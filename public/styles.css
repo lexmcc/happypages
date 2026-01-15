@@ -145,6 +145,37 @@ h2 {
   text-align: center;
 }
 
+/* Client Logos */
+.client-subtitle {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 24px;
+}
+
+.client-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+}
+
+.client-logo {
+  height: 32px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  opacity: 0.6;
+  filter: grayscale(100%);
+}
+
+/* Invert white Gousto logo to black */
+.client-logo[alt="Gousto"] {
+  filter: grayscale(100%) invert(1);
+}
+
 /* How It Works Cards */
 .how-it-works-cards {
   display: flex;
@@ -185,7 +216,7 @@ h2 {
 .step-card__description {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 16px;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   line-height: 1.4;
 }
 

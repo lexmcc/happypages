@@ -71,4 +71,18 @@ The join card header has animated coral bars:
 ## Page Sections
 
 - `.hero` - Main hero section with card
-- `.how-it-works-section` - Second section with centered heading
+- `.how-it-works-section` - Second section with step cards and client logos
+
+### Step Cards
+
+3 neumorphic cards with scroll animation:
+- Colors: Coral (#ff584d), Blue (#154ffb), Cyan (#00C6F7)
+- Bunched initial state with rotation, spread on scroll
+- Intersection Observer triggers at 100% visibility
+- 300ms animation duration
+
+### Client Logos
+
+- Use `filter: grayscale(100%)` for consistent styling
+- Use `filter: invert(1)` to flip white logos to black (e.g., Gousto)
+- Normalize with consistent height + max-width

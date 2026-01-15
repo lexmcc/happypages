@@ -13,7 +13,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 ### Hero Section
 - [x] Two-column layout (left: content, right: card)
 - [x] Logo with header buttons (book a call, see pricing)
-- [x] Main headline: "a design & dev subscription for d2c founders."
+- [x] Main headline: "a growth design & dev subscription for d2c founders."
 - [x] Subheading: "pause or cancel anytime."
 - [x] Responsive breakpoints (1024px, 768px)
 
@@ -29,6 +29,12 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 ### How It Works Section
 - [x] Centered h2 heading with italic span
 - [x] Matching container styling (borders, max-width)
+- [x] 3 animated step cards (Subscribe, Request, Receive)
+- [x] Cards animate from bunched to spread on scroll (Intersection Observer)
+- [x] Card colors: Coral (#ff584d), Blue (#154ffb), Cyan (#00C6F7)
+- [x] Abstract gradient patterns in card image areas
+- [x] Client logos row (Gousto, Butternut Box, Field Doctor)
+- [x] Client subtitle text
 
 ### Typography
 - [x] Hanken Grotesk font (including italic)
@@ -54,5 +60,6 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-15 | Added step cards with scroll animation, client logos, copy updates |
 | 2026-01-15 | Added how-it-works section, animated bars, card stack, typography updates |
 | 2026-01-15 | Initial landing page with hero, neumorphic card, Railway deployment |
