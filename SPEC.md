@@ -27,14 +27,32 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Book a call section with icon
 
 ### How It Works Section
+- [x] Section label "how it works."
 - [x] Centered h2 heading with italic span
 - [x] Matching container styling (borders, max-width)
 - [x] 3 animated step cards (Subscribe, Request, Receive)
+- [x] Card stack effect (front + colored back card)
 - [x] Cards animate from bunched to spread on scroll (Intersection Observer)
+- [x] Cards re-bunch when scrolled halfway out of viewport
 - [x] Card colors: Coral (#ff584d), Blue (#154ffb), Cyan (#00C6F7)
 - [x] Abstract gradient patterns in card image areas
 - [x] Client logos row (Gousto, Butternut Box, Field Doctor)
 - [x] Client subtitle text
+
+### Member Benefits Section
+- [x] Section label "membership benefits."
+- [x] Centered h2 heading: "it's 'oh, this is how to do it' better."
+- [x] Subheading with value proposition
+- [x] Horizontal carousel with 5 benefit cards
+- [x] Card stack effect (front + neumorphic back card)
+- [x] Unique animated patterns per card:
+  - Design board: sliding mini-cards (coral)
+  - Fixed monthly rate: blobs above static bar (blue)
+  - Fast delivery: diagonal streaks (cyan)
+  - Top-notch quality: rotating star (coral)
+  - Flexible and scalable: scaling squares (blue)
+- [x] Carousel navigation arrows with scroll feedback
+- [x] Border-radius matching hero join card (20px 4px 4px 4px)
 
 ### Typography
 - [x] Hanken Grotesk font (including italic)

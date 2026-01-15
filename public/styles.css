@@ -6,17 +6,22 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: #F4F4F0;
   letter-spacing: -0.03em;
 }
 
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.07em;
+  text-wrap: balance;
 }
 
 h2 {
   font-weight: 700;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 .hero {
@@ -494,6 +499,15 @@ h2 {
   100% {
     transform: scaleY(0.3) translateY(0);
   }
+}
+
+/* Pause bar animations when off-screen */
+.bar {
+  animation-play-state: paused;
+}
+
+.card-header.is-animating .bar {
+  animation-play-state: running;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -990,6 +1004,27 @@ h2 {
 @keyframes scale-grow {
   0%, 100% { transform: scale(0.6); opacity: 0.6; }
   50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Pause benefit card animations when off-screen */
+.mini-card,
+.bar-blob,
+.benefit-pattern--streaks::before,
+.benefit-pattern--streaks::after,
+.benefit-pattern--star::before,
+.benefit-pattern--scale::before,
+.benefit-pattern--scale::after {
+  animation-play-state: paused;
+}
+
+.benefit-card.is-animating .mini-card,
+.benefit-card.is-animating .bar-blob,
+.benefit-card.is-animating .benefit-pattern--streaks::before,
+.benefit-card.is-animating .benefit-pattern--streaks::after,
+.benefit-card.is-animating .benefit-pattern--star::before,
+.benefit-card.is-animating .benefit-pattern--scale::before,
+.benefit-card.is-animating .benefit-pattern--scale::after {
+  animation-play-state: running;
 }
 
 /* Respect reduced motion for benefit patterns */

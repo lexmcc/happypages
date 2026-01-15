@@ -71,15 +71,25 @@ The join card header has animated coral bars:
 ## Page Sections
 
 - `.hero` - Main hero section with card
-- `.how-it-works-section` - Second section with step cards and client logos
+- `.how-it-works-section` - Step cards and client logos
+- `.member-benefits-section` - Carousel of benefit cards
 
 ### Step Cards
 
 3 neumorphic cards with scroll animation:
 - Colors: Coral (#ff584d), Blue (#154ffb), Cyan (#00C6F7)
+- Card stack effect with colored back cards matching front
 - Bunched initial state with rotation, spread on scroll
-- Intersection Observer triggers at 100% visibility
+- Intersection Observer triggers at 50% visibility (spread) and re-bunches below 50%
 - 300ms animation duration
+
+### Member Benefits
+
+Horizontal carousel with 5 benefit cards:
+- Card stack effect (front neumorphic + grey back card)
+- Border-radius: 20px 4px 4px 4px (front), 4px 4px 4px 20px (back)
+- Each card has unique animated pattern in brand colors
+- Carousel navigation with JavaScript (cardWidth + backCardOffset for scroll calc)
 
 ### Client Logos
 

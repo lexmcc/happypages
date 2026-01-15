@@ -249,6 +249,17 @@
       observer.observe(cards);
     }
 
+    // Pause looping animations when off-screen
+    const animatedElements = document.querySelectorAll('.card-header, .benefit-card');
+    if (animatedElements.length > 0) {
+      const animationObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.target.classList.toggle('is-animating', entry.isIntersecting);
+        });
+      });
+      animatedElements.forEach(el => animationObserver.observe(el));
+    }
+
     // Benefits carousel navigation
     const track = document.querySelector('.benefits-track');
     const prevBtn = document.querySelector('.carousel-btn--prev');
