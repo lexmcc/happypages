@@ -41,9 +41,60 @@ body {
   gap: 60px;
 }
 
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .logo {
   height: 40px;
   width: auto;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.btn-light {
+  background: #f4f4f0;
+  color: #1a1a1a;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-light:hover {
+  background: #ebebeb;
+}
+
+.btn-coral {
+  background: #ff584d;
+  color: #fff;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.3),
+    inset -1px -1px 0 rgba(0,0,0,0.1),
+    0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-coral:hover {
+  background: #e64d43;
 }
 
 .hero__left h1 {
@@ -111,7 +162,7 @@ body {
 .pill-dot {
   width: 10px;
   height: 10px;
-  background: #fbbf24;
+  background: #ff584d;
   border-radius: 50%;
 }
 
@@ -178,11 +229,10 @@ body {
   gap: 12px;
 }
 
-.avatar-placeholder {
+.avatar-icon {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border-radius: 50%;
+  object-fit: contain;
 }
 
 .book-call-text {
