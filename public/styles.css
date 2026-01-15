@@ -60,6 +60,14 @@ body {
   font-weight: 500;
 }
 
+.subheading {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: #999;
+  margin-top: -40px;
+}
+
 /* Neumorphic Card */
 .hero__right {
   flex-shrink: 0;
