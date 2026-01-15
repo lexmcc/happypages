@@ -35,7 +35,40 @@ Simple static landing page with zero-dependency Node.js server:
 
 ## Design
 
-- Max container width: 1200px with light grey side borders
+- Max container width: 1200px with light grey side borders (#e0e0e0)
 - Background: #F4F4F0
 - Primary font: Hanken Grotesk (Google Fonts)
-- Hero h1: 84pt desktop, 36pt mobile
+- Hero h1: 62pt desktop, 36pt mobile
+- Accent color: Coral #ff584d (hover: #e64d43)
+- Letter spacing: -3% body, -7% headings
+- All text lowercase with fullstops on headings
+
+### Neumorphic Card Styling
+
+```css
+background: #f9f9f9;
+border: 1px solid rgba(0,0,0,0.05);
+box-shadow:
+  inset 1px 1px 0 rgba(255,255,255,1),
+  inset -1px -1px 0 rgba(0,0,0,0.05),
+  0 4px 8px rgba(0,0,0,0.05);
+```
+
+### Card Stack
+
+Uses two HTML elements (not ::before pseudo-element):
+- `.card-back` - offset left/down, bottom-left 20px radius
+- `.neumorphic-card` - front card, top-left 20px radius
+
+### Animated Bars
+
+The join card header has animated coral bars:
+- 40 bars with staggered animation delays
+- Even bars are static (full height), odd bars animate
+- Animation: 4s ease-in-out, scaleY + translateY
+- Respects `prefers-reduced-motion`
+
+## Page Sections
+
+- `.hero` - Main hero section with card
+- `.how-it-works-section` - Second section with centered heading
