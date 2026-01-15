@@ -142,6 +142,62 @@
     </div>
   </section>
 
+  <section class="member-benefits-section">
+    <div class="container">
+      <h2 class="section-heading">it's <span class="serif-italic">'this is how to do it'</span> better.</h2>
+      <p class="section-subheading">happypages design & dev replaces unreliable freelancers and mega-expensive agencies for one flat monthly fee, with work shipped so fast you wont want to go anywhere else.</p>
+
+      <div class="benefits-carousel">
+        <div class="benefits-track">
+          <div class="benefit-item">
+            <div class="benefit-card">
+              <div class="benefit-pattern benefit-pattern--grid"></div>
+            </div>
+            <h3 class="benefit-title">design board.</h3>
+            <p class="benefit-description">easily manage your design queue with a trello board.</p>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-card">
+              <div class="benefit-pattern benefit-pattern--bars"></div>
+            </div>
+            <h3 class="benefit-title">fixed monthly rate.</h3>
+            <p class="benefit-description">no surprises here! pay the same fixed price each month.</p>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-card">
+              <div class="benefit-pattern benefit-pattern--streaks"></div>
+            </div>
+            <h3 class="benefit-title">fast delivery.</h3>
+            <p class="benefit-description">get your design one at a time in just a couple days on average.</p>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-card">
+              <div class="benefit-pattern benefit-pattern--star"></div>
+            </div>
+            <h3 class="benefit-title">top-notch quality.</h3>
+            <p class="benefit-description">senior-level design quality at your fingertips, whenever you need it.</p>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-card">
+              <div class="benefit-pattern benefit-pattern--scale"></div>
+            </div>
+            <h3 class="benefit-title">flexible and scalable.</h3>
+            <p class="benefit-description">scale up or down as needed, and pause or cancel at anytime.</p>
+          </div>
+        </div>
+
+        <div class="carousel-nav">
+          <button class="carousel-btn carousel-btn--prev" aria-label="Previous">←</button>
+          <button class="carousel-btn carousel-btn--next" aria-label="Next">→</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
     // Intersection Observer for card animation
     const cards = document.querySelector('.how-it-works-cards');
@@ -154,6 +210,27 @@
         });
       }, { threshold: 1.0 });
       observer.observe(cards);
+    }
+
+    // Benefits carousel navigation
+    const track = document.querySelector('.benefits-track');
+    const prevBtn = document.querySelector('.carousel-btn--prev');
+    const nextBtn = document.querySelector('.carousel-btn--next');
+
+    if (track && prevBtn && nextBtn) {
+      const cardWidth = 200 + 24; // card width + gap
+      let position = 0;
+
+      nextBtn.addEventListener('click', () => {
+        const maxScroll = track.scrollWidth - track.parentElement.offsetWidth;
+        position = Math.min(position + cardWidth, maxScroll);
+        track.style.transform = `translateX(-${position}px)`;
+      });
+
+      prevBtn.addEventListener('click', () => {
+        position = Math.max(position - cardWidth, 0);
+        track.style.transform = `translateX(-${position}px)`;
+      });
     }
   </script>
 </body>

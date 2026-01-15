@@ -650,3 +650,248 @@ h2 {
     font-size: 36px;
   }
 }
+
+/* Member Benefits Section */
+.member-benefits-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 0;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.section-subheading {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+  max-width: 700px;
+  margin: 16px auto 40px;
+  line-height: 1.5;
+}
+
+/* Benefits Carousel */
+.benefits-carousel {
+  position: relative;
+  overflow: hidden;
+  padding: 0 40px;
+}
+
+.benefits-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.3s ease-out;
+}
+
+.benefit-item {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+/* Neumorphic Benefit Cards */
+.benefit-card {
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  background: #f9f9f9;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 4px 8px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.benefit-title {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.benefit-description {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.carousel-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-btn:hover {
+  background: #f4f4f0;
+}
+
+/* Benefit Pattern Base */
+.benefit-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Pattern 1: Grid (Coral) - Design Board */
+.benefit-pattern--grid::before {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background-image:
+    linear-gradient(#ff584d 2px, transparent 2px),
+    linear-gradient(90deg, #ff584d 2px, transparent 2px);
+  background-size: 20px 20px;
+  animation: grid-pulse 4s ease-in-out infinite;
+}
+
+@keyframes grid-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Pattern 2: Bars (Blue) - Fixed Monthly Rate */
+.benefit-pattern--bars {
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px;
+}
+
+.benefit-pattern--bars::before,
+.benefit-pattern--bars::after {
+  content: '';
+  width: 100%;
+  height: 12px;
+  background: #154ffb;
+  border-radius: 6px;
+}
+
+.benefit-pattern--bars::before {
+  animation: bar-steady 4s ease-in-out infinite;
+}
+
+.benefit-pattern--bars::after {
+  animation: bar-steady 4s ease-in-out infinite 0.5s;
+}
+
+@keyframes bar-steady {
+  0%, 100% { transform: scaleX(0.7); opacity: 0.7; }
+  50% { transform: scaleX(1); opacity: 1; }
+}
+
+/* Pattern 3: Streaks (Cyan) - Fast Delivery */
+.benefit-pattern--streaks::before,
+.benefit-pattern--streaks::after {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 6px;
+  background: #00C6F7;
+  border-radius: 3px;
+}
+
+.benefit-pattern--streaks::before {
+  top: 60px;
+  left: 20px;
+  animation: streak-move 2s ease-out infinite;
+}
+
+.benefit-pattern--streaks::after {
+  top: 100px;
+  left: 40px;
+  animation: streak-move 2s ease-out infinite 0.3s;
+}
+
+@keyframes streak-move {
+  0% { transform: translateX(-60px) scaleX(0.5); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100px) scaleX(1.5); opacity: 0; }
+}
+
+/* Pattern 4: Star (Coral) - Top-notch Quality */
+.benefit-pattern--star::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background:
+    linear-gradient(#ff584d, #ff584d) center/4px 100% no-repeat,
+    linear-gradient(#ff584d, #ff584d) center/100% 4px no-repeat,
+    linear-gradient(45deg, transparent 46%, #ff584d 46%, #ff584d 54%, transparent 54%),
+    linear-gradient(-45deg, transparent 46%, #ff584d 46%, #ff584d 54%, transparent 54%);
+  animation: star-rotate 8s linear infinite;
+}
+
+@keyframes star-rotate {
+  0% { transform: rotate(0deg) scale(0.8); opacity: 0.7; }
+  50% { transform: rotate(180deg) scale(1); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0.8); opacity: 0.7; }
+}
+
+/* Pattern 5: Scale (Blue) - Flexible and Scalable */
+.benefit-pattern--scale::before,
+.benefit-pattern--scale::after {
+  content: '';
+  position: absolute;
+  border: 4px solid #154ffb;
+  border-radius: 8px;
+}
+
+.benefit-pattern--scale::before {
+  width: 60px;
+  height: 60px;
+  animation: scale-grow 4s ease-in-out infinite;
+}
+
+.benefit-pattern--scale::after {
+  width: 100px;
+  height: 100px;
+  animation: scale-grow 4s ease-in-out infinite 1s;
+}
+
+@keyframes scale-grow {
+  0%, 100% { transform: scale(0.6); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Respect reduced motion for benefit patterns */
+@media (prefers-reduced-motion: reduce) {
+  .benefit-pattern--grid::before,
+  .benefit-pattern--bars::before,
+  .benefit-pattern--bars::after,
+  .benefit-pattern--streaks::before,
+  .benefit-pattern--streaks::after,
+  .benefit-pattern--star::before,
+  .benefit-pattern--scale::before,
+  .benefit-pattern--scale::after {
+    animation: none;
+    opacity: 0.8;
+  }
+}
