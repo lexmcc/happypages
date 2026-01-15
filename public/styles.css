@@ -22,13 +22,39 @@ body {
   min-height: 100vh;
 }
 
-.header {
+.container {
   padding: 0 40px;
+}
+
+.header {
+  margin-bottom: 60px;
 }
 
 .logo {
   height: 40px;
   width: auto;
+}
+
+.hero_flex {
+  display: flex;
+}
+
+.hero__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero__left-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero__left-bottom h1 {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 84pt;
+  font-weight: 500;
+  line-height: 1;
+  text-align: left;
 }
 
 @media (max-width: 768px) {
@@ -37,11 +63,15 @@ body {
     padding-bottom: 40px;
   }
 
-  .header {
+  .container {
     padding: 0 16px;
   }
 
   .logo {
     height: 32px;
+  }
+
+  .hero__left-bottom h1 {
+    font-size: 36pt;
   }
 }
