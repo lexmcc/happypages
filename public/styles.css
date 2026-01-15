@@ -37,11 +37,15 @@ body {
 
 .hero_flex {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
 }
 
 .hero__left {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .hero__left-bottom {
@@ -55,6 +59,147 @@ body {
   font-weight: 500;
   line-height: 1;
   text-align: left;
+}
+
+/* Neumorphic Card */
+.hero__right {
+  flex-shrink: 0;
+  width: 380px;
+}
+
+.neumorphic-card {
+  background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
+  border-radius: 24px;
+  padding: 24px;
+  color: #fff;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.1),
+    inset -1px -1px 0 rgba(0,0,0,0.2),
+    0 20px 40px rgba(0,0,0,0.3);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.3);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pill-dot {
+  width: 10px;
+  height: 10px;
+  background: #fbbf24;
+  border-radius: 50%;
+}
+
+.card-image-placeholder {
+  width: 120px;
+  height: 100px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 12px;
+  transform: rotate(6deg);
+}
+
+.card-heading {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.card-tagline {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 24px;
+}
+
+.cta-button {
+  width: 100%;
+  padding: 16px 24px;
+  background: #fff;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 24px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 4px 8px rgba(0,0,0,0.1);
+}
+
+.cta-button:hover {
+  background: #f5f5f5;
+}
+
+.book-call {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.book-call-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-placeholder {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border-radius: 50%;
+}
+
+.book-call-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-call-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.book-call-link {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+
+.arrow-button {
+  width: 40px;
+  height: 40px;
+  background: #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+  .hero_flex {
+    flex-direction: column;
+  }
+
+  .hero__right {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -73,5 +218,9 @@ body {
 
   .hero__left-bottom h1 {
     font-size: 36pt;
+  }
+
+  .card-heading {
+    font-size: 36px;
   }
 }
