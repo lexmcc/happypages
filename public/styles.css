@@ -145,22 +145,45 @@ body {
   overflow: hidden;
 }
 
+.card-header {
+  position: relative;
+  margin: -12px -24px 24px -24px;
+  padding: 40px 24px 24px 24px;
+  border-radius: 20px 4px 0 0;
+  overflow: hidden;
+}
+
 .animated-bars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
-  gap: 6px;
-  height: 100%;
-  padding: 24px;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 16px 16px 0 16px;
 }
 
 .bar {
-  width: 4px;
-  height: 60px;
+  flex: 1;
+  height: 90px;
   background: #ff584d;
   border-radius: 2px;
-  transform-origin: bottom;
-  animation: bar-wave 1.5s ease-in-out infinite;
+  transform-origin: center;
+  animation: bar-wave 4s ease-in-out infinite;
+  max-width: 4px;
+}
+
+.bar:nth-child(even) {
+  animation: none;
+  transform: scaleY(1);
+  max-width: 8px;
+}
+
+.bar:nth-child(4n+2) {
+  max-width: 4px;
 }
 
 .bar:nth-child(1) { animation-delay: 0s; }
@@ -188,13 +211,37 @@ body {
 .bar:nth-child(23) { animation-delay: 1.15s; }
 .bar:nth-child(24) { animation-delay: 1.2s; }
 .bar:nth-child(25) { animation-delay: 1.25s; }
+.bar:nth-child(26) { animation-delay: 1.3s; }
+.bar:nth-child(27) { animation-delay: 1.35s; }
+.bar:nth-child(28) { animation-delay: 1.4s; }
+.bar:nth-child(29) { animation-delay: 1.45s; }
+.bar:nth-child(30) { animation-delay: 1.5s; }
+.bar:nth-child(31) { animation-delay: 1.55s; }
+.bar:nth-child(32) { animation-delay: 1.6s; }
+.bar:nth-child(33) { animation-delay: 1.65s; }
+.bar:nth-child(34) { animation-delay: 1.7s; }
+.bar:nth-child(35) { animation-delay: 1.75s; }
+.bar:nth-child(36) { animation-delay: 1.8s; }
+.bar:nth-child(37) { animation-delay: 1.85s; }
+.bar:nth-child(38) { animation-delay: 1.9s; }
+.bar:nth-child(39) { animation-delay: 1.95s; }
+.bar:nth-child(40) { animation-delay: 2s; }
 
 @keyframes bar-wave {
-  0%, 100% {
-    transform: scaleY(0.3);
+  0% {
+    transform: scaleY(0.3) translateY(0);
+  }
+  25% {
+    transform: scaleY(0.8) translateY(-10px);
   }
   50% {
-    transform: scaleY(1);
+    transform: scaleY(1) translateY(0);
+  }
+  75% {
+    transform: scaleY(0.8) translateY(10px);
+  }
+  100% {
+    transform: scaleY(0.3) translateY(0);
   }
 }
 
@@ -238,6 +285,8 @@ body {
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
     inset -1px -1px 0 rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 1;
 }
 
 .pill-dot {
