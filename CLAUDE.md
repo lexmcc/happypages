@@ -29,6 +29,10 @@ Simple static landing page with zero-dependency Node.js server:
 - GitHub repo connected for auto-deploy on push to `main`
 - Railway project: https://railway.com/project/66f72304-7d9e-4860-9b50-aef51f26c5d2
 
+## Rules
+
+- Never run `git push` unless the user explicitly confirms (e.g., "push", "yes", "push to prod")
+
 ## Design
 
 - Max container width: 1200px with light grey side borders
