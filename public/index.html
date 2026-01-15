@@ -100,7 +100,54 @@
   <section class="how-it-works-section">
     <div class="container">
       <h2 class="section-heading">design & dev how <span class="serif-italic">you<br>wanted it</span> in the first place.</h2>
+
+      <div class="how-it-works-cards">
+        <div class="step-card step-card--coral">
+          <div class="step-card__image">
+            <div class="pattern pattern--coral"></div>
+          </div>
+          <div class="step-card__content">
+            <h3 class="step-card__title">subscribe.</h3>
+            <p class="step-card__description">pick your plan and get started today.</p>
+          </div>
+        </div>
+
+        <div class="step-card step-card--green">
+          <div class="step-card__image">
+            <div class="pattern pattern--green"></div>
+          </div>
+          <div class="step-card__content">
+            <h3 class="step-card__title">request.</h3>
+            <p class="step-card__description">submit unlimited design and dev requests.</p>
+          </div>
+        </div>
+
+        <div class="step-card step-card--blue">
+          <div class="step-card__image">
+            <div class="pattern pattern--blue"></div>
+          </div>
+          <div class="step-card__content">
+            <h3 class="step-card__title">receive.</h3>
+            <p class="step-card__description">get your designs within days, not weeks.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <script>
+    // Intersection Observer for card animation
+    const cards = document.querySelector('.how-it-works-cards');
+    if (cards) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 1.0 });
+      observer.observe(cards);
+    }
+  </script>
 </body>
 </html>
