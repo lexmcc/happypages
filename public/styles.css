@@ -19,31 +19,13 @@ body {
   position: relative;
   border-left: 1px solid #e0e0e0;
   border-right: 1px solid #e0e0e0;
-  min-height: 100vh;
 }
 
 .container {
   padding: 0 40px;
 }
 
-.hero-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  margin-bottom: 60px;
-}
-
-.header {
-  flex-shrink: 0;
-}
-
-.logo {
-  height: 40px;
-  width: auto;
-}
-
-.hero_flex {
+.hero-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -53,21 +35,29 @@ body {
 .hero__left {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   flex: 1;
-  max-width: 700px;
+  max-width: 650px;
+  gap: 60px;
 }
 
-.hero__left-bottom {
-  display: flex;
-  flex-direction: column;
+.logo {
+  height: 40px;
+  width: auto;
 }
 
-.hero__left-bottom h1 {
+.hero__left h1 {
   font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 84pt;
+  font-size: 62pt;
   font-weight: 500;
   line-height: 1;
   text-align: left;
+}
+
+.serif-italic {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-style: italic;
+  font-weight: 500;
 }
 
 /* Neumorphic Card */
@@ -143,8 +133,8 @@ body {
 .cta-button {
   width: 100%;
   padding: 16px 24px;
-  background: #f4f4f0;
-  color: #1a1a1a;
+  background: #ff584d;
+  color: #fff;
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 4px;
   font-size: 18px;
@@ -152,13 +142,13 @@ body {
   cursor: pointer;
   margin-bottom: 24px;
   box-shadow:
-    inset 1px 1px 0 rgba(255,255,255,1),
-    inset -1px -1px 0 rgba(0,0,0,0.05),
-    0 4px 8px rgba(0,0,0,0.05);
+    inset 1px 1px 0 rgba(255,255,255,0.3),
+    inset -1px -1px 0 rgba(0,0,0,0.1),
+    0 4px 8px rgba(0,0,0,0.1);
 }
 
 .cta-button:hover {
-  background: #ebebeb;
+  background: #e64d43;
 }
 
 .book-call {
@@ -220,12 +210,12 @@ body {
 }
 
 @media (max-width: 1024px) {
-  .hero-top-row {
+  .hero-content {
     flex-direction: column;
   }
 
-  .hero_flex {
-    flex-direction: column;
+  .hero__left {
+    max-width: 100%;
   }
 
   .hero__right {
@@ -248,7 +238,7 @@ body {
     height: 32px;
   }
 
-  .hero__left-bottom h1 {
+  .hero__left h1 {
     font-size: 36pt;
   }
 
