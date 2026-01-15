@@ -26,8 +26,16 @@ body {
   padding: 0 40px;
 }
 
-.header {
+.hero-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
   margin-bottom: 60px;
+}
+
+.header {
+  flex-shrink: 0;
 }
 
 .logo {
@@ -46,6 +54,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-width: 700px;
 }
 
 .hero__left-bottom {
@@ -68,14 +77,15 @@ body {
 }
 
 .neumorphic-card {
-  background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
-  border-radius: 24px;
+  background: #f9f9f9;
+  border-radius: 4px;
   padding: 24px;
-  color: #fff;
+  color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,0.05);
   box-shadow:
-    inset 1px 1px 0 rgba(255,255,255,0.1),
-    inset -1px -1px 0 rgba(0,0,0,0.2),
-    0 20px 40px rgba(0,0,0,0.3);
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 4px 8px rgba(0,0,0,0.05);
 }
 
 .card-top {
@@ -89,11 +99,15 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0,0,0,0.3);
+  background: #f4f4f0;
   padding: 8px 16px;
   border-radius: 999px;
   font-size: 14px;
   font-weight: 500;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05);
 }
 
 .pill-dot {
@@ -107,7 +121,7 @@ body {
   width: 120px;
   height: 100px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-  border-radius: 12px;
+  border-radius: 4px;
   transform: rotate(6deg);
 }
 
@@ -117,21 +131,22 @@ body {
   font-weight: 600;
   line-height: 1.1;
   margin-bottom: 12px;
+  color: #1a1a1a;
 }
 
 .card-tagline {
   font-size: 16px;
-  color: rgba(255,255,255,0.7);
+  color: #666;
   margin-bottom: 24px;
 }
 
 .cta-button {
   width: 100%;
   padding: 16px 24px;
-  background: #fff;
-  color: #1a1a2e;
-  border: none;
-  border-radius: 12px;
+  background: #f4f4f0;
+  color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 4px;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
@@ -139,17 +154,24 @@ body {
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
     inset -1px -1px 0 rgba(0,0,0,0.05),
-    0 4px 8px rgba(0,0,0,0.1);
+    0 4px 8px rgba(0,0,0,0.05);
 }
 
 .cta-button:hover {
-  background: #f5f5f5;
+  background: #ebebeb;
 }
 
 .book-call {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 16px;
+  background: #f4f4f0;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05);
 }
 
 .book-call-left {
@@ -173,25 +195,35 @@ body {
 .book-call-title {
   font-size: 14px;
   font-weight: 600;
+  color: #1a1a1a;
 }
 
 .book-call-link {
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: #666;
 }
 
 .arrow-button {
   width: 40px;
   height: 40px;
-  background: #3b82f6;
+  background: #f9f9f9;
+  border: 1px solid rgba(0,0,0,0.05);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
+  color: #1a1a1a;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05);
 }
 
 @media (max-width: 1024px) {
+  .hero-top-row {
+    flex-direction: column;
+  }
+
   .hero_flex {
     flex-direction: column;
   }
