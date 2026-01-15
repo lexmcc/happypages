@@ -185,12 +185,43 @@ h2 {
   position: relative;
 }
 
+.step-card-stack {
+  position: relative;
+}
+
+.step-card-back {
+  position: absolute;
+  top: 12px;
+  left: -12px;
+  right: 12px;
+  bottom: -12px;
+  border-radius: 4px 4px 4px 20px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.3),
+    inset -1px -1px 0 rgba(0,0,0,0.1),
+    0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Back card colors matching front cards */
+.step-card-stack:nth-child(1) .step-card-back {
+  background: #ff584d;
+}
+
+.step-card-stack:nth-child(2) .step-card-back {
+  background: #154ffb;
+}
+
+.step-card-stack:nth-child(3) .step-card-back {
+  background: #00C6F7;
+}
+
 .step-card {
+  position: relative;
   width: 320px;
   height: 440px;
-  border-radius: 20px;
+  border-radius: 20px 4px 4px 4px;
   overflow: hidden;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   display: flex;
   flex-direction: column;
 }
@@ -276,36 +307,40 @@ h2 {
 }
 
 /* Card Animation - Initial bunched state */
-.how-it-works-cards .step-card:nth-child(1) {
+.step-card-stack {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.how-it-works-cards .step-card-stack:nth-child(1) {
   transform: translateX(180px) rotate(-12deg);
   opacity: 0.9;
   z-index: 3;
 }
 
-.how-it-works-cards .step-card:nth-child(2) {
+.how-it-works-cards .step-card-stack:nth-child(2) {
   transform: translateX(0) rotate(2deg);
   opacity: 0.95;
   z-index: 2;
 }
 
-.how-it-works-cards .step-card:nth-child(3) {
+.how-it-works-cards .step-card-stack:nth-child(3) {
   transform: translateX(-180px) rotate(12deg);
   opacity: 0.9;
   z-index: 1;
 }
 
 /* Card Animation - Spread state */
-.how-it-works-cards.is-visible .step-card {
+.how-it-works-cards.is-visible .step-card-stack {
   transform: translateX(0) rotate(0deg);
   opacity: 1;
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .step-card {
+  .step-card-stack {
     transition: none;
   }
-  .how-it-works-cards .step-card {
+  .how-it-works-cards .step-card-stack {
     transform: none;
     opacity: 1;
   }
@@ -318,19 +353,19 @@ h2 {
     align-items: center;
   }
 
-  .how-it-works-cards .step-card:nth-child(1) {
+  .how-it-works-cards .step-card-stack:nth-child(1) {
     transform: translateY(40px) rotate(-4deg);
   }
 
-  .how-it-works-cards .step-card:nth-child(2) {
+  .how-it-works-cards .step-card-stack:nth-child(2) {
     transform: translateY(0) rotate(0deg);
   }
 
-  .how-it-works-cards .step-card:nth-child(3) {
+  .how-it-works-cards .step-card-stack:nth-child(3) {
     transform: translateY(-40px) rotate(4deg);
   }
 
-  .how-it-works-cards.is-visible .step-card {
+  .how-it-works-cards.is-visible .step-card-stack {
     transform: translateY(0) rotate(0deg);
   }
 }
@@ -660,6 +695,16 @@ h2 {
   border-right: 1px solid #e0e0e0;
 }
 
+.section-label {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #999;
+  text-align: center;
+  width: 100%;
+  margin: 0 0 12px 0;
+}
+
 .section-subheading {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 18px;
@@ -681,7 +726,8 @@ h2 {
   display: flex;
   gap: 24px;
   transition: transform 0.3s ease-out;
-  padding-right: 40px;
+  padding-right: 60px;
+  padding-left: 12px;
 }
 
 .benefit-item {
@@ -690,19 +736,38 @@ h2 {
 }
 
 /* Neumorphic Benefit Cards */
+.benefit-card-stack {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.benefit-card-back {
+  position: absolute;
+  top: 8px;
+  left: -8px;
+  right: 8px;
+  bottom: -8px;
+  background: #f9f9f9;
+  border-radius: 4px 4px 4px 20px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 4px 8px rgba(0,0,0,0.05);
+}
+
 .benefit-card {
+  position: relative;
   width: 200px;
   height: 200px;
-  border-radius: 16px;
+  border-radius: 20px 4px 4px 4px;
   background: #f9f9f9;
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
     inset -1px -1px 0 rgba(0,0,0,0.05),
     0 4px 8px rgba(0,0,0,0.05);
-  position: relative;
   overflow: hidden;
-  margin-bottom: 16px;
 }
 
 .benefit-title {
