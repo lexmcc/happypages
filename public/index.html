@@ -151,7 +151,12 @@
         <div class="benefits-track">
           <div class="benefit-item">
             <div class="benefit-card">
-              <div class="benefit-pattern benefit-pattern--grid"></div>
+              <div class="benefit-pattern benefit-pattern--cards">
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+              </div>
             </div>
             <h3 class="benefit-title">design board.</h3>
             <p class="benefit-description">easily manage your design queue with a trello board.</p>
@@ -159,7 +164,11 @@
 
           <div class="benefit-item">
             <div class="benefit-card">
-              <div class="benefit-pattern benefit-pattern--bars"></div>
+              <div class="benefit-pattern benefit-pattern--bars">
+                <div class="bar-blob"></div>
+                <div class="bar-blob"></div>
+                <div class="bar-blob"></div>
+              </div>
             </div>
             <h3 class="benefit-title">fixed monthly rate.</h3>
             <p class="benefit-description">no surprises here! pay the same fixed price each month.</p>
@@ -221,15 +230,25 @@
       const cardWidth = 200 + 24; // card width + gap
       let position = 0;
 
+      const updateButtons = () => {
+        const maxScroll = Math.max(0, track.scrollWidth - track.parentElement.offsetWidth);
+        prevBtn.style.opacity = position <= 0 ? '0.4' : '1';
+        nextBtn.style.opacity = position >= maxScroll ? '0.4' : '1';
+      };
+
+      updateButtons();
+
       nextBtn.addEventListener('click', () => {
-        const maxScroll = track.scrollWidth - track.parentElement.offsetWidth;
+        const maxScroll = Math.max(0, track.scrollWidth - track.parentElement.offsetWidth);
         position = Math.min(position + cardWidth, maxScroll);
         track.style.transform = `translateX(-${position}px)`;
+        updateButtons();
       });
 
       prevBtn.addEventListener('click', () => {
         position = Math.max(position - cardWidth, 0);
         track.style.transform = `translateX(-${position}px)`;
+        updateButtons();
       });
     }
   </script>
