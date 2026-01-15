@@ -132,11 +132,11 @@ body {
 .card-back {
   position: absolute;
   top: 12px;
-  left: 12px;
-  right: -12px;
+  left: -12px;
+  right: 12px;
   bottom: -12px;
   background: #f9f9f9;
-  border-radius: 4px 4px 20px 4px;
+  border-radius: 4px 4px 4px 20px;
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
