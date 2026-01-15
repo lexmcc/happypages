@@ -239,11 +239,13 @@
     if (cards) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
             entry.target.classList.add('is-visible');
+          } else if (entry.intersectionRatio < 0.5) {
+            entry.target.classList.remove('is-visible');
           }
         });
-      }, { threshold: 1.0 });
+      }, { threshold: [0.5, 1.0] });
       observer.observe(cards);
     }
 
