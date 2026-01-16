@@ -315,6 +315,27 @@
 
     .step-card__image {
       min-height: 200px;
+      position: relative;
+    }
+
+    /* Mobile: show GIF, hide video */
+    @media (max-width: 768px) {
+      .step-card__video {
+        display: none;
+      }
+      .step-card__gif {
+        display: block;
+      }
+    }
+
+    /* Desktop: show video, hide GIF */
+    @media (min-width: 769px) {
+      .step-card__gif {
+        display: none;
+      }
+      .step-card__video {
+        display: block;
+      }
     }
 
     .pricing-cta-row {
@@ -453,7 +474,8 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--coral">
             <div class="step-card__image">
-              <video src="/assets/subscribe-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
+              <img src="/assets/subscribe.gif" alt="" class="step-card__img step-card__gif">
+              <video src="/assets/subscribe-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto" poster="/assets/subscribe-poster.jpg"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">subscribe.</h3>
@@ -466,7 +488,8 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--green">
             <div class="step-card__image">
-              <video src="/assets/request-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
+              <img src="/assets/request.gif" alt="" class="step-card__img step-card__gif">
+              <video src="/assets/request-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto" poster="/assets/request-poster.jpg"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">request.</h3>
@@ -479,7 +502,8 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--blue">
             <div class="step-card__image">
-              <video src="/assets/receive-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
+              <img src="/assets/receive.gif" alt="" class="step-card__img step-card__gif">
+              <video src="/assets/receive-clip-mobile.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto" poster="/assets/receive-poster.jpg"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">receive.</h3>
@@ -877,46 +901,7 @@
       desktopObserver.observe(howItWorksCards);
     }
 
-    // Mobile: individual video playback when each card is visible
-    if (stepVideos.length) {
-      stepVideos.forEach(video => {
-        let isVisible = false;
-        let loopTimeout = null;
-
-        const playVideo = () => {
-          if (isVisible && !isDesktop()) {
-            video.currentTime = 0;
-            video.play().catch(() => {
-              // Autoplay blocked - video will show first frame
-            });
-          }
-        };
-
-        video.addEventListener('ended', () => {
-          if (isVisible && !isDesktop()) {
-            loopTimeout = setTimeout(playVideo, 5000);
-          }
-        });
-
-        const videoObserver = new IntersectionObserver((entries) => {
-          if (isDesktop()) return;
-          entries.forEach(entry => {
-            isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.8;
-            if (isVisible) {
-              playVideo();
-            } else {
-              video.pause();
-              if (loopTimeout) {
-                clearTimeout(loopTimeout);
-                loopTimeout = null;
-              }
-            }
-          });
-        }, { threshold: 0.8 });
-
-        videoObserver.observe(video.closest('.step-card'));
-      });
-    }
+    // Mobile uses GIFs (no JS needed) - video logic is desktop only
 
     // Benefits carousel navigation
     const track = document.querySelector('.benefits-track');
