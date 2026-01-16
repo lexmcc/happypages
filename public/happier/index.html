@@ -813,42 +813,104 @@
       animatedElements.forEach(el => animationObserver.observe(el));
     }
 
-    // Step card video playback: play when fully visible, 5s pause between loops
-    const stepVideos = document.querySelectorAll('.step-card__video');
-    stepVideos.forEach(video => {
-      let isVisible = false;
-      let loopTimeout = null;
+    // Step card video playback
+    const stepVideos = Array.from(document.querySelectorAll('.step-card__video'));
+    const isDesktop = () => window.innerWidth > 768;
+    let cardsVisible = false;
+    let currentVideoIndex = 0;
+    let sequenceTimeout = null;
 
-      const playVideo = () => {
-        if (isVisible) {
-          video.currentTime = 0;
-          video.play();
-        }
-      };
+    const playVideoAt = (index) => {
+      if (!cardsVisible || !isDesktop()) return;
+      const video = stepVideos[index];
+      if (video) {
+        video.currentTime = 0;
+        video.play();
+      }
+    };
 
+    const startSequence = () => {
+      if (!cardsVisible || !isDesktop()) return;
+      currentVideoIndex = 0;
+      playVideoAt(0);
+    };
+
+    // Desktop: sequential playback
+    stepVideos.forEach((video, index) => {
       video.addEventListener('ended', () => {
-        if (isVisible) {
-          loopTimeout = setTimeout(playVideo, 5000);
-        }
+        if (!isDesktop() || !cardsVisible) return;
+        const nextIndex = (index + 1) % stepVideos.length;
+        const isLooping = nextIndex === 0;
+        const delay = isLooping ? 5000 : 0;
+        sequenceTimeout = setTimeout(() => {
+          currentVideoIndex = nextIndex;
+          playVideoAt(nextIndex);
+        }, delay);
       });
+    });
 
-      const videoObserver = new IntersectionObserver((entries) => {
+    // Observe the cards container for desktop sequential play
+    const howItWorksCards = document.querySelector('.how-it-works-cards');
+    if (howItWorksCards && stepVideos.length) {
+      const desktopObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          isVisible = entry.isIntersecting && entry.intersectionRatio >= 1;
-          if (isVisible) {
-            playVideo();
-          } else {
-            video.pause();
-            if (loopTimeout) {
-              clearTimeout(loopTimeout);
-              loopTimeout = null;
+          const wasVisible = cardsVisible;
+          cardsVisible = entry.isIntersecting && entry.intersectionRatio >= 0.8;
+
+          if (isDesktop()) {
+            if (cardsVisible && !wasVisible) {
+              startSequence();
+            } else if (!cardsVisible) {
+              stepVideos.forEach(v => v.pause());
+              if (sequenceTimeout) {
+                clearTimeout(sequenceTimeout);
+                sequenceTimeout = null;
+              }
             }
           }
         });
-      }, { threshold: 1.0 });
+      }, { threshold: 0.8 });
+      desktopObserver.observe(howItWorksCards);
+    }
 
-      videoObserver.observe(video.closest('.step-card'));
-    });
+    // Mobile: individual video playback when each card is visible
+    if (stepVideos.length) {
+      stepVideos.forEach(video => {
+        let isVisible = false;
+        let loopTimeout = null;
+
+        const playVideo = () => {
+          if (isVisible && !isDesktop()) {
+            video.currentTime = 0;
+            video.play();
+          }
+        };
+
+        video.addEventListener('ended', () => {
+          if (isVisible && !isDesktop()) {
+            loopTimeout = setTimeout(playVideo, 5000);
+          }
+        });
+
+        const videoObserver = new IntersectionObserver((entries) => {
+          if (isDesktop()) return;
+          entries.forEach(entry => {
+            isVisible = entry.isIntersecting && entry.intersectionRatio >= 1;
+            if (isVisible) {
+              playVideo();
+            } else {
+              video.pause();
+              if (loopTimeout) {
+                clearTimeout(loopTimeout);
+                loopTimeout = null;
+              }
+            }
+          });
+        }, { threshold: 1.0 });
+
+        videoObserver.observe(video.closest('.step-card'));
+      });
+    }
 
     // Benefits carousel navigation
     const track = document.querySelector('.benefits-track');
