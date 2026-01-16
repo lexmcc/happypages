@@ -1148,7 +1148,16 @@ p {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+.pricing-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  box-shadow:
+    0 1px 0 rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  margin-bottom: 24px;
 }
 
 .pricing-price {
@@ -1173,6 +1182,7 @@ p {
   list-style: none;
   margin-bottom: 32px;
   padding: 0;
+  min-height: 130px;
 }
 
 .pricing-features li {
@@ -1219,7 +1229,7 @@ p {
 .pricing-flex-text {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 400;
   color: rgba(255,255,255,0.7);
   margin: 0;
 }
@@ -1227,7 +1237,7 @@ p {
 /* Pricing Toggle Switch */
 .pricing-toggle {
   position: absolute;
-  top: 40px;
+  top: 80px;
   right: 40px;
   display: flex;
   align-items: center;

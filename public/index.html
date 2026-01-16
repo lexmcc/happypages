@@ -276,7 +276,7 @@
     </div>
   </section>
 
-  <section class="pricing-section">
+  <section class="pricing-section" id="pricing">
     <div class="container">
       <h4 class="section-label">pricing.</h4>
       <h2 class="section-heading">two subscriptions,<br><span class="serif-italic">endless opportunities.</span></h2>
@@ -362,6 +362,7 @@
                 <span class="pricing-price">£1095</span>
                 <span class="pricing-period">/month</span>
               </div>
+              <div class="pricing-divider"></div>
               <ul class="pricing-features">
                 <li>one request at a time</li>
                 <li>avg. 48 hour delivery</li>
@@ -369,6 +370,7 @@
                 <li>static page development</li>
                 <li>1 user</li>
               </ul>
+              <div class="pricing-divider"></div>
               <div class="pricing-cta-row">
                 <button class="pricing-cta">
                   <img src="/assets/happypages-icon-black.svg" alt="" class="pricing-cta-icon">
@@ -513,8 +515,15 @@
         const content = isPro ? proContent : basicContent;
         const prevContent = isPro ? basicContent : proContent;
 
-        // Toggle label highlight
+        // Toggle label highlight and card state
         document.querySelector('.pricing-toggle').classList.toggle('is-pro', isPro);
+        document.querySelector('.pricing-card-dark').classList.toggle('pricing-pro', isPro);
+
+        // Update CTA button text
+        const ctaBtn = document.querySelector('.pricing-cta');
+        ctaBtn.innerHTML = isPro
+          ? '<img src="/assets/happypages-icon-black.svg" alt="" class="pricing-cta-icon">join pro today'
+          : '<img src="/assets/happypages-icon-black.svg" alt="" class="pricing-cta-icon">join today';
 
         // Update title - type if changed
         const titleChanged = content.title !== prevContent.title;
@@ -559,6 +568,15 @@
         });
       });
     }
+
+    // Smooth scroll to pricing section
+    document.querySelectorAll('.btn-coral, .cta-button').forEach(btn => {
+      if (btn.textContent.trim() === 'see pricing') {
+        btn.addEventListener('click', () => {
+          document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
   </script>
 </body>
 </html>
