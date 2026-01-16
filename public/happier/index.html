@@ -374,6 +374,58 @@
       align-items: center;
       gap: 8px;
     }
+
+    @media (max-width: 768px) {
+      .pricing-cta-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .pricing-cta-row .pricing-cta {
+        width: 100%;
+      }
+      .pricing-cta-row .pricing-cta-bottom {
+        margin-top: 12px;
+      }
+    }
+
+    .pricing-header-row {
+      display: block;
+    }
+
+    .pricing-price {
+      display: inline-block;
+      min-width: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .pricing-header-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+      }
+      .pricing-header-left {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+      }
+      .pricing-header-row .pricing-toggle {
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 429px) {
+      .pricing-toggle {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 12px;
+      }
+      .pricing-toggle .pricing-toggle-label {
+        order: -1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -775,21 +827,25 @@
           <div class="card-stack">
             <div class="card-back card-back--dark"></div>
             <div class="neumorphic-card pricing-card-dark">
-              <div class="pricing-toggle">
-                <span class="pricing-toggle-label">basic</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" class="toggle-input">
-                  <span class="toggle-track">
-                    <span class="toggle-knob"></span>
-                    <span class="toggle-indicator"></span>
-                  </span>
-                </label>
-                <span class="pricing-toggle-label">pro</span>
-              </div>
-              <h4 class="pricing-tier-label">monthly club</h4>
-              <div class="pricing-amount">
-                <span class="pricing-price">£1095</span>
-                <span class="pricing-period">/month</span>
+              <div class="pricing-header-row">
+                <div class="pricing-header-left">
+                  <h4 class="pricing-tier-label">monthly club</h4>
+                  <div class="pricing-amount">
+                    <span class="pricing-price">£1095</span>
+                    <span class="pricing-period">/m</span>
+                  </div>
+                </div>
+                <div class="pricing-toggle">
+                  <span class="pricing-toggle-label">basic</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" class="toggle-input">
+                    <span class="toggle-track">
+                      <span class="toggle-knob"></span>
+                      <span class="toggle-indicator"></span>
+                    </span>
+                  </label>
+                  <span class="pricing-toggle-label">pro</span>
+                </div>
               </div>
               <div class="pricing-divider"></div>
               <ul class="pricing-features">
@@ -1054,6 +1110,12 @@
 
       // Typing animation for changed text
       function typeText(element, text, isChanged, speed = 20, callback) {
+        // Cancel any existing animation on this element
+        if (element._animationId) {
+          clearTimeout(element._animationId);
+          element._animationId = null;
+        }
+
         if (!isChanged) {
           element.textContent = text;
           if (callback) callback();
@@ -1066,9 +1128,10 @@
           if (i < text.length) {
             element.textContent += text.charAt(i);
             i++;
-            setTimeout(type, speed);
-          } else if (callback) {
-            callback();
+            element._animationId = setTimeout(type, speed);
+          } else {
+            element._animationId = null;
+            if (callback) callback();
           }
         }
         type();
