@@ -365,22 +365,32 @@ p {
   .how-it-works-cards {
     flex-direction: column;
     align-items: center;
+    gap: 24px;
+    margin: 40px 16px 0 16px;
   }
 
-  .how-it-works-cards .step-card-stack:nth-child(1) {
-    transform: translateY(40px) rotate(-4deg);
+  /* Remove animation on mobile - just stack */
+  .step-card-stack {
+    transition: none;
   }
 
-  .how-it-works-cards .step-card-stack:nth-child(2) {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  .how-it-works-cards .step-card-stack:nth-child(3) {
-    transform: translateY(-40px) rotate(4deg);
-  }
-
+  .how-it-works-cards .step-card-stack:nth-child(1),
+  .how-it-works-cards .step-card-stack:nth-child(2),
+  .how-it-works-cards .step-card-stack:nth-child(3),
   .how-it-works-cards.is-visible .step-card-stack {
-    transform: translateY(0) rotate(0deg);
+    transform: none;
+    opacity: 1;
+  }
+
+  .step-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .client-logos {
+    padding: 0 16px;
+    gap: 24px;
+    flex-wrap: wrap;
   }
 }
 
@@ -693,12 +703,21 @@ p {
     height: 32px;
   }
 
+  .hero-buttons {
+    display: none;
+  }
+
   .hero__left h1 {
     font-size: 36pt;
   }
 
+  .subheading {
+    font-size: 18px;
+    margin-top: -30px;
+  }
+
   .card-heading {
-    font-size: 36px;
+    display: none;
   }
 }
 
@@ -1892,6 +1911,52 @@ p {
   }
 }
 
+/* Pricing Section Mobile */
+@media (max-width: 768px) {
+  .pricing-cards {
+    flex-direction: column;
+    padding: 0 16px;
+    gap: 24px;
+  }
+
+  .pricing-card-left,
+  .pricing-card-right {
+    flex: none;
+    width: 100%;
+  }
+
+  .pricing-card-dark {
+    padding: 32px 24px;
+  }
+
+  .pricing-toggle {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 16px;
+  }
+
+  .pricing-price {
+    font-size: 42px;
+  }
+
+  .pricing-features {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    gap: 10px;
+  }
+
+  .pricing-cta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .pricing-flex-text {
+    font-size: 14px;
+  }
+}
+
 /* Floating Icons Animation */
 .how-it-works-section {
   position: relative;
@@ -1905,9 +1970,14 @@ p {
   width: 100%;
   height: 0;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1;
   overflow: visible;
   contain: layout style;
+}
+
+.how-it-works-section > .container {
+  position: relative;
+  z-index: 10;
 }
 
 .floating-icon {
