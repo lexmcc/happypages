@@ -298,6 +298,49 @@
         opacity: 0.3;
       }
     }
+
+    .pricing-cta-icon {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .pricing-cta-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .pricing-cta-row .pricing-cta {
+      width: 50%;
+      flex-shrink: 0;
+      padding: 16px 24px;
+      background: #ff584d;
+      color: #fff;
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 4px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.3),
+        inset -1px -1px 0 rgba(0,0,0,0.1),
+        0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .pricing-cta-row .pricing-cta:hover {
+      background: #e64d43;
+    }
+
+    .pricing-cta-row .pricing-cta-bottom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -722,11 +765,11 @@
               </ul>
               <div class="pricing-divider"></div>
               <div class="pricing-cta-row">
-                <button class="pricing-cta">
+                <button class="pricing-cta">join today</button>
+                <div class="pricing-cta-bottom">
                   <img src="/assets/happypages-icon-white.png" alt="" class="pricing-cta-icon">
-                  join today
-                </button>
-                <h4 class="pricing-flex-text">pause, cancel, or flex subscription tier anytime.</h4>
+                  <h4 class="pricing-flex-text">pause, cancel, or flex subscription tier anytime.</h4>
+                </div>
               </div>
             </div>
           </div>
@@ -944,9 +987,7 @@
 
         // Update CTA button text
         const ctaBtn = document.querySelector('.pricing-cta');
-        ctaBtn.innerHTML = isPro
-          ? '<img src="/assets/happypages-icon-white.png" alt="" class="pricing-cta-icon">join pro today'
-          : '<img src="/assets/happypages-icon-white.png" alt="" class="pricing-cta-icon">join today';
+        ctaBtn.textContent = isPro ? 'join pro today' : 'join today';
 
         // Update title - type if changed
         const titleChanged = content.title !== prevContent.title;

@@ -102,6 +102,8 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Card styling matches hero join card (card-heading, card-tagline)
 - [x] Mobile responsive: 11 columns, smaller boxes (16px), proper width constraints
 - [x] Removed floating icons and orbit animation (cleaner look)
+- [x] Pricing CTA: button 50% width left, icon+text on right
+- [x] Pricing button styled like hero CTA (coral, neumorphic, centered text)
 
 ## Planned Features
 
