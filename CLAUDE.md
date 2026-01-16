@@ -18,10 +18,13 @@ No build step, no dependencies to install.
 
 Simple static landing page with zero-dependency Node.js server:
 
-- `server.js` - Vanilla Node.js HTTP server serving files from `public/`
-- `public/index.html` - Single-page HTML
-- `public/styles.css` - All styles (responsive breakpoint at 768px)
-- `public/assets/` - Static assets (logo images)
+- `server.js` - Vanilla Node.js HTTP server with clean URL routing
+- `public/index.html` - Main landing page
+- `public/styles.css` - All styles (responsive breakpoints at 1024px, 768px)
+- `public/happier/index.html` - Design exploration variant (inline styles)
+- `public/assets/` - Static assets (logo images, PNG icons)
+
+Clean URL routing: `/happier` serves `/happier/index.html`
 
 ## Deployment
 
@@ -139,3 +142,23 @@ Background animation with 40 icons following a curved SVG path:
 - Use `filter: grayscale(100%)` for consistent styling
 - Use `filter: invert(1)` to flip white logos to black (e.g., Gousto)
 - Normalize with consistent height + max-width
+
+## Design Exploration Page (/happier)
+
+Variant of main page for testing design changes. Uses inline styles (no external CSS).
+
+### Grid Animation
+
+Works-text-card features an animated coral grid (5 rows × 15 columns):
+- Box size: 20px desktop, 16px mobile
+- Animation: opacity pulses right-to-left with staggered delays per box
+- 4 wave patterns with different opacity profiles (wave-a, wave-b, wave-c, wave-d)
+- Varied speeds per row (4.5s, 5.625s, 6.75s) for organic feel
+- Random row timing offsets
+- Mobile: 11 columns (hides boxes 12-15 via `nth-child(n+12)`)
+
+### Differences from Main Page
+
+- Removed floating icons and orbit animations (cleaner look)
+- Works-text-card styled like hero join card (card-heading, card-tagline)
+- White icon variants instead of black

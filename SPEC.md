@@ -91,6 +91,17 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] PNG icons for animated elements (better performance than SVG filters)
 - [x] CSS containment for layout performance
 - [x] Standardized z-index scale (5, 10, 20, 30, 50)
+- [x] Clean URL routing (e.g., /happier serves /happier/index.html)
+
+### Design Exploration Page (/happier)
+- [x] Variant of main page for design experiments
+- [x] Works text card with animated coral grid (5 rows × 15 columns)
+- [x] Grid animation: boxes pulse opacity right-to-left with row offsets
+- [x] 4 wave patterns with varied speeds (4.5s, 5.625s, 6.75s)
+- [x] Random row timing offsets for organic feel
+- [x] Card styling matches hero join card (card-heading, card-tagline)
+- [x] Mobile responsive: 11 columns, smaller boxes (16px), proper width constraints
+- [x] Removed floating icons and orbit animation (cleaner look)
 
 ## Planned Features
 
