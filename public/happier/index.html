@@ -449,7 +449,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--coral">
             <div class="step-card__image">
-              <video src="/assets/lexmack_A_cinematic_film_still_in_the_distinct_style_of_Wes_A_a3780100-b7b0-4d22-909c-0f49df49ccf0_3.mp4" class="step-card__img" autoplay loop muted playsinline></video>
+              <video src="/assets/subscribe-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">subscribe.</h3>
@@ -462,7 +462,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--green">
             <div class="step-card__image">
-              <video src="/assets/lexmack_A_cinematic_film_still_in_the_distinct_style_of_Wes_A_8980e8ca-39d7-4bbd-9d18-a687029722c8_0.mp4" class="step-card__img" autoplay loop muted playsinline></video>
+              <video src="/assets/request-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">request.</h3>
@@ -475,7 +475,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--blue">
             <div class="step-card__image">
-              <video src="/assets/lexmack_A_cinematic_film_still_in_the_distinct_style_of_Wes_A_87a0927d-da86-49fd-923e-f200926de804_2.mp4" class="step-card__img" autoplay loop muted playsinline></video>
+              <video src="/assets/receive-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">receive.</h3>
@@ -812,6 +812,43 @@
       });
       animatedElements.forEach(el => animationObserver.observe(el));
     }
+
+    // Step card video playback: play when fully visible, 5s pause between loops
+    const stepVideos = document.querySelectorAll('.step-card__video');
+    stepVideos.forEach(video => {
+      let isVisible = false;
+      let loopTimeout = null;
+
+      const playVideo = () => {
+        if (isVisible) {
+          video.currentTime = 0;
+          video.play();
+        }
+      };
+
+      video.addEventListener('ended', () => {
+        if (isVisible) {
+          loopTimeout = setTimeout(playVideo, 5000);
+        }
+      });
+
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isVisible = entry.isIntersecting && entry.intersectionRatio >= 1;
+          if (isVisible) {
+            playVideo();
+          } else {
+            video.pause();
+            if (loopTimeout) {
+              clearTimeout(loopTimeout);
+              loopTimeout = null;
+            }
+          }
+        });
+      }, { threshold: 1.0 });
+
+      videoObserver.observe(video.closest('.step-card'));
+    });
 
     // Benefits carousel navigation
     const track = document.querySelector('.benefits-track');
