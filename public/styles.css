@@ -850,6 +850,28 @@ p {
   background: #f4f4f0;
 }
 
+/* Benefits Carousel Mobile - Swipeable */
+@media (max-width: 768px) {
+  .benefits-carousel {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 16px;
+  }
+
+  .benefits-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .benefits-track {
+    transform: none !important;
+  }
+
+  .carousel-nav {
+    display: none;
+  }
+}
+
 /* Benefit Pattern Base */
 .benefit-pattern {
   position: absolute;
