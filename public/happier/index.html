@@ -313,6 +313,10 @@
       margin: 2px 2px 0 2px;
     }
 
+    .step-card__image {
+      min-height: 200px;
+    }
+
     .pricing-cta-row {
       display: flex;
       flex-direction: row;
@@ -449,7 +453,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--coral">
             <div class="step-card__image">
-              <video src="/assets/subscribe-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
+              <video src="/assets/subscribe-clip.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">subscribe.</h3>
@@ -462,7 +466,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--green">
             <div class="step-card__image">
-              <video src="/assets/request-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
+              <video src="/assets/request-clip.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">request.</h3>
@@ -475,7 +479,7 @@
           <div class="step-card-back"></div>
           <div class="step-card step-card--blue">
             <div class="step-card__image">
-              <video src="/assets/receive-clip.mp4" class="step-card__img step-card__video" muted playsinline></video>
+              <video src="/assets/receive-clip.mp4" class="step-card__img step-card__video" muted playsinline webkit-playsinline preload="auto"></video>
             </div>
             <div class="step-card__content">
               <h3 class="step-card__title">receive.</h3>
@@ -825,7 +829,7 @@
       const video = stepVideos[index];
       if (video) {
         video.currentTime = 0;
-        video.play();
+        video.play().catch(() => {});
       }
     };
 
@@ -882,7 +886,9 @@
         const playVideo = () => {
           if (isVisible && !isDesktop()) {
             video.currentTime = 0;
-            video.play();
+            video.play().catch(() => {
+              // Autoplay blocked - video will show first frame
+            });
           }
         };
 
@@ -895,7 +901,7 @@
         const videoObserver = new IntersectionObserver((entries) => {
           if (isDesktop()) return;
           entries.forEach(entry => {
-            isVisible = entry.isIntersecting && entry.intersectionRatio >= 1;
+            isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.8;
             if (isVisible) {
               playVideo();
             } else {
@@ -906,7 +912,7 @@
               }
             }
           });
-        }, { threshold: 1.0 });
+        }, { threshold: 0.8 });
 
         videoObserver.observe(video.closest('.step-card'));
       });
