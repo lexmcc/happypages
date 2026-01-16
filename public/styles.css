@@ -198,7 +198,7 @@ p {
 
 .step-card-stack {
   position: relative;
-  z-index: 2;
+  z-index: 20;
 }
 
 .step-card-back {
@@ -318,6 +318,8 @@ p {
     radial-gradient(circle at 50% 20%, rgba(0,0,0,0.05) 0%, transparent 45%);
 }
 
+/* z-index scale: 10=back, 20=middle, 30=front, 50=animating */
+
 /* Card Animation - Initial bunched state */
 .step-card-stack {
   transition: transform 0.2s ease-out, opacity 0.2s ease-out;
@@ -326,19 +328,19 @@ p {
 .how-it-works-cards .step-card-stack:nth-child(1) {
   transform: translateX(180px) rotate(-12deg);
   opacity: 0.9;
-  z-index: 3;
+  z-index: 30;
 }
 
 .how-it-works-cards .step-card-stack:nth-child(2) {
   transform: translateX(0) rotate(2deg);
   opacity: 0.95;
-  z-index: 2;
+  z-index: 20;
 }
 
 .how-it-works-cards .step-card-stack:nth-child(3) {
   transform: translateX(-180px) rotate(12deg);
   opacity: 0.9;
-  z-index: 1;
+  z-index: 10;
 }
 
 /* Card Animation - Spread state */
@@ -390,7 +392,7 @@ p {
 
 .card-stack {
   position: relative;
-  z-index: 2;
+  z-index: 20;
 }
 
 .card-back {
@@ -739,7 +741,7 @@ p {
 .benefits-track {
   display: flex;
   gap: 24px;
-  transition: transform 0.3s ease-out;
+  transition: transform 0.2s ease-out;
   padding-right: 60px;
   padding-left: 12px;
 }
@@ -753,7 +755,8 @@ p {
 .benefit-card-stack {
   position: relative;
   margin-bottom: 16px;
-  z-index: 2;
+  z-index: 20;
+  contain: layout style;
 }
 
 .benefit-card-back {
@@ -783,6 +786,7 @@ p {
     inset -1px -1px 0 rgba(0,0,0,0.05),
     0 4px 8px rgba(0,0,0,0.05);
   overflow: hidden;
+  contain: layout paint style;
 }
 
 .benefit-title {
@@ -1026,6 +1030,7 @@ p {
 .benefit-card.is-animating .benefit-pattern--scale::before,
 .benefit-card.is-animating .benefit-pattern--scale::after {
   animation-play-state: running;
+  will-change: transform, opacity;
 }
 
 /* Respect reduced motion for benefit patterns */
@@ -1061,6 +1066,7 @@ p {
   border-left: 1px solid #e0e0e0;
   border-right: 1px solid #e0e0e0;
   overflow: visible;
+  contain: layout style;
 }
 
 .works-cards {
@@ -1069,7 +1075,7 @@ p {
   margin-top: 40px;
   padding: 0 40px;
   position: relative;
-  z-index: 2;
+  z-index: 20;
 }
 
 /* Flex sizing - opposite of pricing (larger on left) */
@@ -1105,7 +1111,8 @@ p {
   left: 0;
   width: 100%;
   height: 580px;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  contain: layout paint style;
 }
 
 /* Back card element (colored offset) */
@@ -1201,17 +1208,17 @@ p {
 /* Stacked card positions - poke out to LEFT with rotation */
 .works-deck-card[data-position="0"] {
   transform: translateX(0) rotate(0deg);
-  z-index: 3;
+  z-index: 30;
 }
 
 .works-deck-card[data-position="1"] {
   transform: translateX(-6%) rotate(-4deg);
-  z-index: 2;
+  z-index: 20;
 }
 
 .works-deck-card[data-position="2"] {
   transform: translateX(-12%) rotate(-8deg);
-  z-index: 1;
+  z-index: 10;
 }
 
 /* Works patterns */
@@ -1342,6 +1349,7 @@ p {
 
 .works-text-card.is-animating .orbit-icon {
   animation-play-state: running;
+  will-change: offset-distance;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1370,12 +1378,12 @@ p {
 /* Animation class applied during shuffle */
 .works-deck-card.shuffling-out {
   animation: shuffle-out-left 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  z-index: 10;
+  z-index: 50;
 }
 
 /* Card returning - low z-index to go behind other cards */
 .works-deck-card.shuffling-out.returning {
-  z-index: 0;
+  z-index: 5;
 }
 
 /* Reverse animation - back card comes to front */
@@ -1396,11 +1404,11 @@ p {
 
 .works-deck-card.shuffling-in {
   animation: shuffle-in-from-back 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  z-index: 0;
+  z-index: 5;
 }
 
 .works-deck-card.shuffling-in.arriving {
-  z-index: 10;
+  z-index: 50;
 }
 
 /* Prevent transitions during shuffle animation */
@@ -1490,7 +1498,7 @@ p {
   margin-top: 40px;
   padding: 0 40px;
   position: relative;
-  z-index: 2;
+  z-index: 20;
 }
 
 .pricing-card-left {
@@ -1897,8 +1905,9 @@ p {
   width: 100%;
   height: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
   overflow: visible;
+  contain: layout style;
 }
 
 .floating-icon {
