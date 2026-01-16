@@ -20,6 +20,12 @@ h2 {
   font-weight: 700;
 }
 
+h4 {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
 p {
   text-wrap: pretty;
 }
@@ -1074,7 +1080,7 @@ p {
 .works-card-right {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 /* Card Deck Container */
@@ -1253,13 +1259,10 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 300px;
+  height: 580px;
 }
 
 .works-text-title {
-  font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 36px;
-  font-weight: 600;
   line-height: 1.1;
   color: #1a1a1a;
 }

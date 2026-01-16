@@ -32,6 +32,7 @@ Simple static landing page with zero-dependency Node.js server:
 ## Rules
 
 - Never run `git push` unless the user explicitly confirms (e.g., "push", "yes", "push to prod")
+- No references to Claude or Anthropic in commit messages (no "Generated with Claude Code" or "Co-Authored-By")
 
 ## Design
 
