@@ -14,11 +14,21 @@ const MIME_TYPES = {
   '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.webp': 'image/webp'
 };
 
 const server = http.createServer((req, res) => {
-  let filePath = path.join(__dirname, 'public', req.url === '/' ? 'index.html' : req.url);
+  let urlPath = req.url.split('?')[0]; // Remove query string
+
+  // Handle clean URLs: / → index.html, /happier → /happier/index.html
+  if (urlPath.endsWith('/')) {
+    urlPath = urlPath + 'index.html';
+  } else if (!path.extname(urlPath)) {
+    urlPath = urlPath + '/index.html';
+  }
+
+  let filePath = path.join(__dirname, 'public', urlPath);
   const ext = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
