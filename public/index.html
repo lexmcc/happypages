@@ -87,9 +87,9 @@
                   <span class="book-call-link">schedule now</span>
                 </div>
               </div>
-              <div class="arrow-button">
-                <span>→</span>
-              </div>
+              <button class="arrow-button" aria-label="Book a call">
+                <span aria-hidden="true">→</span>
+              </button>
             </div>
           </div>
           </div>
@@ -276,6 +276,80 @@
     </div>
   </section>
 
+  <section class="works-section" id="works">
+    <div class="container">
+      <h4 class="section-label">works.</h4>
+      <h2 class="section-heading">see what we <span class="serif-italic">can build<br>for you.</span></h2>
+
+      <div class="works-cards">
+        <!-- Left Card (larger) - Card Deck Carousel -->
+        <div class="works-card-left">
+          <div class="works-deck-container">
+            <div class="works-deck">
+              <!-- Card 3 (back) - Cyan -->
+              <div class="works-deck-card" data-index="2" data-position="2">
+                <div class="works-deck-card-back"></div>
+                <div class="works-deck-card-front">
+                  <div class="works-deck-card__image">
+                    <div class="works-pattern works-pattern--cyan"></div>
+                  </div>
+                  <div class="works-deck-card__content">
+                    <h3 class="works-deck-card__title">email flows.</h3>
+                    <p class="works-deck-card__description">conversion-focused email sequences.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2 (middle) - Blue -->
+              <div class="works-deck-card" data-index="1" data-position="1">
+                <div class="works-deck-card-back"></div>
+                <div class="works-deck-card-front">
+                  <div class="works-deck-card__image">
+                    <div class="works-pattern works-pattern--blue"></div>
+                  </div>
+                  <div class="works-deck-card__content">
+                    <h3 class="works-deck-card__title">user flows.</h3>
+                    <p class="works-deck-card__description">seamless checkout and onboarding experiences.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 1 (front) - Coral -->
+              <div class="works-deck-card" data-index="0" data-position="0">
+                <div class="works-deck-card-back"></div>
+                <div class="works-deck-card-front">
+                  <div class="works-deck-card__image">
+                    <div class="works-pattern works-pattern--coral"></div>
+                  </div>
+                  <div class="works-deck-card__content">
+                    <h3 class="works-deck-card__title">landing pages.</h3>
+                    <p class="works-deck-card__description">high-converting pages that drive growth.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carousel controls -->
+            <div class="works-deck-nav">
+              <button class="carousel-btn works-deck-btn--prev" aria-label="Previous">←</button>
+              <button class="carousel-btn works-deck-btn--next" aria-label="Next">→</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Card (smaller) - Text Content -->
+        <div class="works-card-right">
+          <div class="card-stack">
+            <div class="card-back"></div>
+            <div class="neumorphic-card works-text-card">
+              <h3 class="works-text-title">pages, flows, emails and more.</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="pricing-section" id="pricing">
     <div class="container">
       <h4 class="section-label">pricing.</h4>
@@ -452,6 +526,85 @@
         track.style.transform = `translateX(-${position}px)`;
         updateButtons();
       });
+    }
+
+    // Works deck shuffle carousel
+    const worksDeck = document.querySelector('.works-deck');
+    const worksDeckCards = document.querySelectorAll('.works-deck-card');
+    const worksPrevBtn = document.querySelector('.works-deck-btn--prev');
+    const worksNextBtn = document.querySelector('.works-deck-btn--next');
+
+    if (worksDeck && worksDeckCards.length && worksPrevBtn && worksNextBtn) {
+      let currentOrder = [0, 1, 2]; // Tracks which card index is at which position
+      let isAnimating = false;
+
+      // Update positions based on current order
+      function updatePositions() {
+        worksDeckCards.forEach(card => {
+          const cardIndex = parseInt(card.getAttribute('data-index'));
+          const position = currentOrder.indexOf(cardIndex);
+          card.setAttribute('data-position', position);
+        });
+      }
+
+      // Shuffle to next card (front card exits left)
+      function shuffleNext() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const frontCardIndex = currentOrder[0];
+        const frontCard = document.querySelector(`.works-deck-card[data-index="${frontCardIndex}"]`);
+
+        // Add shuffle class
+        worksDeck.classList.add('is-shuffling');
+        frontCard.classList.add('shuffling-out');
+
+        // At 40% (320ms) - card has exited, add returning class to lower z-index
+        setTimeout(() => {
+          frontCard.classList.add('returning');
+          // Move front card to back
+          currentOrder.push(currentOrder.shift());
+          updatePositions();
+        }, 320);
+
+        // Clean up after animation (800ms total)
+        setTimeout(() => {
+          frontCard.classList.remove('shuffling-out', 'returning');
+          worksDeck.classList.remove('is-shuffling');
+          isAnimating = false;
+        }, 800);
+      }
+
+      // Shuffle to previous card (back card comes to front)
+      function shufflePrev() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        // Get the back card (will become front)
+        const backCardIndex = currentOrder[2];
+        const backCard = document.querySelector(`.works-deck-card[data-index="${backCardIndex}"]`);
+
+        worksDeck.classList.add('is-shuffling');
+        backCard.classList.add('shuffling-in');
+
+        // At 40% (320ms) - card is out, add arriving class for high z-index
+        setTimeout(() => {
+          backCard.classList.add('arriving');
+          // Move back card to front
+          currentOrder.unshift(currentOrder.pop());
+          updatePositions();
+        }, 320);
+
+        // Clean up after animation (800ms total)
+        setTimeout(() => {
+          backCard.classList.remove('shuffling-in', 'arriving');
+          worksDeck.classList.remove('is-shuffling');
+          isAnimating = false;
+        }, 800);
+      }
+
+      worksNextBtn.addEventListener('click', shuffleNext);
+      worksPrevBtn.addEventListener('click', shufflePrev);
     }
 
     // Pricing toggle - switch between basic and pro tiers

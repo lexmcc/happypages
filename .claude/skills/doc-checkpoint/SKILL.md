@@ -1,6 +1,6 @@
 ---
 name: doc-checkpoint
-description: End-of-session documentation checkpoint. Updates SPEC.md with completed features, adds new learnings to CLAUDE.md, and reviews if CLAUDE.md needs restructuring. Use when finishing a work session, after completing features, or when asked to "checkpoint", "sync docs", or "save progress".
+description: End-of-session documentation checkpoint. Updates SPEC.md with completed features, adds new learnings to CLAUDE.md, and reviews if CLAUDE.md needs restructuring. Use when finishing a work session, after completing features, or when asked to "doc-check", "doc-checkpoint", "checkpoint", "sync docs", or "save progress".
 ---
 
 # Documentation Checkpoint

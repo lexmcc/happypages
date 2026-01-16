@@ -73,6 +73,8 @@ The join card header has animated coral bars:
 - `.hero` - Main hero section with card
 - `.how-it-works-section` - Step cards and client logos
 - `.member-benefits-section` - Carousel of benefit cards
+- `.works-section` - Card deck carousel showcasing work types
+- `.pricing-section` - Pricing cards with toggle
 
 ### Step Cards
 
@@ -90,6 +92,28 @@ Horizontal carousel with 5 benefit cards:
 - Border-radius: 20px 4px 4px 4px (front), 4px 4px 4px 20px (back)
 - Each card has unique animated pattern in brand colors
 - Carousel navigation with JavaScript (cardWidth + backCardOffset for scroll calc)
+
+### Works Section
+
+Two-column layout (flex: 2 left, flex: 1 right) with card deck carousel:
+
+**Card Deck (left):**
+- 3 stacked cards (480x580px) offset to left with rotation
+- Cards follow how-it-works styling: full color background, white text
+- Colors: Coral (#ff584d), Blue (#154ffb), Cyan (#00C6F7)
+- Position transforms: front (0, 0deg), middle (-40px, -4deg), back (-80px, -8deg)
+
+**Shuffle Animation:**
+- Cards animate -600px left, pause, then return to new position
+- Right arrow (next): front card → exits left → returns to back (z-index high → low)
+- Left arrow (prev): back card → exits left → returns to front (z-index low → high)
+- 0.8s duration, z-index switches at 320ms (40%)
+- Uses `.shuffling-out`/`.returning` and `.shuffling-in`/`.arriving` classes
+- `overflow: visible` on section/container allows animation outside bounds
+
+**Text Card (right):**
+- Simple neumorphic card with text content
+- Card stack effect matching other sections
 
 ### Client Logos
 

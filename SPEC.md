@@ -59,6 +59,23 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Letter spacing: -3% body, -7% headings
 - [x] All text lowercase with fullstops on headings
 
+### Works Section
+- [x] Two-column layout (flex: 2 left, flex: 1 right)
+- [x] Card deck carousel with 3 stacked cards (480x580px)
+- [x] Cards styled like how-it-works: full color background, white text
+- [x] Shuffle animation: card exits left (-600px), returns to new position
+- [x] Bidirectional: right arrow sends front→back, left arrow sends back→front
+- [x] Z-index switching at animation midpoint for proper layering
+- [x] Carousel nav buttons (left-aligned)
+- [x] Text card on right with neumorphic styling
+
+### Pricing Section
+- [x] Two-column layout (flex: 1 left, flex: 2 right)
+- [x] Left card: neumorphic with animated bars header
+- [x] Right card: dark theme with pricing toggle (basic/pro)
+- [x] Typing animation on price and feature changes
+- [x] Feature list with highlighting for pro additions
+
 ### Technical
 - [x] Zero-dependency Node.js server
 - [x] Railway deployment with GitHub auto-deploy
@@ -66,7 +83,6 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 ## Planned Features
 
-- [ ] Pricing section
 - [ ] Services/features grid
 - [ ] Testimonials section
 - [ ] FAQ section
@@ -78,6 +94,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-16 | Added works section with card deck shuffle carousel (bidirectional animation) |
 | 2026-01-15 | Added step cards with scroll animation, client logos, copy updates |
 | 2026-01-15 | Added how-it-works section, animated bars, card stack, typography updates |
 | 2026-01-15 | Initial landing page with hero, neumorphic card, Railway deployment |
