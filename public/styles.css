@@ -192,6 +192,7 @@ p {
 
 .step-card-stack {
   position: relative;
+  z-index: 2;
 }
 
 .step-card-back {
@@ -383,6 +384,7 @@ p {
 
 .card-stack {
   position: relative;
+  z-index: 2;
 }
 
 .card-back {
@@ -753,6 +755,7 @@ p {
 .benefit-card-stack {
   position: relative;
   margin-bottom: 16px;
+  z-index: 2;
 }
 
 .benefit-card-back {
@@ -1050,4 +1053,510 @@ p {
   .bar-blob:nth-child(1) { transform: translateX(20px); }
   .bar-blob:nth-child(2) { transform: translateX(60px); }
   .bar-blob:nth-child(3) { transform: translateX(100px); }
+}
+
+/* Pricing Section */
+.pricing-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 0;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.pricing-cards {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.pricing-card-left {
+  flex: 1;
+}
+
+.pricing-card-right {
+  flex: 2;
+}
+
+/* Left Pricing Card */
+.pricing-card-light {
+  padding: 24px;
+}
+
+.pricing-header-large {
+  margin: -24px -24px 24px -24px;
+  padding: 0;
+  height: 180px;
+  border-radius: 20px 4px 0 0;
+}
+
+.pricing-header-large .animated-bars {
+  padding: 24px 16px 0 16px;
+}
+
+.pricing-card-title {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 16px 0 12px 0;
+  color: #1a1a1a;
+}
+
+.pricing-card-subtitle {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Dark Pricing Card */
+.pricing-card-dark {
+  position: relative;
+  background: #2A2A28;
+  color: #fff;
+  border-radius: 20px 4px 4px 4px;
+  padding: 40px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.1),
+    inset -1px -1px 0 rgba(0,0,0,0.2),
+    0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card-back--dark {
+  background: #1a1a18;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.05),
+    inset -1px -1px 0 rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.3);
+}
+
+.pricing-tier-label {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 8px;
+}
+
+.pricing-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.pricing-price {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pricing-period {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  color: rgba(255,255,255,0.6);
+}
+
+.pricing-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 12px 40px;
+  list-style: none;
+  margin-bottom: 32px;
+  padding: 0;
+}
+
+.pricing-features li {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+}
+
+.pricing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 4px 32px 4px 4px;
+  background: #ff584d;
+  color: #fff;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 4px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.3),
+    inset -1px -1px 0 rgba(0,0,0,0.1),
+    0 4px 8px rgba(0,0,0,0.1);
+}
+
+.pricing-cta:hover {
+  background: #e64d43;
+}
+
+.pricing-cta-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.pricing-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pricing-flex-text {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+}
+
+/* Pricing Toggle Switch */
+.pricing-toggle {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pricing-toggle-label {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  transition: color 0.2s ease;
+}
+
+/* Basic selected (default) - first label solid white */
+.pricing-toggle-label:first-child {
+  color: rgba(255,255,255,1);
+}
+
+/* Pro selected - first label dimmed, last label coral + bold */
+.pricing-toggle.is-pro .pricing-toggle-label:first-child {
+  color: rgba(255,255,255,0.6);
+}
+
+.pricing-toggle.is-pro .pricing-toggle-label:last-child {
+  color: #ff584d;
+  font-weight: 600;
+}
+
+.toggle-switch {
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  display: flex;
+  align-items: center;
+  width: 72px;
+  height: 36px;
+  background: #4a4a48;
+  border-radius: 18px;
+  padding: 4px;
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.3),
+    inset -1px -1px 2px rgba(255,255,255,0.1);
+}
+
+.toggle-knob {
+  width: 28px;
+  height: 28px;
+  background: #e8e8e8;
+  border-radius: 50%;
+  box-shadow:
+    2px 2px 4px rgba(0,0,0,0.3),
+    inset 1px 1px 0 rgba(255,255,255,0.8),
+    inset -1px -1px 0 rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.toggle-indicator {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+/* Checked state */
+.toggle-input:checked + .toggle-track .toggle-knob {
+  transform: translateX(36px);
+}
+
+/* Pro selected - indicator becomes coral instead of hidden */
+.pricing-toggle.is-pro .toggle-indicator {
+  border-color: #ff584d;
+  opacity: 1;
+}
+
+/* Typing highlight - solid white for changed text only */
+.typing-highlight {
+  color: rgba(255,255,255,1);
+}
+
+/* Pro features - bold and solid white */
+.pricing-features li.typing-highlight {
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Pricing Bars - Exponential heights with wave animation */
+.pricing-bars .bar {
+  transform-origin: bottom;
+  animation: bar-wave-pricing 4s ease-in-out infinite;
+  max-width: 4px;
+}
+
+/* Even bars are static and wider (same as hero) */
+.pricing-bars .bar:nth-child(even) {
+  animation: none;
+  transform: scaleY(1);
+  max-width: 8px;
+}
+
+.pricing-bars .bar:nth-child(4n+2) {
+  max-width: 4px;
+}
+
+/* Exponential height curve from bottom-left (~10px) to top-right (~90px) */
+.pricing-bars .bar:nth-child(1) { height: 10px; }
+.pricing-bars .bar:nth-child(2) { height: 11px; }
+.pricing-bars .bar:nth-child(3) { height: 12px; }
+.pricing-bars .bar:nth-child(4) { height: 13px; }
+.pricing-bars .bar:nth-child(5) { height: 14px; }
+.pricing-bars .bar:nth-child(6) { height: 15px; }
+.pricing-bars .bar:nth-child(7) { height: 16px; }
+.pricing-bars .bar:nth-child(8) { height: 17px; }
+.pricing-bars .bar:nth-child(9) { height: 19px; }
+.pricing-bars .bar:nth-child(10) { height: 20px; }
+.pricing-bars .bar:nth-child(11) { height: 22px; }
+.pricing-bars .bar:nth-child(12) { height: 23px; }
+.pricing-bars .bar:nth-child(13) { height: 25px; }
+.pricing-bars .bar:nth-child(14) { height: 27px; }
+.pricing-bars .bar:nth-child(15) { height: 29px; }
+.pricing-bars .bar:nth-child(16) { height: 31px; }
+.pricing-bars .bar:nth-child(17) { height: 33px; }
+.pricing-bars .bar:nth-child(18) { height: 35px; }
+.pricing-bars .bar:nth-child(19) { height: 38px; }
+.pricing-bars .bar:nth-child(20) { height: 40px; }
+.pricing-bars .bar:nth-child(21) { height: 43px; }
+.pricing-bars .bar:nth-child(22) { height: 46px; }
+.pricing-bars .bar:nth-child(23) { height: 49px; }
+.pricing-bars .bar:nth-child(24) { height: 52px; }
+.pricing-bars .bar:nth-child(25) { height: 56px; }
+.pricing-bars .bar:nth-child(26) { height: 59px; }
+.pricing-bars .bar:nth-child(27) { height: 63px; }
+.pricing-bars .bar:nth-child(28) { height: 67px; }
+.pricing-bars .bar:nth-child(29) { height: 71px; }
+.pricing-bars .bar:nth-child(30) { height: 76px; }
+.pricing-bars .bar:nth-child(31) { height: 80px; }
+.pricing-bars .bar:nth-child(32) { height: 85px; }
+.pricing-bars .bar:nth-child(33) { height: 90px; }
+.pricing-bars .bar:nth-child(34) { height: 96px; }
+.pricing-bars .bar:nth-child(35) { height: 102px; }
+.pricing-bars .bar:nth-child(36) { height: 108px; }
+.pricing-bars .bar:nth-child(37) { height: 114px; }
+.pricing-bars .bar:nth-child(38) { height: 121px; }
+.pricing-bars .bar:nth-child(39) { height: 128px; }
+.pricing-bars .bar:nth-child(40) { height: 135px; }
+
+/* Staggered animation delays for pricing bars */
+.pricing-bars .bar:nth-child(1) { animation-delay: 0s; }
+.pricing-bars .bar:nth-child(2) { animation-delay: 0.05s; }
+.pricing-bars .bar:nth-child(3) { animation-delay: 0.1s; }
+.pricing-bars .bar:nth-child(4) { animation-delay: 0.15s; }
+.pricing-bars .bar:nth-child(5) { animation-delay: 0.2s; }
+.pricing-bars .bar:nth-child(6) { animation-delay: 0.25s; }
+.pricing-bars .bar:nth-child(7) { animation-delay: 0.3s; }
+.pricing-bars .bar:nth-child(8) { animation-delay: 0.35s; }
+.pricing-bars .bar:nth-child(9) { animation-delay: 0.4s; }
+.pricing-bars .bar:nth-child(10) { animation-delay: 0.45s; }
+.pricing-bars .bar:nth-child(11) { animation-delay: 0.5s; }
+.pricing-bars .bar:nth-child(12) { animation-delay: 0.55s; }
+.pricing-bars .bar:nth-child(13) { animation-delay: 0.6s; }
+.pricing-bars .bar:nth-child(14) { animation-delay: 0.65s; }
+.pricing-bars .bar:nth-child(15) { animation-delay: 0.7s; }
+.pricing-bars .bar:nth-child(16) { animation-delay: 0.75s; }
+.pricing-bars .bar:nth-child(17) { animation-delay: 0.8s; }
+.pricing-bars .bar:nth-child(18) { animation-delay: 0.85s; }
+.pricing-bars .bar:nth-child(19) { animation-delay: 0.9s; }
+.pricing-bars .bar:nth-child(20) { animation-delay: 0.95s; }
+.pricing-bars .bar:nth-child(21) { animation-delay: 1s; }
+.pricing-bars .bar:nth-child(22) { animation-delay: 1.05s; }
+.pricing-bars .bar:nth-child(23) { animation-delay: 1.1s; }
+.pricing-bars .bar:nth-child(24) { animation-delay: 1.15s; }
+.pricing-bars .bar:nth-child(25) { animation-delay: 1.2s; }
+.pricing-bars .bar:nth-child(26) { animation-delay: 1.25s; }
+.pricing-bars .bar:nth-child(27) { animation-delay: 1.3s; }
+.pricing-bars .bar:nth-child(28) { animation-delay: 1.35s; }
+.pricing-bars .bar:nth-child(29) { animation-delay: 1.4s; }
+.pricing-bars .bar:nth-child(30) { animation-delay: 1.45s; }
+.pricing-bars .bar:nth-child(31) { animation-delay: 1.5s; }
+.pricing-bars .bar:nth-child(32) { animation-delay: 1.55s; }
+.pricing-bars .bar:nth-child(33) { animation-delay: 1.6s; }
+.pricing-bars .bar:nth-child(34) { animation-delay: 1.65s; }
+.pricing-bars .bar:nth-child(35) { animation-delay: 1.7s; }
+.pricing-bars .bar:nth-child(36) { animation-delay: 1.75s; }
+.pricing-bars .bar:nth-child(37) { animation-delay: 1.8s; }
+.pricing-bars .bar:nth-child(38) { animation-delay: 1.85s; }
+.pricing-bars .bar:nth-child(39) { animation-delay: 1.9s; }
+.pricing-bars .bar:nth-child(40) { animation-delay: 1.95s; }
+
+@keyframes bar-wave-pricing {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.35);
+  }
+}
+
+/* Pause pricing bar animations when off-screen */
+.pricing-bars .bar {
+  animation-play-state: paused;
+}
+
+.pricing-header-large.is-animating .pricing-bars .bar {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pricing-bars .bar {
+    animation: none;
+  }
+}
+
+/* Floating Icons Animation */
+.how-it-works-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-icons-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.floating-icon {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  opacity: 0;
+  /* Sine wave path: shifted left 5%, increased wavelength and amplitude */
+  offset-path: path('M -200,100 Q 150,30 400,230 Q 650,500 900,130 Q 1150,30 1400,280 Q 1650,560 1800,180');
+  offset-rotate: 0deg;
+  animation: float-path 22s ease-in-out infinite;
+  will-change: offset-distance, opacity;
+}
+
+@keyframes float-path {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 1;
+  }
+  30% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Staggered animation delays for 40 icons (0.2s spacing) */
+.floating-icon:nth-child(1) { animation-delay: 0s; }
+.floating-icon:nth-child(2) { animation-delay: 0.2s; }
+.floating-icon:nth-child(3) { animation-delay: 0.4s; }
+.floating-icon:nth-child(4) { animation-delay: 0.6s; }
+.floating-icon:nth-child(5) { animation-delay: 0.8s; }
+.floating-icon:nth-child(6) { animation-delay: 1s; }
+.floating-icon:nth-child(7) { animation-delay: 1.2s; }
+.floating-icon:nth-child(8) { animation-delay: 1.4s; }
+.floating-icon:nth-child(9) { animation-delay: 1.6s; }
+.floating-icon:nth-child(10) { animation-delay: 1.8s; }
+.floating-icon:nth-child(11) { animation-delay: 2s; }
+.floating-icon:nth-child(12) { animation-delay: 2.2s; }
+.floating-icon:nth-child(13) { animation-delay: 2.4s; }
+.floating-icon:nth-child(14) { animation-delay: 2.6s; }
+.floating-icon:nth-child(15) { animation-delay: 2.8s; }
+.floating-icon:nth-child(16) { animation-delay: 3s; }
+.floating-icon:nth-child(17) { animation-delay: 3.2s; }
+.floating-icon:nth-child(18) { animation-delay: 3.4s; }
+.floating-icon:nth-child(19) { animation-delay: 3.6s; }
+.floating-icon:nth-child(20) { animation-delay: 3.8s; }
+.floating-icon:nth-child(21) { animation-delay: 4s; }
+.floating-icon:nth-child(22) { animation-delay: 4.2s; }
+.floating-icon:nth-child(23) { animation-delay: 4.4s; }
+.floating-icon:nth-child(24) { animation-delay: 4.6s; }
+.floating-icon:nth-child(25) { animation-delay: 4.8s; }
+.floating-icon:nth-child(26) { animation-delay: 5s; }
+.floating-icon:nth-child(27) { animation-delay: 5.2s; }
+.floating-icon:nth-child(28) { animation-delay: 5.4s; }
+.floating-icon:nth-child(29) { animation-delay: 5.6s; }
+.floating-icon:nth-child(30) { animation-delay: 5.8s; }
+.floating-icon:nth-child(31) { animation-delay: 6s; }
+.floating-icon:nth-child(32) { animation-delay: 6.2s; }
+.floating-icon:nth-child(33) { animation-delay: 6.4s; }
+.floating-icon:nth-child(34) { animation-delay: 6.6s; }
+.floating-icon:nth-child(35) { animation-delay: 6.8s; }
+.floating-icon:nth-child(36) { animation-delay: 7s; }
+.floating-icon:nth-child(37) { animation-delay: 7.2s; }
+.floating-icon:nth-child(38) { animation-delay: 7.4s; }
+.floating-icon:nth-child(39) { animation-delay: 7.6s; }
+.floating-icon:nth-child(40) { animation-delay: 7.8s; }
+
+/* Pause floating icons animation when off-screen */
+.floating-icon {
+  animation-play-state: paused;
+}
+
+.floating-icons-container.is-animating .floating-icon {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-icon {
+    animation: none;
+    display: none;
+  }
 }
