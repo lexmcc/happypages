@@ -92,6 +92,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] CSS containment for layout performance
 - [x] Standardized z-index scale (5, 10, 20, 30, 50)
 - [x] Clean URL routing (e.g., /happier serves /happier/index.html)
+- [x] MP4 MIME type support (video/mp4)
 
 ### Design Exploration Page (/happier)
 - [x] Variant of main page for design experiments
@@ -104,6 +105,10 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Removed floating icons and orbit animation (cleaner look)
 - [x] Pricing CTA: button 50% width left, icon+text on right
 - [x] Pricing button styled like hero CTA (coral, neumorphic, centered text)
+- [x] Step cards: videos on desktop, GIFs on mobile (iOS compatible)
+- [x] Desktop: sequential video playback (subscribe → request → receive)
+- [x] Videos clipped to final 3s, 5s pause before looping
+- [x] Poster images as video fallback
 
 ## Planned Features
 
@@ -118,6 +123,8 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-16 | /happier: Step card videos (desktop) + GIFs (mobile/iOS), sequential playback |
+| 2026-01-16 | /happier: Pricing CTA redesign, grid animation, works card styling |
 | 2026-01-16 | PNG icons for performance, CSS containment, orbit animation, floating icons |
 | 2026-01-16 | Added works section with card deck shuffle carousel (bidirectional animation) |
 | 2026-01-15 | Added step cards with scroll animation, client logos, copy updates |

@@ -157,8 +157,18 @@ Works-text-card features an animated coral grid (5 rows × 15 columns):
 - Random row timing offsets
 - Mobile: 11 columns (hides boxes 12-15 via `nth-child(n+12)`)
 
+### Step Card Media
+
+Step cards use different media for desktop vs mobile:
+- **Desktop (>768px)**: Videos with sequential playback (subscribe → request → receive)
+- **Mobile (≤768px)**: Animated GIFs (iOS blocks video autoplay)
+- Videos: H.264 Baseline profile, 3s clips, poster images as fallback
+- GIFs: 312px width, 12fps, optimized palette
+- CSS media queries toggle `display: none/block` on `.step-card__video` / `.step-card__gif`
+
 ### Differences from Main Page
 
 - Removed floating icons and orbit animations (cleaner look)
 - Works-text-card styled like hero join card (card-heading, card-tagline)
 - White icon variants instead of black
+- Step cards use videos/GIFs instead of CSS patterns
