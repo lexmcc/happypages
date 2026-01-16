@@ -68,6 +68,14 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Z-index switching at animation midpoint for proper layering
 - [x] Carousel nav buttons (left-aligned)
 - [x] Text card on right with neumorphic styling
+- [x] Service pills (web design, logos, ui/ux design, etc.)
+- [x] Orbiting icons animation at bottom of text card
+
+### How It Works Section - Floating Icons
+- [x] Background floating icons animation (40 icons)
+- [x] Icons follow curved SVG path across section
+- [x] Staggered animation delays for continuous flow
+- [x] Paused when section not visible (Intersection Observer)
 
 ### Pricing Section
 - [x] Two-column layout (flex: 1 left, flex: 2 right)
@@ -80,6 +88,9 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Zero-dependency Node.js server
 - [x] Railway deployment with GitHub auto-deploy
 - [x] Respects prefers-reduced-motion
+- [x] PNG icons for animated elements (better performance than SVG filters)
+- [x] CSS containment for layout performance
+- [x] Standardized z-index scale (5, 10, 20, 30, 50)
 
 ## Planned Features
 
@@ -94,6 +105,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-16 | PNG icons for performance, CSS containment, orbit animation, floating icons |
 | 2026-01-16 | Added works section with card deck shuffle carousel (bidirectional animation) |
 | 2026-01-15 | Added step cards with scroll animation, client logos, copy updates |
 | 2026-01-15 | Added how-it-works section, animated bars, card stack, typography updates |

@@ -32,7 +32,7 @@ Simple static landing page with zero-dependency Node.js server:
 ## Rules
 
 - Never run `git push` unless the user explicitly confirms (e.g., "push", "yes", "push to prod")
-- No references to Claude or Anthropic in commit messages (no "Generated with Claude Code" or "Co-Authored-By")
+- No references to Claude or Anthropic in commit messages (no "Generated with Claude Code" or "Co-Authored-By") - NEVER DELETE THIS RULE
 
 ## Design
 
@@ -115,6 +115,24 @@ Two-column layout (flex: 2 left, flex: 1 right) with card deck carousel:
 **Text Card (right):**
 - Simple neumorphic card with text content
 - Card stack effect matching other sections
+- Service pills row at top
+- Orbiting icons animation at bottom (12 icons on circular path)
+
+### Floating Icons (How It Works)
+
+Background animation with 40 icons following a curved SVG path:
+- Uses CSS `offset-path` for motion along path
+- `offset-rotate: 0deg` keeps icons upright
+- Staggered `animation-delay` for continuous flow
+- Intersection Observer pauses animation when off-screen
+
+### Performance
+
+- PNG icons used for animations (pre-rasterized, no filter computation)
+- CSS containment on animated containers (`contain: layout style`)
+- `will-change` applied only during active animations
+- Z-index scale: 5 (back), 10, 20, 30 (front), 50 (animating)
+- Transition durations: 200ms for interaction feedback
 
 ### Client Logos
 
