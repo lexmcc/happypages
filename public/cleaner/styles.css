@@ -325,7 +325,10 @@ p {
 }
 
 .card-back--coral { background: var(--color-coral); }
-.card-back--blue { background: var(--color-blue); }
+.card-back--blue {
+  background: var(--color-blue);
+  border: none;
+}
 .card-back--cyan { background: var(--color-cyan); }
 
 /* Small offset variant for benefit cards */
@@ -367,6 +370,7 @@ p {
 .card--blue {
   background: var(--color-blue);
   color: var(--color-white);
+  border: none;
   box-shadow:
     var(--shadow-colored),
     0 4px 12px rgba(21,79,251,0.3);
@@ -654,6 +658,18 @@ p {
   width: 380px;
   position: relative;
   z-index: 1;
+}
+
+.hero-card {
+  background-image: url('/assets/happypages-hero-small-3.png');
+  background-size: cover;
+  background-position: center;
+  padding-bottom: calc(var(--card-padding) + 150px);
+  border: 2px solid var(--color-blue);
+}
+
+.hero-card .card__tagline {
+  color: var(--color-white);
 }
 
 /* Hero Responsive */
@@ -2066,14 +2082,19 @@ p {
   padding: var(--card-padding);
   display: flex;
   flex-direction: column;
+  background-image: url('/assets/happypages-hero-small-3.png');
+  background-size: cover;
+  background-position: center;
+  padding-bottom: calc(var(--card-padding) + 150px);
+  border: 2px solid var(--color-blue);
 }
 
 .faq-card .card__heading {
   margin-bottom: var(--space-5);
 }
 
-.faq-card .card-header.is-animating .bar {
-  animation-play-state: running;
+.faq-card .card__tagline {
+  color: var(--color-white);
 }
 
 .faq-card__cta {
@@ -2107,6 +2128,7 @@ p {
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
     inset -1px -1px 0 rgba(0,0,0,0.05);
+  margin-top: var(--space-5);
 }
 
 .faq-email-left {
