@@ -294,6 +294,16 @@ p {
 .pill--border-coral { border-color: var(--color-coral); }
 .pill--border-cyan { border-color: var(--color-cyan); }
 
+.pill--light {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.3);
+  color: var(--color-white);
+}
+
+.pill--light .pill__dot {
+  background: var(--color-white);
+}
+
 /* ==========================================================================
    7. CARD SYSTEM
    ========================================================================== */
@@ -1542,21 +1552,28 @@ p {
   flex: 2;
 }
 
-/* Light Pricing Card */
-.pricing-card-light {
+/* Coral Pricing Card */
+.pricing-card-coral {
+  background-image: url('/assets/happypages-pricing-small-2.png');
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-coral);
+  border: 2px solid var(--color-coral);
   padding: var(--card-padding);
+  padding-bottom: calc(var(--card-padding) + 150px);
+  color: var(--color-white);
 }
 
-.pricing-header-large {
-  margin: calc(var(--card-padding) * -1);
-  margin-bottom: var(--space-5);
-  padding: 0;
-  height: 180px;
-  border-radius: var(--radius-xl) var(--radius-md) 0 0;
+.pricing-card-coral .pill {
+  margin-bottom: var(--space-4);
 }
 
-.pricing-header-large .animated-bars {
-  padding: var(--space-5) var(--space-4) 0 var(--space-4);
+.pricing-card-coral .card__heading {
+  color: var(--color-white);
+}
+
+.pricing-card-coral .card__tagline {
+  color: var(--color-white);
 }
 
 .pricing-card-title {
