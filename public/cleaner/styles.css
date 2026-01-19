@@ -2268,3 +2268,121 @@ p {
     margin: 0 auto;
   }
 }
+
+/* ==========================================================================
+   20. BOOK A CALL SECTION
+   ========================================================================== */
+
+.book-call-section {
+  background: #1a1a1a;
+  padding: var(--space-10) 0;
+}
+
+.book-call-content {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+.book-call-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--space-4);
+}
+
+.book-call-logo {
+  height: 48px;
+  width: auto;
+  max-width: fit-content;
+  align-self: flex-start;
+  margin-bottom: var(--space-6);
+}
+
+.book-call-title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.1;
+  color: var(--color-white);
+  margin-bottom: var(--space-3);
+}
+
+.book-call-subtitle {
+  font-size: var(--text-base);
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+
+.book-call-right {
+  flex: 1;
+  min-height: 500px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.book-call-right #my-cal-inline-15min {
+  min-height: 500px;
+}
+
+.book-call-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-10);
+  padding-top: var(--space-6);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.book-call-footer-location {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.5);
+}
+
+.book-call-footer-links {
+  display: flex;
+  gap: var(--space-5);
+}
+
+.book-call-footer-link {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.book-call-footer-link:hover {
+  color: var(--color-white);
+}
+
+/* Book a Call Responsive */
+@media (max-width: 1024px) {
+  .book-call-content {
+    flex-direction: column;
+  }
+
+  .book-call-left {
+    padding-top: 0;
+  }
+
+  .book-call-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-call-content {
+    padding: 0 var(--space-4);
+  }
+
+  .book-call-title {
+    font-size: var(--text-2xl);
+  }
+
+  .book-call-footer {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+    padding: var(--space-6) var(--space-4) 0;
+  }
+}
