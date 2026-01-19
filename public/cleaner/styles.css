@@ -604,9 +604,12 @@ p {
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-7);
+  position: relative;
 }
 
 .hero__left {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -649,6 +652,8 @@ p {
 .hero__right {
   flex-shrink: 0;
   width: 380px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Hero Responsive */
