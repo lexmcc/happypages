@@ -122,6 +122,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-family);
   min-height: 100dvh;
@@ -218,6 +222,7 @@ p {
   border-radius: var(--radius-md);
   cursor: pointer;
   border: 1px solid rgba(0,0,0,0.05);
+  text-decoration: none;
   transition: background var(--transition-fast);
 }
 
@@ -2153,6 +2158,8 @@ p {
 }
 
 .faq-card__cta {
+  display: flex;
+  justify-content: center;
   width: 100%;
   padding: var(--space-4) var(--space-5);
   background: var(--color-coral);
@@ -2162,6 +2169,7 @@ p {
   font-family: var(--font-family);
   font-size: var(--text-lg);
   font-weight: var(--font-weight-semibold);
+  text-decoration: none;
   cursor: pointer;
   box-shadow: var(--shadow-button);
   margin-bottom: var(--space-5);
@@ -2274,8 +2282,19 @@ p {
    ========================================================================== */
 
 .book-call-section {
-  background: #1a1a1a;
-  padding: var(--space-10) 0;
+  background: var(--color-coral);
+  padding: 0;
+  max-width: none;
+  border-left: none;
+  border-right: none;
+}
+
+.book-call-section .container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  padding: var(--space-10) var(--container-padding);
 }
 
 .book-call-content {
