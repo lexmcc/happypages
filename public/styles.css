@@ -680,7 +680,9 @@ p {
 }
 
 .hero-card {
-  background-image: url('/assets/happypages-hero-small-3.webp');
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 50%),
+    url('/assets/happypages-hero-small-3.webp');
   background-size: cover;
   background-position: center;
   padding-top: calc(var(--card-padding) + var(--space-3));
@@ -2143,7 +2145,9 @@ p {
   padding-top: calc(var(--card-padding) + var(--space-3));
   display: flex;
   flex-direction: column;
-  background-image: url('/assets/happypages-hero-small-3.webp');
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 50%),
+    url('/assets/happypages-hero-small-3.webp');
   background-size: cover;
   background-position: center;
   padding-bottom: calc(var(--card-padding) + 150px);
