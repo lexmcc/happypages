@@ -1699,6 +1699,7 @@ p {
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-button);
+  text-decoration: none;
 }
 
 .pricing-cta-row .pricing-cta:hover {
