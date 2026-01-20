@@ -1569,7 +1569,7 @@ p {
 
 /* Coral Pricing Card */
 .pricing-card-coral {
-  background-image: url('/assets/happypages-pricing-small-2.png');
+  background-image: url('/assets/happypages-pricing-small-2.webp');
   background-size: cover;
   background-position: center;
   background-color: var(--color-coral);
