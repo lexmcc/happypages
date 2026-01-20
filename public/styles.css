@@ -421,7 +421,7 @@ p {
 .card--coral .card__tagline,
 .card--blue .card__tagline,
 .card--cyan .card__tagline {
-  color: rgba(255,255,255,0.85);
+  color: var(--color-white);
 }
 
 /* ==========================================================================
@@ -2197,6 +2197,8 @@ p {
   box-shadow:
     inset 1px 1px 0 rgba(255,255,255,1),
     inset -1px -1px 0 rgba(0,0,0,0.05);
+  text-decoration: none;
+  color: inherit;
   margin-top: var(--space-5);
 }
 
