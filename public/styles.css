@@ -726,7 +726,8 @@ p {
     display: none;
   }
 
-  .hero-card .card__heading {
+  .hero-card .card__heading,
+  .faq-card .card__heading {
     display: block;
     font-size: var(--text-4xl);
   }
@@ -2282,7 +2283,7 @@ p {
    ========================================================================== */
 
 .book-call-section {
-  background: var(--color-coral);
+  background: #2a2a28;
   padding: 0;
   max-width: none;
   border-left: none;
@@ -2394,7 +2395,12 @@ p {
     padding: 0 var(--space-4);
   }
 
+  .book-call-left {
+    display: flex;
+  }
+
   .book-call-title {
+    display: block;
     font-size: var(--text-2xl);
   }
 
