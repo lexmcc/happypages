@@ -24,16 +24,21 @@ h1, h2, h3 {
   padding: 32px 20px;
 }
 
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
 .review-header h1 {
   font-size: 24px;
-  margin-bottom: 24px;
 }
 
 /* Large video player */
 .video-wrapper {
   width: 100%;
   margin-bottom: 24px;
-  position: relative;
 }
 
 .video-wrapper video {
@@ -45,9 +50,6 @@ h1, h2, h3 {
 }
 
 .btn-finished {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   padding: 8px 16px;
   background: #1a1a1a;
   color: #fff;
@@ -59,7 +61,7 @@ h1, h2, h3 {
   cursor: pointer;
   transition: background 200ms;
   text-transform: lowercase;
-  z-index: 10;
+  white-space: nowrap;
 }
 
 .btn-finished:hover {
