@@ -33,6 +33,7 @@ h1, h2, h3 {
 .video-wrapper {
   width: 100%;
   margin-bottom: 24px;
+  position: relative;
 }
 
 .video-wrapper video {
@@ -41,6 +42,56 @@ h1, h2, h3 {
   border-radius: 12px;
   background: #000;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-finished {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms;
+  text-transform: lowercase;
+  z-index: 10;
+}
+
+.btn-finished:hover {
+  background: #333;
+}
+
+/* Thank you page */
+.thank-you {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.thank-you h1 {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.thank-you .back-link {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #999;
+  text-decoration: none;
+  transition: color 200ms;
+}
+
+.thank-you .back-link:hover {
+  color: #ff584d;
 }
 
 /* Comments panel below video */

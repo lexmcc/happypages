@@ -168,6 +168,17 @@
     badgeEl.textContent = formatTime(player.currentTime);
   });
 
+  // Finished reviewing
+  document.getElementById('btn-finished').addEventListener('click', () => {
+    const container = document.querySelector('.review-container');
+    container.innerHTML = `
+      <div class="thank-you">
+        <h1>thanks so much for your feedback.</h1>
+        <a href="${window.location.pathname}" class="back-link">back to video</a>
+      </div>
+    `;
+  });
+
   // Add comment
   addBtn.addEventListener('click', addComment);
   inputEl.addEventListener('keydown', (e) => {
