@@ -159,11 +159,26 @@ h1, h2, h3 {
   font-family: inherit;
   font-size: 14px;
   width: 240px;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+
+.upload-form input.input-error {
+  border-color: #ff584d;
+  box-shadow: 0 0 0 2px rgba(255, 88, 77, 0.15);
 }
 
 .upload-form input[type="file"] {
   font-family: inherit;
   font-size: 14px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+
+.upload-form input[type="file"].input-error {
+  border-color: #ff584d;
+  box-shadow: 0 0 0 2px rgba(255, 88, 77, 0.15);
 }
 
 .btn-upload {

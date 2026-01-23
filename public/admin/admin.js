@@ -1,6 +1,10 @@
 (function() {
   'use strict';
 
+  const titleInput = document.getElementById('upload-title');
+  const fileInput = document.getElementById('upload-file');
+  const uploadBtn = document.getElementById('btn-upload');
+
   // Check auth on load
   checkAuth();
   loadVideos();
@@ -10,7 +14,21 @@
     window.location.href = '/admin/login';
   });
 
-  document.getElementById('btn-upload').addEventListener('click', uploadVideo);
+  // Enable upload button only when title + file are present
+  function updateUploadBtn() {
+    uploadBtn.disabled = !(titleInput.value.trim() && fileInput.files.length);
+  }
+  titleInput.addEventListener('input', () => {
+    titleInput.classList.remove('input-error');
+    updateUploadBtn();
+  });
+  fileInput.addEventListener('change', () => {
+    fileInput.classList.remove('input-error');
+    updateUploadBtn();
+  });
+  updateUploadBtn();
+
+  uploadBtn.addEventListener('click', uploadVideo);
 
   async function checkAuth() {
     const res = await fetch('/api/videos');
@@ -108,8 +126,6 @@
   }
 
   async function uploadVideo() {
-    const titleInput = document.getElementById('upload-title');
-    const fileInput = document.getElementById('upload-file');
     const btn = document.getElementById('btn-upload');
     const progressBar = document.getElementById('progress-bar');
     const progressFill = document.getElementById('progress-fill');
@@ -118,8 +134,11 @@
     const title = titleInput.value.trim();
     const file = fileInput.files[0];
 
-    if (!title) { status.textContent = 'please enter a title'; return; }
-    if (!file) { status.textContent = 'please select a file'; return; }
+    if (!title || !file) {
+      if (!title) titleInput.classList.add('input-error');
+      if (!file) fileInput.classList.add('input-error');
+      return;
+    }
 
     btn.disabled = true;
     status.textContent = 'requesting upload url...';
