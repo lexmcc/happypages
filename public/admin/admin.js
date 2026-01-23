@@ -101,6 +101,7 @@
       .map(c => `
         <div class="comment-item">
           <span class="comment-time">${c.formattedTime}</span>
+          <span class="comment-reviewer">${escapeHtml(c.reviewer || 'anonymous')}</span>
           <span class="comment-text">${escapeHtml(c.text)}</span>
         </div>
       `).join('');

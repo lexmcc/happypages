@@ -14,37 +14,29 @@
       <h1 id="video-title">loading...</h1>
     </div>
 
-    <div class="review-content">
-      <div class="video-wrapper">
-        <video id="video-player" controls preload="metadata">
-          Your browser does not support video playback.
-        </video>
-      </div>
-
-      <div class="comments-panel">
-        <div class="comment-input-section" id="comment-input-section">
-          <div class="comment-input-row">
-            <span class="timestamp-badge" id="timestamp-badge">0:00</span>
-            <input type="text" id="comment-input" placeholder="add a comment at this timestamp...">
-            <button id="btn-add-comment">add</button>
-          </div>
-        </div>
-
-        <div class="comments-list" id="comments-list">
-          <p class="no-comments">no comments yet. play the video and add your feedback.</p>
-        </div>
-
-        <div class="submit-section" id="submit-section">
-          <button id="btn-submit" class="btn-submit">i'm finished reviewing</button>
-        </div>
-      </div>
+    <div class="video-wrapper">
+      <video id="video-player" controls preload="metadata">
+        Your browser does not support video playback.
+      </video>
     </div>
-  </div>
 
-  <div class="submitted-overlay" id="submitted-overlay">
-    <div class="submitted-card">
-      <h2>review submitted.</h2>
-      <p>thanks for your feedback! your comments have been saved.</p>
+    <div class="comments-panel">
+      <div class="name-section" id="name-section">
+        <label for="reviewer-name">your name</label>
+        <input type="text" id="reviewer-name" placeholder="enter your name to comment">
+      </div>
+
+      <div class="comment-input-section" id="comment-input-section">
+        <div class="comment-input-row">
+          <span class="timestamp-badge" id="timestamp-badge">0:00</span>
+          <input type="text" id="comment-input" placeholder="add a comment at this timestamp..." disabled>
+          <button id="btn-add-comment" disabled>add</button>
+        </div>
+      </div>
+
+      <div class="comments-list" id="comments-list">
+        <p class="no-comments">no comments yet. play the video and add your feedback.</p>
+      </div>
     </div>
   </div>
 

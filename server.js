@@ -107,13 +107,13 @@ router.get('/api/videos/:id/comments', (req, res) => {
 router.post('/api/videos/:id/comments', async (req, res) => {
   const video = data.getVideo(req.params.id);
   if (!video) return json(res, 404, { error: 'Video not found' });
-  if (video.submitted) return json(res, 400, { error: 'Review already submitted' });
   const body = await parseBody(req);
   if (!body.text || body.timestamp == null) return json(res, 400, { error: 'text and timestamp required' });
   const comment = data.addComment(req.params.id, {
     text: body.text,
     timestamp: body.timestamp,
     formattedTime: body.formattedTime || formatTime(body.timestamp),
+    reviewer: body.reviewer || 'anonymous',
   });
   json(res, 201, comment);
 });
@@ -121,7 +121,6 @@ router.post('/api/videos/:id/comments', async (req, res) => {
 router.put('/api/videos/:id/comments/:cid', async (req, res) => {
   const video = data.getVideo(req.params.id);
   if (!video) return json(res, 404, { error: 'Video not found' });
-  if (video.submitted) return json(res, 400, { error: 'Review already submitted' });
   const body = await parseBody(req);
   const updated = data.updateComment(req.params.id, req.params.cid, { text: body.text });
   if (!updated) return json(res, 404, { error: 'Comment not found' });

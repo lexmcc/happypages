@@ -351,6 +351,13 @@ h1, h2, h3 {
   white-space: nowrap;
 }
 
+.comment-reviewer {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  white-space: nowrap;
+}
+
 .comment-text {
   color: #444;
 }
