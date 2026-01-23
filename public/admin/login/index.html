@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin login - happypages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <h1>admin login.</h1>
+      <form id="login-form">
+        <input type="password" id="password" placeholder="password" autocomplete="current-password" required>
+        <button type="submit">log in</button>
+        <p class="error" id="error"></p>
+      </form>
+    </div>
+  </div>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('error');
+      errorEl.textContent = '';
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          const data = await res.json();
+          errorEl.textContent = data.error || 'login failed';
+        }
+      } catch (err) {
+        errorEl.textContent = 'network error';
+      }
+    });
+  </script>
+</body>
+</html>

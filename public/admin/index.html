@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin - happypages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <h1>video reviews.</h1>
+      <button class="btn-logout" id="btn-logout">log out</button>
+    </div>
+
+    <div class="upload-section">
+      <h2>upload video.</h2>
+      <div class="upload-form">
+        <div class="field">
+          <label>title</label>
+          <input type="text" id="upload-title" placeholder="e.g. homepage v2 review">
+        </div>
+        <div class="field">
+          <label>video file</label>
+          <input type="file" id="upload-file" accept="video/*">
+        </div>
+        <button class="btn-upload" id="btn-upload">upload</button>
+      </div>
+      <div class="progress-bar" id="progress-bar">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <p class="upload-status" id="upload-status"></p>
+    </div>
+
+    <div class="video-list">
+      <h2>videos.</h2>
+      <div id="video-list-content">
+        <p class="no-videos">loading...</p>
+      </div>
+    </div>
+  </div>
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

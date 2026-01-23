@@ -1,0 +1,272 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Hanken Grotesk', sans-serif;
+  background: #F4F4F0;
+  color: #1a1a1a;
+  letter-spacing: -0.03em;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.07em;
+  text-transform: lowercase;
+  font-weight: 600;
+}
+
+.review-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.review-header h1 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.review-content {
+  display: flex;
+  gap: 24px;
+}
+
+.video-wrapper {
+  flex: 3;
+  min-width: 0;
+}
+
+.video-wrapper video {
+  width: 100%;
+  border-radius: 12px;
+  background: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.comments-panel {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Comment input */
+.comment-input-section {
+  background: #f9f9f9;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,1),
+    inset -1px -1px 0 rgba(0,0,0,0.05),
+    0 4px 8px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.comment-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.timestamp-badge {
+  background: #ff584d;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: 40px;
+  text-align: center;
+}
+
+.comment-input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.comment-input-row input:disabled {
+  background: #eee;
+  cursor: not-allowed;
+}
+
+.comment-input-row button {
+  padding: 10px 16px;
+  background: #ff584d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms;
+  white-space: nowrap;
+}
+
+.comment-input-row button:hover {
+  background: #e64d43;
+}
+
+.comment-input-row button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Comments list */
+.comments-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 4px 0;
+}
+
+.no-comments {
+  color: #999;
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+.comment-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms;
+  align-items: flex-start;
+}
+
+.comment-item:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.comment-item .comment-time {
+  color: #ff584d;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  padding-top: 2px;
+  cursor: pointer;
+}
+
+.comment-item .comment-time:hover {
+  text-decoration: underline;
+}
+
+.comment-item .comment-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.comment-item .comment-edit-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ff584d;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  min-width: 0;
+}
+
+/* Submit section */
+.submit-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms;
+  text-transform: lowercase;
+}
+
+.btn-submit:hover {
+  background: #333;
+}
+
+.btn-submit:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* Submitted overlay */
+.submitted-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.submitted-overlay.visible {
+  display: flex;
+}
+
+.submitted-card {
+  background: #f9f9f9;
+  border-radius: 20px;
+  padding: 48px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.submitted-card h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.submitted-card p {
+  color: #666;
+  font-size: 15px;
+}
+
+/* Error state */
+.error-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.error-message h2 {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .review-content {
+    flex-direction: column;
+  }
+
+  .comments-list {
+    max-height: 300px;
+  }
+
+  .review-header h1 {
+    font-size: 20px;
+  }
+}

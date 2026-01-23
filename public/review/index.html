@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>video review - happypages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/review/review.css">
+</head>
+<body>
+  <div class="review-container">
+    <div class="review-header">
+      <h1 id="video-title">loading...</h1>
+    </div>
+
+    <div class="review-content">
+      <div class="video-wrapper">
+        <video id="video-player" controls preload="metadata">
+          Your browser does not support video playback.
+        </video>
+      </div>
+
+      <div class="comments-panel">
+        <div class="comment-input-section" id="comment-input-section">
+          <div class="comment-input-row">
+            <span class="timestamp-badge" id="timestamp-badge">0:00</span>
+            <input type="text" id="comment-input" placeholder="add a comment at this timestamp...">
+            <button id="btn-add-comment">add</button>
+          </div>
+        </div>
+
+        <div class="comments-list" id="comments-list">
+          <p class="no-comments">no comments yet. play the video and add your feedback.</p>
+        </div>
+
+        <div class="submit-section" id="submit-section">
+          <button id="btn-submit" class="btn-submit">i'm finished reviewing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submitted-overlay" id="submitted-overlay">
+    <div class="submitted-card">
+      <h2>review submitted.</h2>
+      <p>thanks for your feedback! your comments have been saved.</p>
+    </div>
+  </div>
+
+  <script src="/review/review.js"></script>
+</body>
+</html>
