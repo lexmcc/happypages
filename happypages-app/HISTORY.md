@@ -70,6 +70,11 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Jan 28** - Production launch Phase 1 complete (UK Ltd, bank, email)
 - **Jan 28** - Happy Pages integration added to production plan
 - **Jan 28** - Consolidated DNS to single subdomain (app.happypages.co)
+- **Jan 29** - Railway deployment complete: Rails app + PostgreSQL at app.happypages.co
+- **Jan 29** - Shopify extension deployed and released (version 7)
+- **Jan 29** - OAuth redirect URLs fixed (shopify.app.*.toml configuration)
+- **Jan 29** - Railway multi-service configuration (separate railway.toml per service)
+- **Jan 29** - First successful OAuth installation on dev store
 
 ## Key Milestones
 
@@ -82,6 +87,7 @@ A chronicle of the referral app's evolution from initial commit to production-re
 7. **First Klaviyo event tracked** - Jan 23: Referral lifecycle events flowing
 8. **Multi-tenant architecture complete** - Jan 26: Platform-agnostic, encrypted credentials
 9. **Self-service OAuth onboarding** - Jan 26: Merchants can install independently
+10. **Production deployment** - Jan 29: Rails app live at app.happypages.co with PostgreSQL
 
 ## Architecture Evolution
 
@@ -111,3 +117,10 @@ _This section is updated by the doc-checkpoint skill at the end of each working 
 - Simplified architecture decision: use single `app.happypages.co` subdomain for both API and dashboard (instead of separate `api.` and `app.` subdomains)
 - Merged DNS and Happy Pages integration into single phase in production launch plan
 - Phase 1 business setup confirmed complete (UK Ltd formed, bank account open, email configured)
+
+### Jan 29, 2026
+- **Railway Deployment Complete**: Rails backend deployed with PostgreSQL, all environment variables configured
+- **Shopify OAuth Working**: Fixed redirect URL configuration - the linked TOML file (`shopify.app.happypages-friendly-referrals.toml`) was using defaults instead of custom URLs
+- **Multi-Service Railway Config**: Two services from same repo require separate `railway.toml` files with `watchPatterns` to trigger correct deploys
+- **Gotcha**: Railway services may reference secrets from other services in same project - adding dummy values unblocks builds
+- **Login redirect bug fixed**: `sessions_controller.rb` was redirecting to non-existent `admin_config_path` instead of `edit_admin_config_path`

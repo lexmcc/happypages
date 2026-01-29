@@ -110,12 +110,28 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Videos clipped to final 3s, 5s pause before looping
 - [x] Poster images as video fallback
 
+### FAQ Section
+- [x] FAQ accordion with 13 questions
+- [x] Expandable/collapsible answers
+- [x] CTA card with book a call button
+
+### Footer
+- [x] Book a call section with Cal.com integration
+- [x] Location text ("headquartered in london, uk.")
+- [x] Terms of service and privacy policy links
+- [x] Referrals login link (app.happypages.co/login)
+
+### Shopify Referrals App
+- [x] Rails 8.1 backend deployed to Railway (app.happypages.co)
+- [x] Shopify checkout UI extension (Preact + Polaris)
+- [x] OAuth flow for self-service app installation
+- [x] PostgreSQL database with multi-tenant architecture
+- [x] Environment variables and secrets configured
+
 ## Planned Features
 
 - [ ] Services/features grid
 - [ ] Testimonials section
-- [ ] FAQ section
-- [ ] Footer with links
 - [ ] Contact form integration
 - [ ] Mobile menu
 
@@ -123,6 +139,10 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-29 | Railway deployment: Rails backend + Shopify extension deployed to app.happypages.co |
+| 2026-01-29 | Shopify OAuth: Self-service app installation with redirect URL configuration |
+| 2026-01-29 | Footer: Added referrals login link to main site |
+| 2026-01-29 | Railway: Fixed watch patterns for multi-service deployment (static site + Rails app) |
 | 2026-01-16 | /happier: Step card videos (desktop) + GIFs (mobile/iOS), sequential playback |
 | 2026-01-16 | /happier: Pricing CTA redesign, grid animation, works card styling |
 | 2026-01-16 | PNG icons for performance, CSS containment, orbit animation, floating icons |

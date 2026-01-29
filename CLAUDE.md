@@ -28,9 +28,26 @@ Clean URL routing: `/happier` serves `/happier/index.html`
 
 ## Deployment
 
-- Hosted on Railway at https://happypages-production.up.railway.app
-- GitHub repo connected for auto-deploy on push to `main`
-- Railway project: https://railway.com/project/66f72304-7d9e-4860-9b50-aef51f26c5d2
+Two Railway services from the same GitHub repo:
+
+### happypages (Static Site)
+- **URL:** https://happypages.co
+- **Root:** `/` (repo root)
+- **Config:** `railway.toml` at repo root
+- Uses `server.js` to serve static files from `/public`
+
+### happypages-app (Rails Backend)
+- **URL:** https://app.happypages.co
+- **Root:** `happypages-app/`
+- **Config:** `happypages-app/railway.toml`
+- Rails 8.1 + PostgreSQL for Shopify referrals app
+
+### Multi-Service Gotchas
+- Each service needs its own `railway.toml` with `watchPatterns` to trigger correct deploys
+- Services may inherit/reference variables from project level - add dummy values if build fails on missing secrets
+- Root directory setting in Railway determines which `railway.toml` is used
+
+**Railway project:** https://railway.com/project/66f72304-7d9e-4860-9b50-aef51f26c5d2
 
 ## Rules
 
