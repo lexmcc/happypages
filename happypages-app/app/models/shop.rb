@@ -13,6 +13,11 @@ class Shop < ApplicationRecord
   validates :domain, presence: true, uniqueness: true
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :platform_type, presence: true, inclusion: { in: PLATFORM_TYPES }
+  validates :slug, uniqueness: true, allow_nil: true
+  validates :slug, length: { minimum: 3, maximum: 50 }, allow_nil: true
+  validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }, allow_nil: true
+
+  before_validation :generate_slug, on: :create
 
   scope :active, -> { where(status: "active") }
   scope :shopify, -> { where(platform_type: "shopify") }
@@ -93,5 +98,21 @@ class Shop < ApplicationRecord
 
   def provider_class(name)
     "Providers::#{platform_type.camelize}::#{name}".constantize
+  end
+
+  def generate_slug
+    return if slug.present?
+    return unless name.present?
+
+    base_slug = name.parameterize
+    candidate = base_slug
+    counter = 1
+
+    while Shop.exists?(slug: candidate)
+      candidate = "#{base_slug}-#{counter}"
+      counter += 1
+    end
+
+    self.slug = candidate
   end
 end

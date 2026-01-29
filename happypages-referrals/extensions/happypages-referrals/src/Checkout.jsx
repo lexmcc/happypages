@@ -29,7 +29,9 @@ const DEFAULT_CONFIG = {
   banner_image: "https://images.pexels.com/photos/35259676/pexels-photo-35259676.jpeg",
   heading: "{firstName}, Refer A Friend",
   subtitle: "Give 50% And Get 50% Off",
-  button_text: "Share Now"
+  button_text: "Share Now",
+  shop_slug: null,
+  referral_base_url: REFERRAL_APP_URL
 };
 
 const DEFAULT_DISCOUNTS = {
@@ -49,6 +51,8 @@ export default async () => {
 function Extension() {
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [discounts, setDiscounts] = useState(DEFAULT_DISCOUNTS);
+  const [shopSlug, setShopSlug] = useState(null);
+  const [referralBaseUrl, setReferralBaseUrl] = useState(REFERRAL_APP_URL);
   const [isLoading, setIsLoading] = useState(true);
 
   // Try customer account first (logged-in users)
@@ -74,6 +78,12 @@ function Extension() {
         }
         if (data.discounts) {
           setDiscounts(data.discounts);
+        }
+        if (data.shop_slug) {
+          setShopSlug(data.shop_slug);
+        }
+        if (data.referral_base_url) {
+          setReferralBaseUrl(data.referral_base_url);
         }
         // Track extension load after config fetch completes
         trackEvent('extension_load', email);
@@ -130,8 +140,10 @@ function Extension() {
   const subtitle = replaceVariables(config.subtitle || 'Give 50% And Get 50% Off');
   const buttonText = replaceVariables(config.button_text || 'Share Now');
 
-  // Build referral URL with user params
-  const referralUrl = `${REFERRAL_APP_URL}/refer?firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
+  // Build referral URL with user params (use shop slug for white-labeled URL if available)
+  const referralUrl = shopSlug
+    ? `${referralBaseUrl}/${shopSlug}/refer?firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`
+    : `${referralBaseUrl}/refer?firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
 
   // Track share button click before navigation
   const handleShareClick = () => {

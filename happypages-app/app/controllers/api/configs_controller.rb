@@ -28,7 +28,9 @@ class Api::ConfigsController < ApplicationController
           type: group&.effective_reward_type || "percentage",
           value: group&.effective_reward_value || "50"
         }
-      }
+      },
+      shop_slug: Current.shop&.slug,
+      referral_base_url: "https://app.happypages.co"
     }
   end
 

@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   end
 
   # Main referral page - takes firstName and email from URL params
+  # Shop-specific URL (preferred for multi-tenant)
+  get ":shop_slug/refer", to: "referrals#show", as: :shop_referral
+  # Legacy URL (falls back to session or first shop)
   get "refer", to: "referrals#show"
 
   # Webhook endpoint for Shopify order notifications

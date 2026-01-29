@@ -59,6 +59,63 @@
       <p class="text-gray-600 mt-2 text-pretty">Configure the checkout extension and discount settings</p>
     </header>
 
+    <%# ==================== SECTION: Shop Settings ==================== %>
+    <% if @shop %>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Shop Settings</h2>
+
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900">White-Labeled Referral URL</h3>
+            <p class="text-sm text-gray-500">Customize your shop's referral page URL slug</p>
+          </div>
+
+          <div class="p-6">
+            <%= form_with url: admin_config_path, method: :patch, local: true, class: "space-y-4" do %>
+              <div class="max-w-md">
+                <label for="shop_slug" class="block text-sm font-medium text-gray-700 mb-1">
+                  URL Slug
+                </label>
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-500 text-sm">https://app.happypages.co/</span>
+                  <input
+                    type="text"
+                    name="shop_slug"
+                    id="shop_slug"
+                    value="<%= @shop.slug %>"
+                    pattern="[a-z0-9-]+"
+                    minlength="3"
+                    maxlength="50"
+                    class="flex-1 px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                    placeholder="your-shop-name"
+                  >
+                  <span class="text-gray-500 text-sm">/refer</span>
+                </div>
+                <p class="mt-1 text-xs text-gray-500">Only lowercase letters, numbers, and hyphens. 3-50 characters.</p>
+                <% if @shop.slug.present? %>
+                  <p class="mt-2 text-sm text-gray-600">
+                    Current referral URL:
+                    <a href="https://app.happypages.co/<%= @shop.slug %>/refer" target="_blank" class="text-[#ff584d] hover:underline">
+                      https://app.happypages.co/<%= @shop.slug %>/refer
+                    </a>
+                  </p>
+                <% end %>
+              </div>
+
+              <div>
+                <button type="submit" class="px-4 py-2 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm">
+                  Update Slug
+                </button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </section>
+
+      <%# Section divider %>
+      <div class="border-t border-gray-200 my-8"></div>
+    <% end %>
+
     <%# Hidden notice data for Stimulus to detect %>
     <% if notice %>
       <div data-preview-target="noticeData" data-notice="<%= notice %>" class="hidden"></div>

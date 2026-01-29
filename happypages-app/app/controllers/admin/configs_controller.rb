@@ -10,9 +10,18 @@ class Admin::ConfigsController < Admin::BaseController
     @shared_discount_status = get_shared_discount_status
     @discount_groups = discount_groups_scope.includes(:discount_generations).order(is_active: :desc, created_at: :asc)
     @active_group = SharedDiscount.current(Current.shop)
+    @shop = Current.shop
   end
 
   def update
+    # Update shop slug if provided
+    if params[:shop_slug].present? && Current.shop
+      unless Current.shop.update(slug: params[:shop_slug])
+        redirect_to edit_admin_config_path, alert: "Could not update slug: #{Current.shop.errors.full_messages.join(', ')}"
+        return
+      end
+    end
+
     old_discount_config = current_discount_config
 
     (params[:configs] || {}).each do |key, value|

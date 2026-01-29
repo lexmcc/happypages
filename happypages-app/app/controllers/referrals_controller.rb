@@ -2,6 +2,8 @@ class ReferralsController < ApplicationController
   include KlaviyoTrackable
   layout "public"
 
+  before_action :set_shop_from_slug
+
   def show
     first_name = params[:firstName].presence || params[:first_name].presence
     email = params[:email].presence
@@ -52,6 +54,18 @@ class ReferralsController < ApplicationController
   end
 
   private
+
+  def set_shop_from_slug
+    return unless params[:shop_slug].present?
+
+    shop = Shop.active.find_by(slug: params[:shop_slug])
+    if shop
+      Current.shop = shop
+    else
+      @error = "Shop not found"
+      render :error, status: :not_found
+    end
+  end
 
   def track_page_load(referral)
     AnalyticsEvent.create(
