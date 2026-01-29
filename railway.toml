@@ -1,6 +1,6 @@
 [build]
-builder = "nixpacks"
-watchPatterns = ["happypages-app/**"]
+builder = "static"
+watchPatterns = ["public/**"]
 
 [deploy]
-startCommand = "cd happypages-app && ./start.sh"
+staticFolder = "public"
