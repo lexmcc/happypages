@@ -1,0 +1,96 @@
+<% content_for(:title) { "Login - Referral App" } %>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
+        Referral App
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Sign in to manage your referral program
+      </p>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="rounded-md bg-red-50 p-4">
+        <div class="flex">
+          <div class="ml-3">
+            <p class="text-sm font-medium text-red-800"><%= flash[:alert] %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="rounded-md bg-green-50 p-4">
+        <div class="flex">
+          <div class="ml-3">
+            <p class="text-sm font-medium text-green-800"><%= flash[:notice] %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-8 space-y-6">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div class="space-y-6">
+          <div>
+            <label for="shop" class="block text-sm font-medium text-gray-700">
+              Your Shopify Store Domain
+            </label>
+            <div class="mt-1 flex rounded-md shadow-sm">
+              <input type="text"
+                     name="shop"
+                     id="shop"
+                     class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                     placeholder="your-store">
+              <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                .myshopify.com
+              </span>
+            </div>
+          </div>
+
+          <button type="button"
+                  onclick="redirectToShopify()"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Install / Login with Shopify
+          </button>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-gray-500">
+        New merchants will be guided through the Shopify app installation process.
+        <br>
+        Existing users will be logged in automatically.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function redirectToShopify() {
+    const shopInput = document.getElementById('shop').value.trim();
+    if (!shopInput) {
+      alert('Please enter your store name');
+      return;
+    }
+
+    // Clean up the input - remove .myshopify.com if they added it
+    let shop = shopInput.replace(/\.myshopify\.com$/, '');
+
+    // Validate shop name format
+    if (!/^[\w-]+$/.test(shop)) {
+      alert('Invalid store name. Use only letters, numbers, and hyphens.');
+      return;
+    }
+
+    window.location.href = '/auth/shopify?shop=' + encodeURIComponent(shop + '.myshopify.com');
+  }
+
+  // Allow Enter key to submit
+  document.getElementById('shop').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      redirectToShopify();
+    }
+  });
+</script>

@@ -1,0 +1,88 @@
+<%= render "admin/shared/tabs" %>
+
+<div class="min-h-screen bg-[#f9f9f9] py-8">
+  <div class="max-w-7xl mx-auto px-4">
+    <%# Header with period selector on right %>
+    <div class="flex justify-between items-start mb-8">
+      <header>
+        <h1 class="text-3xl font-bold text-gray-900 text-balance">Analytics Dashboard</h1>
+        <p class="text-gray-600 mt-2 text-pretty">Track engagement and conversion metrics</p>
+      </header>
+
+      <%# Period selector %>
+      <div class="flex space-x-2">
+        <% [["1d", "1 Day"], ["7d", "7 Days"], ["30d", "30 Days"]].each do |value, label| %>
+          <%= link_to label,
+              admin_analytics_path(period: value),
+              class: "px-4 py-2 rounded-lg font-medium transition-all #{@period == value ? 'bg-[#ff584d] text-white' : 'bg-[#f4f4f0] text-gray-600 hover:shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_8px_16px_rgba(0,0,0,0.1)] border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)]'}" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <%# Checkout Extension Analytics %>
+      <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div class="px-6 py-4 border-b border-black/5">
+          <h2 class="text-lg font-semibold text-gray-900 text-balance">Checkout Extension</h2>
+          <p class="text-sm text-gray-500 text-pretty">Share button engagement on Thank You page</p>
+        </div>
+
+        <div class="p-6">
+          <div class="h-64">
+            <%= line_chart [
+              { name: "Page Loads", data: @extension_loads },
+              { name: "Share Clicks", data: @share_clicks }
+            ], colors: ["#ff584d", "#34d399"], library: { plugins: { legend: { position: "bottom" } } } %>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-black/5">
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@extension_total_loads) %></p>
+              <p class="text-sm text-gray-500">Total Loads</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@extension_total_clicks) %></p>
+              <p class="text-sm text-gray-500">Share Clicks</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-bold text-[#ff584d] tabular-nums"><%= @extension_click_rate %>%</p>
+              <p class="text-sm text-gray-500">Click Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%# Referral Page Analytics %>
+      <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div class="px-6 py-4 border-b border-black/5">
+          <h2 class="text-lg font-semibold text-gray-900 text-balance">Referral Page</h2>
+          <p class="text-sm text-gray-500 text-pretty">Code copy engagement on referral page</p>
+        </div>
+
+        <div class="p-6">
+          <div class="h-64">
+            <%= line_chart [
+              { name: "Page Views", data: @page_loads },
+              { name: "Code Copies", data: @copy_clicks }
+            ], colors: ["#ff584d", "#34d399"], library: { plugins: { legend: { position: "bottom" } } } %>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-black/5">
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@page_total_loads) %></p>
+              <p class="text-sm text-gray-500">Page Views</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@page_total_clicks) %></p>
+              <p class="text-sm text-gray-500">Code Copies</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-bold text-[#ff584d] tabular-nums"><%= @page_click_rate %>%</p>
+              <p class="text-sm text-gray-500">Copy Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

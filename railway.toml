@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+watchPatterns = ["happypages-app/**"]
+
+[deploy]
+startCommand = "cd happypages-app && ./start.sh"

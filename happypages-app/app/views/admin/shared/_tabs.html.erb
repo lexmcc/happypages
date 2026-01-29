@@ -1,0 +1,23 @@
+<nav class="bg-[#f4f4f0] border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex justify-between items-center">
+      <div class="flex space-x-6 -mb-px">
+        <%= link_to "Configuration",
+            edit_admin_config_path,
+            class: "py-4 px-1 font-medium transition-colors border-b-2 #{current_page?(edit_admin_config_path) ? 'border-[#ff584d] text-[#ff584d]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "Analytics",
+            admin_analytics_path,
+            class: "py-4 px-1 font-medium transition-colors border-b-2 #{current_page?(admin_analytics_path) ? 'border-[#ff584d] text-[#ff584d]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "Progress",
+            admin_progress_index_path,
+            class: "py-4 px-1 font-medium transition-colors border-b-2 #{current_page?(admin_progress_index_path) ? 'border-[#ff584d] text-[#ff584d]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+      </div>
+      <% if defined?(current_user) && current_user %>
+        <div class="flex items-center space-x-4 text-sm">
+          <span class="text-gray-500"><%= Current.shop&.domain || current_user.email %></span>
+          <%= button_to "Logout", logout_path, method: :delete, class: "text-gray-500 hover:text-gray-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</nav>

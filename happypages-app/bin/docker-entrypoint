@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+echo "Docker entrypoint starting..."
+echo "Arguments: $@"
+
+# Always run migrations on startup
+echo "Running database migrations..."
+./bin/rails db:migrate --trace
+echo "Migrations complete!"
+
+# NOTE: Shop setup removed - shops are now created via OAuth self-service onboarding
+# New merchants install the app through /auth/shopify which creates their shop automatically
+
+exec "${@}"

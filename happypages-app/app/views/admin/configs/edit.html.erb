@@ -1,0 +1,629 @@
+<%= render "admin/shared/tabs" %>
+
+<%
+  # Compute effective discount values from active group
+  discount_type = @active_group&.effective_referred_type || 'percentage'
+  discount_val = @active_group&.effective_referred_value || '50'
+  reward_type = @active_group&.effective_reward_type || 'percentage'
+  reward_val = @active_group&.effective_reward_value || '50'
+  discount_str = discount_type == 'percentage' ? "#{discount_val}%" : "£#{discount_val}"
+  reward_str = reward_type == 'percentage' ? "#{reward_val}%" : "£#{reward_val}"
+%>
+
+<div class="min-h-screen bg-[#f9f9f9] py-8" data-controller="preview" data-preview-discount-value="<%= discount_str %>" data-preview-reward-value="<%= reward_str %>">
+  <div class="max-w-7xl mx-auto px-4">
+    <%# Floating action buttons - float right, sticky, background only wraps buttons %>
+    <div
+      data-preview-target="buttonContainer"
+      class="float-right sticky top-4 z-10 flex gap-3 items-center transition-all duration-200 rounded-xl"
+    >
+      <button
+        type="button"
+        data-preview-target="undoButton"
+        data-action="click->preview#undoAll"
+        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors opacity-50 cursor-not-allowed"
+        disabled
+      >
+        Undo All Changes
+      </button>
+
+      <div class="relative">
+        <button
+          type="submit"
+          form="config-form"
+          data-preview-target="saveButton"
+          data-action="click->preview#handleSave"
+          class="px-5 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium cursor-pointer flex items-center gap-2"
+        >
+          <span data-preview-target="saveButtonText">Save Changes</span>
+          <svg data-preview-target="saveSpinner" class="hidden animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+
+        <%# Success tooltip %>
+        <div
+          data-preview-target="successTooltip"
+          class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1.5 bg-[#34d399] text-white text-sm rounded-lg whitespace-nowrap opacity-0 transition-opacity duration-200 pointer-events-none"
+        >
+          Successfully saved
+          <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 size-2 bg-[#34d399] rotate-45"></div>
+        </div>
+      </div>
+    </div>
+
+    <%# Header %>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 text-balance">Referral App Configuration</h1>
+      <p class="text-gray-600 mt-2 text-pretty">Configure the checkout extension and discount settings</p>
+    </header>
+
+    <%# Hidden notice data for Stimulus to detect %>
+    <% if notice %>
+      <div data-preview-target="noticeData" data-notice="<%= notice %>" class="hidden"></div>
+    <% end %>
+
+      <%# ==================== SECTION 1: Discount Groups (outside form to allow nested button_to) ==================== %>
+      <section class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Discount Groups</h2>
+          <%= link_to new_admin_discount_group_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New Group
+          <% end %>
+        </div>
+
+        <% if @discount_groups.empty? %>
+          <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-8 text-center">
+            <p class="text-gray-500 mb-4">No discount groups yet. Create your first group to get started.</p>
+            <%= link_to "Create First Group", new_admin_discount_group_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm" %>
+          </div>
+        <% else %>
+          <div class="space-y-4">
+            <% @discount_groups.each do |group| %>
+              <div class="bg-[#f4f4f0] rounded-xl <%= group.is_active? ? 'border-2 border-emerald-400' : 'border border-black/5' %> shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+                <div class="px-6 py-4 flex items-start justify-between gap-4">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <h3 class="text-lg font-semibold text-gray-900"><%= group.name %></h3>
+                      <% if group.is_active? %>
+                        <span class="inline-flex items-center px-2.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
+                          ACTIVE
+                        </span>
+                      <% end %>
+                    </div>
+
+                    <%# Discount details %>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-gray-600 mb-3">
+                      <span>
+                        <span class="text-gray-400">Referred:</span>
+                        <span class="font-medium"><%= group.referred_discount_display %></span>
+                      </span>
+                      <span>
+                        <span class="text-gray-400">Reward:</span>
+                        <span class="font-medium"><%= group.referrer_reward_display %></span>
+                      </span>
+                      <span>
+                        <span class="text-gray-400">Codes:</span>
+                        <span class="font-medium"><%= group.current_generation&.codes_count || 0 %></span>
+                        <% if group.discount_generations.count > 1 %>
+                          <span class="text-gray-400">(<%= group.discount_generations.count %> generations)</span>
+                        <% end %>
+                      </span>
+                    </div>
+
+                    <%# Override/Boost status %>
+                    <% if group.override_active? %>
+                      <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-700 text-sm rounded-lg border border-amber-200">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="font-medium">BOOST ACTIVE:</span>
+                        <%= group.override_referred_display %> / <%= group.override_reward_display %>
+                        <span class="text-amber-600">until <%= group.override_ends_at.strftime('%b %d') %></span>
+                        <%= button_to "End Boost", cancel_override_admin_discount_group_path(group), method: :post, class: "ml-2 px-2 py-0.5 bg-amber-200 text-amber-800 rounded text-xs hover:bg-amber-300 transition-colors", data: { turbo_confirm: "End the boost early?" } %>
+                      </div>
+                    <% elsif group.override_scheduled? %>
+                      <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 text-sm rounded-lg border border-blue-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-medium">BOOST SCHEDULED:</span>
+                        <%= group.override_referred_display %> / <%= group.override_reward_display %>
+                        <span class="text-blue-600"><%= group.override_starts_at.strftime('%b %d') %> - <%= group.override_ends_at.strftime('%b %d') %></span>
+                        <%= button_to "Cancel", cancel_override_admin_discount_group_path(group), method: :post, class: "ml-2 px-2 py-0.5 bg-blue-200 text-blue-800 rounded text-xs hover:bg-blue-300 transition-colors", data: { turbo_confirm: "Cancel the scheduled boost?" } %>
+                      </div>
+                    <% end %>
+
+                    <%# Sync status %>
+                    <div class="mt-2">
+                      <% if group.current_generation&.synced? %>
+                        <span class="inline-flex items-center gap-1.5 text-sm text-emerald-600">
+                          <span class="size-2 bg-emerald-500 rounded-full"></span>
+                          Synced with Shopify
+                        </span>
+                      <% elsif group.current_generation.present? %>
+                        <span class="inline-flex items-center gap-1.5 text-sm text-amber-600">
+                          <span class="size-2 bg-amber-500 rounded-full"></span>
+                          Not synced
+                        </span>
+                      <% else %>
+                        <span class="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                          <span class="size-2 bg-gray-400 rounded-full"></span>
+                          No codes yet
+                        </span>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <%# Actions %>
+                  <div class="flex items-center gap-2">
+                    <% unless group.is_active? %>
+                      <%= button_to "Activate", activate_admin_discount_group_path(group), method: :post, class: "px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-200 transition-colors", data: { turbo_confirm: "Make '#{group.name}' the active group? New referrals will use this group's rules." } %>
+                    <% end %>
+                    <%= link_to "Edit", edit_admin_discount_group_path(group), class: "px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+
+      <%# Section divider %>
+      <div class="border-t border-gray-200 my-8"></div>
+
+    <%= form_with url: admin_config_path, method: :patch, local: true, id: "config-form", data: { preview_target: "form" } do |form| %>
+
+      <%# ==================== SECTION: Klaviyo Settings ==================== %>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Klaviyo</h2>
+
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900">Nurture Settings</h3>
+            <p class="text-sm text-gray-500">Configure automated share reminder timing</p>
+          </div>
+
+          <div class="p-6">
+            <div class="max-w-xs">
+              <label for="configs_klaviyo_reminder_delay_days" class="block text-sm font-medium text-gray-700 mb-1">
+                Share reminder delay (days)
+              </label>
+              <input
+                type="number"
+                name="configs[klaviyo_reminder_delay_days]"
+                id="configs_klaviyo_reminder_delay_days"
+                value="<%= @configs['klaviyo_reminder_delay_days']&.config_value.presence || '3' %>"
+                min="1"
+                max="30"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+              >
+              <p class="mt-1 text-xs text-gray-500">Days after referral creation before sending a share reminder (if no share activity detected)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <%# ==================== SECTION 2: Thank You Page Card ==================== %>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Thank You Page Card</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <%# Card Settings %>
+          <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+            <div class="px-6 py-4 border-b border-black/5">
+              <h3 class="text-lg font-semibold text-gray-900 text-balance"><%= @config_keys[:extension][:label] %></h3>
+              <p class="text-sm text-gray-500 text-pretty"><%= @config_keys[:extension][:subtitle] %></p>
+            </div>
+
+            <div class="p-6 space-y-6">
+              <%# Banner Image URL %>
+              <div>
+                <label for="configs_extension_banner_image" class="block text-sm font-medium text-gray-700 mb-1">
+                  Banner Image URL
+                </label>
+                <input
+                  type="url"
+                  name="configs[extension_banner_image]"
+                  id="configs_extension_banner_image"
+                  value="<%= @configs['extension_banner_image']&.config_value %>"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                  placeholder="https://..."
+                  data-preview-target="bannerImage"
+                  data-action="input->preview#updatePreview"
+                >
+              </div>
+
+              <%# Heading %>
+              <div>
+                <label for="configs_extension_heading" class="block text-sm font-medium text-gray-700 mb-1">
+                  Heading
+                </label>
+                <textarea
+                  name="configs[extension_heading]"
+                  id="configs_extension_heading"
+                  rows="1"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                  data-preview-target="heading"
+                  data-action="input->preview#updatePreview input->preview#autoResize"
+                ><%= @configs['extension_heading']&.config_value %></textarea>
+                <div class="mt-2 flex gap-2">
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+                </div>
+              </div>
+
+              <%# Subtitle %>
+              <div>
+                <label for="configs_extension_subtitle" class="block text-sm font-medium text-gray-700 mb-1">
+                  Subtitle
+                </label>
+                <textarea
+                  name="configs[extension_subtitle]"
+                  id="configs_extension_subtitle"
+                  rows="1"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                  data-preview-target="subtitle"
+                  data-action="input->preview#updatePreview input->preview#autoResize"
+                ><%= @configs['extension_subtitle']&.config_value %></textarea>
+                <div class="mt-2 flex gap-2">
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+                </div>
+              </div>
+
+              <%# Button Text %>
+              <div>
+                <label for="configs_extension_button_text" class="block text-sm font-medium text-gray-700 mb-1">
+                  Button Text
+                </label>
+                <textarea
+                  name="configs[extension_button_text]"
+                  id="configs_extension_button_text"
+                  rows="1"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                  data-preview-target="buttonText"
+                  data-action="input->preview#updatePreview input->preview#autoResize"
+                ><%= @configs['extension_button_text']&.config_value %></textarea>
+                <div class="mt-2 flex gap-2">
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                  <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Live Preview %>
+          <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden lg:sticky lg:top-20">
+            <div class="px-6 py-4 border-b border-black/5">
+              <h3 class="text-lg font-semibold text-gray-900 text-balance">Live Preview</h3>
+              <p class="text-sm text-gray-500 text-pretty">Preview shows how the card appears in checkout</p>
+            </div>
+
+            <div class="p-6">
+              <%# Preview Card - matches Shopify checkout extension styling %>
+              <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                <%# Banner Image %>
+                <img
+                  data-preview-target="previewImage"
+                  src="<%= @configs['extension_banner_image']&.config_value.presence || 'https://via.placeholder.com/400x267/e5e7eb/9ca3af?text=Banner+Image' %>"
+                  alt="Preview banner"
+                  class="w-full object-cover aspect-[3/2]"
+                  data-action="error->preview#handleImageError"
+                >
+
+                <%# Content area %>
+                <div class="p-4 space-y-2">
+                  <%# Heading - uses discount_str and reward_str computed at top of file %>
+                  <h3
+                    data-preview-target="previewHeading"
+                    class="text-lg font-semibold text-gray-900"
+                  ><%= (@configs['extension_heading']&.config_value.presence || '{firstName}, Refer A Friend').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></h3>
+
+                  <%# Subtitle %>
+                  <p
+                    data-preview-target="previewSubtitle"
+                    class="text-sm text-gray-500"
+                  ><%= (@configs['extension_subtitle']&.config_value.presence || 'Give 50% And Get 50% Off').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></p>
+
+                  <%# Button (non-functional preview) %>
+                  <button
+                    type="button"
+                    data-preview-target="previewButton"
+                    class="w-full mt-2 px-4 py-2 bg-black text-white rounded-md font-medium cursor-default"
+                  ><%= (@configs['extension_button_text']&.config_value.presence || 'Share Now').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <%# Section divider %>
+      <div class="border-t border-gray-200 my-8"></div>
+
+      <%# ==================== SECTION 3: Referral Page ==================== %>
+      <section data-controller="referral-preview" data-referral-preview-discount-value="<%= discount_str %>" data-referral-preview-reward-value="<%= reward_str %>">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Referral Page</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <%# Referral Page Settings %>
+          <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+            <div class="px-6 py-4 border-b border-black/5">
+              <h3 class="text-lg font-semibold text-gray-900 text-balance"><%= @config_keys[:referral_page][:label] %></h3>
+              <p class="text-sm text-gray-500 text-pretty"><%= @config_keys[:referral_page][:subtitle] %></p>
+            </div>
+
+            <div class="p-6 space-y-6">
+              <%# Colors %>
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <label for="configs_referral_primary_color" class="block text-sm font-medium text-gray-700 mb-1">
+                    Primary
+                  </label>
+                  <input
+                    type="color"
+                    name="configs[referral_primary_color]"
+                    id="configs_referral_primary_color"
+                    value="<%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>"
+                    class="w-full h-10 rounded-lg border border-black/10 cursor-pointer"
+                    data-referral-preview-target="primaryColor"
+                    data-action="input->referral-preview#updatePreview"
+                  >
+                </div>
+                <div>
+                  <label for="configs_referral_secondary_color" class="block text-sm font-medium text-gray-700 mb-1">
+                    Secondary
+                  </label>
+                  <input
+                    type="color"
+                    name="configs[referral_secondary_color]"
+                    id="configs_referral_secondary_color"
+                    value="<%= @configs['referral_secondary_color']&.config_value.presence || '#818cf8' %>"
+                    class="w-full h-10 rounded-lg border border-black/10 cursor-pointer"
+                    data-referral-preview-target="secondaryColor"
+                    data-action="input->referral-preview#updatePreview"
+                  >
+                </div>
+                <div>
+                  <label for="configs_referral_background_color" class="block text-sm font-medium text-gray-700 mb-1">
+                    Background
+                  </label>
+                  <input
+                    type="color"
+                    name="configs[referral_background_color]"
+                    id="configs_referral_background_color"
+                    value="<%= @configs['referral_background_color']&.config_value.presence || '#f9fafb' %>"
+                    class="w-full h-10 rounded-lg border border-black/10 cursor-pointer"
+                    data-referral-preview-target="backgroundColor"
+                    data-action="input->referral-preview#updatePreview"
+                  >
+                </div>
+              </div>
+
+              <%# Banner Image URL %>
+              <div>
+                <label for="configs_referral_banner_image" class="block text-sm font-medium text-gray-700 mb-1">
+                  Banner Image URL
+                </label>
+                <input
+                  type="url"
+                  name="configs[referral_banner_image]"
+                  id="configs_referral_banner_image"
+                  value="<%= @configs['referral_banner_image']&.config_value %>"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                  placeholder="https://..."
+                  data-referral-preview-target="bannerImage"
+                  data-action="input->referral-preview#updatePreview"
+                >
+              </div>
+
+              <%# Heading %>
+              <div>
+                <label for="configs_referral_heading" class="block text-sm font-medium text-gray-700 mb-1">
+                  Heading
+                </label>
+                <textarea
+                  name="configs[referral_heading]"
+                  id="configs_referral_heading"
+                  rows="1"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                  data-referral-preview-target="heading"
+                  data-action="input->referral-preview#updatePreview input->referral-preview#autoResize"
+                ><%= @configs['referral_heading']&.config_value %></textarea>
+                <div class="mt-2 flex gap-2">
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{firstName}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{firstName}</button>
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{discount}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{discount}</button>
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{reward}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{reward}</button>
+                </div>
+              </div>
+
+              <%# Subtitle %>
+              <div>
+                <label for="configs_referral_subtitle" class="block text-sm font-medium text-gray-700 mb-1">
+                  Subtitle
+                </label>
+                <textarea
+                  name="configs[referral_subtitle]"
+                  id="configs_referral_subtitle"
+                  rows="1"
+                  class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                  data-referral-preview-target="subtitle"
+                  data-action="input->referral-preview#updatePreview input->referral-preview#autoResize"
+                ><%= @configs['referral_subtitle']&.config_value %></textarea>
+                <div class="mt-2 flex gap-2">
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{firstName}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{firstName}</button>
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{discount}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{discount}</button>
+                  <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{reward}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{reward}</button>
+                </div>
+              </div>
+
+              <%# Steps %>
+              <div class="space-y-4">
+                <p class="text-sm font-medium text-gray-700">How It Works Steps</p>
+
+                <div>
+                  <label for="configs_referral_step_1" class="block text-xs text-gray-500 mb-1">Step 1</label>
+                  <textarea
+                    name="configs[referral_step_1]"
+                    id="configs_referral_step_1"
+                    rows="1"
+                    class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                    data-referral-preview-target="step1"
+                    data-action="input->referral-preview#updatePreview input->referral-preview#autoResize"
+                  ><%= @configs['referral_step_1']&.config_value %></textarea>
+                </div>
+
+                <div>
+                  <label for="configs_referral_step_2" class="block text-xs text-gray-500 mb-1">Step 2</label>
+                  <textarea
+                    name="configs[referral_step_2]"
+                    id="configs_referral_step_2"
+                    rows="1"
+                    class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                    data-referral-preview-target="step2"
+                    data-action="input->referral-preview#updatePreview input->referral-preview#autoResize"
+                  ><%= @configs['referral_step_2']&.config_value %></textarea>
+                  <div class="mt-1 flex gap-2">
+                    <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{discount}" data-target-field="step2" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{discount}</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="configs_referral_step_3" class="block text-xs text-gray-500 mb-1">Step 3</label>
+                  <textarea
+                    name="configs[referral_step_3]"
+                    id="configs_referral_step_3"
+                    rows="1"
+                    class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                    data-referral-preview-target="step3"
+                    data-action="input->referral-preview#updatePreview input->referral-preview#autoResize"
+                  ><%= @configs['referral_step_3']&.config_value %></textarea>
+                  <div class="mt-1 flex gap-2">
+                    <button type="button" data-action="click->referral-preview#insertVariable" data-variable="{reward}" data-target-field="step3" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">{reward}</button>
+                  </div>
+                </div>
+              </div>
+
+              <%# Button Text %>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="configs_referral_copy_button_text" class="block text-sm font-medium text-gray-700 mb-1">
+                    Copy Button
+                  </label>
+                  <input
+                    type="text"
+                    name="configs[referral_copy_button_text]"
+                    id="configs_referral_copy_button_text"
+                    value="<%= @configs['referral_copy_button_text']&.config_value %>"
+                    class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                    placeholder="Copy"
+                    data-referral-preview-target="copyButtonText"
+                    data-action="input->referral-preview#updatePreview"
+                  >
+                </div>
+                <div>
+                  <label for="configs_referral_back_button_text" class="block text-sm font-medium text-gray-700 mb-1">
+                    Back Button
+                  </label>
+                  <input
+                    type="text"
+                    name="configs[referral_back_button_text]"
+                    id="configs_referral_back_button_text"
+                    value="<%= @configs['referral_back_button_text']&.config_value %>"
+                    class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                    placeholder="Back to Store"
+                    data-referral-preview-target="backButtonText"
+                    data-action="input->referral-preview#updatePreview"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Live Preview %>
+          <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden lg:sticky lg:top-20">
+            <div class="px-6 py-4 border-b border-black/5">
+              <h3 class="text-lg font-semibold text-gray-900 text-balance">Live Preview</h3>
+              <p class="text-sm text-gray-500 text-pretty">Preview of the /refer page</p>
+            </div>
+
+            <div class="p-4" data-referral-preview-target="previewContainer" style="background-color: <%= @configs['referral_background_color']&.config_value.presence || '#f9fafb' %>;">
+              <%# Preview Card %>
+              <div class="max-w-sm mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <%# Banner Image %>
+                <img
+                  data-referral-preview-target="previewImage"
+                  src="<%= @configs['referral_banner_image']&.config_value.presence || '' %>"
+                  alt="Preview banner"
+                  class="w-full aspect-video object-cover <%= @configs['referral_banner_image']&.config_value.present? ? '' : 'hidden' %>"
+                  data-action="error->referral-preview#handleImageError"
+                >
+
+                <%# Header %>
+                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 text-center">
+                  <h3 data-referral-preview-target="previewHeading" class="text-lg font-bold text-gray-900"><%= (@configs['referral_heading']&.config_value.presence || 'Thanks, {firstName}!').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></h3>
+                  <p data-referral-preview-target="previewSubtitle" class="text-sm text-gray-600"><%= (@configs['referral_subtitle']&.config_value.presence || 'Share your code and earn rewards').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></p>
+                </div>
+
+                <%# Content %>
+                <div class="p-4">
+                  <%# Code display %>
+                  <div class="text-center mb-4">
+                    <p class="text-gray-500 text-xs uppercase mb-1">Your Referral Code</p>
+                    <div class="flex items-center justify-center gap-2">
+                      <span class="text-xl font-mono font-bold text-gray-900 bg-gray-100 px-4 py-2 rounded-lg">FRIEND123</span>
+                      <button
+                        type="button"
+                        data-referral-preview-target="previewCopyButton"
+                        class="p-2 text-white rounded-lg"
+                        style="background-color: <%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>;"
+                        title="<%= @configs['referral_copy_button_text']&.config_value.presence || 'Copy' %>"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <%# Steps %>
+                  <div class="border-t border-gray-100 pt-3">
+                    <p class="font-semibold text-gray-900 mb-2 text-sm">How It Works</p>
+                    <ol class="space-y-2 text-sm text-gray-600">
+                      <li class="flex items-start gap-2">
+                        <span data-referral-preview-target="previewStep1Badge" class="flex-shrink-0 size-5 rounded-full flex items-center justify-center text-xs font-medium" style="background-color: <%= @configs['referral_secondary_color']&.config_value.presence || '#818cf8' %>; opacity: 0.3; color: <%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>;"><span style="opacity: 1;">1</span></span>
+                        <span data-referral-preview-target="previewStep1"><%= (@configs['referral_step_1']&.config_value.presence || 'Share your unique code with friends').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <span data-referral-preview-target="previewStep2Badge" class="flex-shrink-0 size-5 rounded-full flex items-center justify-center text-xs font-medium" style="background-color: <%= @configs['referral_secondary_color']&.config_value.presence || '#818cf8' %>; opacity: 0.3; color: <%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>;"><span style="opacity: 1;">2</span></span>
+                        <span data-referral-preview-target="previewStep2"><%= (@configs['referral_step_2']&.config_value.presence || 'They get {discount} off their first order').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <span data-referral-preview-target="previewStep3Badge" class="flex-shrink-0 size-5 rounded-full flex items-center justify-center text-xs font-medium" style="background-color: <%= @configs['referral_secondary_color']&.config_value.presence || '#818cf8' %>; opacity: 0.3; color: <%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>;"><span style="opacity: 1;">3</span></span>
+                        <span data-referral-preview-target="previewStep3"><%= (@configs['referral_step_3']&.config_value.presence || 'You earn {reward} when they purchase!').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <%# Back link %>
+                  <div class="mt-3 text-center">
+                    <span data-referral-preview-target="previewBackButton" class="text-sm font-medium" style="color: <%= @configs['referral_primary_color']&.config_value.presence || '#4f46e5' %>;">&larr; <%= @configs['referral_back_button_text']&.config_value.presence || 'Back to Store' %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <% end %>
+  </div>
+</div>
