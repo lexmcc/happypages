@@ -1623,11 +1623,17 @@ p {
   display: block;
 }
 
+.pricing-tier-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
 .pricing-tier-label {
   font-size: var(--text-lg);
   font-weight: var(--font-weight-medium);
   color: rgba(255,255,255,0.7);
-  margin-bottom: var(--space-2);
 }
 
 .pricing-amount {
@@ -1661,14 +1667,14 @@ p {
 .pricing-founder-pill {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-1) var(--space-3);
+  padding: 4px 10px;
   font-size: var(--text-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-white);
   border-radius: var(--radius-full);
   position: relative;
   background: var(--color-dark);
-  margin-top: var(--space-2);
+  white-space: nowrap;
 }
 
 /* Animated gradient border using pseudo-element */
@@ -2088,40 +2094,26 @@ p {
 
   .pricing-header-row {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--space-4);
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
   }
 
   .pricing-header-left {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-width: 0;
   }
 
   .pricing-toggle {
     position: relative;
     top: 0;
     right: 0;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-1) var(--space-3);
-    max-width: 85px;
-  }
-
-  .pricing-toggle .pricing-toggle-label {
-    order: -1;
+    justify-content: flex-start;
+    gap: var(--space-2);
   }
 
   .pricing-amount {
     margin-bottom: 0;
-  }
-
-  .pricing-header-row {
-    margin-bottom: var(--space-4);
   }
 
   .pricing-price {
