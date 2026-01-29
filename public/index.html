@@ -315,38 +315,43 @@
         <div class="pricing-card-right">
           <div class="card-stack">
             <div class="card-back card-back--dark"></div>
-            <div class="card--dark pricing-card-dark">
+            <div class="card--dark pricing-card-dark pricing-growth">
               <div class="pricing-header-row">
                 <div class="pricing-header-left">
-                  <h4 class="pricing-tier-label">monthly club</h4>
+                  <h4 class="pricing-tier-label">growth partner</h4>
                   <div class="pricing-amount">
-                    <span class="pricing-price">£1095</span>
+                    <span class="pricing-price-full">£5,995</span>
+                    <span class="pricing-price">£2,995</span>
                     <span class="pricing-period">/m</span>
                   </div>
+                  <span class="pricing-founder-label">founder rate</span>
                 </div>
-                <div class="pricing-toggle">
-                  <span class="pricing-toggle-label">basic</span>
+                <div class="pricing-toggle is-growth">
+                  <span class="pricing-toggle-label">build</span>
                   <label class="toggle-switch">
-                    <input type="checkbox" class="toggle-input">
+                    <input type="checkbox" class="toggle-input" checked>
                     <span class="toggle-track">
                       <span class="toggle-knob"></span>
                       <span class="toggle-indicator"></span>
                     </span>
                   </label>
-                  <span class="pricing-toggle-label">pro</span>
+                  <span class="pricing-toggle-label">growth</span>
                 </div>
               </div>
               <div class="pricing-divider"></div>
               <ul class="pricing-features">
                 <li>one request at a time</li>
-                <li>avg. 72 hour delivery</li>
+                <li>avg. 48 hour response</li>
                 <li>unlimited brands</li>
-                <li>static page development</li>
-                <li>1 user</li>
+                <li>page and flow development</li>
+                <li>2 users</li>
+                <li>weekly async updates</li>
+                <li>quarterly roadmap session</li>
+                <li>strategic input included</li>
               </ul>
               <div class="pricing-divider"></div>
               <div class="pricing-cta-row">
-                <a href="#book-call" class="pricing-cta">join today</a>
+                <a href="#book-call" class="pricing-cta">join growth today</a>
                 <div class="pricing-cta-bottom">
                   <img src="/assets/happypages-icon-white-alternate.png" alt="" class="pricing-cta-icon">
                   <h4 class="pricing-flex-text">pause, cancel, or flex subscription tier anytime.</h4>
@@ -780,34 +785,42 @@
     const pricingToggle = document.querySelector('.toggle-input');
     const tierLabel = document.querySelector('.pricing-tier-label');
     const priceEl = document.querySelector('.pricing-price');
+    const fullPriceEl = document.querySelector('.pricing-price-full');
     const featuresEl = document.querySelector('.pricing-features');
 
-    if (pricingToggle && tierLabel && priceEl && featuresEl) {
-      const basicContent = {
-        title: 'monthly club',
-        price: '£1095',
+    if (pricingToggle && tierLabel && priceEl && fullPriceEl && featuresEl) {
+      const buildContent = {
+        title: 'build retainer',
+        fullPrice: '£1,995',
+        price: '£1,095',
         features: [
           'one request at a time',
-          'avg. 72 hour delivery',
+          'avg. 48 hour response',
           'unlimited brands',
           'static page development',
-          '1 user'
-        ]
+          '1 user',
+          'board-only communication',
+          'execution only',
+          'no strategy sessions'
+        ],
+        cta: 'join today'
       };
 
-      const proContent = {
-        title: 'monthly club pro',
-        price: '£2995',
+      const growthContent = {
+        title: 'growth partner',
+        fullPrice: '£5,995',
+        price: '£2,995',
         features: [
           'one request at a time',
-          'avg. 48 hour delivery',
+          'avg. 48 hour response',
           'unlimited brands',
           'page and flow development',
           '2 users',
-          'unlimited stock photos',
-          '2hr strategy session each month',
-          'priority support'
-        ]
+          'weekly async updates',
+          'quarterly roadmap session',
+          'strategic input included'
+        ],
+        cta: 'join growth today'
       };
 
       function typeText(element, text, isChanged, speed = 20, callback) {
@@ -838,27 +851,21 @@
       }
 
       pricingToggle.addEventListener('change', () => {
-        const isPro = pricingToggle.checked;
-        const content = isPro ? proContent : basicContent;
-        const prevContent = isPro ? basicContent : proContent;
+        const isGrowth = pricingToggle.checked;
+        const content = isGrowth ? growthContent : buildContent;
+        const prevContent = isGrowth ? buildContent : growthContent;
 
-        document.querySelector('.pricing-toggle').classList.toggle('is-pro', isPro);
-        document.querySelector('.pricing-card-dark').classList.toggle('pricing-pro', isPro);
+        document.querySelector('.pricing-toggle').classList.toggle('is-growth', isGrowth);
+        document.querySelector('.pricing-card-dark').classList.toggle('pricing-growth', isGrowth);
 
         const ctaBtn = document.querySelector('.pricing-cta');
-        ctaBtn.textContent = isPro ? 'join pro today' : 'join today';
+        ctaBtn.textContent = content.cta;
 
-        const titleChanged = content.title !== prevContent.title;
-        if (titleChanged) {
-          if (isPro) {
-            tierLabel.innerHTML = 'monthly club <span class="typing-highlight"></span>';
-            const proSpan = tierLabel.querySelector('.typing-highlight');
-            typeText(proSpan, 'pro', true);
-          } else {
-            tierLabel.textContent = content.title;
-            tierLabel.classList.remove('typing-highlight');
-          }
-        }
+        tierLabel.textContent = '';
+        typeText(tierLabel, content.title, true);
+
+        fullPriceEl.textContent = '';
+        typeText(fullPriceEl, content.fullPrice, true, 80);
 
         priceEl.textContent = '';
         typeText(priceEl, content.price, true, 100);
@@ -866,7 +873,7 @@
         const featureItems = content.features.map((f, i) => {
           const isNew = i >= prevContent.features.length;
           const isChanged = !isNew && f !== prevContent.features[i];
-          return { text: f, highlight: isPro && (isNew || isChanged) };
+          return { text: f, highlight: isGrowth && (isNew || isChanged) };
         });
 
         featuresEl.innerHTML = featureItems.map(f =>

@@ -18,5 +18,8 @@ else
   bundle exec rails db:migrate
 fi
 
+echo "Backfilling missing shop slugs..."
+bundle exec rails runner "Shop.where(slug: nil).find_each { |s| s.save! }"
+
 echo "Starting Rails server..."
 exec bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000}

@@ -1637,6 +1637,13 @@ p {
   margin-bottom: var(--space-5);
 }
 
+.pricing-price-full {
+  font-size: var(--text-2xl);
+  color: rgba(255,255,255,0.5);
+  text-decoration: line-through;
+  margin-right: var(--space-2);
+}
+
 .pricing-price {
   font-size: var(--text-6xl);
   font-weight: var(--font-weight-bold);
@@ -1649,6 +1656,14 @@ p {
 .pricing-period {
   font-size: var(--text-lg);
   color: rgba(255,255,255,0.6);
+}
+
+.pricing-founder-label {
+  display: block;
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.6);
+  margin-top: var(--space-1);
+  letter-spacing: var(--tracking-body);
 }
 
 .pricing-divider {
@@ -1741,15 +1756,21 @@ p {
   transition: color var(--transition-fast);
 }
 
+/* Default: build selected (toggle unchecked, no .is-growth class) */
 .pricing-toggle-label:first-child {
   color: rgba(255,255,255,1);
 }
 
-.pricing-toggle.is-pro .pricing-toggle-label:first-child {
+.pricing-toggle-label:last-child {
   color: rgba(255,255,255,0.6);
 }
 
-.pricing-toggle.is-pro .pricing-toggle-label:last-child {
+/* Growth selected (toggle checked, .is-growth class present) */
+.pricing-toggle.is-growth .pricing-toggle-label:first-child {
+  color: rgba(255,255,255,0.6);
+}
+
+.pricing-toggle.is-growth .pricing-toggle-label:last-child {
   color: var(--color-coral);
   font-weight: var(--font-weight-semibold);
 }
@@ -1807,7 +1828,7 @@ p {
   transform: translateX(36px);
 }
 
-.pricing-toggle.is-pro .toggle-indicator {
+.pricing-toggle.is-growth .toggle-indicator {
   border-color: var(--color-coral);
 }
 
