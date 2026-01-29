@@ -340,7 +340,7 @@
               </div>
               <div class="pricing-divider"></div>
               <ul class="pricing-features">
-                <li>one request at a time</li>
+                <li>typically 4-6 deliverables/month</li>
                 <li>avg. 48 hour response</li>
                 <li>unlimited brands</li>
                 <li>page and flow development</li>
@@ -357,6 +357,40 @@
                   <h4 class="pricing-flex-text">pause, cancel, or flex subscription tier anytime.</h4>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- See More Detail Expandable -->
+      <div class="pricing-detail-section">
+        <button class="pricing-detail-toggle">
+          <span>what's included?</span>
+          <span class="pricing-detail-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </span>
+        </button>
+        <div class="pricing-detail-content">
+          <div class="pricing-detail-grid">
+            <div class="pricing-detail-item">
+              <h5 class="pricing-detail-question">what's a deliverable?</h5>
+              <p class="pricing-detail-answer">a deliverable is one user-facing outcome. a landing page, an email, a checkout step, a modal flow. if a user would experience it as "one thing," it's one deliverable. a 4-step signup wizard? that's 4 deliverables, shipped one after another.</p>
+            </div>
+            <div class="pricing-detail-item">
+              <h5 class="pricing-detail-question">how does it work?</h5>
+              <p class="pricing-detail-answer">you get a shared trello board. drop requests in using a simple template, i scope them, build them, and mark them done. you'll always know what's in progress and what's next. everything's async by default. no standing meetings, no status calls, just work shipping.</p>
+            </div>
+            <div class="pricing-detail-item">
+              <h5 class="pricing-detail-question">what's the difference between the tiers?</h5>
+              <p class="pricing-detail-answer">build retainer is execution. you know exactly what you want, i build it. no strategy, no calls, just output.<br><br>growth partner is strategic. i help you figure out what to build, then build it. you get weekly updates, quarterly roadmaps, and someone thinking about your growth, not just completing tasks.</p>
+            </div>
+            <div class="pricing-detail-item">
+              <h5 class="pricing-detail-question">can i switch between tiers?</h5>
+              <p class="pricing-detail-answer">yes. flex down to build retainer during quieter months. flex back up to growth partner when you need more strategic input, subject to availability.</p>
+            </div>
+            <div class="pricing-detail-item">
+              <h5 class="pricing-detail-question">what if i need to pause?</h5>
+              <p class="pricing-detail-answer">pause or cancel anytime. no awkward conversations, no penalties.</p>
             </div>
           </div>
         </div>
@@ -780,7 +814,7 @@
     }
 
     // ==========================================
-    // Pricing Toggle (Basic/Pro)
+    // Pricing Toggle (Build/Growth)
     // ==========================================
     const pricingToggle = document.querySelector('.toggle-input');
     const tierLabel = document.querySelector('.pricing-tier-label');
@@ -794,7 +828,7 @@
         fullPrice: '£1,995',
         price: '£1,095',
         features: [
-          'one request at a time',
+          'typically 2-3 deliverables/month',
           'avg. 48 hour response',
           'unlimited brands',
           'static page development',
@@ -811,7 +845,7 @@
         fullPrice: '£5,995',
         price: '£2,995',
         features: [
-          'one request at a time',
+          'typically 4-6 deliverables/month',
           'avg. 48 hour response',
           'unlimited brands',
           'page and flow development',
@@ -892,6 +926,17 @@
           }, delay);
           delay += f.highlight ? 50 : 0;
         });
+      });
+    }
+
+    // ==========================================
+    // Pricing Detail Expandable
+    // ==========================================
+    const pricingDetailSection = document.querySelector('.pricing-detail-section');
+    const pricingDetailToggle = document.querySelector('.pricing-detail-toggle');
+    if (pricingDetailSection && pricingDetailToggle) {
+      pricingDetailToggle.addEventListener('click', () => {
+        pricingDetailSection.classList.toggle('is-open');
       });
     }
 

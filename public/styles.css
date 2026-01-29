@@ -1663,7 +1663,7 @@ p {
   font-size: var(--text-sm);
   color: rgba(255,255,255,0.6);
   margin-top: var(--space-1);
-  letter-spacing: var(--tracking-body);
+  letter-spacing: var(--letter-spacing-body);
 }
 
 .pricing-divider {
@@ -1951,6 +1951,93 @@ p {
 
 .pricing-header-large.is-animating .pricing-bars .bar {
   animation-play-state: running;
+}
+
+/* Pricing Detail Expandable Section */
+.pricing-detail-section {
+  margin-top: var(--space-7);
+  padding: 0 var(--space-7);
+}
+
+.pricing-detail-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-4) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  letter-spacing: var(--letter-spacing-body);
+  transition: color var(--transition-fast);
+}
+
+.pricing-detail-toggle:hover {
+  color: var(--color-coral);
+}
+
+.pricing-detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.pricing-detail-section.is-open .pricing-detail-icon {
+  transform: rotate(180deg);
+}
+
+.pricing-detail-content {
+  display: none;
+  padding-top: var(--space-5);
+}
+
+.pricing-detail-section.is-open .pricing-detail-content {
+  display: block;
+}
+
+.pricing-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5) var(--space-7);
+}
+
+.pricing-detail-item {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-neumorphic);
+}
+
+.pricing-detail-question {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+.pricing-detail-answer {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .pricing-detail-section {
+    padding: 0 var(--space-4);
+  }
+
+  .pricing-detail-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
 }
 
 /* Pricing Responsive */
