@@ -189,3 +189,17 @@ Step cards use different media for desktop vs mobile:
 - Works-text-card styled like hero join card (card-heading, card-tagline)
 - White icon variants instead of black
 - Step cards use videos/GIFs instead of CSS patterns
+
+## Rails Backend (happypages-app/)
+
+See `happypages-app/HISTORY.md` for detailed session notes.
+
+### Key Patterns
+- **Multi-tenant**: `Current.shop` thread-isolated context, shop lookup via `X-Shop-Domain` header
+- **White-labeled URLs**: `/:shop_slug/refer` routes with auto-generated slugs from shop name
+- **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
+
+### Gotchas
+- Railway UI "no tables" can be stale - verify with `rails runner "puts ActiveRecord::Base.connection.tables.count"`
+- `before_validation :generate_slug, on: :create` won't backfill existing records - remove `on: :create` or add explicit backfill
+- Shopify OAuth redirect URLs: check the **linked** TOML file (`shopify.app.*.toml`), not just `shopify.app.toml`

@@ -127,6 +127,8 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] OAuth flow for self-service app installation
 - [x] PostgreSQL database with multi-tenant architecture
 - [x] Environment variables and secrets configured
+- [x] White-labeled URLs: shop-specific referral URLs (e.g., /shop-slug/refer)
+- [x] Auto-generated slugs from shop name with uniqueness handling
 
 ## Planned Features
 
@@ -139,6 +141,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-01-29 | White-labeled URLs: shop-specific referral pages with auto-generated slugs |
 | 2026-01-29 | Railway deployment: Rails backend + Shopify extension deployed to app.happypages.co |
 | 2026-01-29 | Shopify OAuth: Self-service app installation with redirect URL configuration |
 | 2026-01-29 | Footer: Added referrals login link to main site |

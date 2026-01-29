@@ -75,6 +75,9 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Jan 29** - OAuth redirect URLs fixed (shopify.app.*.toml configuration)
 - **Jan 29** - Railway multi-service configuration (separate railway.toml per service)
 - **Jan 29** - First successful OAuth installation on dev store
+- **Jan 29** - White-labeled URLs: shop-specific referral pages (/:shop_slug/refer)
+- **Jan 29** - Auto-generated slugs with backfill for existing shops
+- **Jan 29** - Database startup improvements: db:prepare + slug backfill in start.sh
 
 ## Key Milestones
 
@@ -124,3 +127,7 @@ _This section is updated by the doc-checkpoint skill at the end of each working 
 - **Multi-Service Railway Config**: Two services from same repo require separate `railway.toml` files with `watchPatterns` to trigger correct deploys
 - **Gotcha**: Railway services may reference secrets from other services in same project - adding dummy values unblocks builds
 - **Login redirect bug fixed**: `sessions_controller.rb` was redirecting to non-existent `admin_config_path` instead of `edit_admin_config_path`
+- **White-labeled URLs implemented**: Shop-specific referral URLs (e.g., `/happypages-test-store/refer`) fix multi-tenant bug where `/refer` had no shop context
+- **Slug auto-generation**: `before_validation :generate_slug` creates URL-safe slugs from shop name; runs on every save (not just create) to backfill existing shops
+- **Railway database gotcha**: Railway UI may show "no tables" even when tables exist - use `rails runner` to verify actual table count
+- **db:prepare vs db:migrate**: Use `db:prepare` in production startup scripts - it handles both empty databases (schema load) and existing ones (migrate)
