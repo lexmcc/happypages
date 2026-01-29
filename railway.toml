@@ -1,6 +1,5 @@
 [build]
-builder = "static"
 watchPatterns = ["public/**"]
 
 [deploy]
-staticFolder = "public"
+numReplicas = 1
