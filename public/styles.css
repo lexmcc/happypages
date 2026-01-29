@@ -1634,7 +1634,7 @@ p {
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-1);
 }
 
 .pricing-price-full {
@@ -1658,12 +1658,44 @@ p {
   color: rgba(255,255,255,0.6);
 }
 
-.pricing-founder-label {
-  display: block;
-  font-size: var(--text-sm);
-  color: rgba(255,255,255,0.6);
-  margin-top: var(--space-1);
-  letter-spacing: var(--letter-spacing-body);
+.pricing-founder-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  position: relative;
+  background: var(--color-dark);
+  margin-top: var(--space-2);
+}
+
+/* Animated gradient border using pseudo-element */
+.pricing-founder-pill::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-full);
+  padding: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-coral),
+    var(--color-cyan),
+    var(--color-coral)
+  );
+  background-size: 200% 100%;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: gradient-rotate 3s linear infinite;
+}
+
+@keyframes gradient-rotate {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
 }
 
 .pricing-divider {
