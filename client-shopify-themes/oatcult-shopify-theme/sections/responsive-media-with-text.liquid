@@ -10,8 +10,6 @@ CSS
   #shopify-section-{{ section.id }} {
     --media-with-text-gap: {% if section.settings.spacing == 'none' %}0{% else %}var(--grid-gutter){% endif %};
     --media-with-text-item-grid-template: "media" "content" / auto;
-    padding-top: {{ section.settings.padding_top }}px;
-    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
   /* Mobile typography */
@@ -42,6 +40,8 @@ CSS
 
     #block-{{ section.id }}-{{ block.id }} {
       --media-with-text-item-icon-width: {{ block.settings.icon_width }}px;
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
     }
 
     /* Content element ordering - enable flexbox on prose */
@@ -84,6 +84,13 @@ CSS
       #block-{{ section.id }}-{{ block.id }} .media-with-text__media { order: unset; }
     }
   {%- endfor -%}
+
+  {%- if section.settings.remove_section_padding -%}
+    #shopify-section-{{ section.id }} .section {
+      padding-block-start: 0;
+      padding-block-end: 0;
+    }
+  {%- endif -%}
 </style>
 
 {%- comment -%}
@@ -270,24 +277,11 @@ LIQUID
       "default": "small"
     },
     {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Top padding",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Bottom padding",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 0
+      "type": "checkbox",
+      "id": "remove_section_padding",
+      "label": "Remove section padding",
+      "info": "Removes the default top/bottom padding from the section",
+      "default": false
     }
   ],
   "blocks": [
@@ -310,6 +304,26 @@ LIQUID
           "step": 5,
           "unit": "%",
           "default": 50
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Top padding",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom padding",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "default": 0
         },
         {
           "type": "image_picker",
@@ -935,6 +949,26 @@ LIQUID
           "step": 5,
           "unit": "%",
           "default": 50
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Top padding",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom padding",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "default": 0
         },
         {
           "type": "select",
