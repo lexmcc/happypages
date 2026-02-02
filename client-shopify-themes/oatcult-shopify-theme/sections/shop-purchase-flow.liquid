@@ -205,11 +205,7 @@ CRO-optimized product purchase page with:
     }
 
     .shop-gallery__thumbs {
-      display: none;
-    }
-
-    .shop-gallery__dots {
-      display: flex;
+      max-width: 100%;
     }
   }
 
@@ -268,14 +264,13 @@ CRO-optimized product purchase page with:
     font-weight: 700;
     margin: 0 0 var(--spacing-2) 0;
     color: var(--spf-text-color);
-    text-transform: uppercase;
     font-family: var(--heading-font-family);
     letter-spacing: var(--heading-letter-spacing);
   }
 
   .shop-purchase__subtitle {
     font-size: var(--text-base);
-    color: var(--spf-text-muted);
+    color: var(--spf-text-color);
     margin: 0 0 var(--spacing-3) 0;
   }
 
@@ -940,9 +935,9 @@ CRO-optimized product purchase page with:
 
   .sub-option__savings {
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--spf-savings-color);
-    margin-top: var(--spacing-2);
+    margin-top: auto;
   }
 
   .sub-option__nudge {
@@ -973,6 +968,8 @@ CRO-optimized product purchase page with:
   .sub-option__right-col {
     text-align: right;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .sub-option__title-row {
@@ -1020,22 +1017,22 @@ CRO-optimized product purchase page with:
   .cta-button {
     width: 100%;
     padding: var(--spacing-5) var(--spacing-6);
-    border-radius: var(--rounded-lg);
-    background: var(--spf-cta-background);
+    border-radius: 8px;
+    background: #FED700;
     color: var(--spf-text-color);
     font-size: var(--text-base);
     font-weight: 700;
     text-align: center;
     cursor: pointer;
     transition: all var(--transition-normal);
-    border: none;
+    border: 1px solid #E0C426;
     text-transform: uppercase;
   }
 
   .cta-button:hover {
-    background: var(--spf-cta-hover);
+    background: #E8C300;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(147, 197, 253, 0.4);
+    box-shadow: 0 4px 12px rgba(254, 215, 0, 0.4);
   }
 
   .cta-button:active {
@@ -1432,17 +1429,10 @@ CRO-optimized product purchase page with:
               :class="{ 'size-card--selected': selectedSize === size.id }"
               @click="selectedSize = size.id"
             >
-              <span
-                class="size-card__badge"
-                :class="size.badgeClass"
-                x-show="size.badge"
-                x-text="size.badge"
-              ></span>
               <div class="size-card__label" x-text="size.label"></div>
               <div class="size-card__packs" x-text="size.packsLabel"></div>
-              <div class="size-card__duration" x-text="size.duration"></div>
               <div class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></div>
-              <div class="size-card__per-pack" x-text="'£' + size.perPack + '/pack'"></div>
+              <div class="size-card__per-pack" x-text="formatPrice(getSizePrice(size.id) / size.id) + '/pack'"></div>
             </div>
           </template>
         </div>
@@ -1462,7 +1452,6 @@ CRO-optimized product purchase page with:
             <!-- Left column: Title + Benefits -->
             <div class="sub-option__left-col">
               <div class="sub-option__title-row">
-                <div class="sub-option__radio"></div>
                 <span class="sub-option__title">SUB & SAVE <span x-text="discountPercent + '%'"></span></span>
               </div>
               <div class="sub-option__benefits">
@@ -1518,10 +1507,9 @@ CRO-optimized product purchase page with:
         >
           <div class="sub-option__header">
             <div class="sub-option__left">
-              <div class="sub-option__radio"></div>
               <span class="sub-option__title">One-time purchase</span>
             </div>
-            <span class="sub-option__price" x-text="formatPrice(getTotalPrice(false))"></span>
+            <span class="sub-option__price" x-text="formatPrice(getTotalPrice(false)) + '/box'"></span>
           </div>
         </div>
       </div>
@@ -1533,7 +1521,7 @@ CRO-optimized product purchase page with:
           @click="checkout()"
           :disabled="!canCheckout"
         >
-          <span x-text="subscribe ? 'Subscribe Now' : 'Buy Now'"></span> · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
+          {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
           <div class="cta-button__summary" x-text="getOrderSummary()"></div>
         </button>
       </div>
@@ -1569,7 +1557,7 @@ CRO-optimized product purchase page with:
       @click="checkout()"
       :disabled="!canCheckout"
     >
-      <span x-text="subscribe ? 'Subscribe Now' : 'Buy Now'"></span> · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
+      {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
       <div class="cta-button__summary" x-text="getOrderSummary()"></div>
     </button>
   </div>
@@ -2190,6 +2178,16 @@ CRO-optimized product purchase page with:
       "id": "sub_benefit_3",
       "label": "Benefit 3",
       "default": "Commit to Cult & save 20%"
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "Checkout button text",
+      "default": "Checkout"
     }
   ],
   "blocks": [
