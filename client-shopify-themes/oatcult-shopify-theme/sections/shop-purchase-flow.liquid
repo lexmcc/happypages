@@ -251,6 +251,34 @@ CRO-optimized product purchase page with:
     line-height: 1;
   }
 
+  /* Mobile benefits in purchase column */
+  .shop-purchase__benefits {
+    display: none;
+  }
+
+  @media screen and (max-width: 767px) {
+    .shop-gallery__benefits {
+      display: none;
+    }
+
+    .shop-purchase__benefits {
+      display: block;
+      margin-top: var(--spacing-4);
+      padding: 16px;
+      background: #F0E9DE;
+      border-radius: 12px;
+    }
+
+    .shop-purchase__benefits .shop-gallery__benefit {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      padding: var(--spacing-2) 0;
+      font-size: var(--text-sm);
+      color: var(--spf-text-color);
+    }
+  }
+
   /* ============================================
      PURCHASE COLUMN
      ============================================ */
@@ -815,6 +843,29 @@ CRO-optimized product purchase page with:
     margin-top: 4px;
   }
 
+  /* Size cards mobile overrides */
+  @media screen and (max-width: 767px) {
+    .size-card {
+      padding: var(--spacing-3) var(--spacing-2);
+    }
+
+    .size-card__label {
+      font-size: 10px;
+    }
+
+    .size-card__packs {
+      font-size: var(--text-base);
+    }
+
+    .size-card__price {
+      font-size: 1rem;
+    }
+
+    .size-card__per-pack {
+      font-size: 10px;
+    }
+  }
+
   /* ============================================
      SUBSCRIPTION TOGGLE
      ============================================ */
@@ -1014,6 +1065,30 @@ CRO-optimized product purchase page with:
     width: 16px;
     height: 16px;
     object-fit: contain;
+  }
+
+  /* Subscribe cards mobile overrides */
+  @media screen and (max-width: 767px) {
+    .sub-option {
+      padding: var(--spacing-3) var(--spacing-4);
+    }
+
+    .sub-option__title {
+      font-size: var(--text-sm);
+    }
+
+    .sub-option__benefit {
+      font-size: var(--text-xs);
+    }
+
+    .sub-option__per-pack {
+      font-size: 1.1rem;
+    }
+
+    .sub-option__per-box,
+    .sub-option__savings {
+      font-size: var(--text-xs);
+    }
   }
 
   /* ============================================
@@ -1270,6 +1345,40 @@ CRO-optimized product purchase page with:
             <span class="shop-purchase__stars">★★★★★</span>
           {%- endif -%}
           <span>{{ section.settings.reviews_text }}</span>
+        </div>
+
+        <!-- Benefits (Mobile only - duplicated for layout) -->
+        <div class="shop-purchase__benefits">
+          <div class="shop-gallery__benefit">
+            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_1_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
+              {%- if section.settings.benefit_1_icon != blank -%}
+                <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+              {%- else -%}
+                {{ section.settings.benefit_1_emoji }}
+              {%- endif -%}
+            </span>
+            <span>{{ section.settings.benefit_1 }}</span>
+          </div>
+          <div class="shop-gallery__benefit">
+            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_2_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
+              {%- if section.settings.benefit_2_icon != blank -%}
+                <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+              {%- else -%}
+                {{ section.settings.benefit_2_emoji }}
+              {%- endif -%}
+            </span>
+            <span>{{ section.settings.benefit_2 }}</span>
+          </div>
+          <div class="shop-gallery__benefit">
+            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_3_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
+              {%- if section.settings.benefit_3_icon != blank -%}
+                <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+              {%- else -%}
+                {{ section.settings.benefit_3_emoji }}
+              {%- endif -%}
+            </span>
+            <span>{{ section.settings.benefit_3 }}</span>
+          </div>
         </div>
       </div>
 
@@ -1532,14 +1641,6 @@ CRO-optimized product purchase page with:
 
       <!-- Trust Badges -->
       <div class="trust-badges">
-        <span class="trust-badge">
-          <span class="trust-badge__icon">🚚</span>
-          <span>Free shipping £40+</span>
-        </span>
-        <span class="trust-badge">
-          <span class="trust-badge__icon">↩️</span>
-          <span>30-day guarantee</span>
-        </span>
         <span class="trust-badge">
           <span class="trust-badge__icon">🔒</span>
           <span>Secure checkout</span>
