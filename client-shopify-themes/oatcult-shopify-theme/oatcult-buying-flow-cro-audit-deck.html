@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Oat Cult | Product Page CRO Audit</title>
+  <style>
+    :root {
+      --brand-brown: #8B4513;
+      --brand-brown-light: #D2691E;
+      --brand-cream: #FFF8F0;
+      --brand-dark: #3D2314;
+      --text-primary: #333333;
+      --text-muted: #666666;
+      --accent-green: #22C55E;
+      --accent-red: #EF4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--brand-cream);
+      color: var(--text-primary);
+      overflow: hidden;
+    }
+
+    .deck {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .slide--brown {
+      background: var(--brand-brown);
+      color: white;
+    }
+
+    .slide--dark {
+      background: var(--brand-dark);
+      color: white;
+    }
+
+    .slide--cream {
+      background: var(--brand-cream);
+      color: var(--text-primary);
+    }
+
+    .slide__content {
+      max-width: 680px;
+      width: 100%;
+    }
+
+    .slide__label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .slide__title {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .slide__subtitle {
+      font-size: clamp(16px, 3vw, 20px);
+      line-height: 1.5;
+      opacity: 0.9;
+      margin-bottom: 32px;
+    }
+
+    .slide__highlight {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .slide--cream .slide__highlight {
+      background: var(--brand-brown);
+      color: white;
+    }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.1);
+      padding: 20px 16px;
+      border-radius: 12px;
+    }
+
+    .slide--cream .stat {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .stat__value {
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .stat__label {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* Issues Table */
+    .issues {
+      text-align: left;
+      width: 100%;
+    }
+
+    .issue {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .slide--cream .issue {
+      border-bottom-color: rgba(0,0,0,0.1);
+    }
+
+    .issue:last-child {
+      border-bottom: none;
+    }
+
+    .issue__icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .issue__text {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .issue__text strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .issue__text span {
+      opacity: 0.7;
+      font-size: 13px;
+    }
+
+    /* Recommendation Card */
+    .rec-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: left;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    .rec-card__number {
+      display: inline-block;
+      background: var(--brand-brown);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .rec-card__title {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--brand-dark);
+    }
+
+    .rec-card__list {
+      list-style: none;
+    }
+
+    .rec-card__list li {
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .rec-card__list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--brand-brown);
+    }
+
+    .rec-card__list li strong {
+      color: var(--text-primary);
+    }
+
+    /* Timeline */
+    .timeline {
+      text-align: left;
+      width: 100%;
+    }
+
+    .timeline__phase {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .timeline__marker {
+      width: 40px;
+      height: 40px;
+      background: var(--brand-brown);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .timeline__content h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .timeline__content p {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    /* CTA */
+    .cta-button {
+      display: inline-block;
+      background: white;
+      color: var(--brand-brown);
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      margin-top: 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .slide--cream .cta-button {
+      background: var(--brand-brown);
+      color: white;
+    }
+
+    /* Progress Indicator */
+    .progress {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .progress__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(139, 69, 19, 0.3);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .progress__dot.active {
+      background: var(--brand-brown);
+      transform: scale(1.4);
+    }
+
+    .slide--brown .progress__dot,
+    .slide--dark .progress__dot {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .slide--brown .progress__dot.active,
+    .slide--dark .progress__dot.active {
+      background: white;
+    }
+
+    /* Swipe Hint */
+    .swipe-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.6;
+      animation: bounce 2s infinite;
+    }
+
+    .swipe-hint__text {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .swipe-hint__arrow {
+      font-size: 20px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .slide {
+        padding: 32px 20px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+      }
+
+      .stat__value {
+        font-size: 24px;
+      }
+
+      .stat__label {
+        margin-top: 0;
+        text-align: right;
+      }
+
+      .progress {
+        right: 8px;
+      }
+
+      .progress__dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      .rec-card {
+        padding: 24px 20px;
+      }
+
+      .timeline__phase {
+        gap: 12px;
+      }
+
+      .timeline__marker {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+      }
+    }
+
+    /* Hide scrollbar */
+    .deck::-webkit-scrollbar {
+      display: none;
+    }
+
+    .deck {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <!-- Slide 1: Title -->
+    <div class="slide slide--brown" data-slide="0">
+      <div class="slide__content">
+        <div class="slide__label">CRO Audit</div>
+        <h1 class="slide__title">Oat Cult<br>Product Page Analysis</h1>
+        <p class="slide__subtitle">How to increase conversions, subscriptions, and average order value</p>
+      </div>
+      <div class="swipe-hint">
+        <span class="swipe-hint__text">Swipe up</span>
+        <span class="swipe-hint__arrow">↓</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Bottom Line -->
+    <div class="slide slide--dark" data-slide="1">
+      <div class="slide__content">
+        <div class="slide__label">The Bottom Line</div>
+        <h1 class="slide__title">Your product page is <span class="slide__highlight">leaving money on the table</span></h1>
+        <p class="slide__subtitle">We've identified 6 quick wins that could significantly improve your key metrics.</p>
+        <p class="slide__subtitle" style="opacity: 0.7; font-size: 16px;">The core issue: <strong>customers are confused by the purchase flow.</strong><br>The fix is straightforward.</p>
+      </div>
+    </div>
+
+    <!-- Slide 3: Current Issues -->
+    <div class="slide slide--cream" data-slide="2">
+      <div class="slide__content">
+        <div class="slide__label">What We Found</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">5 Friction Points</h1>
+        <div class="issues">
+          <div class="issue">
+            <span class="issue__icon">❓</span>
+            <div class="issue__text">
+              <strong>Cryptic quantity buttons</strong>
+              <span>0/9/18/27 — customers don't understand what they're buying</span>
+            </div>
+          </div>
+          <div class="issue">
+            <span class="issue__icon">💔</span>
+            <div class="issue__text">
+              <strong>Price shows £0.00</strong>
+              <span>Until selection — feels broken, erodes trust</span>
+            </div>
+          </div>
+          <div class="issue">
+            <span class="issue__icon">📉</span>
+            <div class="issue__text">
+              <strong>Subscription buried</strong>
+              <span>Below one-time — missing revenue from subscriptions</span>
+            </div>
+          </div>
+          <div class="issue">
+            <span class="issue__icon">👻</span>
+            <div class="issue__text">
+              <strong>No social proof</strong>
+              <span>Near buy button — no reassurance at decision point</span>
+            </div>
+          </div>
+          <div class="issue">
+            <span class="issue__icon">🛒</span>
+            <div class="issue__text">
+              <strong>Cart adds friction</strong>
+              <span>Extra click = lost customers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Rec 1 - Box Size -->
+    <div class="slide slide--cream" data-slide="3">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">1</div>
+          <h2 class="rec-card__title">Clear Box Size Selection</h2>
+          <ul class="rec-card__list">
+            <li>Replace confusing buttons with <strong>visual tier cards</strong></li>
+            <li><strong>Starter</strong> — 9 packs, ~1 week</li>
+            <li><strong>Popular</strong> — 18 packs, ~2 weeks (pre-selected)</li>
+            <li><strong>Best Value</strong> — 27 packs, ~4 weeks + FREE shipping</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Rec 2 - Flavors -->
+    <div class="slide slide--cream" data-slide="4">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">2</div>
+          <h2 class="rec-card__title">Simplified Flavor Selection</h2>
+          <ul class="rec-card__list">
+            <li>Two clear options instead of complex grid</li>
+            <li><strong>Mixed Box</strong> — all 3 flavors (default)</li>
+            <li><strong>Pick Your Own</strong> — choose 1-3 individual flavors</li>
+            <li>Mutually exclusive — reduces decision fatigue</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Rec 3 - Subscription -->
+    <div class="slide slide--cream" data-slide="5">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">3</div>
+          <h2 class="rec-card__title">Subscription-First Design</h2>
+          <ul class="rec-card__list">
+            <li><strong>Pre-select subscription</strong> (20% off)</li>
+            <li>Show savings prominently: <strong>"You save £7.20"</strong></li>
+            <li>List benefits clearly: monthly, cancel anytime</li>
+            <li>One-time purchase becomes secondary option</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Rec 4 - Free Shipping -->
+    <div class="slide slide--cream" data-slide="6">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">4</div>
+          <h2 class="rec-card__title">Free Shipping Upsell</h2>
+          <ul class="rec-card__list">
+            <li><strong>£40 threshold</strong> creates natural upsell</li>
+            <li>"Add another flavor for FREE shipping"</li>
+            <li>"Upgrade to 27-pack for FREE shipping"</li>
+            <li>Dynamic nudge based on cart value</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Rec 5 - Social Proof -->
+    <div class="slide slide--cream" data-slide="7">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">5</div>
+          <h2 class="rec-card__title">Social Proof & Trust</h2>
+          <ul class="rec-card__list">
+            <li>Review count: <strong>"5.0 from 200+ reviews"</strong></li>
+            <li>Trust badges near CTA: Free shipping, 30-day guarantee</li>
+            <li>Short testimonial from verified subscriber</li>
+            <li>Reassurance at the decision point</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Rec 6 - Direct Checkout -->
+    <div class="slide slide--cream" data-slide="8">
+      <div class="slide__content">
+        <div class="rec-card">
+          <div class="rec-card__number">6</div>
+          <h2 class="rec-card__title">Direct to Checkout</h2>
+          <ul class="rec-card__list">
+            <li><strong>Skip the cart entirely</strong></li>
+            <li>One product store = one click to checkout</li>
+            <li>Reduce steps from 7 to 4</li>
+            <li>Every extra click loses customers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Expected Results -->
+    <div class="slide slide--brown" data-slide="9">
+      <div class="slide__content">
+        <div class="slide__label">Expected Results</div>
+        <h1 class="slide__title">The Opportunity</h1>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__value">+25-40%</div>
+            <div class="stat__label">Conversion Rate</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value">+40-60%</div>
+            <div class="stat__label">Subscription Rate</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value">+15-20%</div>
+            <div class="stat__label">Average Order Value</div>
+          </div>
+        </div>
+        <p class="slide__subtitle" style="margin-top: 32px; opacity: 0.8;">Conservative estimates based on industry benchmarks for similar optimizations.</p>
+      </div>
+    </div>
+
+    <!-- Slide 11: Timeline -->
+    <div class="slide slide--cream" data-slide="10">
+      <div class="slide__content">
+        <div class="slide__label">Plan of Action</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 32px); margin-bottom: 32px;">4-Phase Rollout</h1>
+        <div class="timeline">
+          <div class="timeline__phase">
+            <div class="timeline__marker">1</div>
+            <div class="timeline__content">
+              <h3>Foundation</h3>
+              <p>Box size cards, flavor selector, subscription toggle, direct checkout</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">2</div>
+            <div class="timeline__content">
+              <h3>Refinement</h3>
+              <p>"Pick your own" option, free shipping nudges, mobile sticky CTA</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">3</div>
+            <div class="timeline__content">
+              <h3>Polish</h3>
+              <p>Trust badges, social proof, testimonials, animations</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">4</div>
+            <div class="timeline__content">
+              <h3>Measure</h3>
+              <p>A/B testing, track metrics, iterate based on data</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Next Steps -->
+    <div class="slide slide--dark" data-slide="11">
+      <div class="slide__content">
+        <div class="slide__label">Next Steps</div>
+        <h1 class="slide__title">Ready to increase conversions?</h1>
+        <p class="slide__subtitle">Review this deck, confirm priorities, and we can start implementation immediately.</p>
+        <a href="mailto:alex@happypages.co" class="cta-button">Let's Talk</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress" id="progress"></div>
+
+  <script>
+    const deck = document.getElementById('deck');
+    const progress = document.getElementById('progress');
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    // Create progress dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'progress__dot';
+      dot.dataset.slide = i;
+      dot.addEventListener('click', () => {
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+      });
+      progress.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.progress__dot');
+
+    // Update active dot on scroll
+    function updateProgress() {
+      const scrollPos = deck.scrollTop;
+      const slideHeight = window.innerHeight;
+      const currentSlide = Math.round(scrollPos / slideHeight);
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+
+      // Update dot colors based on slide background
+      const activeSlide = slides[currentSlide];
+      const isDark = activeSlide.classList.contains('slide--brown') ||
+                     activeSlide.classList.contains('slide--dark');
+
+      progress.style.setProperty('--dot-color', isDark ? 'rgba(255,255,255,0.3)' : 'rgba(139,69,19,0.3)');
+      progress.style.setProperty('--dot-active', isDark ? 'white' : '#8B4513');
+    }
+
+    deck.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const slideHeight = window.innerHeight;
+
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'j') {
+        e.preventDefault();
+        deck.scrollBy({ top: slideHeight, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'k') {
+        e.preventDefault();
+        deck.scrollBy({ top: -slideHeight, behavior: 'smooth' });
+      }
+    });
+
+    // Hide swipe hint after first scroll
+    deck.addEventListener('scroll', function hideHint() {
+      const hint = document.querySelector('.swipe-hint');
+      if (hint && deck.scrollTop > 50) {
+        hint.style.opacity = '0';
+        hint.style.transition = 'opacity 0.3s';
+        setTimeout(() => hint.remove(), 300);
+        deck.removeEventListener('scroll', hideHint);
+      }
+    });
+  </script>
+</body>
+</html>
