@@ -194,10 +194,15 @@ CRO-optimized product purchase page with:
   }
 
   @media screen and (max-width: 767px) {
+    .shop-gallery {
+      min-width: 0;
+      overflow: hidden;
+    }
+
     .shop-gallery__main {
-      border-radius: 0;
-      margin: 0 calc(-1 * var(--spacing-5));
-      width: calc(100% + var(--spacing-5) * 2);
+      border-radius: 8px;
+      margin: 0;
+      width: 100%;
     }
 
     .shop-gallery__nav {
@@ -1522,7 +1527,6 @@ CRO-optimized product purchase page with:
           :disabled="!canCheckout"
         >
           {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
-          <div class="cta-button__summary" x-text="getOrderSummary()"></div>
         </button>
       </div>
 
@@ -1558,7 +1562,6 @@ CRO-optimized product purchase page with:
       :disabled="!canCheckout"
     >
       {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
-      <div class="cta-button__summary" x-text="getOrderSummary()"></div>
     </button>
   </div>
 </div>
