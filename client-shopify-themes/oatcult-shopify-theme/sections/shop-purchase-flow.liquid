@@ -703,30 +703,39 @@ CRO-optimized product purchase page with:
     color: var(--spf-text-color);
   }
 
-  .flavor-card__action {
-    padding: var(--spacing-2) var(--spacing-4);
-    border: 1px solid var(--spf-border-color);
-    border-radius: var(--rounded);
-    background: transparent;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    cursor: pointer;
+  .flavor-card__checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--spf-selector-border);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     transition: all var(--transition-normal);
-    color: var(--spf-text-color);
   }
 
-  .flavor-card__action:hover {
-    background: rgb(var(--text-primary) / 0.05);
+  .flavor-card__checkbox svg {
+    width: 14px;
+    height: 14px;
+    stroke: white;
+    stroke-width: 3;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
   }
 
-  .flavor-card--selected .flavor-card__action {
+  .flavor-card--selected .flavor-card__checkbox {
     background: var(--spf-selector-selected-border);
     border-color: var(--spf-selector-selected-border);
-    color: white;
   }
 
-  .flavor-card--selected .flavor-card__action:hover {
-    background: color-mix(in srgb, var(--spf-selector-selected-border) 85%, black);
+  .flavor-card--selected .flavor-card__checkbox svg {
+    opacity: 1;
+  }
+
+  .flavor-card:hover:not(.flavor-card--selected) .flavor-card__checkbox {
+    border-color: rgb(var(--text-primary) / 0.3);
   }
 
   /* Info text below flavor cards */
@@ -994,19 +1003,6 @@ CRO-optimized product purchase page with:
     font-weight: 700;
     color: var(--spf-savings-color);
     margin-top: auto;
-  }
-
-  .sub-option__nudge {
-    margin-top: var(--spacing-3);
-    padding: var(--spacing-3);
-    background: rgb(var(--warning-background));
-    border-radius: var(--rounded);
-    font-size: var(--text-sm);
-    color: rgb(var(--warning-text));
-    margin-left: 32px;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
   }
 
   /* Subscribe section redesign - two column layout */
@@ -1461,11 +1457,11 @@ CRO-optimized product purchase page with:
                             {%- endif -%}
                           </div>
                           <div class="flavor-card__name">{{ flavor_name }}</div>
-                          <button
-                            class="flavor-card__action"
-                            @click.stop="toggleFlavor({{ flavor_product.id }})"
-                            x-text="selectedFlavors.includes({{ flavor_product.id }}) ? 'Un-select' : 'Select'"
-                          ></button>
+                          <span class="flavor-card__checkbox">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          </span>
                         </div>
                       {%- endif -%}
                     {%- endfor -%}
@@ -1500,11 +1496,11 @@ CRO-optimized product purchase page with:
                             {%- endif -%}
                           </div>
                           <div class="flavor-card__name">{{ flavor_name }}</div>
-                          <button
-                            class="flavor-card__action"
-                            @click.stop="toggleFlavor({{ product.id }})"
-                            x-text="selectedFlavors.includes({{ product.id }}) ? 'Un-select' : 'Select'"
-                          ></button>
+                          <span class="flavor-card__checkbox">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          </span>
                         </div>
                       {%- endunless -%}
                     {%- endfor -%}
@@ -1546,7 +1542,7 @@ CRO-optimized product purchase page with:
               <div class="size-card__label" x-text="size.label"></div>
               <div class="size-card__packs" x-text="size.packsLabel"></div>
               <div class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></div>
-              <div class="size-card__per-pack" x-text="formatPrice(getSizePrice(size.id) / size.id) + '/pack'"></div>
+              <div class="size-card__per-pack" x-text="formatPrice(getSizePrice(size.id) / (size.id * effectiveFlavorCount)) + '/pack'"></div>
             </div>
           </template>
         </div>
@@ -1607,9 +1603,6 @@ CRO-optimized product purchase page with:
               <div class="sub-option__per-box" x-text="formatPrice(getTotalPrice(true)) + '/box'"></div>
               <div class="sub-option__savings">Save <span x-text="formatPrice(getSavings())"></span></div>
             </div>
-          </div>
-          <div class="sub-option__nudge" x-show="subscribe && showFreeShippingNudge" x-collapse>
-            💡 <span x-text="freeShippingNudgeText"></span>
           </div>
         </div>
 
@@ -1822,21 +1815,6 @@ CRO-optimized product purchase page with:
       get canCheckout() {
         if (this.flavorMode === 'mixed') return true;
         return this.selectedFlavors.length > 0;
-      },
-
-      get showFreeShippingNudge() {
-        const total = this.getTotalPrice(true);
-        const totalPence = total;
-        return totalPence < 4000 && this.flavorMode === 'pick' && this.selectedFlavors.length < 3;
-      },
-
-      get freeShippingNudgeText() {
-        const total = this.getTotalPrice(true);
-        const gap = 4000 - total;
-        if (this.selectedFlavors.length < 3 && gap > 0) {
-          return 'Add another flavor for FREE shipping';
-        }
-        return 'Upgrade to 27-pack for FREE shipping';
       },
 
       // Methods
