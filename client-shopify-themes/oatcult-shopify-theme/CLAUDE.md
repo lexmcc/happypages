@@ -85,6 +85,13 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 
 - NEVER run Shopify CLI commands (`shopify theme dev`, `shopify theme push`, `shopify theme pull`, etc.) without explicit permission EVERY TIME - these commands interact with live store data
 
+## Planning Docs
+
+- [SPEC.md](./SPEC.md) - Project specification and feature checklist
+- [SUBSCRIPTION-MIGRATION-PLAN.md](./SUBSCRIPTION-MIGRATION-PLAN.md) - Subscription app migration analysis
+- [PRODUCT-PAGE-CRO-PLAN.md](./PRODUCT-PAGE-CRO-PLAN.md) - Product page redesign spec
+- [CRO-AUDIT-CLIENT.md](./CRO-AUDIT-CLIENT.md) - Client-facing CRO audit
+
 ## Documentation
 
 Official technical documentation: https://support.maestrooo.com/category/300-technical-documentation
