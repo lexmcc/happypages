@@ -1,0 +1,192 @@
+{% if section.blocks.size > 0 %}
+  {%- render 'section-spacing-collapsing' -%}
+
+  <style>
+    #shopify-section-{{ section.id }} {
+      --section-spacing-inline: 0;
+      --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.125rem{% elsif section.settings.text_size == 'small' %}2.5rem{% elsif section.settings.text_size == 'medium' %}3.75rem{% elsif section.settings.text_size == 'large' %}5rem{% else %}7.5rem{% endif %};
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} {
+        --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.5rem{% elsif section.settings.text_size == 'small' %}3.75rem{% elsif section.settings.text_size == 'medium' %}5rem{% elsif section.settings.text_size == 'large' %}8.75rem{% else %}12.5rem{% endif %};
+      }
+    }
+
+    .marquee-container {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .marquee {
+      display: flex;
+      width: 200%; /* Double the width to accommodate the duplicate content */
+      animation: marquee_scroller {{ section.settings.scrolling_speed }}s linear infinite;
+    }
+
+    .marquee-content_scroller {
+      display: flex;
+      width:100%;
+    }
+
+    .scrolling-text__text_scroller {
+      white-space: nowrap;
+      padding: 0 4rem;
+      width:25vw;
+    }
+
+    @keyframes marquee_scroller {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100vw); }
+    }
+  </style>
+
+  {%- if section.settings.text_size == 'xsmall' -%}
+    {%- assign is_tight = true -%}
+  {%- endif -%}
+
+  <div {% render 'section-properties', tight: is_tight %}>
+    <div class="marquee-container">
+      <div class="marquee">
+        {% for i in (1..2) %}
+          <div class="marquee-content marquee-content_scroller">
+            {% for block in section.blocks %}
+              {% if block.settings.text != blank %}
+                <span class="scrolling-text__text scrolling-text__text_scroller heading">
+                  {%- render 'styled-text', content: block.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
+                </span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "Multi-Text Marquee",
+  "class": "shopify-section--scrolling-text",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        {
+          "value": "xsmall",
+          "label": "X-Small"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "xlarge",
+          "label": "X-Large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Text style",
+      "options": [
+        {
+          "value": "outline",
+          "label": "Outline"
+        },
+        {
+          "value": "fill",
+          "label": "Fill"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "scrolling_speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Scrolling speed",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set. Gradient text outline and gradient background cannot be combined."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color_background",
+      "id": "text_gradient",
+      "label": "Text gradient"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Promotion text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-Text Marquee",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

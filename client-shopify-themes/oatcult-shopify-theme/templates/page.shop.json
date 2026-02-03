@@ -1,0 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "shop_purchase_flow": {
+      "type": "shop-purchase-flow",
+      "blocks": {
+        "gallery_image_Wig3QK": {
+          "type": "gallery_image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_Cult_ALL_top_mix_9_pink_UPDATED_LORES.jpg",
+            "alt": "Product image"
+          }
+        },
+        "gallery_image_MACiXU": {
+          "type": "gallery_image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new7_0da71485-addb-4701-acd5-e8e8b9929aca.jpg",
+            "alt": "Product image"
+          }
+        },
+        "gallery_image_wPLV3H": {
+          "type": "gallery_image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new9_c4f2fe12-26bc-4988-9e6b-580df2dd65d3.jpg",
+            "alt": "Product image"
+          }
+        },
+        "gallery_image_fgzfVf": {
+          "type": "gallery_image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new11.jpg",
+            "alt": "Product image"
+          }
+        },
+        "gallery_image_xDFNUK": {
+          "type": "gallery_image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new10.jpg",
+            "alt": "Product image"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_image_Wig3QK",
+        "gallery_image_MACiXU",
+        "gallery_image_wPLV3H",
+        "gallery_image_fgzfVf",
+        "gallery_image_xDFNUK"
+      ],
+      "settings": {
+        "title": "Overnight Gut Oats",
+        "subtitle": "DELICIOUS OVERNIGHT OATS, JUST ADD MILK. NO FLUFF.",
+        "reviews_text": "5.0 from 200+ reviews",
+        "benefit_1": "1+ billion probiotics per serving",
+        "benefit_1_icon": "shopify://shop_images/Figma_2024-09-23_11.22.04_240x240_91cdc439-ad22-47bb-95c3-654605a62e30.webp",
+        "benefit_2": "No artificial ingredients or added sugars",
+        "benefit_2_icon": "shopify://shop_images/Figma_2024-09-23_11.21.47_240x240_11c87ca3-0515-456a-8610-018c21ce6177.webp",
+        "benefit_3": "Supports healthy digestion",
+        "benefit_3_icon": "shopify://shop_images/Figma_2024-09-23_11.21.19_240x240_69a5f938-23dd-4c7a-a2c8-b6999c453107.webp",
+        "testimonial_quote": "Damn this stuff is great. First, I love a good cult! Excited to have passed the initiation stage! Second, they taste amazing. Made me so much healthier with zero effort. love that",
+        "testimonial_author": "Patrick C.",
+        "flavors_title": "Pick your flavors",
+        "size_title": "Choose your size",
+        "mixed_box_name": "THE CULT MIX",
+        "mixed_box_image": "shopify://shop_images/Oat_Cult_ALL_top_mix_9_pink_UPDATED_LORES.jpg",
+        "mixed_box_description": "All 3 flavors in one box — can't decide? This is the one for you.",
+        "mixed_box_badge": "",
+        "mixed_box_flavor_list": "Get all 3 Cults: Cacao, Strawberry Goji, Cinnamon",
+        "pick_own_name": "Pick your own",
+        "pick_own_description": "Select 1-3 individual flavors",
+        "sub_tick_icon": "shopify://shop_images/check-circle.png",
+        "sub_benefit_1": "Pause or cancel anytime",
+        "sub_benefit_2": "Monthly, to your door",
+        "sub_benefit_3": "Join the Cult & save 20%",
+        "cta_button_text": "Checkout",
+        "selected_background": "#d8f7ff",
+        "selected_border": "#6cdfff",
+        "selected_text": "#000000"
+      }
+    }
+  },
+  "order": [
+    "shop_purchase_flow"
+  ]
+}

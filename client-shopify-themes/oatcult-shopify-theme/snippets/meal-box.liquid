@@ -1,0 +1,517 @@
+<div x-data="productSelector()" x-init="initializeSelection()" class="maison-multi-product-selector animate__animated animate__fadeIn">
+  <p class="maison-quantity-title">CHOOSE CULTS & QUANTITIES</p>
+
+  {% for product in collections['breakfast'].products limit: 4 %}
+    <div 
+      class="maison-product-item maison-{{ product.metafields.custom.color }}"
+    >
+      <div class="maison-product-content">
+        <div class="maison-product-info">
+          <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}" class="maison-product-image">
+          <div>
+            <p class="maison-product-title">{{ product.title | remove: 'Overnight Gut Oats |' }}</p>
+            <p class="maison-product-benefits">{{ product.metafields.custom.benefits }} <a href="{{ product.url }}" class="maison-learn-more">Meet the flavour</a></p>
+          </div>
+        </div>
+        <div class="maison-quantity-selector">
+          <button 
+            @click="selectVariant({{ product.id }}, 0)"
+            class="maison-quantity-button"
+            :class="{ 'maison-selected': isSelected({{ product.id }}, 0) }"
+          >
+            0
+          </button>
+          {% for variant in product.variants %}
+            <button 
+              @click="selectVariant({{ product.id }}, {{ variant.id }})"
+              class="maison-quantity-button"
+              :class="{ 'maison-selected': isSelected({{ product.id }}, {{ variant.id }}) }"
+            >
+              {{ variant.title }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="maison-subscription-options">
+    <div class="maison-subscription-option" :class="{ 'selected': !subscribe }" @click="subscribe = false; updateTotals()">
+      <div class="option-header">
+        <div>
+        <input type="radio" :checked="!subscribe" class="maison-subscription-radio">
+        <span class="option-title">One-Time Purchase</span>
+        </div>
+
+        <div class="option-price">
+        <span x-text="formatPrice(originalPrice)"></span>
+        
+      </div>
+        
+      </div>
+      
+      
+    </div>
+
+    <div class="maison-subscription-option" :class="{ 'selected': subscribe }" @click="toggleSubscription(subscribe ? false : true)">
+      <div class="option-header">
+        <div>
+        <input type="radio" :checked="subscribe" class="maison-subscription-radio">
+        <span class="option-title">Sub & Save 20%!</span>
+        </div>
+
+        <div class="option-price">
+        <span x-text="formatPrice(calculateDiscountedPrice())"></span>
+        <span class="original-price"><span x-text="formatPrice(originalPrice)"></span></span>
+        
+      </div>
+      </div>
+      
+      
+      <div class="subscription-benefits">
+        <div class="benefit">
+          
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"  class="benefit-icon">
+<path d="M12 21.6C17.3019 21.6 21.6 17.3019 21.6 12C21.6 6.69806 17.3019 2.39999 12 2.39999C6.69806 2.39999 2.39999 6.69806 2.39999 12C2.39999 17.3019 6.69806 21.6 12 21.6Z" stroke="#528456" stroke-width="2.4"/>
+<path d="M16.2857 8.91429L11.8526 15.5863C11.7963 15.6711 11.7219 15.7423 11.6347 15.7948C11.5476 15.8473 11.4498 15.8797 11.3485 15.8897C11.2473 15.8997 11.1451 15.8871 11.0493 15.8527C10.9535 15.8183 10.8666 15.763 10.7949 15.6909L7.71428 12.6" stroke="#528456" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+          Devote yourself to the Cult and save 20%.
+        </div>
+        <div class="benefit">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"  class="benefit-icon">
+<path d="M12 21.6C17.3019 21.6 21.6 17.3019 21.6 12C21.6 6.69806 17.3019 2.39999 12 2.39999C6.69806 2.39999 2.39999 6.69806 2.39999 12C2.39999 17.3019 6.69806 21.6 12 21.6Z" stroke="#528456" stroke-width="2.4"/>
+<path d="M16.2857 8.91429L11.8526 15.5863C11.7963 15.6711 11.7219 15.7423 11.6347 15.7948C11.5476 15.8473 11.4498 15.8797 11.3485 15.8897C11.2473 15.8997 11.1451 15.8871 11.0493 15.8527C10.9535 15.8183 10.8666 15.763 10.7949 15.6909L7.71428 12.6" stroke="#528456" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+          Monthly straight to your door.
+        </div>
+        <div class="benefit">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"  class="benefit-icon">
+<path d="M12 21.6C17.3019 21.6 21.6 17.3019 21.6 12C21.6 6.69806 17.3019 2.39999 12 2.39999C6.69806 2.39999 2.39999 6.69806 2.39999 12C2.39999 17.3019 6.69806 21.6 12 21.6Z" stroke="#528456" stroke-width="2.4"/>
+<path d="M16.2857 8.91429L11.8526 15.5863C11.7963 15.6711 11.7219 15.7423 11.6347 15.7948C11.5476 15.8473 11.4498 15.8797 11.3485 15.8897C11.2473 15.8997 11.1451 15.8871 11.0493 15.8527C10.9535 15.8183 10.8666 15.763 10.7949 15.6909L7.71428 12.6" stroke="#528456" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+          No commitment, cancel anytime
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span x-show="subscribe" class="best_option" x-transition>
+    Welcome to the Cult’s best deal—your oats await
+  </span>
+  <button 
+    @click="addToCart"
+    class="maison-add-to-cart-button"
+    :disabled="totalQuantity === 0"
+  >
+    ADD TO CART |  
+    <span x-show="subscribe" x-transition>
+      <span x-text="formatPrice(discountedPrice)"></span>
+      <span class="original-price" x-text="formatPrice(originalPrice)" style="text-decoration: line-through;"></span>
+    </span>
+    <span x-show="!subscribe" x-text="formatPrice(originalPrice)"></span>
+  </button>
+
+  <p class="maison-total-meals">TOTAL: <span x-text="totalQuantity"></span> MEALS/PACKS</p>
+</div>
+
+<script>
+  function productSelector() {
+    return {
+      selectedVariants: {},
+      subscribe: false,
+      totalQuantity: 0,
+      originalPrice: 0,
+      discountedPrice: 0,
+      sellingPlans: {},
+
+      initializeSelection() {
+       {% for product in collections['breakfast'].products limit: 4 %}
+      {% assign first_variant = product.variants.first %}
+      
+      // Default "Cinnamon mix" to "7", others to "0"
+if ("{{ product.title }}" === "Overnight Gut Oats | Cinnamon Mix") {
+        this.selectedVariants[{{ product.id }}] = {{ product.variants[1].id }}; // Pre-select "7"
+      } else {
+        this.selectedVariants[{{ product.id }}] = 0; // Default others to "0"
+      }
+
+      // Store selling plan for each variant
+      {% for variant in product.variants %}
+        {% if variant.selling_plan_allocations.size > 0 %}
+          this.sellingPlans[{{ variant.id }}] = {{ variant.selling_plan_allocations.first.selling_plan.id }};
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    this.updateTotals();
+},
+
+      isSelected(productId, variantId) {
+        return this.selectedVariants[productId] === variantId;
+      },
+
+      selectVariant(productId, variantId) {
+        this.selectedVariants[productId] = variantId;
+        this.updateTotals();
+      },
+
+      updateTotals() {
+        this.totalQuantity = 0;
+        this.originalPrice = 0;
+
+        Object.entries(this.selectedVariants).forEach(([productId, variantId]) => {
+          if (variantId !== 0) {
+            {% for product in collections['breakfast'].products limit: 4 %}
+              {% for variant in product.variants %}
+                if ({{ product.id }} == productId && {{ variant.id }} == variantId) {
+                  let variantQuantity = {{ variant.title | remove: 'Pack' | times: 1 }};
+                  this.totalQuantity += variantQuantity;
+                  this.originalPrice += {{ variant.price | times: 0.01 }};
+                }
+              {% endfor %}
+            {% endfor %}
+          }
+        });
+
+        this.discountedPrice = this.calculateDiscountedPrice();
+      },
+
+      calculateDiscountedPrice() {
+  return this.originalPrice * 0.8; // 20% discount
+},
+
+      formatPrice(price) {
+        return '{{ cart.currency.symbol }}' + price.toFixed(2);
+      },
+      
+toggleSubscription(value) {
+  this.subscribe = value === this.subscribe ? false : value;
+  this.updateTotals();
+},
+      addToCart() {
+        if (this.totalQuantity === 0) {
+          alert('Please select at least one product before adding to cart.');
+          return;
+        }
+
+        let formData = {
+          'items': []
+        };
+
+        Object.entries(this.selectedVariants).forEach(([productId, variantId]) => {
+          if (variantId !== 0) {
+            let item = {
+              'id': parseInt(variantId),
+              'quantity': 1
+            };
+
+            if (this.subscribe && this.sellingPlans[variantId]) {
+              item.selling_plan = this.sellingPlans[variantId];
+            }
+
+            formData.items.push(item);
+          }
+        });
+
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Products added to cart:', data);
+          this.openSidecart();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('There was an error adding products to the cart. Please try again.');
+        });
+      },
+
+      openSidecart() {
+        const cartDrawer = document.querySelector("#cart-drawer");
+        fetch("/?section_id=cart-drawer")
+          .then((res) => res.text())
+          .then((text) => {
+            const sectionHTML = new DOMParser().parseFromString(text, "text/html");
+            const cartInnerHTML = sectionHTML.getElementById("cart-drawer").innerHTML;
+            cartDrawer.innerHTML = cartInnerHTML;
+            cartDrawer.setAttribute("open", "");
+          });
+      }
+    }
+  }
+</script>
+
+<style>
+  .maison-multi-product-selector {
+    max-width: 600px;
+    margin: 0 auto;
+        font: var(--text-font-style) var(--text-font-weight) var(--text-base) / 1.6 var(--text-font-family);
+  }
+
+  .maison-quantity-title {
+    font-size: 0.875rem;
+    color: #4a5568;
+    margin-bottom: 1rem;
+  }
+
+  .maison-product-item {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 0.875rem;
+    background-color: #f0e9de;
+  }
+
+  .maison-product-item.maison-brown {
+    background-color: #4a2511;
+    color: #bfdbfe;
+  }
+
+  .maison-product-item.maison-tan {
+    background-color: #fef3c7;
+    color: #4a2511;
+  }
+
+  .maison-product-item.maison-pink {
+    background-color: #fca5a5;
+    color: #4a2511;
+  }
+
+  .maison-product-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .maison-product-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .maison-product-image {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+
+  .maison-product-title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .maison-product-benefits {
+    font-size: 0.875rem;
+    margin: 0.25rem 0 0 0;
+  }
+
+  .maison-learn-more {
+    text-decoration: underline;
+  }
+
+  .maison-quantity-selector {
+    display: flex;
+  }
+
+  .maison-quantity-button {
+        width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin: 0 0.25rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    transition:0.3s all ease;
+  }
+
+  .maison-product-item.maison-brown .maison-quantity-button {
+    background-color: #3f2010;
+    color: #bfdbfe;
+  }
+
+  .maison-product-item.maison-tan .maison-quantity-button {
+    background-color: #fde68a;
+    color: #4a2511;
+  }
+
+  .maison-product-item.maison-pink .maison-quantity-button {
+    background-color: #f87171;
+    color: #4a2511;
+  }
+
+  .maison-quantity-button.maison-selected {
+    background-color: #bfdbfe;
+    color: #4a2511;
+    transition:0.3s all ease;
+  }
+
+  .maison-subscription-option {
+    background-color: #f0e9de;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 0px;
+  }
+
+  .maison-subscription-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .maison-subscription-checkbox {
+    height: 1.25rem;
+    width: 1.25rem;
+    margin-right: 0.5rem;
+  }
+
+  .maison-subscription-text {
+    font-size: 0.875rem;
+  }
+
+  .maison-subscription-text strong {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .maison-add-to-cart-button {
+    width: 100%;
+    background-color: #93c5fd;
+    color: #4a2511;
+    padding: 1rem 0.75rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: center;
+  }
+
+  .maison-add-to-cart-button:hover {
+    background-color: #60a5fa;
+  }
+
+  .maison-total-meals {
+    text-align: center;
+    margin-top: 1rem;
+    color: #4a5568;
+  }
+
+   .original-price {
+    margin-right: 0.5rem;
+    color: #888;
+  }
+
+  @media (max-width: 575px) {
+    .maison-quantity-selector {
+      
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: px;
+    grid-row-gap: 0px;
+  }
+  }
+  .best_option {
+    
+    padding: 3px;
+    width: 100%!important;
+    text-align: center;
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    background-color: #92c5fd20;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #426993;
+    margin-bottom: 12px;
+  }
+
+   .maison-subscription-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .maison-subscription-option {
+        background-color: #f0e9de;
+    border: 2px solid #c8c1b6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .maison-subscription-option.selected {
+    border-color: #93c5fd;
+    background-color: #f0f7ff;
+  }
+
+  .option-header {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    margin-bottom: 0rem;
+  }
+
+  .maison-subscription-radio {
+    margin-right: 0.5rem;
+  }
+
+  .option-title {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .option-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom:0px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 2px;
+    align-items: baseline;
+}
+
+  .option-quantity {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0;
+  }
+
+  .original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+  }
+
+  .subscription-benefits {
+    margin-top: 0.75rem;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    margin-bottom: 0rem;
+  }
+
+  .benefit-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+  }
+</style>

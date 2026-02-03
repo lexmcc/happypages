@@ -1,0 +1,301 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "80ch"
+      }
+    },
+    "multi_column_K9Jyyp": {
+      "type": "multi-column",
+      "blocks": {
+        "item_p6MRKQ": {
+          "type": "item",
+          "settings": {
+            "column_size": "2",
+            "title": "Fuel Your Day",
+            "heading_tag": "h1",
+            "content": "",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_8niB3k": {
+          "type": "item",
+          "settings": {
+            "column_size": "2",
+            "title": "",
+            "heading_tag": "h4",
+            "content": "<p>At Oat Cult, we are on a mission to provide you with the highest quality overnight oats. Our carefully crafted recipes are packed with flavor and nutrition, making them the perfect choice to start your day right.</p>",
+            "link_url": "shopify://collections/all",
+            "link_text": "Learn More",
+            "link_style": "button"
+          }
+        }
+      },
+      "block_order": [
+        "item_p6MRKQ",
+        "item_8niB3k"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": false,
+        "gap": "medium",
+        "text_alignment": "start",
+        "subheading": "",
+        "title": "",
+        "content": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "media_with_text_wqFExQ": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_TYcywx": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_Sachet_Packaging_Mockup_cocoa_pink.jpg",
+            "media_width": 50,
+            "media_position": "end",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "icon_width": 48,
+            "subheading": "",
+            "title": "Inspiration",
+            "content": "<p>Oat Cult was founded with a simple goal: to make healthy and delicious breakfasts accessible to everyone. Our founder, Jane, was inspired by her own struggles to find a quick and nutritious breakfast option that didn't compromise on taste. She wanted to create a product that would not only nourish the body but also delight the taste buds. And thus, Oat Cult was born.</p>",
+            "link_text": "",
+            "link_url": "",
+            "background": "#ffffff",
+            "background_gradient": "",
+            "text_color": "#1a1a1a",
+            "text_gradient": "",
+            "button_background": "",
+            "button_text_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_TYcywx"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing": "medium"
+      }
+    },
+    "rich_text_RdLMBQ": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_63QepC": {
+          "type": "heading",
+          "settings": {
+            "text": "We're hiring!",
+            "heading_tag": "h2",
+            "text_color": "",
+            "gradient": ""
+          }
+        },
+        "richtext_LhjFwa": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+          }
+        },
+        "button_n3fJGx": {
+          "type": "button",
+          "settings": {
+            "style": "outline",
+            "size": "base",
+            "text": "Open positions",
+            "url": "",
+            "background": "",
+            "text_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_63QepC",
+        "richtext_LhjFwa",
+        "button_n3fJGx"
+      ],
+      "settings": {
+        "full_width": true,
+        "content_width": "small",
+        "text_position": "center",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "media_with_text_cUEVTd": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_DgBR3m": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_Falling-Square-Boxes-Scene-Mockup.jpg",
+            "media_width": 50,
+            "media_position": "start",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "icon_width": 48,
+            "subheading": "Nourishing",
+            "title": "Choose Oat Cult for Organic, Sustainable, and Healthy Oats",
+            "content": "<p>At Oat Cult, we pride ourselves on providing you with the best quality overnight oats. Our products are made with organic ingredients, ensuring that you get the most natural and nutritious breakfast. We are committed to sustainability, using eco-friendly packaging and supporting ethical farming practices. With Oat Cult, you can enjoy a delicious and healthy start to your day.</p>",
+            "link_text": "Learn More",
+            "link_url": "shopify://collections/all",
+            "background": "#ffffff",
+            "background_gradient": "",
+            "text_color": "#1a1a1a",
+            "text_gradient": "",
+            "button_background": "#1a1a1a",
+            "button_text_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_DgBR3m"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing": "medium"
+      }
+    },
+    "press_WeJeEe": {
+      "type": "press",
+      "blocks": {
+        "quote_FFJfWW": {
+          "type": "quote",
+          "settings": {
+            "logo_width": 100,
+            "author": "Emily Thompson",
+            "content": "The overnight oats from Oat Cult are a game-changer! They are delicious, convenient, and packed with nutrients. I love how easy it is to prepare them by simply adding milk and letting them sit overnight.",
+            "show_rating": false,
+            "rating": 0
+          }
+        },
+        "quote_TUdUhh": {
+          "type": "quote",
+          "settings": {
+            "logo_width": 100,
+            "author": "Emily Thompson",
+            "content": "The overnight oats from Oat Cult are a game-changer! They are delicious, convenient, and packed with nutrients. I love how easy it is to prepare them by simply adding milk and letting them sit overnight.",
+            "show_rating": false,
+            "rating": 0
+          }
+        }
+      },
+      "block_order": [
+        "quote_FFJfWW",
+        "quote_TUdUhh"
+      ],
+      "settings": {
+        "full_width": true,
+        "content_size": "medium",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "logo_item_background": "",
+        "logo_item_border": ""
+      }
+    },
+    "newsletter_GPEBai": {
+      "type": "newsletter",
+      "settings": {
+        "full_width": false,
+        "show_icon": true,
+        "title": "Newsletter",
+        "content": "<p>Write something about what your customers will receive by subscribing to your newsletter.</p>",
+        "button_text": "Subscribe",
+        "subtext": "",
+        "background": "#efe7dc",
+        "background_gradient": "",
+        "text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    },
+    "image_with_text_overlay_9gek6X": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading_tEmXgr": {
+          "type": "heading",
+          "settings": {
+            "text": "Discover Our Delicious Overnight Oats",
+            "heading_tag": "h2"
+          }
+        },
+        "richtext_99yWBk": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Indulge in our flavorful and nutritious overnight oats, packed with wholesome ingredients.</p>"
+          }
+        },
+        "button_gcAfcB": {
+          "type": "button",
+          "settings": {
+            "style": "fill",
+            "size": "lg",
+            "text": "Explore",
+            "url": "shopify://collections/all",
+            "background": "",
+            "text_color": ""
+          }
+        },
+        "button_beiK6w": {
+          "type": "button",
+          "settings": {
+            "style": "outline",
+            "size": "lg",
+            "text": "Contact",
+            "url": "shopify://pages/contact",
+            "background": "",
+            "text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "heading_tEmXgr",
+        "richtext_99yWBk",
+        "button_gcAfcB",
+        "button_beiK6w"
+      ],
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "lg",
+        "image": "shopify://shop_images/Oat_Square-Boxes-Product-Brand-Packaging-Mockup.jpg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center-start sm:text-start",
+        "text_color": "#ffffff",
+        "overlay_color": "#281118",
+        "overlay_opacity": 80
+      }
+    }
+  },
+  "order": [
+    "main",
+    "multi_column_K9Jyyp",
+    "media_with_text_wqFExQ",
+    "rich_text_RdLMBQ",
+    "media_with_text_cUEVTd",
+    "press_WeJeEe",
+    "newsletter_GPEBai",
+    "image_with_text_overlay_9gek6X"
+  ]
+}

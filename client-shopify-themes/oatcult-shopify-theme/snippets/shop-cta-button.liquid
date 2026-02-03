@@ -1,0 +1,108 @@
+{%- comment -%}
+----------------------------------------------------------------------------------------------------------------------
+SHOP CTA BUTTON
+----------------------------------------------------------------------------------------------------------------------
+
+Simple "Buy Now" CTA button that links to the /pages/shop purchase flow page.
+This replaces the complex meal-box.liquid cross-product selector on individual product pages.
+
+{%- endcomment -%}
+
+<div class="shop-cta-button animate__animated animate__fadeIn">
+  <a href="/pages/shop" class="shop-cta-button__link">
+    <span class="shop-cta-button__text">Shop Now</span>
+    <span class="shop-cta-button__subtext">Subscribe & save 20%</span>
+  </a>
+
+  <div class="shop-cta-button__benefits">
+    <span class="shop-cta-button__benefit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Monthly delivery
+    </span>
+    <span class="shop-cta-button__benefit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Cancel anytime
+    </span>
+    <span class="shop-cta-button__benefit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Free shipping £40+
+    </span>
+  </div>
+</div>
+
+<style>
+  .shop-cta-button {
+    max-width: 600px;
+    margin: 0 auto;
+    font: var(--text-font-style) var(--text-font-weight) var(--text-base) / 1.6 var(--text-font-family);
+  }
+
+  .shop-cta-button__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px 24px;
+    border-radius: 8px;
+    background-color: #93c5fd;
+    color: #3a2e1b;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .shop-cta-button__link:hover {
+    background-color: #60a5fa;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(147, 197, 253, 0.4);
+  }
+
+  .shop-cta-button__text {
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .shop-cta-button__subtext {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+
+  .shop-cta-button__benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .shop-cta-button__benefit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .shop-cta-button__benefit svg {
+    color: #528456;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 575px) {
+    .shop-cta-button__benefits {
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,579 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "responsive_media_with_text_twnnPd": {
+      "type": "responsive-media-with-text",
+      "blocks": {
+        "image_wxJ3TN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new7hand_short.jpg",
+            "media_width": 50,
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "image_below_text": "shopify://shop_images/Oat_cult_benifits_new1.jpg",
+            "media_position": "end",
+            "text_position": "place-self-center text-center",
+            "icon": "none",
+            "icon_width": 48,
+            "subheading": "",
+            "title": "Overnight oats with a billion gut-worshipping bacteria",
+            "content": "<p>Natural ingredients, no added sugar <br/>or artificial nonsense. <strong>Blessed be breakfast</strong></p>",
+            "accordion_title_1": "",
+            "accordion_content_1": "",
+            "accordion_title_2": "",
+            "accordion_content_2": "",
+            "accordion_title_3": "",
+            "accordion_content_3": "",
+            "link_text": "BUY NOW",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "#f7aac1",
+            "background_gradient": "",
+            "text_color": "#3c1b01",
+            "text_gradient": "",
+            "button_background": "",
+            "button_text_color": "",
+            "mobile_image_first": true,
+            "mobile_order_icon": 1,
+            "mobile_order_subheading": 2,
+            "mobile_order_heading": 3,
+            "mobile_order_body": 5,
+            "mobile_order_accordions": 6,
+            "mobile_order_image_below": 7,
+            "mobile_order_button": 4,
+            "desktop_order_icon": 1,
+            "desktop_order_subheading": 2,
+            "desktop_order_heading": 3,
+            "desktop_order_body": 4,
+            "desktop_order_accordions": 5,
+            "desktop_order_image_below": 6,
+            "desktop_order_button": 7
+          }
+        }
+      },
+      "block_order": [
+        "image_wxJ3TN"
+      ],
+      "name": "Responsive Media w/ text",
+      "settings": {
+        "full_width": true,
+        "spacing": "none",
+        "remove_section_padding": true
+      }
+    },
+    "image_with_text_overlay_QYYUVb": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading_MN7UK9": {
+          "type": "heading",
+          "settings": {
+            "text": "OATS WITH GUTS",
+            "heading_tag": "h0"
+          }
+        },
+        "richtext_JL7eUV": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p><strong>Our overnight oat mixes are designed for optimal gut health, featuring over a billion live probiotic cultures per serving. Enjoy the benefits of overnight oats with added probiotics, no added sugar, and no fake sweeteners for a healthier start to your day.</strong></p>"
+          }
+        },
+        "button_4MABJB": {
+          "type": "button",
+          "settings": {
+            "style": "fill",
+            "size": "lg",
+            "text": "See flavours",
+            "url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "",
+            "text_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_MN7UK9",
+        "richtext_JL7eUV",
+        "button_4MABJB"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".h0 {font-size: 10vw; font-family: \"Rudolph\";}",
+        ".place-self-center {max-width: none;}",
+        ".button {width: auto;}"
+      ],
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "lg",
+        "image": "shopify://shop_images/Oat_Square-Boxes-Product-Brand-Packaging-Mockup.jpg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#ee6a92",
+        "overlay_color": "#000000",
+        "overlay_opacity": 75
+      }
+    },
+    "multi_column_Ap3tPK": {
+      "type": "multi-column",
+      "blocks": {
+        "item_CiMJK7": {
+          "type": "item",
+          "settings": {
+            "column_size": "2",
+            "title": "OVERNIGHT OATS WITH GUTS",
+            "heading_tag": "h2",
+            "content": "",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_tznJAG": {
+          "type": "item",
+          "settings": {
+            "column_size": "2",
+            "title": "",
+            "heading_tag": "h4",
+            "content": "<p>Our overnight oats aren't just a meal, they're <span style=\"text-decoration:underline\"><strong>a gut-health powerhouse packed with over a billion live cultures</strong></span>. </p>",
+            "link_url": "#",
+            "link_text": "See Flavours",
+            "link_style": "button"
+          }
+        }
+      },
+      "block_order": [
+        "item_CiMJK7",
+        "item_tznJAG"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "img.rounded {max-width: 80px;}"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": true,
+        "gap": "medium",
+        "text_alignment": "start",
+        "subheading": "",
+        "title": "",
+        "content": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "scrolling_text_wWgDnb": {
+      "type": "scrolling-text",
+      "custom_css": [],
+      "settings": {
+        "full_width": true,
+        "text": "+    JOIN THE CULT   +",
+        "text_size": "xsmall",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 20,
+        "background": "#3c1b01",
+        "background_gradient": "",
+        "text_color": "#ee6a92",
+        "text_gradient": ""
+      }
+    },
+    "173866928562737984": {
+      "type": "apps",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "background": "#f7aac1",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "media_with_text_qG6irt": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_MW3HiL": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_website_various_1.jpg",
+            "media_width": 50,
+            "image_below_text": "shopify://shop_images/Oat_cult_benifits_monk3.jpg",
+            "media_position": "end",
+            "text_position": "place-self-center text-center",
+            "icon": "none",
+            "icon_width": 52,
+            "subheading": "SIMPLE NIGHTS, MAGIC MORNINGS",
+            "title": "Oats + Milk = Breakfast Magic",
+            "content": "<p>Say goodbye to hectic mornings. Oat Cult’s overnight oats are packed with gut-friendly bacteria, nutrient-rich chia and flax seeds, and all-natural ingredients. Just add milk or yoghurt, leave overnight, and wake up to a creamy, delicious breakfast that’s ready when you are. No cooking, no fuss—just magic in a bowl.</p>",
+            "accordion_title_1": "",
+            "accordion_content_1": "",
+            "accordion_title_2": "",
+            "accordion_content_2": "",
+            "accordion_title_3": "",
+            "accordion_content_3": "",
+            "link_text": "Discover our flavours",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "#f7aac1",
+            "background_gradient": "",
+            "text_color": "#3a2e1b",
+            "text_gradient": "",
+            "button_background": "#3c1b01",
+            "button_text_color": "#acdbe7"
+          }
+        }
+      },
+      "block_order": [
+        "image_MW3HiL"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing": "none"
+      }
+    },
+    "multi_column_9hMmBG": {
+      "type": "multi-column",
+      "blocks": {
+        "item_RcRFXW": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/cinnamon_1.jpg",
+            "column_size": "3",
+            "title": "Cinnamon",
+            "heading_tag": "h3",
+            "content": "<p>A comforting blend of aromatic cinnamon, chia seeds, and almond slices. Perfect on its own or topped with your favourites.</p>",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "link_text": "Meet Cinnamon",
+            "link_style": "link"
+          }
+        },
+        "item_QfMHQT": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/strawberry_1_8e89ed9d-12b2-4044-8d9d-7e03a2b0515d.jpg",
+            "column_size": "3",
+            "title": "Strawberry Goji",
+            "heading_tag": "h3",
+            "content": "<p>Sweet, tangy bursts of real strawberries and goji berries, blended with chia seeds for a fruity morning ritual. Naturally divine.</p>",
+            "link_url": "shopify://products/overnight-gut-oats-strawberry-mix",
+            "link_text": "Meet Strawberry",
+            "link_style": "link"
+          }
+        },
+        "item_ekMRQM": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/cacao_1_3af1e940-874e-46d0-9c63-8f4ca2683054.jpg",
+            "column_size": "3",
+            "title": "Cacao",
+            "heading_tag": "h3",
+            "content": "<p>Rich cacao nibs and carob powder meet creamy oats for the ultimate chocolate fix. Guilt-free indulgence, every time.</p>",
+            "link_url": "shopify://products/overnight-gut-oats-cocoa-chip",
+            "link_text": "Meet Cacao",
+            "link_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "item_RcRFXW",
+        "item_QfMHQT",
+        "item_ekMRQM"
+      ],
+      "custom_css": [
+        "img.rounded {max-width: 70%; margin: 0 auto;}"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": true,
+        "gap": "medium",
+        "text_alignment": "center",
+        "subheading": "",
+        "title": "Meet the Cults",
+        "content": "",
+        "background": "#f7aac1",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "media_with_text_3LpRWg": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_9gzEJa": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Oat_Sachet_Packaging_Mockup_cocoa_pink.jpg",
+            "media_width": 50,
+            "media_position": "end",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "custom_icon": "shopify://shop_images/Figma_2024-07-15_11.20.25.png",
+            "icon_width": 80,
+            "subheading": "The Benefits of Oat Cult Overnight Oats",
+            "title": "Why Overnight Oats?",
+            "content": "<p>Overnight oats are soaked rather than cooked, breaking down starches and making them easier to digest. This process helps maintain the nutrients in the ingredients, ensuring maximum health benefits. <br/><br/></p><h5><strong>What Makes Oat Cult Special?<br/><br/></strong></h5><h6>Gut Health:</h6><p>Packed with probiotics like Bacillus subtilis, scientifically proven to reach the gut and support a healthy microbiome.</p><h6>No Added Sugar:</h6><p>Naturally sweetened, better for gut health. Sugar: Can disrupt the balance of gut bacteria, leading to digestive issues and inflammation.</p><h6>No Artificial Sweeteners:</h6><p>Keeps your digestive system happy and avoids potential gut disruption. Artificial Sweeteners can negatively affect gut health by altering gut bacteria composition.</p><h6>All-Natural Ingredients:</h6><p>Free from preservatives and fillers.</p><h6>1 Billion Live Cultures:</h6><p>Each serving contains 1 billion live cultures to ensure maximum gut health benefits.</p><h6>Improved Digestion:</h6><p>Fiber-rich ingredients promote regular bowel movements.</p><h6>Stable Blood Sugar:</h6><p>Fiber and healthy fats help prevent cravings and energy crashes.</p><h6>Enhanced Satiety:</h6><p>Keeps you full longer, reducing the need for snacking.</p><h6>Heart Health: </h6><p>Oats are rich in beta-glucan, which helps lower cholesterol.</p><h6>Anti-Inflammatory:</h6><p>Ingredients like cinnamon have anti-inflammatory properties.<br/><br/></p><h5>Your gut will love you</h5><p>A healthy gut supports digestion, boosts immunity, enhances mood, and improves overall well-being.</p>",
+            "accordion_title_1": "What Makes Oat Cult Special?",
+            "accordion_content_1": "<div class=\"ingredients-list\">\n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Gut Health</h6>\n      <p>Packed with probiotics like Bacillus subtilis, scientifically proven to reach the gut and support a healthy microbiome.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>No Added Sugar</h6>\n      <p>Naturally sweetened, better for gut health. Sugar: Can disrupt the balance of gut bacteria, leading to digestive issues and inflammation.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>No Artificial Sweeteners</h6>\n      <p>Keeps your digestive system happy and avoids potential gut disruption. Artificial Sweeteners can negatively affect gut health by altering gut bacteria composition.</p>\n    </div>\n  </div>\n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n  gap: 1rem\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "accordion_title_2": "All Natural Ingredients",
+            "accordion_content_2": "<div class=\"ingredients-list\">\n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>1 Billion Live Cultures</h6>\n      <p>Each serving contains 1 billion live cultures to ensure maximum gut health benefits.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Improved Digestion</h6>\n      <p>Fiber-rich ingredients promote regular bowel movements.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Stable Blood Sugar</h6>\n      <p>Fiber and healthy fats help prevent cravings and energy crashes.</p>\n    </div>\n  </div>\n  \n \n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n  gap: 1rem\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "accordion_title_3": "Helps Keeping You Healthy",
+            "accordion_content_3": "<div class=\"ingredients-list\">\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Heart Health</h6>\n      <p>Oats are rich in beta-glucan, which helps lower cholesterol.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Anti-Inflammatory</h6>\n      <p>Ingredients like cinnamon have anti-inflammatory properties.</p>\n    </div>\n  </div>\n\n<div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Your gut will love you</h6>\n      <p>A healthy gut supports digestion, boosts immunity, enhances mood, and improves overall well-being.</p>\n    </div>\n  </div>\n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n  gap: 1rem\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "link_text": "PICK A CULT",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "rgba(0,0,0,0)",
+            "background_gradient": "",
+            "text_color": "#1a1a1a",
+            "text_gradient": "",
+            "button_background": "",
+            "button_text_color": ""
+          }
+        },
+        "image_MMnbEH": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs_new20.jpg",
+            "media_width": 50,
+            "media_position": "end",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "icon_width": 80,
+            "subheading": "The Benefits of Oat Cult Overnight Oats",
+            "title": "Why Overnight Oats?",
+            "content": "",
+            "accordion_title_1": "What Makes Oat Cult Special?",
+            "accordion_content_1": "<div class=\"ingredients-list\">\n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Gut Health</h6>\n      <p>Packed with probiotics like Bacillus subtilis, scientifically proven to reach the gut and support a healthy microbiome.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>No Added Sugar</h6>\n      <p>Naturally sweetened, better for gut health. Sugar can disrupt the balance of gut bacteria, leading to digestive issues and inflammation.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>No Artificial Sweeteners</h6>\n      <p>Keeps your digestive system happy and avoids potential gut disruption. Artificial Sweeteners can negatively affect gut health by altering gut bacteria composition.</p>\n    </div>\n  </div>\n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n  gap: 1rem\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "accordion_title_2": "All Natural Ingredients",
+            "accordion_content_2": "<div class=\"ingredients-list\">\n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>1 Billion Live Cultures</h6>\n      <p>Each serving contains 1 billion live cultures to ensure maximum gut health benefits.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Improved Digestion</h6>\n      <p>Fibre-rich ingredients promote regular bowel movements.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Stable Blood Sugar</h6>\n      <p>Fibre and healthy fats help prevent cravings and energy crashes.</p>\n    </div>\n  </div>\n  \n \n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n  gap: 1rem\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "accordion_title_3": "Helps Keeping You Healthy",
+            "accordion_content_3": "<div class=\"ingredients-list\">\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Heart Health</h6>\n      <p>Oats are rich in beta-glucan, which helps lower cholesterol.</p>\n    </div>\n  </div>\n  \n  <div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Anti-Inflammatory</h6>\n      <p>Ingredients like cinnamon have anti-inflammatory properties.</p>\n    </div>\n  </div>\n\n<div class=\"ingredient\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 32 32\" fill=\"none\">\n      <rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#EE6A92\"/>\n      <path d=\"M23.778 10.6528L13.0835 21.3473L8.22241 16.4862\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </svg>\n    <div class=\"ingredient-info\">\n      <h6>Your gut will love you</h6>\n      <p>A healthy gut supports digestion, boosts immunity, enhances mood, and improves overall well-being.</p>\n    </div>\n  </div>\n</div>\n\n<style>\n.ingredients-list {\n  margin: 0 auto;\n  gap: 10px\n}\n  \n  .ingredients-list svg {\n    flex-shrink: 0\n  }\n\n.ingredient {\n  display: flex;\n  align-items: start;\n\n  gap: 1rem;\n    align-items: center !important;\n}\n\n.ingredient img {\n  width: 50px;\n  height: 50px;\n  margin-right: 15px;\n  flex-shrink: 0;\n}\n\n.ingredient-info h3 {\n  margin: 0 0 5px 0;\n  color: #333;\n  font-weight: bold\n}\n\n.ingredient-info p {\n  margin: 0;\n  color: #666;\n  font-size: 14px;\n}\n\n.ingredients-list * { margin-block: 0 !important } \n\n.ingredients-list {\n    display: grid;\n    gap: 16px;\n}\n</style>",
+            "link_text": "PICK A CULT",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "rgba(0,0,0,0)",
+            "background_gradient": "",
+            "text_color": "#1a1a1a",
+            "text_gradient": "",
+            "button_background": "#3c1b01",
+            "button_text_color": "#acdbe7"
+          }
+        }
+      },
+      "block_order": [
+        "image_9gzEJa",
+        "image_MMnbEH"
+      ],
+      "custom_css": [
+        ".accordion {border: 1px solid rgba(17, 17, 17, 0.12); padding-inline: 16px; margin-block: 10px; border-radius: 16px; border-block-start-width: 1px !important; background-color: white;}",
+        ".media-with-text__content .prose {width: 100%;}"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing": "none"
+      }
+    },
+    "revealed_image_on_scroll_pMdp44": {
+      "type": "revealed-image-on-scroll",
+      "disabled": true,
+      "settings": {
+        "image": "shopify://shop_images/P1000374.jpg",
+        "subheading": "OATS WITH GUTS",
+        "title": "1,000,000,000 of them!",
+        "background": "",
+        "text_color_inside": "#acdbe7",
+        "text_color_outside": "#000000"
+      }
+    },
+    "multi_column_PW9gAL": {
+      "type": "multi-column",
+      "blocks": {
+        "item_X9kMRq": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new_monk.jpg",
+            "column_size": "3",
+            "title": "1: Pour",
+            "heading_tag": "h4",
+            "content": "<p>Empty your chosen Oat Cult pack into a jar or bowl. Any vessel will do—no judgment here.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_DWwNce": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new_monk2.jpg",
+            "column_size": "3",
+            "title": "2: Fill",
+            "heading_tag": "h4",
+            "content": "<p>Add your favourite milk (yoghurt) or alternative until the oats are just covered. Stir gently to make sure every oat gets some love.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_txeTi8": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new_monk3.jpg",
+            "column_size": "3",
+            "title": "3: Enjoy",
+            "heading_tag": "h4",
+            "content": "<p>Leave overnight for maximum magic—or dig in straight away if you can’t wait. Heat it up if that's your thing.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "item_X9kMRq",
+        "item_DWwNce",
+        "item_txeTi8"
+      ],
+      "custom_css": [
+        "img.rounded {max-width: 80px; margin: 0 auto;}"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": true,
+        "gap": "medium",
+        "text_alignment": "center",
+        "subheading": "",
+        "title": "How to awaken your oats",
+        "content": "",
+        "background": "#f7aac1",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "testimonials_QRYgpJ": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_6dL3FX": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2024-12-20_at_14.05.03.png",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Sam S.",
+            "title": "",
+            "content": "<p>I tried making overnight oats myself once—it was a disaster. With Oat Cult, I just chuck it in a jar with some milk, and it’s ready by morning. It’s proper fuel for my morning run without the faff.</p>"
+          }
+        },
+        "testimonial_EXMzwm": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2024-12-20_at_14.03.15.png",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Dee C.",
+            "title": "",
+            "content": "<p>I’ve been through so many so-called healthy breakfasts, and they all taste weird or have sneaky sweeteners. Oat Cult is the first one I’ve found that actually feels wholesome and tastes great without any of the fake stuff. It’s become my go-to.</p>"
+          }
+        },
+        "testimonial_38Ntc6": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2024-12-20_at_14.02.20.png",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Joshua A.",
+            "title": "",
+            "content": "<p>Honestly, I’m not into all those fancy gut health supplements, but my stomach’s been happier since I started eating Oat Cult. Plus, it’s breakfast sorted without thinking too much. Win-win.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_6dL3FX",
+        "testimonial_EXMzwm",
+        "testimonial_38Ntc6"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_testimonials": false,
+        "subheading": "",
+        "title": "What cult members say...",
+        "content": "",
+        "link_url": "",
+        "link_text": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "testimonial_card_background": "",
+        "testimonial_card_text_color": ""
+      }
+    },
+    "image_with_text_overlay_d7ib4T": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading_LVfFJV": {
+          "type": "heading",
+          "settings": {
+            "text": "Overnight Oats Worth Worshipping",
+            "heading_tag": "h1"
+          }
+        },
+        "richtext_kDY4UC": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Nutrient-packed blends with gut-loving bacteria. Just add milk, chill, and enjoy. Blessed be breakfast.</p>"
+          }
+        },
+        "button_N3ECyY": {
+          "type": "button",
+          "settings": {
+            "style": "fill",
+            "size": "lg",
+            "text": "Dive into our flavours",
+            "url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "#3b1a01",
+            "text_color": "#ee6a92"
+          }
+        }
+      },
+      "block_order": [
+        "heading_LVfFJV",
+        "richtext_kDY4UC",
+        "button_N3ECyY"
+      ],
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": true,
+        "image_size": "sm",
+        "image": "shopify://shop_images/bag_close_small_ab8c73dd-787d-45df-b055-f7e01694dd6f.jpg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#3a2e1b",
+        "overlay_color": "#ee6a92",
+        "overlay_opacity": 69
+      }
+    }
+  },
+  "order": [
+    "responsive_media_with_text_twnnPd",
+    "image_with_text_overlay_QYYUVb",
+    "multi_column_Ap3tPK",
+    "scrolling_text_wWgDnb",
+    "173866928562737984",
+    "media_with_text_qG6irt",
+    "multi_column_9hMmBG",
+    "media_with_text_3LpRWg",
+    "revealed_image_on_scroll_pMdp44",
+    "multi_column_PW9gAL",
+    "testimonials_QRYgpJ",
+    "image_with_text_overlay_d7ib4T"
+  ]
+}

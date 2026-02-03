@@ -1,0 +1,117 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_Xkfcqe": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_UWbQzN": {
+          "type": "subheading",
+          "settings": {
+            "text": "Scroll to join the cult"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_UWbQzN"
+      ],
+      "settings": {
+        "full_width": false,
+        "content_width": "small",
+        "text_position": "center",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "revealed_image_on_scroll_YmQiRk": {
+      "type": "revealed-image-on-scroll",
+      "settings": {
+        "image": "shopify://shop_images/WhatsApp_Image_2024-12-17_at_15.40.57.jpg",
+        "subheading": "",
+        "title": "WELCOME TO THE CULT",
+        "background": "",
+        "text_color_inside": "#ffffff",
+        "text_color_outside": "#000000"
+      }
+    },
+    "newsletter_jXPfdJ": {
+      "type": "newsletter",
+      "settings": {
+        "full_width": true,
+        "show_icon": false,
+        "title": "JOIN THE CULT",
+        "content": "<p>To decide on new flavours, win prizes & get discounts every month.<br/><br/>No Sacrifice needed, just your email</p>",
+        "button_text": "JOIN CULT",
+        "subtext": "",
+        "background": "#3a2e1b",
+        "background_gradient": "",
+        "text_color": "#f0e9de",
+        "button_background": "#acdbe7",
+        "button_text_color": "#3a2e1b"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "80ch"
+      }
+    },
+    "images_with_text_scrolling_3HTPMb": {
+      "type": "images-with-text-scrolling",
+      "blocks": {
+        "item_M9cwi6": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2024-12-17_at_15.40.48_1.jpg",
+            "icon": "none",
+            "icon_width": 48,
+            "title": "You've been selected to join",
+            "content": "<p>By joining OAT CULT, you will get a chance to: </p><ul><li>Win cool prizes</li><li>Decide on new flavours</li><li>Get discounts </li></ul>"
+          }
+        },
+        "item_HViRGj": {
+          "type": "item",
+          "disabled": true,
+          "settings": {
+            "icon": "none",
+            "icon_width": 48,
+            "title": "Next: Sign up using your email",
+            "content": "<p>We will invite you to the OAT CULT CLUB and keep you posted every month. No spam (we hate it too) & opt out anytime. </p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_M9cwi6",
+        "item_HViRGj"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": true,
+        "show_counter": false,
+        "desktop_image_effect": "fade",
+        "image_position": "end",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": ""
+      }
+    }
+  },
+  "order": [
+    "rich_text_Xkfcqe",
+    "revealed_image_on_scroll_YmQiRk",
+    "newsletter_jXPfdJ",
+    "main",
+    "images_with_text_scrolling_3HTPMb"
+  ]
+}
