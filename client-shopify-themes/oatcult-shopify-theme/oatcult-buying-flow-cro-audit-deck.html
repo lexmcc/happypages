@@ -4,14 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Oat Cult | Product Page CRO Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --brand-brown: #8B4513;
-      --brand-brown-light: #D2691E;
-      --brand-cream: #FFF8F0;
-      --brand-dark: #3D2314;
-      --text-primary: #333333;
-      --text-muted: #666666;
+      /* New design system */
+      --bg-warm: #F0E9DE;
+      --bg-dark: #2a1f1a;
+      --accent: #8B4513;
+      --accent-hover: #a0522d;
+      --accent-light: #FFF8F0;
+      --pink: #EA76A1;
+      --pink-hover: #d4608b;
+      --highlight: #6CDFFF;
+      --card-bg: #fafafa;
+      --text-primary: #222;
+      --text-muted: #666;
+      --border-subtle: rgba(0,0,0,0.06);
       --accent-green: #22C55E;
       --accent-red: #EF4444;
     }
@@ -24,10 +34,11 @@
 
     html, body {
       height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--brand-cream);
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-warm);
       color: var(--text-primary);
       overflow: hidden;
+      letter-spacing: -0.02em;
     }
 
     .deck {
@@ -50,19 +61,20 @@
       position: relative;
     }
 
-    .slide--brown {
-      background: var(--brand-brown);
-      color: white;
-    }
-
+    /* Slide backgrounds */
     .slide--dark {
-      background: var(--brand-dark);
+      background: var(--bg-dark);
       color: white;
     }
 
-    .slide--cream {
-      background: var(--brand-cream);
+    .slide--warm {
+      background: var(--bg-warm);
       color: var(--text-primary);
+    }
+
+    .slide--accent {
+      background: linear-gradient(135deg, #8B4513 0%, #a0522d 50%, #8B4513 100%);
+      color: white;
     }
 
     .slide__content {
@@ -71,38 +83,81 @@
     }
 
     .slide__label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      opacity: 0.7;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      opacity: 0.6;
       margin-bottom: 16px;
     }
 
     .slide__title {
       font-size: clamp(28px, 6vw, 48px);
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1.1;
       margin-bottom: 24px;
+      letter-spacing: -0.05em;
+      text-transform: lowercase;
+    }
+
+    .slide__title::after {
+      content: '.';
     }
 
     .slide__subtitle {
       font-size: clamp(16px, 3vw, 20px);
       line-height: 1.5;
-      opacity: 0.9;
+      opacity: 0.85;
       margin-bottom: 32px;
+      letter-spacing: -0.01em;
     }
 
     .slide__highlight {
       display: inline-block;
-      background: rgba(255,255,255,0.2);
-      padding: 2px 8px;
-      border-radius: 4px;
+      background: var(--highlight);
+      color: var(--text-primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
     }
 
-    .slide--cream .slide__highlight {
-      background: var(--brand-brown);
+    .slide--dark .slide__highlight,
+    .slide--accent .slide__highlight {
+      background: rgba(255,255,255,0.2);
       color: white;
+    }
+
+    /* Logo */
+    .logo {
+      max-width: 280px;
+      width: 60%;
+      margin: 0 auto 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .logo img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Credit */
+    .credit {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 11px;
+      opacity: 0.5;
+      letter-spacing: 0.02em;
+    }
+
+    .credit a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .credit a:hover {
+      opacity: 0.8;
     }
 
     /* Stats Grid */
@@ -114,29 +169,40 @@
     }
 
     .stat {
-      background: rgba(255,255,255,0.1);
-      padding: 20px 16px;
-      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      padding: 24px 16px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
     }
 
-    .slide--cream .stat {
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    .slide--warm .stat {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,1),
+        inset -1px -1px 0 rgba(0,0,0,0.03),
+        0 4px 12px rgba(0,0,0,0.06);
     }
 
     .stat__value {
-      font-size: clamp(24px, 5vw, 36px);
+      font-size: clamp(28px, 6vw, 42px);
       font-weight: 700;
       color: var(--accent-green);
+      letter-spacing: -0.03em;
+    }
+
+    .slide--accent .stat__value {
+      color: white;
     }
 
     .stat__label {
       font-size: 12px;
-      opacity: 0.8;
-      margin-top: 4px;
+      opacity: 0.7;
+      margin-top: 6px;
+      text-transform: lowercase;
     }
 
-    /* Issues Table */
+    /* Issues/Tradeoffs List */
     .issues {
       text-align: left;
       width: 100%;
@@ -145,13 +211,13 @@
     .issue {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    .slide--cream .issue {
-      border-bottom-color: rgba(0,0,0,0.1);
+    .slide--dark .issue {
+      border-bottom-color: rgba(255,255,255,0.1);
     }
 
     .issue:last-child {
@@ -159,95 +225,84 @@
     }
 
     .issue__icon {
-      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
       flex-shrink: 0;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,1),
+        inset -1px -1px 0 rgba(0,0,0,0.03),
+        0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .slide--dark .issue__icon {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: none;
+    }
+
+    .slide:nth-child(odd) .issue__icon {
+      color: var(--pink);
+    }
+
+    .slide:nth-child(even) .issue__icon {
+      color: var(--highlight);
     }
 
     .issue__text {
       font-size: 15px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .issue__text strong {
       display: block;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
 
     .issue__text span {
-      opacity: 0.7;
+      opacity: 0.65;
       font-size: 13px;
     }
 
-    /* Recommendation Card */
-    .rec-card {
-      background: white;
-      border-radius: 16px;
-      padding: 32px 24px;
-      text-align: left;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    /* Horizontal Timeline */
+    .timeline-horizontal {
+      display: flex;
+      gap: 0;
       width: 100%;
-    }
-
-    .rec-card__number {
-      display: inline-block;
-      background: var(--brand-brown);
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 32px;
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-
-    .rec-card__title {
-      font-size: clamp(20px, 4vw, 28px);
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--brand-dark);
-    }
-
-    .rec-card__list {
-      list-style: none;
-    }
-
-    .rec-card__list li {
-      padding: 8px 0;
-      padding-left: 24px;
       position: relative;
-      font-size: 15px;
-      color: var(--text-muted);
+      margin-top: 16px;
     }
 
-    .rec-card__list li::before {
-      content: "→";
+    .timeline-horizontal::before {
+      content: '';
       position: absolute;
-      left: 0;
-      color: var(--brand-brown);
-    }
-
-    .rec-card__list li strong {
-      color: var(--text-primary);
-    }
-
-    /* Timeline */
-    .timeline {
-      text-align: left;
-      width: 100%;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0.3;
     }
 
     .timeline__phase {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 8px;
     }
 
     .timeline__marker {
       width: 40px;
       height: 40px;
-      background: var(--brand-brown);
+      background: var(--accent);
       color: white;
       border-radius: 50%;
       display: flex;
@@ -255,41 +310,56 @@
       justify-content: center;
       font-weight: 700;
       font-size: 14px;
-      flex-shrink: 0;
+      margin: 0 auto 16px;
+      position: relative;
+      z-index: 1;
     }
 
     .timeline__content h3 {
-      font-size: 16px;
-      margin-bottom: 4px;
+      font-size: 14px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
     }
 
     .timeline__content p {
-      font-size: 13px;
-      opacity: 0.7;
+      font-size: 12px;
+      opacity: 0.65;
+      line-height: 1.4;
     }
 
     /* CTA */
     .cta-button {
       display: inline-block;
-      background: white;
-      color: var(--brand-brown);
-      padding: 16px 32px;
-      border-radius: 8px;
+      background: var(--pink);
+      color: white;
+      padding: 16px 36px;
+      border-radius: 12px;
       font-weight: 600;
       font-size: 16px;
       text-decoration: none;
       margin-top: 24px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: all 0.25s ease;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 12px rgba(234, 118, 161, 0.3);
     }
 
     .cta-button:hover {
+      background: var(--pink-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 20px rgba(234, 118, 161, 0.4);
     }
 
-    .slide--cream .cta-button {
-      background: var(--brand-brown);
+    .slide--dark .cta-button {
+      background: var(--pink);
       color: white;
+      box-shadow: 0 4px 12px rgba(234, 118, 161, 0.3);
+    }
+
+    .slide--dark .cta-button:hover {
+      background: var(--pink-hover);
+      box-shadow: 0 6px 20px rgba(234, 118, 161, 0.4);
     }
 
     /* Progress Indicator */
@@ -308,24 +378,18 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(139, 69, 19, 0.3);
-      transition: all 0.2s;
+      background: rgba(234, 118, 161, 0.25);
+      transition: all 0.25s ease;
       cursor: pointer;
     }
 
+    .progress__dot:hover {
+      background: rgba(234, 118, 161, 0.5);
+    }
+
     .progress__dot.active {
-      background: var(--brand-brown);
-      transform: scale(1.4);
-    }
-
-    .slide--brown .progress__dot,
-    .slide--dark .progress__dot {
-      background: rgba(255,255,255,0.3);
-    }
-
-    .slide--brown .progress__dot.active,
-    .slide--dark .progress__dot.active {
-      background: white;
+      background: var(--pink);
+      transform: scale(1.5);
     }
 
     /* Swipe Hint */
@@ -337,17 +401,19 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      opacity: 0.6;
+      opacity: 0.5;
       animation: bounce 2s infinite;
     }
 
     .swipe-hint__text {
-      font-size: 12px;
-      margin-bottom: 8px;
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-transform: lowercase;
+      letter-spacing: 0.05em;
     }
 
     .swipe-hint__arrow {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     @keyframes bounce {
@@ -370,11 +436,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 16px;
+        padding: 18px 20px;
       }
 
       .stat__value {
-        font-size: 24px;
+        font-size: 28px;
       }
 
       .stat__label {
@@ -391,18 +457,49 @@
         height: 6px;
       }
 
-      .rec-card {
-        padding: 24px 20px;
+      .timeline-horizontal {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .timeline-horizontal::before {
+        display: none;
       }
 
       .timeline__phase {
-        gap: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
+        padding: 0;
       }
 
       .timeline__marker {
-        width: 32px;
-        height: 32px;
-        font-size: 12px;
+        margin: 0;
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+
+      .timeline__content {
+        padding-top: 4px;
+      }
+
+      .issue__icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+      }
+
+      .logo {
+        max-width: 220px;
+      }
+
+      .credit {
+        bottom: 16px;
+        right: 16px;
+        font-size: 10px;
       }
     }
 
@@ -415,73 +512,93 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Accent line decoration */
+    .accent-line {
+      width: 60px;
+      height: 3px;
+      background: var(--pink);
+      margin: 0 auto 24px;
+      border-radius: 2px;
+    }
+
+    .slide--dark .accent-line,
+    .slide--accent .accent-line {
+      background: rgba(255,255,255,0.4);
+    }
   </style>
 </head>
 <body>
   <div class="deck" id="deck">
 
     <!-- Slide 1: Title -->
-    <div class="slide slide--brown" data-slide="0">
+    <div class="slide slide--dark" data-slide="0">
       <div class="slide__content">
-        <div class="slide__label">CRO Audit</div>
-        <h1 class="slide__title">Oat Cult<br>Product Page Analysis</h1>
-        <p class="slide__subtitle">How to increase conversions, subscriptions, and average order value</p>
+        <div class="logo">
+          <img src="../oatcult-assets/Oat_logo_Landscape_pink_master_TM_f64ab11a-d79f-4384-a0d4-23e963673a8a.avif" alt="Oat Cult">
+        </div>
+        <div class="accent-line"></div>
+        <h1 class="slide__title">product page cro audit</h1>
+        <p class="slide__subtitle">how to increase conversions, subscriptions, and average order value</p>
       </div>
       <div class="swipe-hint">
-        <span class="swipe-hint__text">Swipe up</span>
+        <span class="swipe-hint__text">swipe up</span>
         <span class="swipe-hint__arrow">↓</span>
+      </div>
+      <div class="credit">
+        <a href="https://happypages.co" target="_blank">by happypages</a>
       </div>
     </div>
 
     <!-- Slide 2: Bottom Line -->
     <div class="slide slide--dark" data-slide="1">
       <div class="slide__content">
-        <div class="slide__label">The Bottom Line</div>
-        <h1 class="slide__title">Your product page is <span class="slide__highlight">leaving money on the table</span></h1>
-        <p class="slide__subtitle">We've identified 6 quick wins that could significantly improve your key metrics.</p>
-        <p class="slide__subtitle" style="opacity: 0.7; font-size: 16px;">The core issue: <strong>customers are confused by the purchase flow.</strong><br>The fix is straightforward.</p>
+        <div class="slide__label">the bottom line</div>
+        <h1 class="slide__title">your product page is <span class="slide__highlight">leaving money on the table</span></h1>
+        <p class="slide__subtitle">we've identified 6 quick wins that could significantly improve your key metrics.</p>
+        <p class="slide__subtitle" style="opacity: 0.6; font-size: 15px; margin-top: 24px;">the core issue: <strong>customers are confused by the purchase flow.</strong><br>the fix is straightforward.</p>
       </div>
     </div>
 
     <!-- Slide 3: Current Issues -->
-    <div class="slide slide--cream" data-slide="2">
+    <div class="slide slide--warm" data-slide="2">
       <div class="slide__content">
-        <div class="slide__label">What We Found</div>
-        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">5 Friction Points</h1>
+        <div class="slide__label">what we found</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">5 friction points</h1>
         <div class="issues">
           <div class="issue">
-            <span class="issue__icon">❓</span>
+            <div class="issue__icon">?</div>
             <div class="issue__text">
-              <strong>Cryptic quantity buttons</strong>
+              <strong>cryptic quantity buttons</strong>
               <span>0/9/18/27 — customers don't understand what they're buying</span>
             </div>
           </div>
           <div class="issue">
-            <span class="issue__icon">💔</span>
+            <div class="issue__icon">£</div>
             <div class="issue__text">
-              <strong>Price shows £0.00</strong>
-              <span>Until selection — feels broken, erodes trust</span>
+              <strong>price shows £0.00</strong>
+              <span>until selection — feels broken, erodes trust</span>
             </div>
           </div>
           <div class="issue">
-            <span class="issue__icon">📉</span>
+            <div class="issue__icon">↓</div>
             <div class="issue__text">
-              <strong>Subscription buried</strong>
-              <span>Below one-time — missing revenue from subscriptions</span>
+              <strong>subscription buried</strong>
+              <span>below one-time — missing revenue from subscriptions</span>
             </div>
           </div>
           <div class="issue">
-            <span class="issue__icon">👻</span>
+            <div class="issue__icon">★</div>
             <div class="issue__text">
-              <strong>No social proof</strong>
-              <span>Near buy button — no reassurance at decision point</span>
+              <strong>no social proof</strong>
+              <span>near buy button — no reassurance at decision point</span>
             </div>
           </div>
           <div class="issue">
-            <span class="issue__icon">🛒</span>
+            <div class="issue__icon">+</div>
             <div class="issue__text">
-              <strong>Cart adds friction</strong>
-              <span>Extra click = lost customers</span>
+              <strong>cart adds friction</strong>
+              <span>extra click = lost customers</span>
             </div>
           </div>
         </div>
@@ -489,169 +606,328 @@
     </div>
 
     <!-- Slide 4: Rec 1 - Box Size -->
-    <div class="slide slide--cream" data-slide="3">
+    <div class="slide slide--warm" data-slide="3">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">1</div>
-          <h2 class="rec-card__title">Clear Box Size Selection</h2>
-          <ul class="rec-card__list">
-            <li>Replace confusing buttons with <strong>visual tier cards</strong></li>
-            <li><strong>Starter</strong> — 9 packs, ~1 week</li>
-            <li><strong>Popular</strong> — 18 packs, ~2 weeks (pre-selected)</li>
-            <li><strong>Best Value</strong> — 27 packs, ~4 weeks + FREE shipping</li>
-          </ul>
+        <div class="slide__label">recommendation 1</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">clear box size selection</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>visual tier cards</strong>
+              <span>Replace confusing buttons with clear, scannable options</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">1</div>
+            <div class="issue__text">
+              <strong>starter — 9 packs</strong>
+              <span>Box price + per-packet breakdown shown</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">2</div>
+            <div class="issue__text">
+              <strong>popular — 18 packs</strong>
+              <span>Box price + per-packet breakdown shown</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">3</div>
+            <div class="issue__text">
+              <strong>best value — 27 packs</strong>
+              <span>Box price + per-packet breakdown + FREE shipping</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Slide 5: Rec 2 - Flavors -->
-    <div class="slide slide--cream" data-slide="4">
+    <div class="slide slide--warm" data-slide="4">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">2</div>
-          <h2 class="rec-card__title">Simplified Flavor Selection</h2>
-          <ul class="rec-card__list">
-            <li>Two clear options instead of complex grid</li>
-            <li><strong>Mixed Box</strong> — all 3 flavors (default)</li>
-            <li><strong>Pick Your Own</strong> — choose 1-3 individual flavors</li>
-            <li>Mutually exclusive — reduces decision fatigue</li>
-          </ul>
+        <div class="slide__label">recommendation 2</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">simplified flavor selection</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>two clear options</strong>
+              <span>Replace complex grid with simple binary choice</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">A</div>
+            <div class="issue__text">
+              <strong>mixed box</strong>
+              <span>All 3 flavors — recommended default</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">B</div>
+            <div class="issue__text">
+              <strong>pick your own</strong>
+              <span>Choose 1-3 individual flavors</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">✓</div>
+            <div class="issue__text">
+              <strong>mutually exclusive</strong>
+              <span>Reduces decision fatigue significantly</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Slide 6: Rec 3 - Subscription -->
-    <div class="slide slide--cream" data-slide="5">
+    <div class="slide slide--warm" data-slide="5">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">3</div>
-          <h2 class="rec-card__title">Subscription-First Design</h2>
-          <ul class="rec-card__list">
-            <li><strong>Pre-select subscription</strong> (20% off)</li>
-            <li>Show savings prominently: <strong>"You save £7.20"</strong></li>
-            <li>List benefits clearly: monthly, cancel anytime</li>
-            <li>One-time purchase becomes secondary option</li>
-          </ul>
+        <div class="slide__label">recommendation 3</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">subscription-first design</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>pre-select subscription</strong>
+              <span>20% off becomes the default choice</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">£</div>
+            <div class="issue__text">
+              <strong>show savings prominently</strong>
+              <span>"You save £7.20" — make value obvious</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">✓</div>
+            <div class="issue__text">
+              <strong>list benefits clearly</strong>
+              <span>Monthly delivery, cancel anytime, flexible</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">2</div>
+            <div class="issue__text">
+              <strong>secondary one-time option</strong>
+              <span>Available but not the default path</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Slide 7: Rec 4 - Free Shipping -->
-    <div class="slide slide--cream" data-slide="6">
+    <div class="slide slide--warm" data-slide="6">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">4</div>
-          <h2 class="rec-card__title">Free Shipping Upsell</h2>
-          <ul class="rec-card__list">
-            <li><strong>£40 threshold</strong> creates natural upsell</li>
-            <li>"Add another flavor for FREE shipping"</li>
-            <li>"Upgrade to 27-pack for FREE shipping"</li>
-            <li>Dynamic nudge based on cart value</li>
-          </ul>
+        <div class="slide__label">recommendation 4</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">free shipping upsell</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">£</div>
+            <div class="issue__text">
+              <strong>£40 threshold</strong>
+              <span>Creates natural upsell opportunity</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">↑</div>
+            <div class="issue__text">
+              <strong>"upgrade to 27-pack"</strong>
+              <span>For FREE shipping — tier upgrade prompt</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>dynamic nudges</strong>
+              <span>Show based on current cart value</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Slide 8: Rec 5 - Social Proof -->
-    <div class="slide slide--cream" data-slide="7">
+    <div class="slide slide--warm" data-slide="7">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">5</div>
-          <h2 class="rec-card__title">Social Proof & Trust</h2>
-          <ul class="rec-card__list">
-            <li>Review count: <strong>"5.0 from 200+ reviews"</strong></li>
-            <li>Trust badges near CTA: Free shipping, 30-day guarantee</li>
-            <li>Short testimonial from verified subscriber</li>
-            <li>Reassurance at the decision point</li>
-          </ul>
+        <div class="slide__label">recommendation 5</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">social proof & trust</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">★</div>
+            <div class="issue__text">
+              <strong>review count visible</strong>
+              <span>"5.0 from 200+ reviews" — near buy button</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">✓</div>
+            <div class="issue__text">
+              <strong>trust badges near CTA</strong>
+              <span>Free shipping, 30-day guarantee icons</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">"</div>
+            <div class="issue__text">
+              <strong>short testimonial</strong>
+              <span>Verified subscriber quote — builds confidence</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>decision-point reassurance</strong>
+              <span>Right when customer is about to buy</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Slide 9: Rec 6 - Direct Checkout -->
-    <div class="slide slide--cream" data-slide="8">
+    <div class="slide slide--warm" data-slide="8">
       <div class="slide__content">
-        <div class="rec-card">
-          <div class="rec-card__number">6</div>
-          <h2 class="rec-card__title">Direct to Checkout</h2>
-          <ul class="rec-card__list">
-            <li><strong>Skip the cart entirely</strong></li>
-            <li>One product store = one click to checkout</li>
-            <li>Reduce steps from 7 to 4</li>
-            <li>Every extra click loses customers</li>
-          </ul>
+        <div class="slide__label">recommendation 6</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">direct to checkout</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">→</div>
+            <div class="issue__text">
+              <strong>skip the cart entirely</strong>
+              <span>Go straight from product to checkout</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">1</div>
+            <div class="issue__text">
+              <strong>one product store</strong>
+              <span>Single product = single click to checkout</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">4</div>
+            <div class="issue__text">
+              <strong>reduce steps from 7 to 4</strong>
+              <span>Fewer clicks = fewer drop-offs</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">✗</div>
+            <div class="issue__text">
+              <strong>every extra click loses customers</strong>
+              <span>Cart is unnecessary friction for this flow</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 10: Expected Results -->
-    <div class="slide slide--brown" data-slide="9">
+    <!-- Slide 10: Design Tradeoffs -->
+    <div class="slide slide--warm" data-slide="9">
       <div class="slide__content">
-        <div class="slide__label">Expected Results</div>
-        <h1 class="slide__title">The Opportunity</h1>
+        <div class="slide__label">the 95% principle</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">what we're intentionally not building</h1>
+        <p class="slide__subtitle" style="font-size: 14px; margin-bottom: 24px;">every feature we add for edge cases adds friction for everyone else.</p>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon">A</div>
+            <div class="issue__text">
+              <strong>max order: 54 packs (3×18)</strong>
+              <span>Covers 95%+ of needs. Subscription serves bulk buyers better with fresh monthly deliveries + ongoing 20% savings.</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">B</div>
+            <div class="issue__text">
+              <strong>same size for all flavors</strong>
+              <span>One decision instead of three. Dramatically reduces cognitive load.</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon">C</div>
+            <div class="issue__text">
+              <strong>streamlined prompts</strong>
+              <span>Key info already visible (FREE SHIP badge, 20% savings). Trust customers to see value without extra nudges.</span>
+            </div>
+          </div>
+        </div>
+        <p class="slide__subtitle" style="font-size: 13px; margin-top: 24px; opacity: 0.6;">if bulk demand emerges in data, easy to add a bulk order option later.</p>
+      </div>
+    </div>
+
+    <!-- Slide 11: Expected Results -->
+    <div class="slide slide--accent" data-slide="10">
+      <div class="slide__content">
+        <div class="slide__label">expected results</div>
+        <h1 class="slide__title">the opportunity</h1>
         <div class="stats">
           <div class="stat">
-            <div class="stat__value">+25-40%</div>
-            <div class="stat__label">Conversion Rate</div>
+            <div class="stat__value">+15-25%</div>
+            <div class="stat__label">conversion rate</div>
           </div>
           <div class="stat">
-            <div class="stat__value">+40-60%</div>
-            <div class="stat__label">Subscription Rate</div>
+            <div class="stat__value">+25-35%</div>
+            <div class="stat__label">subscription rate</div>
           </div>
           <div class="stat">
-            <div class="stat__value">+15-20%</div>
-            <div class="stat__label">Average Order Value</div>
+            <div class="stat__value">+10-15%</div>
+            <div class="stat__label">average order value</div>
           </div>
         </div>
-        <p class="slide__subtitle" style="margin-top: 32px; opacity: 0.8;">Conservative estimates based on industry benchmarks for similar optimizations.</p>
+        <p class="slide__subtitle" style="margin-top: 32px; opacity: 0.75;">conservative estimates based on industry benchmarks for similar optimizations.</p>
       </div>
     </div>
 
-    <!-- Slide 11: Timeline -->
-    <div class="slide slide--cream" data-slide="10">
+    <!-- Slide 12: Timeline -->
+    <div class="slide slide--warm" data-slide="11">
       <div class="slide__content">
-        <div class="slide__label">Plan of Action</div>
-        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 32px); margin-bottom: 32px;">4-Phase Rollout</h1>
-        <div class="timeline">
+        <div class="slide__label">plan of action</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 32px); margin-bottom: 32px;">4 stage build</h1>
+        <div class="timeline-horizontal">
           <div class="timeline__phase">
             <div class="timeline__marker">1</div>
             <div class="timeline__content">
-              <h3>Foundation</h3>
+              <h3>foundation</h3>
               <p>Box size cards, flavor selector, subscription toggle, direct checkout</p>
             </div>
           </div>
           <div class="timeline__phase">
             <div class="timeline__marker">2</div>
             <div class="timeline__content">
-              <h3>Refinement</h3>
+              <h3>refinement</h3>
               <p>"Pick your own" option, free shipping nudges, mobile sticky CTA</p>
             </div>
           </div>
           <div class="timeline__phase">
             <div class="timeline__marker">3</div>
             <div class="timeline__content">
-              <h3>Polish</h3>
+              <h3>polish</h3>
               <p>Trust badges, social proof, testimonials, animations</p>
             </div>
           </div>
           <div class="timeline__phase">
             <div class="timeline__marker">4</div>
             <div class="timeline__content">
-              <h3>Measure</h3>
-              <p>A/B testing, track metrics, iterate based on data</p>
+              <h3>rollout</h3>
+              <p>Track metrics, iterate based on data</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 12: Next Steps -->
-    <div class="slide slide--dark" data-slide="11">
+    <!-- Slide 13: Next Steps -->
+    <div class="slide slide--dark" data-slide="12">
       <div class="slide__content">
-        <div class="slide__label">Next Steps</div>
-        <h1 class="slide__title">Ready to increase conversions?</h1>
-        <p class="slide__subtitle">Review this deck, confirm priorities, and we can start implementation immediately.</p>
-        <a href="mailto:alex@happypages.co" class="cta-button">Let's Talk</a>
+        <div class="slide__label">next steps</div>
+        <h1 class="slide__title">ready to increase conversions</h1>
+        <p class="slide__subtitle">review this deck, confirm priorities, and we can start implementation immediately.</p>
+        <a href="https://oatcult-clone.myshopify.com/pages/buy-oatcult-overnight-oats" class="cta-button" target="_blank">view prototype</a>
+        <p style="margin-top: 12px; font-size: 13px; opacity: 0.6;">password: cult</p>
       </div>
     </div>
 
@@ -691,11 +967,16 @@
 
       // Update dot colors based on slide background
       const activeSlide = slides[currentSlide];
-      const isDark = activeSlide.classList.contains('slide--brown') ||
-                     activeSlide.classList.contains('slide--dark');
+      const isDark = activeSlide.classList.contains('slide--dark') ||
+                     activeSlide.classList.contains('slide--accent');
 
-      progress.style.setProperty('--dot-color', isDark ? 'rgba(255,255,255,0.3)' : 'rgba(139,69,19,0.3)');
-      progress.style.setProperty('--dot-active', isDark ? 'white' : '#8B4513');
+      dots.forEach(dot => {
+        if (isDark) {
+          dot.style.background = dot.classList.contains('active') ? 'white' : 'rgba(255,255,255,0.3)';
+        } else {
+          dot.style.background = dot.classList.contains('active') ? '#EA76A1' : 'rgba(234,118,161,0.25)';
+        }
+      });
     }
 
     deck.addEventListener('scroll', updateProgress);
