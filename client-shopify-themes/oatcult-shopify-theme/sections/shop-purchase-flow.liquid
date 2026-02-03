@@ -246,11 +246,6 @@ CRO-optimized product purchase page with:
     object-fit: contain;
   }
 
-  .shop-gallery__benefit-icon--emoji {
-    font-size: 1.25rem;
-    line-height: 1;
-  }
-
   /* Mobile benefits in purchase column */
   .shop-purchase__benefits {
     display: none;
@@ -456,17 +451,16 @@ CRO-optimized product purchase page with:
   /* Mixed Box with image variant */
   .flavor-option--mixed {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     padding: 0;
     overflow: hidden;
   }
 
   .flavor-option__image {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    padding: 2px;
-    background: #f5f5f5;
+    width: 70px;
+    height: 70px;
+    margin: 8px;
   }
 
   .flavor-option__image img {
@@ -646,7 +640,7 @@ CRO-optimized product purchase page with:
     display: flex;
     align-items: center;
     gap: var(--spacing-4);
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 0;
     border: 2px solid var(--spf-selector-border);
     border-radius: var(--spf-selector-radius);
     background: var(--spf-selector-bg);
@@ -673,12 +667,11 @@ CRO-optimized product purchase page with:
   }
 
   .flavor-card__image {
-    width: 60px;
-    height: 60px;
-    padding: 2px;
+    width: 70px;
+    height: 70px;
+    margin: 8px;
     overflow: hidden;
     flex-shrink: 0;
-    background: #f5f5f5;
   }
 
   .flavor-card__image img {
@@ -710,6 +703,7 @@ CRO-optimized product purchase page with:
   .flavor-card__checkbox {
     width: 24px;
     height: 24px;
+    margin-right: 16px;
     border-radius: 6px;
     border: 2px solid var(--spf-selector-border);
     background: white;
@@ -1300,33 +1294,27 @@ CRO-optimized product purchase page with:
       <!-- Benefit Badges -->
       <div class="shop-gallery__benefits">
         <div class="shop-gallery__benefit">
-          <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_1_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-            {%- if section.settings.benefit_1_icon != blank -%}
+          {%- if section.settings.benefit_1_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
               <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            {%- else -%}
-              {{ section.settings.benefit_1_emoji }}
-            {%- endif -%}
-          </span>
+            </span>
+          {%- endif -%}
           <span>{{ section.settings.benefit_1 }}</span>
         </div>
         <div class="shop-gallery__benefit">
-          <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_2_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-            {%- if section.settings.benefit_2_icon != blank -%}
+          {%- if section.settings.benefit_2_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
               <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            {%- else -%}
-              {{ section.settings.benefit_2_emoji }}
-            {%- endif -%}
-          </span>
+            </span>
+          {%- endif -%}
           <span>{{ section.settings.benefit_2 }}</span>
         </div>
         <div class="shop-gallery__benefit">
-          <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_3_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-            {%- if section.settings.benefit_3_icon != blank -%}
+          {%- if section.settings.benefit_3_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
               <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            {%- else -%}
-              {{ section.settings.benefit_3_emoji }}
-            {%- endif -%}
-          </span>
+            </span>
+          {%- endif -%}
           <span>{{ section.settings.benefit_3 }}</span>
         </div>
       </div>
@@ -1350,33 +1338,27 @@ CRO-optimized product purchase page with:
         <!-- Benefits (Mobile only - duplicated for layout) -->
         <div class="shop-purchase__benefits">
           <div class="shop-gallery__benefit">
-            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_1_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-              {%- if section.settings.benefit_1_icon != blank -%}
+            {%- if section.settings.benefit_1_icon != blank -%}
+              <span class="shop-gallery__benefit-icon">
                 <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              {%- else -%}
-                {{ section.settings.benefit_1_emoji }}
-              {%- endif -%}
-            </span>
+              </span>
+            {%- endif -%}
             <span>{{ section.settings.benefit_1 }}</span>
           </div>
           <div class="shop-gallery__benefit">
-            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_2_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-              {%- if section.settings.benefit_2_icon != blank -%}
+            {%- if section.settings.benefit_2_icon != blank -%}
+              <span class="shop-gallery__benefit-icon">
                 <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              {%- else -%}
-                {{ section.settings.benefit_2_emoji }}
-              {%- endif -%}
-            </span>
+              </span>
+            {%- endif -%}
             <span>{{ section.settings.benefit_2 }}</span>
           </div>
           <div class="shop-gallery__benefit">
-            <span class="shop-gallery__benefit-icon{% unless section.settings.benefit_3_icon != blank %} shop-gallery__benefit-icon--emoji{% endunless %}">
-              {%- if section.settings.benefit_3_icon != blank -%}
+            {%- if section.settings.benefit_3_icon != blank -%}
+              <span class="shop-gallery__benefit-icon">
                 <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              {%- else -%}
-                {{ section.settings.benefit_3_emoji }}
-              {%- endif -%}
-            </span>
+              </span>
+            {%- endif -%}
             <span>{{ section.settings.benefit_3 }}</span>
           </div>
         </div>
@@ -1451,15 +1433,11 @@ CRO-optimized product purchase page with:
                           @click="toggleFlavor({{ flavor_product.id }})"
                           {{ block.shopify_attributes }}
                         >
-                          <div class="flavor-card__image">
-                            {%- if block.settings.image != blank -%}
+                          {%- if block.settings.image != blank -%}
+                            <div class="flavor-card__image">
                               <img src="{{ block.settings.image | image_url: width: 120 }}" alt="{{ flavor_name }}" loading="lazy">
-                            {%- else -%}
-                              <div class="flavor-card__placeholder">
-                                <span>{{ block.settings.emoji | default: '🥣' }}</span>
-                              </div>
-                            {%- endif -%}
-                          </div>
+                            </div>
+                          {%- endif -%}
                           <div class="flavor-card__name">{{ flavor_name }}</div>
                           <span class="flavor-card__checkbox">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1474,14 +1452,6 @@ CRO-optimized product purchase page with:
                     {%- for product in collections['breakfast'].products limit: 4 -%}
                       {%- unless product.title contains 'Mixed' -%}
                         {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                        {%- assign flavor_emoji = '🥣' -%}
-                        {%- if flavor_name contains 'CACAO' -%}
-                          {%- assign flavor_emoji = '🟫' -%}
-                        {%- elsif flavor_name contains 'STRAWBERRY' -%}
-                          {%- assign flavor_emoji = '🍓' -%}
-                        {%- elsif flavor_name contains 'CINNAMON' -%}
-                          {%- assign flavor_emoji = '🟤' -%}
-                        {%- endif -%}
                         <div
                           class="flavor-card"
                           :class="{
@@ -1490,15 +1460,11 @@ CRO-optimized product purchase page with:
                           }"
                           @click="toggleFlavor({{ product.id }})"
                         >
-                          <div class="flavor-card__image">
-                            {%- if product.featured_image != blank -%}
+                          {%- if product.featured_image != blank -%}
+                            <div class="flavor-card__image">
                               <img src="{{ product.featured_image | image_url: width: 120 }}" alt="{{ flavor_name }}" loading="lazy">
-                            {%- else -%}
-                              <div class="flavor-card__placeholder">
-                                <span>{{ flavor_emoji }}</span>
-                              </div>
-                            {%- endif -%}
-                          </div>
+                            </div>
+                          {%- endif -%}
                           <div class="flavor-card__name">{{ flavor_name }}</div>
                           <span class="flavor-card__checkbox">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1957,44 +1923,68 @@ CRO-optimized product purchase page with:
         }
       },
 
-      checkout() {
+      async checkout() {
         if (!this.canCheckout) return;
 
         const packSize = this.selectedSize;
-        let lineItems = [];
+        let items = [];
 
         if (this.flavorMode === 'mixed') {
           const variant = this.getVariantForSize(this.mixedBoxProduct.id, packSize);
           if (variant) {
-            lineItems.push({
-              variantId: variant.id,
-              quantity: 1,
-              sellingPlanId: this.subscribe ? variant.sellingPlanId : null
-            });
+            const item = {
+              id: variant.id,
+              quantity: 1
+            };
+            if (this.subscribe && variant.sellingPlanId) {
+              item.selling_plan = variant.sellingPlanId;
+            }
+            items.push(item);
           }
         } else {
           for (const productId of this.selectedFlavors) {
             const variant = this.getVariantForSize(productId, packSize);
             if (variant) {
-              lineItems.push({
-                variantId: variant.id,
-                quantity: 1,
-                sellingPlanId: this.subscribe ? variant.sellingPlanId : null
-              });
+              const item = {
+                id: variant.id,
+                quantity: 1
+              };
+              if (this.subscribe && variant.sellingPlanId) {
+                item.selling_plan = variant.sellingPlanId;
+              }
+              items.push(item);
             }
           }
         }
 
-        // Build direct checkout URL
-        const params = lineItems.map(item => {
-          let param = `line_items[][variant_id]=${item.variantId}&line_items[][quantity]=${item.quantity}`;
-          if (item.sellingPlanId) {
-            param += `&line_items[][selling_plan]=${item.sellingPlanId}`;
-          }
-          return param;
-        }).join('&');
+        // Clear cart first, then add items, then redirect to checkout
+        try {
+          // Clear existing cart
+          await fetch('/cart/clear.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
 
-        window.location.href = `/checkout?${params}`;
+          // Add items to cart
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            console.error('Cart add error:', error);
+            alert('Sorry, there was an error. Please try again.');
+            return;
+          }
+
+          // Redirect to checkout
+          window.location.href = '/checkout';
+        } catch (error) {
+          console.error('Checkout error:', error);
+          alert('Sorry, there was an error. Please try again.');
+        }
       },
 
       // Image gallery
@@ -2069,79 +2059,15 @@ CRO-optimized product purchase page with:
     },
     {
       "type": "header",
-      "content": "Section Titles"
+      "content": "Gallery"
     },
     {
-      "type": "text",
-      "id": "flavors_title",
-      "label": "Flavors section title",
-      "default": "Pick your flavors"
-    },
-    {
-      "type": "text",
-      "id": "size_title",
-      "label": "Size section title",
-      "default": "Choose your size"
+      "type": "paragraph",
+      "content": "Add gallery images using the blocks below"
     },
     {
       "type": "header",
-      "content": "Mixed Box Option"
-    },
-    {
-      "type": "text",
-      "id": "mixed_box_name",
-      "label": "Mixed box name",
-      "default": "Mixed Box"
-    },
-    {
-      "type": "text",
-      "id": "mixed_box_emoji",
-      "label": "Mixed box emoji",
-      "default": "🎨"
-    },
-    {
-      "type": "text",
-      "id": "mixed_box_badge",
-      "label": "Mixed box badge",
-      "default": "⭐ Popular"
-    },
-    {
-      "type": "image_picker",
-      "id": "mixed_box_image",
-      "label": "Mixed box image",
-      "info": "Image displayed on the left side of the Mixed Box option"
-    },
-    {
-      "type": "text",
-      "id": "mixed_box_description",
-      "label": "Mixed box description",
-      "default": "All 3 flavors in one box — can't decide? This is the one for you."
-    },
-    {
-      "type": "header",
-      "content": "Pick Your Own Option"
-    },
-    {
-      "type": "text",
-      "id": "pick_own_name",
-      "label": "Pick your own name",
-      "default": "Pick your own"
-    },
-    {
-      "type": "text",
-      "id": "pick_own_description",
-      "label": "Pick your own description",
-      "default": "Select 1-3 individual flavors"
-    },
-    {
-      "type": "header",
-      "content": "Product Gallery"
-    },
-    {
-      "type": "text",
-      "id": "benefit_1_emoji",
-      "label": "Benefit 1 emoji",
-      "default": "🦠"
+      "content": "Product Benefits"
     },
     {
       "type": "text",
@@ -2150,10 +2076,9 @@ CRO-optimized product purchase page with:
       "default": "1+ billion probiotics per serving"
     },
     {
-      "type": "text",
-      "id": "benefit_2_emoji",
-      "label": "Benefit 2 emoji",
-      "default": "🚫"
+      "type": "image_picker",
+      "id": "benefit_1_icon",
+      "label": "Benefit 1 icon"
     },
     {
       "type": "text",
@@ -2162,16 +2087,20 @@ CRO-optimized product purchase page with:
       "default": "No artificial ingredients or added sugars"
     },
     {
-      "type": "text",
-      "id": "benefit_3_emoji",
-      "label": "Benefit 3 emoji",
-      "default": "💪"
+      "type": "image_picker",
+      "id": "benefit_2_icon",
+      "label": "Benefit 2 icon"
     },
     {
       "type": "text",
       "id": "benefit_3",
       "label": "Benefit 3",
       "default": "Supports healthy digestion"
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_3_icon",
+      "label": "Benefit 3 icon"
     },
     {
       "type": "header",
@@ -2191,26 +2120,43 @@ CRO-optimized product purchase page with:
     },
     {
       "type": "header",
-      "content": "Selected Option Styling"
+      "content": "Flavor Selection"
     },
     {
-      "type": "color",
-      "id": "selected_background",
-      "label": "Selected background",
-      "default": "#D8F7FF"
+      "type": "text",
+      "id": "flavors_title",
+      "label": "Flavors section title",
+      "default": "Pick your flavors"
     },
     {
-      "type": "color",
-      "id": "selected_border",
-      "label": "Selected border",
-      "default": "#6CDFFF"
+      "type": "text",
+      "id": "size_title",
+      "label": "Size section title",
+      "default": "Choose your size"
     },
     {
-      "type": "color",
-      "id": "selected_text",
-      "label": "Selected text color",
-      "default": "#000000",
-      "info": "Text color for selected options"
+      "type": "text",
+      "id": "mixed_box_name",
+      "label": "Mixed box name",
+      "default": "Mixed Box"
+    },
+    {
+      "type": "image_picker",
+      "id": "mixed_box_image",
+      "label": "Mixed box image",
+      "info": "Image displayed on the left side of the Mixed Box option"
+    },
+    {
+      "type": "text",
+      "id": "mixed_box_description",
+      "label": "Mixed box description",
+      "default": "All 3 flavors in one box — can't decide? This is the one for you."
+    },
+    {
+      "type": "text",
+      "id": "mixed_box_badge",
+      "label": "Mixed box badge",
+      "default": "⭐ Popular"
     },
     {
       "type": "text",
@@ -2219,27 +2165,20 @@ CRO-optimized product purchase page with:
       "default": "All 3: Cacao, Strawberry Goji, Cinnamon"
     },
     {
-      "type": "header",
-      "content": "Benefit Icons"
+      "type": "text",
+      "id": "pick_own_name",
+      "label": "Pick your own name",
+      "default": "Pick your own"
     },
     {
-      "type": "image_picker",
-      "id": "benefit_1_icon",
-      "label": "Benefit 1 icon"
-    },
-    {
-      "type": "image_picker",
-      "id": "benefit_2_icon",
-      "label": "Benefit 2 icon"
-    },
-    {
-      "type": "image_picker",
-      "id": "benefit_3_icon",
-      "label": "Benefit 3 icon"
+      "type": "text",
+      "id": "pick_own_description",
+      "label": "Pick your own description",
+      "default": "Select 1-3 individual flavors"
     },
     {
       "type": "header",
-      "content": "Subscription Benefits"
+      "content": "Subscription"
     },
     {
       "type": "image_picker",
@@ -2267,13 +2206,36 @@ CRO-optimized product purchase page with:
     },
     {
       "type": "header",
-      "content": "CTA Button"
+      "content": "Checkout Button"
     },
     {
       "type": "text",
       "id": "cta_button_text",
       "label": "Checkout button text",
       "default": "Checkout"
+    },
+    {
+      "type": "header",
+      "content": "Selected State Styling"
+    },
+    {
+      "type": "color",
+      "id": "selected_background",
+      "label": "Selected background",
+      "default": "#D8F7FF"
+    },
+    {
+      "type": "color",
+      "id": "selected_border",
+      "label": "Selected border",
+      "default": "#6CDFFF"
+    },
+    {
+      "type": "color",
+      "id": "selected_text",
+      "label": "Selected text color",
+      "default": "#000000",
+      "info": "Text color for selected options"
     }
   ],
   "blocks": [
@@ -2314,13 +2276,6 @@ CRO-optimized product purchase page with:
           "id": "name_override",
           "label": "Display name (optional)",
           "info": "Overrides the product title"
-        },
-        {
-          "type": "text",
-          "id": "emoji",
-          "label": "Emoji (fallback)",
-          "default": "🟤",
-          "info": "Used if no image is set"
         },
         {
           "type": "text",
