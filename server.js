@@ -22,7 +22,8 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.webp': 'image/webp',
-  '.mp4': 'video/mp4'
+  '.mp4': 'video/mp4',
+  '.avif': 'image/avif'
 };
 
 const router = new Router();
