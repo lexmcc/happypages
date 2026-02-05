@@ -78,7 +78,13 @@ CRO-optimized product purchase page with:
     padding: var(--spacing-8) var(--spacing-5);
     font-family: var(--text-font-family);
     background-color: #FFF7EE;
-    overflow: hidden;
+    overflow: hidden;  /* Prevents horizontal scroll on mobile */
+  }
+
+  @media screen and (min-width: 1000px) {
+    .shop-purchase-flow {
+      overflow: visible;  /* Allow sticky to work on desktop */
+    }
   }
 
   /* Reduced motion preference */
@@ -126,8 +132,28 @@ CRO-optimized product purchase page with:
   @media screen and (min-width: 1000px) {
     .shop-purchase-flow__container {
       grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
       gap: var(--spacing-12);
       align-items: start;
+    }
+
+    .shop-purchase__header {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .shop-gallery {
+      grid-column: 1;
+      grid-row: 1 / -1;  /* Span all rows */
+      position: sticky;
+      top: calc(var(--sticky-area-height) + 20px);
+      height: fit-content;  /* Critical for sticky in grid */
+      align-self: start;    /* Not stretch - sticky needs start alignment */
+    }
+
+    .shop-purchase {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 
@@ -135,15 +161,7 @@ CRO-optimized product purchase page with:
      GALLERY COLUMN
      ============================================ */
   .shop-gallery {
-    position: relative;
-  }
-
-  @media screen and (min-width: 1000px) {
-    .shop-gallery {
-      position: sticky;
-      top: var(--header-height, 100px);
-      min-width: 0;  /* Force grid item to respect column width */
-    }
+    min-width: 0;  /* Force grid item to respect column width */
   }
 
   .shop-gallery__main {
@@ -2029,19 +2047,12 @@ CRO-optimized product purchase page with:
   }
 
   /* ============================================
-     PURCHASE COLUMN - MOBILE REORDER
-     Move flavor tabs & description above header
+     MOBILE LAYOUT
+     Header appears first (natural document order),
+     then gallery, then purchase flow
      ============================================ */
   @media screen and (max-width: 999px) {
-    /* Flavor selection first (right after gallery) */
-    .flavor-selection {
-      order: -1;
-    }
-
-    /* Hide the divider between header and flavor selection on mobile */
-    .shop-purchase__header + .shop-purchase__divider {
-      display: none;
-    }
+    /* Divider is already hidden by default (.shop-purchase__divider { display: none; }) */
   }
 </style>
 
@@ -2051,6 +2062,48 @@ CRO-optimized product purchase page with:
   x-init="init()"
 >
   <div class="shop-purchase-flow__container">
+    <!-- HEADER (moved outside shop-purchase for mobile reordering) -->
+    <div class="shop-purchase__header">
+      <h1 class="shop-purchase__title">{{ section.settings.title }}</h1>
+      <p class="shop-purchase__subtitle">{{ section.settings.subtitle }}</p>
+      <div class="shop-purchase__rating">
+        {%- if section.settings.rating_image != blank -%}
+          <img class="shop-purchase__stars-image" src="{{ section.settings.rating_image | image_url: width: 200 }}" alt="5 star rating" height="20">
+        {%- else -%}
+          <span class="shop-purchase__stars">★★★★★</span>
+        {%- endif -%}
+        <span>{{ section.settings.reviews_text }}</span>
+      </div>
+
+      <!-- Benefits -->
+      <div class="shop-purchase__benefits">
+        <div class="shop-gallery__benefit">
+          {%- if section.settings.benefit_1_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
+              <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+            </span>
+          {%- endif -%}
+          <span>{{ section.settings.benefit_1 }}</span>
+        </div>
+        <div class="shop-gallery__benefit">
+          {%- if section.settings.benefit_2_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
+              <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+            </span>
+          {%- endif -%}
+          <span>{{ section.settings.benefit_2 }}</span>
+        </div>
+        <div class="shop-gallery__benefit">
+          {%- if section.settings.benefit_3_icon != blank -%}
+            <span class="shop-gallery__benefit-icon">
+              <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
+            </span>
+          {%- endif -%}
+          <span>{{ section.settings.benefit_3 }}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- GALLERY COLUMN -->
     <div class="shop-gallery">
       <!-- Main Image -->
@@ -2109,55 +2162,10 @@ CRO-optimized product purchase page with:
           ></button>
         </template>
       </div>
-
     </div>
 
     <!-- PURCHASE COLUMN -->
     <div class="shop-purchase">
-      <!-- Header -->
-      <div class="shop-purchase__header">
-        <h1 class="shop-purchase__title">{{ section.settings.title }}</h1>
-        <p class="shop-purchase__subtitle">{{ section.settings.subtitle }}</p>
-        <div class="shop-purchase__rating">
-          {%- if section.settings.rating_image != blank -%}
-            <img class="shop-purchase__stars-image" src="{{ section.settings.rating_image | image_url: width: 200 }}" alt="5 star rating" height="20">
-          {%- else -%}
-            <span class="shop-purchase__stars">★★★★★</span>
-          {%- endif -%}
-          <span>{{ section.settings.reviews_text }}</span>
-        </div>
-
-        <!-- Benefits -->
-        <div class="shop-purchase__benefits">
-          <div class="shop-gallery__benefit">
-            {%- if section.settings.benefit_1_icon != blank -%}
-              <span class="shop-gallery__benefit-icon">
-                <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              </span>
-            {%- endif -%}
-            <span>{{ section.settings.benefit_1 }}</span>
-          </div>
-          <div class="shop-gallery__benefit">
-            {%- if section.settings.benefit_2_icon != blank -%}
-              <span class="shop-gallery__benefit-icon">
-                <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              </span>
-            {%- endif -%}
-            <span>{{ section.settings.benefit_2 }}</span>
-          </div>
-          <div class="shop-gallery__benefit">
-            {%- if section.settings.benefit_3_icon != blank -%}
-              <span class="shop-gallery__benefit-icon">
-                <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-              </span>
-            {%- endif -%}
-            <span>{{ section.settings.benefit_3 }}</span>
-          </div>
-        </div>
-      </div>
-
-      <hr class="shop-purchase__divider">
-
       <!-- FLAVOR TABS (New Design) -->
       <div class="flavor-selection">
         <div class="flavor-tabs" role="tablist">

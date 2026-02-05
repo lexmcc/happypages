@@ -83,6 +83,7 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 - Product handle matching (e.g., checking for "cacao" in handle) is fragile - handles may vary (cacao vs cocoa). Use block-level settings instead.
 - Liquid variables persist across the template - a `{% assign %}` inside a `<script>` tag is still available later in the same file
 - **Never use `scrollIntoView()` for horizontal carousels** - it scrolls all ancestors including the page. Use `container.scrollTo()` instead to avoid mobile horizontal overflow.
+- **CSS cascade order matters** - base styles appearing AFTER media queries will override them. Place base styles before media queries, or remove conflicting properties from base styles.
 
 ## Shop Purchase Flow Architecture
 

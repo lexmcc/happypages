@@ -24,6 +24,34 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 **Lesson:** When multiple methods need the same behavior, delegate to a single source of truth rather than duplicating logic. Look for existing methods that already do what you need.
 
+### Sticky Gallery CSS Cascade Issue (Feb 5, 2026)
+
+**Issue:** Sticky gallery not working on desktop despite `position: sticky` in media query.
+
+**Root Cause:** CSS cascade order bug. The base `.shop-gallery` styles (with `position: relative`) appeared AFTER the media query in the source:
+
+```css
+/* Media query (lines 145-152) */
+@media screen and (min-width: 1000px) {
+  .shop-gallery {
+    position: sticky;  /* Should apply on desktop */
+  }
+}
+
+/* Base styles (lines 163-166) - comes AFTER, so wins! */
+.shop-gallery {
+  position: relative;  /* Overrides sticky */
+}
+```
+
+When two CSS rules have the same specificity, the one appearing later wins. The base `position: relative` overrode `position: sticky`.
+
+**Fix:**
+1. Remove `position: relative` from base `.shop-gallery` styles (not needed - sticky is positioned by definition)
+2. Change `top: var(--header-height, 100px)` to `top: calc(var(--sticky-area-height) + 20px)` to match theme patterns
+
+**Lesson:** When media queries don't seem to apply, check if base styles appear AFTER the media query and override it. Either increase specificity, reorder the CSS, or remove the conflicting base property.
+
 ### Mobile Horizontal Overflow from scrollIntoView (Feb 5, 2026)
 
 **Issue:** On mobile, the entire page could be pushed/dragged left/right. Clicking a half-visible flavor pill caused the screen to jump horizontally.
@@ -54,14 +82,6 @@ if (container) {
 
 ### Method Delegation for Shared Behavior
 When multiple entry points need the same behavior (e.g., `selectImage()` and `selectFlavor()` both need to scroll thumbnails), have them delegate to a shared method (`scrollToImage()`) rather than duplicating logic.
-
-## API & Library Quirks
-
-<!-- Undocumented behaviors, edge cases -->
-
-## Config & Environment
-
-<!-- Build, deploy, environment discoveries -->
 
 ## API & Library Quirks
 
