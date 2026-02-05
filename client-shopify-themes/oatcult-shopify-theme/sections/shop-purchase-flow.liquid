@@ -2573,6 +2573,7 @@ CRO-optimized product purchase page with:
           {%- endfor -%}
         {%- endif -%}
       ],
+      firstFlavorId: {%- for block in flavor_blocks -%}{%- unless block.settings.is_bundle -%}{%- if block.settings.product != blank -%}{{ block.settings.product.id }}{%- break -%}{%- endif -%}{%- endunless -%}{%- endfor -%},
       selectedSize: 18, // 9, 18, or 27 packs
       subscribe: true,
       currentImageIndex: 0,
@@ -2715,10 +2716,11 @@ CRO-optimized product purchase page with:
           if (this.discountPercent !== 20) break;
         }
 
-        // Set default active flavor tab (first individual product)
-        const firstIndividual = this.individualProducts[0];
-        if (firstIndividual) {
-          this.activeFlavorTab = firstIndividual.id;
+        // Set default active flavor tab (first non-bundle block in visual order)
+        if (this.firstFlavorId) {
+          this.activeFlavorTab = this.firstFlavorId;
+        } else if (this.individualProducts[0]) {
+          this.activeFlavorTab = this.individualProducts[0].id;
         }
 
         // Set default frequency (prefer 4 weeks, or first available)
