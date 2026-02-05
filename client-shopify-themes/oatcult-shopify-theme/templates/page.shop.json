@@ -22,6 +22,9 @@
             "subtitle": "All 3 flavours",
             "show_badge": true,
             "description": "Testing the mixed box.",
+            "pill_selected_bg": "#3c1b04",
+            "pill_selected_text": "#ffffff",
+            "pill_selected_border": "#3c1b04",
             "testimonial_quote": "I like it",
             "testimonial_author": "Alex"
           }
@@ -36,6 +39,9 @@
             "subtitle": "",
             "show_badge": false,
             "description": "Sweet cinnamon gluten-free oat mix with almonds, chia, flaxseeds, and live cultures. The path to enlightenment is paved with probiotics.",
+            "pill_selected_bg": "#63433a",
+            "pill_selected_text": "#6cdfff",
+            "pill_selected_border": "#6cdfff",
             "testimonial_quote": "I love this flavour too much! Tastes just like a cinnamon roll",
             "testimonial_author": "Alex"
           }
@@ -50,6 +56,9 @@
             "subtitle": "",
             "show_badge": false,
             "description": "",
+            "pill_selected_bg": "#3c1b04",
+            "pill_selected_text": "#6cdfff",
+            "pill_selected_border": "#6cdfff",
             "testimonial_quote": "I love it simply the best flavour ever.",
             "testimonial_author": "Alex"
           }
@@ -64,6 +73,9 @@
             "subtitle": "",
             "show_badge": false,
             "description": "Tasty",
+            "pill_selected_bg": "#ee6a92",
+            "pill_selected_text": "#6cdfff",
+            "pill_selected_border": "#6cdfff",
             "testimonial_quote": "",
             "testimonial_author": ""
           }
@@ -127,8 +139,8 @@
         "benefit_3_icon": "shopify://shop_images/Oat_cult_icons_new_monk2-removebg-preview_907af09e-4ea3-432c-9071-984b0091c11f.png",
         "testimonial_quote": "Damn this stuff is great. First, I love a good cult! Excited to have passed the initiation stage! Second, they taste amazing. Made me so much healthier with zero effort. love that",
         "testimonial_author": "Patrick C.",
-        "flavors_title": "Pick your flavors",
-        "size_title": "Choose your size",
+        "flavors_title": "Choose your cults",
+        "size_title": "Choose your box size",
         "bestseller_badge_text": "BEST SELLER",
         "bestseller_badge_bg": "#3c1b04",
         "bestseller_badge_text_color": "#6cdfff",

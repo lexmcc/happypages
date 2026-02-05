@@ -313,6 +313,7 @@ CRO-optimized product purchase page with:
     display: flex;
     flex-direction: column;
     gap: var(--spacing-6);
+    min-width: 0;  /* Prevent grid blowout */
   }
 
   .shop-purchase__header {
@@ -1909,6 +1910,53 @@ CRO-optimized product purchase page with:
     background: var(--color-cta-yellow-hover);
     box-shadow: 0 4px 12px rgba(255, 229, 0, 0.4);
   }
+
+  /* ============================================
+     SUBSCRIBE SECTION - MOBILE
+     ============================================ */
+  @media screen and (max-width: 999px) {
+    .desktop-cta {
+      display: none;
+    }
+
+    .sub-section__header {
+      flex-wrap: wrap;
+      gap: var(--spacing-2);
+    }
+
+    .sub-section__benefits {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sub-benefit-card {
+      flex: 1 1 calc(50% - 4px);
+      min-width: 100px;
+      aspect-ratio: auto;  /* Remove forced square */
+      min-height: 120px;   /* Ensure reasonable height */
+    }
+
+    .onetime-option {
+      flex-wrap: wrap;
+      gap: var(--spacing-2);
+    }
+  }
+
+  /* ============================================
+     PURCHASE COLUMN - MOBILE REORDER
+     Move flavor tabs & description above header
+     ============================================ */
+  @media screen and (max-width: 999px) {
+    /* Flavor selection first (right after gallery) */
+    .flavor-selection {
+      order: -1;
+    }
+
+    /* Hide the divider between header and flavor selection on mobile */
+    .shop-purchase__header + .shop-purchase__divider {
+      display: none;
+    }
+  }
 </style>
 
 <div
@@ -2025,7 +2073,7 @@ CRO-optimized product purchase page with:
       <hr class="shop-purchase__divider">
 
       <!-- FLAVOR TABS (New Design) -->
-      <div>
+      <div class="flavor-selection">
         <div class="flavor-tabs" role="tablist">
           {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
           {%- if flavor_blocks.size > 0 -%}
@@ -2766,6 +2814,15 @@ CRO-optimized product purchase page with:
       // Also scrolls gallery to that flavor's first image
       setFlavorTab(productId) {
         this.activeFlavorTab = productId;
+
+        // Scroll the active tab into view (for mobile horizontal scroll)
+        this.$nextTick(() => {
+          const activeTab = document.querySelector('.flavor-tab--active');
+          if (activeTab) {
+            activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
+
         // Scroll gallery to this flavor's first image
         const index = this.getFlavorImageIndex(productId);
         if (index >= 0) {
@@ -2783,9 +2840,10 @@ CRO-optimized product purchase page with:
         this.currentImageIndex = index;
 
         // Also scroll thumbnail strip to show this image
+        // Query by active class instead of children index (unreliable with Alpine's x-for)
         this.$nextTick(() => {
           const thumbs = this.$refs.galleryThumbs;
-          const activeThumb = thumbs?.children[index];
+          const activeThumb = thumbs?.querySelector('.shop-gallery__thumb--active');
           if (activeThumb) {
             activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
           }
@@ -3057,7 +3115,7 @@ CRO-optimized product purchase page with:
       },
 
       selectImage(index) {
-        this.currentImageIndex = index;
+        this.scrollToImage(index);
       },
 
       touchStart(event) {

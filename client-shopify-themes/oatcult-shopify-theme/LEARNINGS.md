@@ -14,9 +14,20 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 **Lesson:** When adding state reset logic to selection handlers, consider which state actually needs to reset. UI navigation state (like gallery position) usually shouldn't reset when selection state changes.
 
+### Thumbnail Scroll-into-View Missing (Feb 5, 2026)
+
+**Issue:** Clicking a gallery thumbnail that was partially off-screen didn't scroll it into view.
+
+**Root Cause:** `selectImage(index)` only set `currentImageIndex = index` with no scroll logic. Meanwhile, `scrollToImage(index)` had proper scroll logic but was only called from `selectFlavor()`.
+
+**Fix:** Change `selectImage()` to delegate to `scrollToImage()` instead of duplicating the index assignment.
+
+**Lesson:** When multiple methods need the same behavior, delegate to a single source of truth rather than duplicating logic. Look for existing methods that already do what you need.
+
 ## Patterns & Best Practices
 
-<!-- Effective approaches for this codebase -->
+### Method Delegation for Shared Behavior
+When multiple entry points need the same behavior (e.g., `selectImage()` and `selectFlavor()` both need to scroll thumbnails), have them delegate to a shared method (`scrollToImage()`) rather than duplicating logic.
 
 ## API & Library Quirks
 
