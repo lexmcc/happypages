@@ -12,6 +12,62 @@
     "shop_purchase_flow": {
       "type": "shop-purchase-flow",
       "blocks": {
+        "flavor_option_4k6Bpz": {
+          "type": "flavor_option",
+          "settings": {
+            "product": "overnight-gut-oats-mixed-box",
+            "is_bundle": true,
+            "card_image": "shopify://shop_images/Mixed-Packs-Transparentbg.png",
+            "name_override": "The Cult Mix",
+            "subtitle": "All 3 flavours",
+            "show_badge": true,
+            "description": "Testing the mixed box.",
+            "testimonial_quote": "I like it",
+            "testimonial_author": "Alex"
+          }
+        },
+        "flavor_option_G4NdW8": {
+          "type": "flavor_option",
+          "settings": {
+            "product": "overnight-gut-oats-cinnamon-mix",
+            "is_bundle": false,
+            "card_background": "shopify://shop_images/Cinnamon-Bowl-Transparentbg_fa730ec3-6366-4484-ad7a-58406e5c7b92.png",
+            "name_override": "",
+            "subtitle": "",
+            "show_badge": false,
+            "description": "Sweet cinnamon gluten-free oat mix with almonds, chia, flaxseeds, and live cultures. The path to enlightenment is paved with probiotics.",
+            "testimonial_quote": "I love this flavour too much! Tastes just like a cinnamon roll",
+            "testimonial_author": "Alex"
+          }
+        },
+        "flavor_option_yM7DEh": {
+          "type": "flavor_option",
+          "settings": {
+            "product": "overnight-gut-oats-cocoa-chip",
+            "is_bundle": false,
+            "card_background": "shopify://shop_images/Cacao-Bowl-Transparentbg.png",
+            "name_override": "",
+            "subtitle": "",
+            "show_badge": false,
+            "description": "",
+            "testimonial_quote": "I love it simply the best flavour ever.",
+            "testimonial_author": "Alex"
+          }
+        },
+        "flavor_option_VHeVh9": {
+          "type": "flavor_option",
+          "settings": {
+            "product": "overnight-gut-oats-strawberry-mix",
+            "is_bundle": false,
+            "card_background": "shopify://shop_images/Strawberry-Bowl-Transparentbg_fd9752e9-b47d-4d77-9d92-b6e789ddef8a.png",
+            "name_override": "",
+            "subtitle": "",
+            "show_badge": false,
+            "description": "Tasty",
+            "testimonial_quote": "",
+            "testimonial_author": ""
+          }
+        },
         "gallery_image_Wig3QK": {
           "type": "gallery_image",
           "settings": {
@@ -49,6 +105,10 @@
         }
       },
       "block_order": [
+        "flavor_option_4k6Bpz",
+        "flavor_option_G4NdW8",
+        "flavor_option_yM7DEh",
+        "flavor_option_VHeVh9",
         "gallery_image_Wig3QK",
         "gallery_image_MACiXU",
         "gallery_image_wPLV3H",
@@ -60,22 +120,19 @@
         "subtitle": "DELICIOUS OVERNIGHT OATS, JUST ADD MILK. NO FLUFF.",
         "reviews_text": "5.0 from 200+ reviews",
         "benefit_1": "1+ billion probiotics per serving",
-        "benefit_1_icon": "shopify://shop_images/Figma_2024-09-23_11.22.04_240x240_91cdc439-ad22-47bb-95c3-654605a62e30.webp",
-        "benefit_2": "No artificial ingredients or added sugars",
-        "benefit_2_icon": "shopify://shop_images/Figma_2024-09-23_11.21.47_240x240_11c87ca3-0515-456a-8610-018c21ce6177.webp",
-        "benefit_3": "Supports healthy digestion",
-        "benefit_3_icon": "shopify://shop_images/Figma_2024-09-23_11.21.19_240x240_69a5f938-23dd-4c7a-a2c8-b6999c453107.webp",
+        "benefit_1_icon": "shopify://shop_images/Oat_cult_icons_new_monk2-removebg-preview_907af09e-4ea3-432c-9071-984b0091c11f.png",
+        "benefit_2": "No bs inside, just the good stuff",
+        "benefit_2_icon": "shopify://shop_images/Oat_cult_icons_new_monk2-removebg-preview_907af09e-4ea3-432c-9071-984b0091c11f.png",
+        "benefit_3": "Improved digestion and cult status",
+        "benefit_3_icon": "shopify://shop_images/Oat_cult_icons_new_monk2-removebg-preview_907af09e-4ea3-432c-9071-984b0091c11f.png",
         "testimonial_quote": "Damn this stuff is great. First, I love a good cult! Excited to have passed the initiation stage! Second, they taste amazing. Made me so much healthier with zero effort. love that",
         "testimonial_author": "Patrick C.",
         "flavors_title": "Pick your flavors",
         "size_title": "Choose your size",
-        "mixed_box_name": "THE CULT MIX",
-        "mixed_box_image": "shopify://shop_images/Oat_Cult_ALL_top_mix_9_pink_UPDATED_LORES.jpg",
-        "mixed_box_description": "All 3 flavors in one box — can't decide? This is the one for you.",
-        "mixed_box_badge": "",
-        "mixed_box_flavor_list": "Get all 3 Cults: Cacao, Strawberry Goji, Cinnamon",
-        "pick_own_name": "Pick your own",
-        "pick_own_description": "Select 1-3 individual flavors",
+        "bestseller_badge_text": "BEST SELLER",
+        "bestseller_badge_bg": "#3c1b04",
+        "bestseller_badge_text_color": "#6cdfff",
+        "bestseller_badge_icon": "shopify://shop_images/Star-blue-small.png",
         "sub_tick_icon": "shopify://shop_images/check-circle.png",
         "sub_benefit_1": "Pause or cancel anytime",
         "sub_benefit_2": "Monthly, to your door",

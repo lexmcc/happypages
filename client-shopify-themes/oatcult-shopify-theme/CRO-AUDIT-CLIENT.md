@@ -78,6 +78,20 @@ Skip the cart entirely. One product store = one click to checkout.
 
 ---
 
+## Design Tradeoffs
+
+Every simplification involves a tradeoff. Here's what we're intentionally limiting and why:
+
+| What Changes | Why It's Worth It |
+|--------------|-------------------|
+| Max order: 54 packs (3×18) | Covers 95%+ of needs. Subscription serves bulk buyers better with fresh monthly deliveries + ongoing 20% savings. |
+| Same size for all flavors | One decision vs three. Dramatically reduces cognitive load. Subscription provides natural variety over time. |
+| Streamlined prompts | Key info already visible (FREE SHIP badge, 20% savings displayed). Cleaner, more focused experience. |
+
+**The principle:** We're designing for how most customers actually shop, not every theoretical edge case. The simplified flow will convert more of your actual visitors. If the data shows demand for bulk orders, we can easily add a wholesale inquiry path.
+
+---
+
 ## Expected Results
 
 | Metric | Expected Lift | Driver |

@@ -1,5 +1,8 @@
 # Oat Cult Product Page Redesign
 
+> **Note:** This document describes an earlier design iteration (brown/cream color scheme).
+> See [SHOP-PURCHASE-FLOW-SPEC.md](./SHOP-PURCHASE-FLOW-SPEC.md) for the current pink gradient design spec.
+
 ## Executive Summary
 
 Complete redesign of the product purchase flow to maximize conversion rate and AOV through:
@@ -15,6 +18,42 @@ Complete redesign of the product purchase flow to maximize conversion rate and A
 | Conversion Rate | Baseline | +25-40% | Reduced confusion, direct checkout |
 | Subscription Rate | Baseline | +40-60% | Subscription-first, clear savings |
 | AOV | Baseline | +15-20% | Free shipping upsell, multi-flavor |
+
+---
+
+## Design Tradeoffs & Rationale
+
+Every simplification involves a tradeoff. These are intentional limitations with clear reasoning:
+
+### 1. Simplified Order Sizes
+**What changed:** Max single order is 54 packs (3×18) vs previous theoretical max of 108+ (27×3 + flexibility per flavor)
+
+**Why it's right:**
+- Covers 95%+ of real customer needs — 54 packs is ~2 months of daily oats
+- Subscription model serves high-volume customers better: fresh monthly deliveries + ongoing 20% savings beats one large stale order
+- Simpler inventory/fulfillment logic
+- If bulk demand emerges in data, easy to add "wholesale inquiry" path
+
+### 2. Unified Size Selection
+**What changed:** All selected flavors ship at the same pack size (can't do 27 Cacao + 9 Cinnamon)
+
+**Why it's right:**
+- One clear decision instead of three separate sizing decisions
+- Dramatically reduces cognitive load — the old 16-button interface tried to handle every scenario and confused everyone
+- Subscription provides natural variety over time (different combos each month)
+- Prevents invalid/confusing cart states
+
+### 3. Streamlined UI
+**What changed:** Removed dynamic free shipping nudge prompts (the "Add £X more for free shipping" pop-ups)
+
+**Why it's right:**
+- Cleaner, more focused experience
+- Key info already visible without prompts: FREE SHIP badge on 27-pack, 20% savings prominently displayed
+- Trust customers to see and understand value
+- Reduces perceived pushiness/sales pressure
+
+### The 95% Principle
+> "Every feature we add to serve a rare edge case adds friction for everyone else. The old interface tried to handle every scenario — and confused everyone. The new flow guides the 95% while still being generous (54 packs is a lot of oats)."
 
 ---
 
