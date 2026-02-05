@@ -80,6 +80,28 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 - The theme uses CSS importmap polyfill for older Safari versions
 - Beae page builder snippets are injected into `theme.liquid` - don't remove these comments
 - Custom fonts (Rudolph, Apercu) are loaded externally
+- Product handle matching (e.g., checking for "cacao" in handle) is fragile - handles may vary (cacao vs cocoa). Use block-level settings instead.
+- Liquid variables persist across the template - a `{% assign %}` inside a `<script>` tag is still available later in the same file
+
+## Shop Purchase Flow Architecture
+
+The `sections/shop-purchase-flow.liquid` section uses a unified block system:
+
+- **Block type:** `flavor_option` - used for both bundles (mixed box) and individual flavors
+- **Key settings:**
+  - `is_bundle` - marks the option as mutually exclusive (selecting it deselects others)
+  - `card_background` - full-bleed background image (set per block, not per handle)
+  - `card_image` - product image for the card
+  - `subtitle` - text below name (e.g., "All 3" for mixed box)
+- **JavaScript state:**
+  - `selectedBundle` - product ID of selected bundle (or null)
+  - `selectedFlavors` - array of individual flavor IDs
+  - `bundleProductIds` - populated from blocks with `is_bundle: true`
+- **Selection logic:** Selecting a bundle clears individual selections and vice versa
+
+## Project Learnings
+
+See [LEARNINGS.md](./LEARNINGS.md) for detailed gotchas and session discoveries.
 
 ## Rules
 
@@ -88,8 +110,9 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 ## Planning Docs
 
 - [SPEC.md](./SPEC.md) - Project specification and feature checklist
+- [SHOP-PURCHASE-FLOW-SPEC.md](./SHOP-PURCHASE-FLOW-SPEC.md) - Shop purchase flow design spec (authoritative)
 - [SUBSCRIPTION-MIGRATION-PLAN.md](./SUBSCRIPTION-MIGRATION-PLAN.md) - Subscription app migration analysis
-- [PRODUCT-PAGE-CRO-PLAN.md](./PRODUCT-PAGE-CRO-PLAN.md) - Product page redesign spec
+- [PRODUCT-PAGE-CRO-PLAN.md](./PRODUCT-PAGE-CRO-PLAN.md) - Product page redesign spec (superseded by SHOP-PURCHASE-FLOW-SPEC.md)
 - [CRO-AUDIT-CLIENT.md](./CRO-AUDIT-CLIENT.md) - Client-facing CRO audit
 
 ## Documentation

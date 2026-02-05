@@ -135,6 +135,14 @@ CRO-optimized product purchase page with:
     position: relative;
   }
 
+  @media screen and (min-width: 1000px) {
+    .shop-gallery {
+      position: sticky;
+      top: var(--header-height, 100px);
+      min-width: 0;  /* Force grid item to respect column width */
+    }
+  }
+
   .shop-gallery__main {
     position: relative;
     width: 100%;
@@ -266,13 +274,6 @@ CRO-optimized product purchase page with:
   }
 
   /* Benefits badges */
-  .shop-gallery__benefits {
-    margin-top: 24px;
-    padding: 16px;
-    background: #F0E9DE;
-    border-radius: 12px;
-  }
-
   .shop-gallery__benefit {
     display: flex;
     align-items: center;
@@ -297,32 +298,11 @@ CRO-optimized product purchase page with:
     object-fit: contain;
   }
 
-  /* Mobile benefits in purchase column */
+  /* Benefits in purchase column (shown on both desktop and mobile) */
   .shop-purchase__benefits {
-    display: none;
-  }
-
-  @media screen and (max-width: 767px) {
-    .shop-gallery__benefits {
-      display: none;
-    }
-
-    .shop-purchase__benefits {
-      display: block;
-      margin-top: var(--spacing-4);
-      padding: 16px;
-      background: #F0E9DE;
-      border-radius: 12px;
-    }
-
-    .shop-purchase__benefits .shop-gallery__benefit {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-3);
-      padding: var(--spacing-2) 0;
-      font-size: var(--text-sm);
-      color: var(--spf-text-color);
-    }
+    display: block;
+    margin-top: var(--spacing-4);
+    padding: 16px;
   }
 
   /* ============================================
@@ -372,9 +352,7 @@ CRO-optimized product purchase page with:
   }
 
   .shop-purchase__divider {
-    height: 1px;
-    background: var(--spf-border-color);
-    margin: 0;
+    display: none;
   }
 
   .shop-purchase__section-title {
@@ -1339,16 +1317,17 @@ CRO-optimized product purchase page with:
   }
 
   .flavor-quote {
-    background: white;
-    padding: var(--spacing-4);
-    border-radius: var(--spf-selector-radius);
+    /* Container only - white box styling moved to __text */
   }
 
   .flavor-quote__text {
+    background: white;
+    padding: var(--spacing-4);
+    border-radius: var(--spf-selector-radius);
     font-size: var(--text-sm);
     font-style: italic;
     color: var(--spf-text-color);
-    margin: 0 0 var(--spacing-2) 0;
+    margin: 0;
     line-height: 1.5;
   }
 
@@ -1367,6 +1346,7 @@ CRO-optimized product purchase page with:
     gap: var(--spacing-2);
     font-size: var(--text-xs);
     color: var(--spf-text-muted);
+    padding-top: var(--spacing-2);
   }
 
   .flavor-quote__stars {
@@ -1946,9 +1926,7 @@ CRO-optimized product purchase page with:
             :alt="image.alt"
             class="shop-gallery__main-image"
             x-show="currentImageIndex === index"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
+            x-transition.opacity.duration.300ms
             style="position: absolute; top: 0; left: 0;"
           >
         </template>
@@ -1974,7 +1952,7 @@ CRO-optimized product purchase page with:
       </div>
 
       <!-- Thumbnail Strip (Desktop) -->
-      <div class="shop-gallery__thumbs">
+      <div class="shop-gallery__thumbs" x-ref="galleryThumbs">
         <template x-for="(image, index) in currentImages" :key="image.id">
           <button
             class="shop-gallery__thumb"
@@ -1997,33 +1975,6 @@ CRO-optimized product purchase page with:
         </template>
       </div>
 
-      <!-- Benefit Badges -->
-      <div class="shop-gallery__benefits">
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_1_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_1 }}</span>
-        </div>
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_2_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_2 }}</span>
-        </div>
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_3_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_3 }}</span>
-        </div>
-      </div>
     </div>
 
     <!-- PURCHASE COLUMN -->
@@ -2041,7 +1992,7 @@ CRO-optimized product purchase page with:
           <span>{{ section.settings.reviews_text }}</span>
         </div>
 
-        <!-- Benefits (Mobile only - duplicated for layout) -->
+        <!-- Benefits -->
         <div class="shop-purchase__benefits">
           <div class="shop-gallery__benefit">
             {%- if section.settings.benefit_1_icon != blank -%}
@@ -2676,20 +2627,25 @@ CRO-optimized product purchase page with:
         {%- endfor -%}
       ],
 
-      // Gallery images from section blocks (populated from Liquid)
+      // Gallery images from all individual flavor products (not bundles)
       galleryImages: [
-        {%- assign gallery_blocks = section.blocks | where: 'type', 'gallery_image' -%}
         {%- assign gallery_first = true -%}
-        {%- for block in gallery_blocks -%}
-          {%- if block.settings.image != blank -%}
-            {%- unless gallery_first -%},{%- endunless -%}
-            {%- assign gallery_first = false -%}
-            {
-              id: 'gallery-{{ block.id }}',
-              src: {{ block.settings.image | image_url: width: 800 | json }},
-              thumb: {{ block.settings.image | image_url: width: 150 | json }},
-              alt: {{ block.settings.alt | default: 'Product image' | json }}
-            }
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'flavor_option' and block.settings.is_bundle != true -%}
+            {%- assign flavor_product = block.settings.product -%}
+            {%- if flavor_product != blank -%}
+              {%- for image in flavor_product.images -%}
+                {%- unless gallery_first -%},{%- endunless -%}
+                {%- assign gallery_first = false -%}
+                {
+                  id: 'gallery-{{ flavor_product.id }}-{{ forloop.index }}',
+                  src: {{ image | image_url: width: 800 | json }},
+                  thumb: {{ image | image_url: width: 150 | json }},
+                  alt: {{ image.alt | default: flavor_product.title | json }},
+                  flavorId: {{ flavor_product.id }}
+                }
+              {%- endfor -%}
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
       ],
@@ -2803,19 +2759,33 @@ CRO-optimized product purchase page with:
       },
 
       // Set active flavor tab (for preview/description, doesn't affect selection)
+      // Also scrolls gallery to that flavor's first image
       setFlavorTab(productId) {
         this.activeFlavorTab = productId;
-        // Update gallery to show this product's images
-        this.updateGalleryForProduct(productId);
+        // Scroll gallery to this flavor's first image
+        const index = this.getFlavorImageIndex(productId);
+        if (index >= 0) {
+          this.scrollToImage(index);
+        }
       },
 
-      // Update gallery images for a specific product
-      updateGalleryForProduct(productId) {
-        const product = this.products[productId];
-        if (product && product.images && product.images.length > 0) {
-          // Reset to first image when switching products
-          this.currentImageIndex = 0;
-        }
+      // Find the index of the first gallery image belonging to a flavor
+      getFlavorImageIndex(flavorId) {
+        return this.galleryImages.findIndex(img => img.flavorId === flavorId);
+      },
+
+      // Scroll gallery to a specific image index with smooth scroll
+      scrollToImage(index) {
+        this.currentImageIndex = index;
+
+        // Also scroll thumbnail strip to show this image
+        this.$nextTick(() => {
+          const thumbs = this.$refs.galleryThumbs;
+          const activeThumb = thumbs?.children[index];
+          if (activeThumb) {
+            activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
       },
 
       // Get flavor description from data (with fallback)
@@ -2875,7 +2845,6 @@ CRO-optimized product purchase page with:
           this.selectedBundle = null;
           this.toggleFlavor(productId);
         }
-        this.currentImageIndex = 0;
         this.pickOwnExpanded = false;
       },
 
@@ -2904,7 +2873,6 @@ CRO-optimized product purchase page with:
             this.selectedFlavors.push(productId);
           }
         }
-        this.currentImageIndex = 0;
       },
 
       getVariantForSize(productId, packSize) {
@@ -3358,24 +3326,6 @@ CRO-optimized product purchase page with:
   ],
   "blocks": [
     {
-      "type": "gallery_image",
-      "name": "Gallery Image",
-      "limit": 12,
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "alt",
-          "label": "Alt text",
-          "default": "Product image"
-        }
-      ]
-    },
-    {
       "type": "flavor_option",
       "name": "Flavor Option",
       "settings": [
@@ -3440,6 +3390,23 @@ CRO-optimized product purchase page with:
           "type": "text",
           "id": "testimonial_author",
           "label": "Author"
+        }
+      ]
+    },
+    {
+      "type": "gallery_image",
+      "name": "Gallery Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Product image"
         }
       ]
     }

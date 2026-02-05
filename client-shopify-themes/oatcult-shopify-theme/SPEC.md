@@ -17,6 +17,7 @@ Shopify theme for Oat Cult based on the Impact theme (v6.0.1) by Maestrooo. Onli
   - Subscription-first design with 20% savings
   - Multi-flavor box builder (Mixed Box or pick 1-3)
   - Direct-to-checkout (no cart)
+  - Unified flavor card architecture (bundle/individual via blocks)
 - [x] Alpine.js reactive components
 - [x] Okendo reviews integration
 - [x] Beae page builder integration
@@ -57,6 +58,7 @@ Shopify theme for Oat Cult based on the Impact theme (v6.0.1) by Maestrooo. Onli
 | File | Purpose |
 |------|---------|
 | `sections/shop-purchase-flow.liquid` | Main CRO purchase flow |
+| `SHOP-PURCHASE-FLOW-SPEC.md` | Design spec for purchase flow (authoritative) |
 | `snippets/product-card.liquid` | Product card with selling plan check |
 | `snippets/line-item.liquid` | Cart line item with subscription display |
 | `snippets/meal-box.liquid` | Meal box component |
@@ -68,6 +70,8 @@ Shopify theme for Oat Cult based on the Impact theme (v6.0.1) by Maestrooo. Onli
 
 | Date | Change |
 |------|--------|
+| Feb 5, 2026 | Fix gallery reset on flavor selection |
+| Feb 5, 2026 | Unified flavor card architecture - blocks for bundles and flavors |
 | Feb 2026 | Subscription migration analysis completed |
 | Feb 2026 | CRO audit and product page redesign spec |
 | — | Initial theme setup from Impact v6.0.1 |
