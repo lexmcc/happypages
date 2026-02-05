@@ -1556,6 +1556,21 @@ CRO-optimized product purchase page with:
     }
   }
 
+  /* Desktop: extend carousel past container to viewport edge */
+  @media screen and (min-width: 1000px) {
+    .flavor-carousel {
+      margin-right: calc(-1 * (100vw - 1200px) / 2);
+    }
+
+    .flavor-carousel__wrapper {
+      padding-right: calc((100vw - 1200px) / 2);
+    }
+
+    .flavor-carousel__nav {
+      margin-right: calc((100vw - 1200px) / 2);
+    }
+  }
+
   /* ============================================
      BOX SIZE CARDS (New Design)
      ============================================ */
