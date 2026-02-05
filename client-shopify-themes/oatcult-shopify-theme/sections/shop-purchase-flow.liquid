@@ -11,23 +11,9 @@ CRO-optimized product purchase page with:
 
 {%- endcomment -%}
 
-{%- comment -%} Collect all product data from the breakfast collection {%- endcomment -%}
-{%- assign products_data = '' -%}
-{%- assign mixed_box_product = nil -%}
-{%- assign individual_products = '' -%}
-
-{%- for product in collections['breakfast'].products limit: 4 -%}
-  {%- if product.title contains 'Mixed' -%}
-    {%- assign mixed_box_product = product -%}
-  {%- else -%}
-    {%- if individual_products != '' -%}
-      {%- assign individual_products = individual_products | append: ',' -%}
-    {%- endif -%}
-    {%- assign individual_products = individual_products | append: product.id -%}
-  {%- endif -%}
-{%- endfor -%}
-
 <style>
+  [x-cloak] { display: none !important; }
+
   .shop-purchase-flow {
     /* Local variables - map to theme variables for consistency */
     --spf-text-color: rgb(var(--text-primary));
@@ -38,6 +24,33 @@ CRO-optimized product purchase page with:
     --spf-accent: rgb(var(--accent));
     --spf-success: rgb(var(--success-text));
     --spf-star-color: rgb(var(--star-color));
+
+    /* === NEW DESIGN TOKENS === */
+    /* Pink palette */
+    --color-pink-dark: #F05E87;
+    --color-pink-light: #FFBED6;
+    --color-pink-border: #B45B7E;
+    /* Neutral palette */
+    --color-cream: #F0E9DE;
+    --color-border-light: #CDCDCD;
+    --color-chevron: #361A05;
+    --color-locked-overlay: rgba(54, 26, 5, 0.9);
+    --color-locked-border: #361A05;
+    /* CTA */
+    --color-cta-yellow: #FFE500;
+    --color-cta-yellow-hover: #E8C300;
+
+    /* Card gradients */
+    --gradient-unselected: linear-gradient(to bottom, #FFFFFF 0%, #F0E9DE 100%);
+    --gradient-selected: linear-gradient(to bottom, #F05E87 0%, #FFBED6 100%);
+    --gradient-sub-section: linear-gradient(to bottom right, #FFBED6 0%, #F05E87 100%);
+
+    /* Z-index scale */
+    --z-base: 1;
+    --z-card-hover: 5;
+    --z-dropdown: 10;
+    --z-sticky: 100;
+
     /* Semantic colors for badges/CTA - keep brand-specific */
     --spf-cta-background: #93c5fd;
     --spf-cta-hover: #60a5fa;
@@ -45,20 +58,58 @@ CRO-optimized product purchase page with:
     --spf-badge-success: #22c55e;
     --spf-badge-hot: #ff6b35;
     --spf-badge-featured: #ec4899;
-    /* Selector box styling */
-    --spf-selector-bg: #F0E9DE;
-    --spf-selector-border: #E3E1E1;
-    --spf-selector-selected-bg: {{ section.settings.selected_background | default: '#D8F7FF' }};
-    --spf-selector-selected-border: {{ section.settings.selected_border | default: '#6CDFFF' }};
+
+    /* Selector box styling - using new gradient system */
+    --spf-selector-bg: var(--color-cream);
+    --spf-selector-border: var(--color-border-light);
+    --spf-selector-selected-bg: {{ section.settings.selected_background | default: '#FFBED6' }};
+    --spf-selector-selected-border: {{ section.settings.selected_border | default: '#B45B7E' }};
     --spf-selector-selected-text: {{ section.settings.selected_text | default: '#000000' }};
     --spf-selector-radius: 8px;
     --spf-subscribe-selected: #fef3c7;
     --spf-subscribe-border: #f59e0b;
-    --spf-savings-color: #E576A1;
+    --spf-savings-color: var(--color-pink-dark);
+
+    /* Transitions (respecting reduced motion) */
     --transition-fast: 0.1s ease;
-    --transition-normal: 0.15s ease;
+    --transition-normal: 0.15s ease-out;
+
     padding: var(--spacing-8) var(--spacing-5);
     font-family: var(--text-font-family);
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .shop-purchase-flow {
+      --transition-fast: 0s;
+      --transition-normal: 0s;
+    }
+
+    .shop-purchase-flow *,
+    .shop-purchase-flow *::before,
+    .shop-purchase-flow *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Tabular numbers for prices */
+  .shop-purchase-flow [class*="price"],
+  .shop-purchase-flow [class*="savings"],
+  .shop-purchase-flow [class*="per-pack"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Focus ring styles for accessibility */
+  .shop-purchase-flow :focus-visible {
+    outline: 2px solid var(--color-pink-dark);
+    outline-offset: 2px;
+  }
+
+  /* Remove outline on mouse focus */
+  .shop-purchase-flow :focus:not(:focus-visible) {
+    outline: none;
   }
 
   .shop-purchase-flow__container {
@@ -1222,6 +1273,646 @@ CRO-optimized product purchase page with:
     border-radius: var(--rounded);
     margin-top: var(--spacing-2);
   }
+
+  /* ============================================
+     FLAVOR TABS (New Design)
+     ============================================ */
+  .flavor-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: var(--spacing-4);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .flavor-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .flavor-tab {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--color-border-light);
+    background: white;
+    color: var(--spf-text-color);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flavor-tab:hover {
+    border-color: var(--spf-text-color);
+  }
+
+  .flavor-tab--active {
+    background: var(--spf-text-color);
+    color: white;
+    border-color: var(--spf-text-color);
+  }
+
+  .flavor-tab--active:hover {
+    background: var(--spf-text-color);
+  }
+
+  /* ============================================
+     FLAVOR DESCRIPTION BLOCK (New Design)
+     ============================================ */
+  .flavor-description {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .flavor-description__text {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--spf-text-color);
+    margin: 0 0 var(--spacing-4) 0;
+  }
+
+  .flavor-quote {
+    background: white;
+    padding: var(--spacing-4);
+    border-radius: var(--spf-selector-radius);
+  }
+
+  .flavor-quote__text {
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--spf-text-color);
+    margin: 0 0 var(--spacing-2) 0;
+    line-height: 1.5;
+  }
+
+  .flavor-quote__text::before {
+    content: '"';
+  }
+
+  .flavor-quote__text::after {
+    content: '"';
+  }
+
+  .flavor-quote__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--spacing-2);
+    font-size: var(--text-xs);
+    color: var(--spf-text-muted);
+  }
+
+  .flavor-quote__stars {
+    color: var(--spf-star-color);
+    letter-spacing: 1px;
+  }
+
+  .flavor-quote__stars-image {
+    height: 14px;
+    width: auto;
+  }
+
+  /* ============================================
+     FLAVOR CAROUSEL (New Design)
+     ============================================ */
+  .flavor-carousel {
+    position: relative;
+    margin-bottom: var(--spacing-2);
+  }
+
+  .flavor-carousel__wrapper {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px;
+    margin: -4px;
+  }
+
+  .flavor-carousel__wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .flavor-carousel__card {
+    flex-shrink: 0;
+    width: calc(33.333% - 8px); /* Match size cards: 3 per row */
+    aspect-ratio: 3 / 4;
+    border-radius: var(--spf-selector-radius);
+    border: 1px solid var(--color-border-light);
+    background: var(--gradient-unselected);
+    cursor: pointer;
+    transition: transform var(--transition-normal), border-color var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    background-image: var(--card-bg-image, none), var(--gradient-unselected);
+    background-size: cover, auto;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+  }
+
+  .flavor-carousel__card:hover {
+    z-index: var(--z-card-hover);
+  }
+
+  .flavor-carousel__card--selected {
+    background-image: var(--card-bg-image, none), var(--gradient-selected);
+    border-color: var(--color-pink-border);
+  }
+
+  .flavor-carousel__card--selected:hover {
+    border-color: var(--color-pink-border);
+  }
+
+  .flavor-carousel__badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--badge-bg, #fbbf24);
+    color: var(--badge-text, #000000);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .flavor-carousel__badge-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  /* Image wrapper - hidden when using background image */
+  .flavor-carousel__image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3);
+  }
+
+  .flavor-carousel__image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* When card has background image, hide the image wrapper */
+  .flavor-carousel__card--has-bg .flavor-carousel__image {
+    display: none;
+  }
+
+  .flavor-carousel__card--has-bg {
+    justify-content: flex-end;
+  }
+
+  .flavor-carousel__footer {
+    padding: var(--spacing-2) var(--spacing-3);
+    text-align: center;
+  }
+
+  .flavor-carousel__name {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--spf-text-color);
+    margin-bottom: 2px;
+  }
+
+  .flavor-carousel__card--selected .flavor-carousel__name {
+    color: var(--spf-text-color); /* Stay dark */
+  }
+
+  .flavor-carousel__label {
+    font-size: 10px;
+    color: var(--spf-text-muted);
+    text-transform: uppercase;
+  }
+
+  .flavor-carousel__card--selected .flavor-carousel__label {
+    color: #BD376B; /* Pink selected label */
+  }
+
+  /* Carousel navigation - below carousel, right-aligned */
+  .flavor-carousel__nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: var(--spacing-3);
+  }
+
+  .flavor-carousel__arrow {
+    position: static;
+    transform: none;
+    width: 40px;
+    height: 40px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 8px;
+    background: var(--gradient-unselected);
+    border: 1px solid var(--color-border-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--transition-normal);
+  }
+
+  .flavor-carousel__arrow:hover {
+    opacity: 0.9;
+  }
+
+  .flavor-carousel__arrow svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-chevron);
+  }
+
+  /* Mobile: hide arrows (users swipe instead) */
+  @media screen and (max-width: 999px) {
+    .flavor-carousel__nav {
+      display: none;
+    }
+
+    .flavor-carousel__card {
+      width: calc(33.333% - 8px);
+      min-width: 120px;
+    }
+  }
+
+  /* ============================================
+     BOX SIZE CARDS (New Design)
+     ============================================ */
+  .size-cards--redesign {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .size-card--redesign {
+    position: relative;
+    padding: var(--spacing-3);
+    border-radius: var(--spf-selector-radius);
+    border: 1px solid var(--color-border-light);
+    background: var(--gradient-unselected);
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--transition-normal), border-color var(--transition-normal);
+    min-height: 44px;
+  }
+
+  .size-card--redesign:hover {
+    transform: scale(1.02);
+    z-index: var(--z-card-hover);
+  }
+
+  .size-card--redesign.size-card--selected {
+    background: var(--gradient-selected);
+    border-color: var(--color-pink-border);
+  }
+
+  .size-card--redesign.size-card--selected .size-card__packs,
+  .size-card--redesign.size-card--selected .size-card__price,
+  .size-card--redesign.size-card--selected .size-card__per-pack {
+    color: white;
+  }
+
+  .size-card--redesign .size-card__badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .size-card--redesign .size-card__image {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-2);
+  }
+
+  .size-card--redesign .size-card__image img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  @media screen and (max-width: 999px) {
+    .size-cards--redesign {
+      gap: 8px;
+    }
+
+    .size-card--redesign {
+      padding: var(--spacing-2);
+    }
+
+    .size-card--redesign .size-card__image {
+      height: 60px;
+    }
+
+    .size-card--redesign .size-card__packs {
+      font-size: var(--text-sm);
+    }
+
+    .size-card--redesign .size-card__price {
+      font-size: 1rem;
+    }
+  }
+
+  /* ============================================
+     SUB & SAVE SECTION (New Design)
+     ============================================ */
+  .sub-section {
+    border-radius: var(--spf-selector-radius);
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+    transition: opacity var(--transition-normal), filter var(--transition-normal);
+  }
+
+  .sub-section--active {
+    background: var(--gradient-sub-section);
+    border-color: var(--color-pink-border);
+  }
+
+  .sub-section--inactive {
+    opacity: 0.5;
+    filter: grayscale(0.5);
+  }
+
+  .sub-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4);
+    cursor: pointer;
+  }
+
+  .sub-section__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  .sub-section__title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--spf-text-color);
+  }
+
+  .sub-section--active .sub-section__title {
+    color: white;
+  }
+
+  .sub-section__subtitle {
+    font-size: var(--text-sm);
+    color: var(--spf-text-muted);
+  }
+
+  .sub-section--active .sub-section__subtitle {
+    color: white;
+    opacity: 0.9;
+  }
+
+  .sub-section__pricing {
+    text-align: right;
+  }
+
+  .sub-section__price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--spf-text-color);
+  }
+
+  .sub-section--active .sub-section__price {
+    color: white;
+  }
+
+  .sub-section__per-pack {
+    font-size: var(--text-sm);
+    color: var(--spf-text-muted);
+  }
+
+  .sub-section--active .sub-section__per-pack {
+    color: white;
+    opacity: 0.9;
+  }
+
+  /* iOS-style toggle */
+  .sub-toggle {
+    position: relative;
+    width: 52px;
+    height: 32px;
+    background: var(--color-border-light);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background var(--transition-normal);
+    flex-shrink: 0;
+  }
+
+  .sub-toggle--active {
+    background: var(--color-pink-dark);
+  }
+
+  .sub-toggle__circle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 50%;
+    transition: transform var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .sub-toggle--active .sub-toggle__circle {
+    transform: translateX(20px);
+  }
+
+  /* Benefit cards */
+  .sub-section__benefits {
+    display: flex;
+    gap: 12px;
+    padding: 0 var(--spacing-4) var(--spacing-4);
+  }
+
+  .sub-benefit-card {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: var(--spf-selector-radius);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sub-benefit-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sub-benefit-card--locked {
+    position: relative;
+  }
+
+  .sub-benefit-card--locked::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-locked-overlay);
+    border: 1px solid var(--color-locked-border);
+    border-radius: var(--spf-selector-radius);
+  }
+
+  .sub-benefit-card__lock-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  /* Benefit list */
+  .sub-section__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2) var(--spacing-4);
+    padding: 0 var(--spacing-4) var(--spacing-4);
+  }
+
+  .sub-section__list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--text-sm);
+    color: var(--spf-text-color);
+  }
+
+  .sub-section--active .sub-section__list-item {
+    color: white;
+  }
+
+  .sub-section__list-item img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+
+  /* Frequency dropdown */
+  .sub-section__frequency {
+    padding: 0 var(--spacing-4) var(--spacing-4);
+  }
+
+  .frequency-dropdown {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--spf-selector-radius);
+    background: white;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--spf-text-color);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23361A05' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    min-height: 44px;
+  }
+
+  /* Savings callout */
+  .sub-section__savings {
+    padding: var(--spacing-3) var(--spacing-4);
+    text-align: center;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-pink-dark);
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .sub-section--active .sub-section__savings {
+    color: white;
+  }
+
+  /* ============================================
+     ONE-TIME PURCHASE OPTION
+     ============================================ */
+  .onetime-option {
+    padding: var(--spacing-4);
+    border-radius: var(--spf-selector-radius);
+    border: 1px solid var(--color-border-light);
+    background: var(--gradient-unselected);
+    cursor: pointer;
+    transition: border-color var(--transition-normal);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .onetime-option:hover {
+    border-color: var(--spf-text-color);
+  }
+
+  .onetime-option--selected {
+    background: var(--gradient-selected);
+    border-color: var(--color-pink-border);
+  }
+
+  .onetime-option__title {
+    font-weight: 600;
+    color: var(--spf-text-color);
+  }
+
+  .onetime-option--selected .onetime-option__title {
+    color: white;
+  }
+
+  .onetime-option__price {
+    font-weight: 700;
+    color: var(--spf-text-color);
+  }
+
+  .onetime-option--selected .onetime-option__price {
+    color: white;
+  }
+
+  /* ============================================
+     CTA BUTTON (Updated Yellow)
+     ============================================ */
+  .cta-button--yellow {
+    background: var(--color-cta-yellow);
+    border-color: var(--color-cta-yellow-hover);
+  }
+
+  .cta-button--yellow:hover {
+    background: var(--color-cta-yellow-hover);
+    box-shadow: 0 4px 12px rgba(255, 229, 0, 0.4);
+  }
 </style>
 
 <div
@@ -1366,150 +2057,241 @@ CRO-optimized product purchase page with:
 
       <hr class="shop-purchase__divider">
 
-      <!-- Flavor Selection -->
+      <!-- FLAVOR TABS (New Design) -->
       <div>
-        <p class="shop-purchase__section-title">{{ section.settings.flavors_title }}</p>
-        <div class="flavor-options">
-          <!-- Mixed Box Option -->
-          <div
-            class="flavor-option flavor-option--mixed{% if section.settings.mixed_box_badge != blank %} flavor-option--has-badge{% endif %}"
-            :class="{ 'flavor-option--selected': flavorMode === 'mixed' }"
-            @click="selectMixedBox()"
-          >
-            {%- if section.settings.mixed_box_badge != blank -%}
-              <span class="flavor-option__badge flavor-option__badge--featured">{{ section.settings.mixed_box_badge }}</span>
-            {%- endif -%}
-            {%- if section.settings.mixed_box_image != blank -%}
-              <div class="flavor-option__image">
-                <img src="{{ section.settings.mixed_box_image | image_url: width: 200 }}" alt="{{ section.settings.mixed_box_name }}">
-              </div>
-            {%- endif -%}
-            <div class="flavor-option__text">
-              <span class="flavor-option__name">{{ section.settings.mixed_box_name | upcase }}</span>
-              {%- if section.settings.mixed_box_flavor_list != blank -%}
-                <p class="flavor-option__flavor-list">{{ section.settings.mixed_box_flavor_list }}</p>
+        <div class="flavor-tabs" role="tablist">
+          {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
+          {%- if flavor_blocks.size > 0 -%}
+            {%- comment -%} Only render tabs for non-bundle flavors (individual flavors) {%- endcomment -%}
+            {%- for block in flavor_blocks -%}
+              {%- unless block.settings.is_bundle -%}
+                {%- assign flavor_product = block.settings.product -%}
+                {%- if flavor_product != blank -%}
+                  {%- assign flavor_name = block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+                  <button
+                    class="flavor-tab"
+                    :class="{ 'flavor-tab--active': activeFlavorTab === {{ flavor_product.id }} }"
+                    @click="setFlavorTab({{ flavor_product.id }})"
+                    role="tab"
+                    :aria-selected="activeFlavorTab === {{ flavor_product.id }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{ flavor_name }}
+                  </button>
+                {%- endif -%}
+              {%- endunless -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- comment -%} Fallback: render tabs from collection {%- endcomment -%}
+            {%- for product in collections['breakfast'].products limit: 4 -%}
+              {%- unless product.title contains 'Mixed' -%}
+                {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+                <button
+                  class="flavor-tab"
+                  :class="{ 'flavor-tab--active': activeFlavorTab === {{ product.id }} }"
+                  @click="setFlavorTab({{ product.id }})"
+                  role="tab"
+                  :aria-selected="activeFlavorTab === {{ product.id }}"
+                >
+                  {{ flavor_name }}
+                </button>
+              {%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        <!-- Flavor Description Block -->
+        <div class="flavor-description">
+          <p class="flavor-description__text" x-text="getFlavorDescription(activeFlavorTab)"></p>
+          <div class="flavor-quote" x-show="getFlavorTestimonial(activeFlavorTab).quote">
+            <p class="flavor-quote__text" x-text="getFlavorTestimonial(activeFlavorTab).quote"></p>
+            <div class="flavor-quote__footer">
+              {%- if section.settings.rating_image != blank -%}
+                <img class="flavor-quote__stars-image" src="{{ section.settings.rating_image | image_url: width: 100 }}" alt="5 stars" height="14">
+              {%- else -%}
+                <span class="flavor-quote__stars">★★★★★</span>
               {%- endif -%}
+              <span x-text="getFlavorTestimonial(activeFlavorTab).author + ', verified buyer'"></span>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Pick Your Own Option -->
-          <div
-            class="flavor-option flavor-option--dropdown"
-            :class="{
-              'flavor-option--selected': flavorMode === 'pick',
-              'flavor-option--expanded': flavorMode === 'pick' || pickOwnExpanded
-            }"
-          >
-            <div class="flavor-option__header" @click="selectPickMode()">
-              <div class="flavor-option__left">
-                <div class="flavor-option__radio"></div>
-                <span class="flavor-option__name">{{ section.settings.pick_own_name | upcase }}</span>
-              </div>
-              <button class="flavor-option__toggle" @click.stop="pickOwnExpanded = !pickOwnExpanded; if(!pickOwnExpanded && flavorMode !== 'pick') { /* keep closed */ } else if(pickOwnExpanded) { flavorMode = 'pick'; }">
-                <span x-text="selectedFlavors.length > 0 ? selectedFlavors.length + ' selected' : 'Pick'"></span>
-                <svg class="flavor-option__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
+      <hr class="shop-purchase__divider">
 
-            <!-- Collapsible Flavor Cards -->
-            <div class="flavor-option__content" x-show="flavorMode === 'pick' || pickOwnExpanded" x-collapse>
-              <div class="flavor-option__content-inner">
-                <div class="flavor-cards">
-                  {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor' -%}
-                  {%- if flavor_blocks.size > 0 -%}
-                    {%- comment -%} Use flavor blocks from Theme Customizer {%- endcomment -%}
-                    {%- for block in flavor_blocks -%}
-                      {%- assign flavor_product = block.settings.product -%}
-                      {%- if flavor_product != blank -%}
-                        {%- assign flavor_name = block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                        <div
-                          class="flavor-card"
-                          :class="{
-                            'flavor-card--selected': selectedFlavors.includes({{ flavor_product.id }}),
-                            'flavor-card--disabled': !selectedFlavors.includes({{ flavor_product.id }}) && selectedFlavors.length >= 3
-                          }"
-                          @click="toggleFlavor({{ flavor_product.id }})"
-                          {{ block.shopify_attributes }}
-                        >
-                          {%- if block.settings.image != blank -%}
-                            <div class="flavor-card__image">
-                              <img src="{{ block.settings.image | image_url: width: 120 }}" alt="{{ flavor_name }}" loading="lazy">
-                            </div>
-                          {%- endif -%}
-                          <div class="flavor-card__name">{{ flavor_name }}</div>
-                          <span class="flavor-card__checkbox">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </span>
-                        </div>
+      <!-- FLAVOR CAROUSEL (New Design) -->
+      <div>
+        <p class="shop-purchase__section-title">{{ section.settings.flavors_title | default: 'Choose your flavours' }}</p>
+        <div class="flavor-carousel">
+          <div class="flavor-carousel__wrapper" x-ref="flavorCarousel">
+            {%- comment -%} Render all flavor_option blocks uniformly {%- endcomment -%}
+            {%- if flavor_blocks.size > 0 -%}
+              {%- for block in flavor_blocks -%}
+                {%- assign block_product = block.settings.product -%}
+                {%- if block_product != blank -%}
+                  {%- assign display_name = block.settings.name_override | default: block_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+                  {%- assign card_bg = block.settings.card_background -%}
+                  {%- assign card_image = block.settings.card_image -%}
+                  {%- assign is_bundle = block.settings.is_bundle -%}
+                  {%- assign subtitle = block.settings.subtitle -%}
+                  <div
+                    class="flavor-carousel__card{% if card_bg != blank %} flavor-carousel__card--has-bg{% endif %}"
+                    :class="{
+                      'flavor-carousel__card--selected': {% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}
+                    }"
+                    @click="selectOption({{ block_product.id }}, {{ is_bundle }})"
+                    @keydown.enter="selectOption({{ block_product.id }}, {{ is_bundle }})"
+                    @keydown.space.prevent="selectOption({{ block_product.id }}, {{ is_bundle }})"
+                    tabindex="0"
+                    role="option"
+                    :aria-selected="{% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}"
+                    {{ block.shopify_attributes }}
+                    {%- if card_bg != blank %}
+                    style="--card-bg-image: url('{{ card_bg | image_url: width: 600 }}')"
+                    {%- endif %}
+                  >
+                    {%- if block.settings.show_badge and section.settings.bestseller_badge_text != blank -%}
+                      <span
+                        class="flavor-carousel__badge"
+                        style="--badge-bg: {{ section.settings.bestseller_badge_bg | default: '#fbbf24' }}; --badge-text: {{ section.settings.bestseller_badge_text_color | default: '#000000' }};"
+                      >
+                        {%- if section.settings.bestseller_badge_icon != blank -%}
+                          <img
+                            class="flavor-carousel__badge-icon"
+                            src="{{ section.settings.bestseller_badge_icon | image_url: width: 24 }}"
+                            alt=""
+                          >
+                        {%- endif -%}
+                        {{ section.settings.bestseller_badge_text }}
+                      </span>
+                    {%- endif -%}
+                    <div class="flavor-carousel__image">
+                      {%- if card_image != blank -%}
+                        <img src="{{ card_image | image_url: width: 300 }}" alt="{{ display_name }}" loading="lazy">
+                      {%- elsif block_product.featured_image != blank -%}
+                        <img src="{{ block_product.featured_image | image_url: width: 300 }}" alt="{{ display_name }}" loading="lazy">
                       {%- endif -%}
-                    {%- endfor -%}
-                  {%- else -%}
-                    {%- comment -%} Fallback: auto-generate from collection {%- endcomment -%}
-                    {%- for product in collections['breakfast'].products limit: 4 -%}
-                      {%- unless product.title contains 'Mixed' -%}
-                        {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                        <div
-                          class="flavor-card"
-                          :class="{
-                            'flavor-card--selected': selectedFlavors.includes({{ product.id }}),
-                            'flavor-card--disabled': !selectedFlavors.includes({{ product.id }}) && selectedFlavors.length >= 3
-                          }"
-                          @click="toggleFlavor({{ product.id }})"
-                        >
-                          {%- if product.featured_image != blank -%}
-                            <div class="flavor-card__image">
-                              <img src="{{ product.featured_image | image_url: width: 120 }}" alt="{{ flavor_name }}" loading="lazy">
-                            </div>
-                          {%- endif -%}
-                          <div class="flavor-card__name">{{ flavor_name }}</div>
-                          <span class="flavor-card__checkbox">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </span>
-                        </div>
-                      {%- endunless -%}
-                    {%- endfor -%}
-                  {%- endif -%}
+                    </div>
+                    <div class="flavor-carousel__footer">
+                      <div class="flavor-carousel__name">{{ display_name }}</div>
+                      {%- if is_bundle -%}
+                        <div class="flavor-carousel__label" x-text="selectedBundle === {{ block_product.id }} ? 'Selected' : '{{ subtitle | default: '' }}'"></div>
+                      {%- else -%}
+                        <div class="flavor-carousel__label" x-text="selectedFlavors.includes({{ block_product.id }}) ? 'Selected' : '{{ subtitle | default: '' }}'"></div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- comment -%} Fallback: render from collection if no blocks configured {%- endcomment -%}
+              {%- for product in collections['breakfast'].products limit: 4 -%}
+                {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+                {%- assign is_mixed = false -%}
+                {%- if product.title contains 'Mixed' -%}
+                  {%- assign is_mixed = true -%}
+                {%- endif -%}
+                <div
+                  class="flavor-carousel__card"
+                  :class="{
+                    'flavor-carousel__card--selected': {% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}
+                  }"
+                  @click="selectOption({{ product.id }}, {{ is_mixed }})"
+                  @keydown.enter="selectOption({{ product.id }}, {{ is_mixed }})"
+                  @keydown.space.prevent="selectOption({{ product.id }}, {{ is_mixed }})"
+                  tabindex="0"
+                  role="option"
+                  :aria-selected="{% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}"
+                >
+                  <div class="flavor-carousel__image">
+                    {%- if product.featured_image != blank -%}
+                      <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ flavor_name }}" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                  <div class="flavor-carousel__footer">
+                    <div class="flavor-carousel__name">{{ flavor_name }}</div>
+                    {%- if is_mixed -%}
+                      <div class="flavor-carousel__label" x-text="selectedBundle === {{ product.id }} ? 'Selected' : 'All 3'"></div>
+                    {%- else -%}
+                      <div class="flavor-carousel__label" x-text="selectedFlavors.includes({{ product.id }}) ? 'Selected' : ''"></div>
+                    {%- endif -%}
+                  </div>
                 </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
 
-                <!-- Info text -->
-                <p class="flavor-option__info">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
-                  <span>There is a minimum of 9 packs per flavour.</span>
-                </p>
-              </div>
-            </div>
+          <div class="flavor-carousel__nav">
+            <button
+              class="flavor-carousel__arrow"
+              @click="scrollCarousel('prev')"
+              aria-label="Previous flavor"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button
+              class="flavor-carousel__arrow"
+              @click="scrollCarousel('next')"
+              aria-label="Next flavor"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
         </div>
 
         <!-- Error message -->
-        <div class="flavor-error" x-show="flavorMode === 'pick' && selectedFlavors.length === 0" x-cloak>
+        <div class="flavor-error" x-show="selectedBundle === null && selectedFlavors.length === 0" x-cloak>
           Please select at least one flavor
         </div>
       </div>
 
       <hr class="shop-purchase__divider">
 
-      <!-- Size Selection -->
+      <!-- SIZE CARDS (New Design) -->
       <div>
-        <p class="shop-purchase__section-title">{{ section.settings.size_title }}</p>
-        <div class="size-cards">
+        <p class="shop-purchase__section-title">{{ section.settings.size_title | default: 'Choose your box size' }}</p>
+        <div class="size-cards size-cards--redesign">
           <template x-for="size in availableSizes" :key="size.id">
             <div
-              class="size-card"
+              class="size-card size-card--redesign"
               :class="{ 'size-card--selected': selectedSize === size.id }"
               @click="selectedSize = size.id"
+              @keydown.enter="selectedSize = size.id"
+              @keydown.space.prevent="selectedSize = size.id"
+              tabindex="0"
+              role="option"
+              :aria-selected="selectedSize === size.id"
             >
-              <div class="size-card__label" x-text="size.label"></div>
+              <template x-if="size.badge">
+                <div class="size-card__badge" :class="size.badgeClass" x-text="size.badge"></div>
+              </template>
+              <div class="size-card__image">
+                <template x-if="size.id === 9">
+                  <div>
+                    {%- if section.settings.size_card_image_9 != blank -%}
+                      <img src="{{ section.settings.size_card_image_9 | image_url: width: 200 }}" alt="9 pack" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                </template>
+                <template x-if="size.id === 18">
+                  <div>
+                    {%- if section.settings.size_card_image_18 != blank -%}
+                      <img src="{{ section.settings.size_card_image_18 | image_url: width: 200 }}" alt="18 pack" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                </template>
+                <template x-if="size.id === 27">
+                  <div>
+                    {%- if section.settings.size_card_image_27 != blank -%}
+                      <img src="{{ section.settings.size_card_image_27 | image_url: width: 200 }}" alt="27 pack" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                </template>
+              </div>
               <div class="size-card__packs" x-text="size.packsLabel"></div>
               <div class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></div>
               <div class="size-card__per-pack" x-text="formatPrice(getSizePrice(size.id) / (size.id * effectiveFlavorCount)) + '/pack'"></div>
@@ -1520,85 +2302,168 @@ CRO-optimized product purchase page with:
 
       <hr class="shop-purchase__divider">
 
-      <!-- Subscribe / One-time Toggle -->
-      <div class="sub-options">
-        <!-- Subscribe Option -->
+      <!-- SUB & SAVE SECTION (New Design) -->
+      <div class="sub-section-wrapper" style="display: flex; flex-direction: column; gap: var(--spacing-3);">
+        <!-- Sub & Save Section with Toggle -->
         <div
-          class="sub-option sub-option--subscribe"
-          :class="{ 'sub-option--selected': subscribe }"
-          @click="subscribe = true"
+          class="sub-section"
+          :class="{
+            'sub-section--active': subscribe,
+            'sub-section--inactive': !subscribe
+          }"
         >
-          <div class="sub-option__layout">
-            <!-- Left column: Title + Benefits -->
-            <div class="sub-option__left-col">
-              <div class="sub-option__title-row">
-                <span class="sub-option__title">SUB & SAVE <span x-text="discountPercent + '%'"></span></span>
+          <div class="sub-section__header" @click="subscribe = !subscribe">
+            <div class="sub-section__title-row">
+              <div
+                class="sub-toggle"
+                :class="{ 'sub-toggle--active': subscribe }"
+                role="switch"
+                :aria-checked="subscribe"
+                tabindex="0"
+                @keydown.enter="subscribe = !subscribe"
+                @keydown.space.prevent="subscribe = !subscribe"
+              >
+                <div class="sub-toggle__circle"></div>
               </div>
-              <div class="sub-option__benefits">
-                <div class="sub-option__benefit">
-                  {%- if section.settings.sub_tick_icon != blank -%}
-                    <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
-                  {%- else -%}
-                    <svg class="sub-option__benefit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  {%- endif -%}
-                  <span>{{ section.settings.sub_benefit_1 | default: 'Pause or cancel anytime' }}</span>
-                </div>
-                <div class="sub-option__benefit">
-                  {%- if section.settings.sub_tick_icon != blank -%}
-                    <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
-                  {%- else -%}
-                    <svg class="sub-option__benefit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  {%- endif -%}
-                  <span>{{ section.settings.sub_benefit_2 | default: 'Monthly, straight to your door' }}</span>
-                </div>
-                <div class="sub-option__benefit">
-                  {%- if section.settings.sub_tick_icon != blank -%}
-                    <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
-                  {%- else -%}
-                    <svg class="sub-option__benefit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  {%- endif -%}
-                  <span>{{ section.settings.sub_benefit_3 | default: 'Commit to Cult & save 20%' }}</span>
-                </div>
+              <div>
+                <div class="sub-section__title">SUB & SAVE</div>
+                <div class="sub-section__subtitle">Join the Cult and get rewarded for life</div>
               </div>
             </div>
-            <!-- Right column: Pricing -->
-            <div class="sub-option__right-col">
-              <div class="sub-option__per-pack" x-text="getPerPackPrice(true) + '/pack'"></div>
-              <div class="sub-option__per-box" x-text="formatPrice(getTotalPrice(true)) + '/box'"></div>
-              <div class="sub-option__savings">Save <span x-text="formatPrice(getSavings())"></span></div>
+            <div class="sub-section__pricing">
+              <div class="sub-section__price" x-text="formatPrice(getTotalPrice(true))"></div>
+              <div class="sub-section__per-pack" x-text="getPerPackPrice(true) + '/pack'"></div>
             </div>
+          </div>
+
+          <!-- Benefit Cards -->
+          <div class="sub-section__benefits" x-show="subscribe" x-collapse>
+            <!-- 20% OFF Always Card -->
+            <div class="sub-benefit-card">
+              {%- if section.settings.sub_benefit_card_1 != blank -%}
+                <img src="{{ section.settings.sub_benefit_card_1 | image_url: width: 400 }}" alt="20% OFF ALWAYS" loading="lazy">
+              {%- else -%}
+                <div style="background: var(--gradient-selected); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; text-align: center; padding: var(--spacing-2);">
+                  <div>
+                    <div style="font-size: 1.5rem;">20% OFF</div>
+                    <div style="font-size: var(--text-xs);">ALWAYS</div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <!-- Free Delivery Card (Locked/Unlocked) -->
+            <div
+              class="sub-benefit-card"
+              :class="{ 'sub-benefit-card--locked': !isFreeShippingUnlocked() }"
+            >
+              <!-- Unlocked State -->
+              <template x-if="isFreeShippingUnlocked()">
+                {%- if section.settings.sub_benefit_card_2_unlocked != blank -%}
+                  <img src="{{ section.settings.sub_benefit_card_2_unlocked | image_url: width: 400 }}" alt="FREE DELIVERY UNLOCKED" loading="lazy">
+                {%- else -%}
+                  <div style="background: white; border: 1px solid var(--color-pink-border); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--spacing-2); border-radius: var(--spf-selector-radius);">
+                    <div>
+                      <div style="font-size: var(--text-xs); color: var(--spf-text-muted);">27 PACK UNLOCKS</div>
+                      <div style="font-size: 1rem; font-weight: 700;">FREE DELIVERY</div>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </template>
+
+              <!-- Locked State -->
+              <template x-if="!isFreeShippingUnlocked()">
+                {%- if section.settings.sub_benefit_card_2_locked != blank -%}
+                  <img src="{{ section.settings.sub_benefit_card_2_locked | image_url: width: 400 }}" alt="FREE DELIVERY - LOCKED" loading="lazy">
+                {%- else -%}
+                  <div style="background: var(--color-locked-overlay); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--spacing-2); border-radius: var(--spf-selector-radius); border: 1px solid var(--color-locked-border);">
+                    <div style="color: white; opacity: 0.7;">
+                      <div style="font-size: 1.5rem;">🔒</div>
+                      <div style="font-size: var(--text-xs);">FREE DELIVERY</div>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </template>
+            </div>
+          </div>
+
+          <!-- Benefit List -->
+          <div class="sub-section__list" x-show="subscribe" x-collapse>
+            <div class="sub-section__list-item">
+              {%- if section.settings.sub_tick_icon != blank -%}
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+              {%- else -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- endif -%}
+              <span>{{ section.settings.sub_benefit_1 | default: 'Pause or cancel anytime' }}</span>
+            </div>
+            <div class="sub-section__list-item">
+              {%- if section.settings.sub_tick_icon != blank -%}
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+              {%- else -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- endif -%}
+              <span>{{ section.settings.sub_benefit_2 | default: 'Change your flavours' }}</span>
+            </div>
+            <div class="sub-section__list-item">
+              {%- if section.settings.sub_tick_icon != blank -%}
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+              {%- else -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- endif -%}
+              <span>{{ section.settings.sub_benefit_3 | default: 'Save 20% on future orders' }}</span>
+            </div>
+          </div>
+
+          <!-- Frequency Dropdown -->
+          <div class="sub-section__frequency" x-show="subscribe" x-collapse>
+            <select
+              class="frequency-dropdown"
+              x-model="selectedFrequency"
+              aria-label="Delivery frequency"
+            >
+              <template x-for="plan in sellingPlans" :key="plan.id">
+                <option :value="plan.id" x-text="plan.name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Savings Callout -->
+          <div class="sub-section__savings" x-show="subscribe" x-collapse>
+            YOU'RE SAVING <span x-text="formatPrice(getSavings())"></span>
           </div>
         </div>
 
-        <!-- One-time Option -->
+        <!-- One-time Purchase Option -->
         <div
-          class="sub-option"
-          :class="{ 'sub-option--selected': !subscribe }"
+          class="onetime-option"
+          :class="{ 'onetime-option--selected': !subscribe }"
           @click="subscribe = false"
+          @keydown.enter="subscribe = false"
+          @keydown.space.prevent="subscribe = false"
+          tabindex="0"
+          role="option"
+          :aria-selected="!subscribe"
         >
-          <div class="sub-option__header">
-            <div class="sub-option__left">
-              <span class="sub-option__title">One-time purchase</span>
-            </div>
-            <span class="sub-option__price" x-text="formatPrice(getTotalPrice(false)) + '/box'"></span>
-          </div>
+          <span class="onetime-option__title">One-time purchase</span>
+          <span class="onetime-option__price" x-text="formatPrice(getTotalPrice(false))"></span>
         </div>
       </div>
 
       <!-- CTA Button (Desktop) -->
       <div class="desktop-cta">
         <button
-          class="cta-button"
+          class="cta-button cta-button--yellow"
           @click="checkout()"
           :disabled="!canCheckout"
         >
-          {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
+          {{ section.settings.cta_button_text | default: 'BUY NOW' }} - <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
         </button>
       </div>
 
@@ -1621,11 +2486,11 @@ CRO-optimized product purchase page with:
   <!-- Mobile Sticky CTA -->
   <div class="sticky-cta">
     <button
-      class="cta-button"
+      class="cta-button cta-button--yellow"
       @click="checkout()"
       :disabled="!canCheckout"
     >
-      {{ section.settings.cta_button_text | default: 'Checkout' }} · <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
+      {{ section.settings.cta_button_text | default: 'BUY NOW' }} - <span x-text="formatPrice(getTotalPrice(subscribe))"></span>
     </button>
   </div>
 </div>
@@ -1636,10 +2501,13 @@ CRO-optimized product purchase page with:
       // Product data (populated from Liquid)
       // Merge products from collection and flavor blocks
       products: {
+        {%- assign products_first = true -%}
         {%- assign included_product_ids = '' -%}
         {%- comment -%} First, add products from collection {%- endcomment -%}
         {%- for product in collections['breakfast'].products limit: 4 -%}
           {%- unless included_product_ids contains product.id -%}
+            {%- unless products_first -%},{%- endunless -%}
+            {%- assign products_first = false -%}
             {%- if included_product_ids != '' -%}{%- assign included_product_ids = included_product_ids | append: ',' -%}{%- endif -%}
             {%- assign included_product_ids = included_product_ids | append: product.id -%}
             {{ product.id }}: {
@@ -1669,15 +2537,17 @@ CRO-optimized product purchase page with:
                   }{% unless forloop.last %},{% endunless %}
                 {%- endfor -%}
               }
-            },
+            }
           {%- endunless -%}
         {%- endfor -%}
         {%- comment -%} Add products from flavor blocks that aren't already included {%- endcomment -%}
-        {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor' -%}
+        {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
         {%- for block in flavor_blocks -%}
           {%- assign flavor_product = block.settings.product -%}
           {%- if flavor_product != blank -%}
             {%- unless included_product_ids contains flavor_product.id -%}
+              {%- unless products_first -%},{%- endunless -%}
+              {%- assign products_first = false -%}
               {%- if included_product_ids != '' -%}{%- assign included_product_ids = included_product_ids | append: ',' -%}{%- endif -%}
               {%- assign included_product_ids = included_product_ids | append: flavor_product.id -%}
               {{ flavor_product.id }}: {
@@ -1707,32 +2577,104 @@ CRO-optimized product purchase page with:
                     }{% unless forloop.last %},{% endunless %}
                   {%- endfor -%}
                 }
-              },
+              }
             {%- endunless -%}
           {%- endif -%}
         {%- endfor -%}
       },
 
       // State
-      flavorMode: 'mixed', // 'mixed' or 'pick'
-      selectedFlavors: [], // Array of product IDs when in 'pick' mode
+      selectedBundle: null, // Product ID of selected bundle, or null
+      selectedFlavors: [], // Array of selected individual flavor IDs
+      bundleProductIds: [
+        {%- assign bundle_ids_first = true -%}
+        {%- for block in flavor_blocks -%}
+          {%- if block.settings.is_bundle and block.settings.product != blank -%}
+            {%- unless bundle_ids_first -%},{%- endunless -%}
+            {%- assign bundle_ids_first = false -%}
+            {{ block.settings.product.id }}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- comment -%}Fallback: include mixed box from collection if no bundle blocks{%- endcomment -%}
+        {%- if bundle_ids_first -%}
+          {%- for product in collections['breakfast'].products limit: 4 -%}
+            {%- if product.title contains 'Mixed' -%}
+              {{ product.id }}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      ],
       selectedSize: 18, // 9, 18, or 27 packs
       subscribe: true,
       currentImageIndex: 0,
       discountPercent: 20, // Default, will be set from first variant with selling plan
       pickOwnExpanded: false, // Manual toggle for Pick Your Own dropdown
 
+      // NEW STATE for redesign
+      activeFlavorTab: null, // Product ID of active tab (for preview/description)
+      selectedFrequency: null, // Selling plan ID (default to 4-week plan)
+
+      // Flavor data with descriptions and testimonials (from Liquid)
+      flavorData: {
+        {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
+        {%- assign flavor_data_first = true -%}
+        {%- for block in flavor_blocks -%}
+          {%- assign flavor_product = block.settings.product -%}
+          {%- if flavor_product != blank -%}
+            {%- unless flavor_data_first -%},{%- endunless -%}
+            {%- assign flavor_data_first = false -%}
+            {{ flavor_product.id }}: {
+              description: {{ block.settings.description | default: flavor_product.description | strip_html | truncate: 300 | json }},
+              testimonialQuote: {{ block.settings.testimonial_quote | default: '' | json }},
+              testimonialAuthor: {{ block.settings.testimonial_author | default: 'Customer' | json }}
+            }
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if flavor_blocks.size == 0 -%}
+          {%- assign fallback_first = true -%}
+          {%- for product in collections['breakfast'].products limit: 4 -%}
+            {%- unless product.title contains 'Mixed' -%}
+              {%- unless fallback_first -%},{%- endunless -%}
+              {%- assign fallback_first = false -%}
+              {{ product.id }}: {
+                description: {{ product.description | strip_html | truncate: 300 | json }},
+                testimonialQuote: "",
+                testimonialAuthor: "Customer"
+              }
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+      },
+
+      // Selling plans (from Liquid)
+      sellingPlans: [
+        {%- for product in collections['breakfast'].products limit: 1 -%}
+          {%- for variant in product.variants limit: 1 -%}
+            {%- for allocation in variant.selling_plan_allocations -%}
+              {
+                id: {{ allocation.selling_plan.id }},
+                name: {{ allocation.selling_plan.name | json }}
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      ],
+
       // Gallery images from section blocks (populated from Liquid)
       galleryImages: [
         {%- assign gallery_blocks = section.blocks | where: 'type', 'gallery_image' -%}
+        {%- assign gallery_first = true -%}
         {%- for block in gallery_blocks -%}
           {%- if block.settings.image != blank -%}
+            {%- unless gallery_first -%},{%- endunless -%}
+            {%- assign gallery_first = false -%}
             {
               id: 'gallery-{{ block.id }}',
               src: {{ block.settings.image | image_url: width: 800 | json }},
               thumb: {{ block.settings.image | image_url: width: 150 | json }},
               alt: {{ block.settings.alt | default: 'Product image' | json }}
-            }{% unless forloop.last %},{% endunless %}
+            }
           {%- endif -%}
         {%- endfor -%}
       ],
@@ -1755,7 +2697,7 @@ CRO-optimized product purchase page with:
       },
 
       get effectiveFlavorCount() {
-        if (this.flavorMode === 'mixed') return 1;
+        if (this.selectedBundle !== null) return 1;
         return Math.max(1, this.selectedFlavors.length);
       },
 
@@ -1783,7 +2725,7 @@ CRO-optimized product purchase page with:
       },
 
       get canCheckout() {
-        if (this.flavorMode === 'mixed') return true;
+        if (this.selectedBundle !== null) return true;
         return this.selectedFlavors.length > 0;
       },
 
@@ -1800,6 +2742,22 @@ CRO-optimized product purchase page with:
           if (this.discountPercent !== 20) break;
         }
 
+        // Set default active flavor tab (first individual product)
+        const firstIndividual = this.individualProducts[0];
+        if (firstIndividual) {
+          this.activeFlavorTab = firstIndividual.id;
+        }
+
+        // Set default frequency (prefer 4 weeks, or first available)
+        if (this.sellingPlans.length > 0) {
+          // Look for a 4-week plan
+          const fourWeekPlan = this.sellingPlans.find(p =>
+            p.name.toLowerCase().includes('4 week') ||
+            p.name.toLowerCase().includes('every 4')
+          );
+          this.selectedFrequency = fourWeekPlan ? fourWeekPlan.id : this.sellingPlans[0].id;
+        }
+
         // Ensure selected size is valid for current flavor count
         this.$watch('effectiveFlavorCount', (count) => {
           const validSizes = this.availableSizes.map(s => s.id);
@@ -1807,29 +2765,129 @@ CRO-optimized product purchase page with:
             this.selectedSize = validSizes[0];
           }
         });
+
+        // Auto-select first bundle if no flavors selected (prevent empty state)
+        this.$watch('selectedFlavors', (flavors) => {
+          if (this.selectedBundle === null && flavors.length === 0) {
+            // Small delay to allow for intentional deselection
+            setTimeout(() => {
+              if (this.selectedBundle === null && this.selectedFlavors.length === 0) {
+                // Select first bundle
+                if (this.bundleProductIds.length > 0) {
+                  this.selectedBundle = this.bundleProductIds[0];
+                }
+              }
+            }, 100);
+          }
+        });
+
+        // Set default selection to first bundle
+        if (this.bundleProductIds.length > 0) {
+          this.selectedBundle = this.bundleProductIds[0];
+        }
       },
 
-      selectMixedBox() {
-        this.flavorMode = 'mixed';
-        this.selectedFlavors = [];
+      // Set active flavor tab (for preview/description, doesn't affect selection)
+      setFlavorTab(productId) {
+        this.activeFlavorTab = productId;
+        // Update gallery to show this product's images
+        this.updateGalleryForProduct(productId);
+      },
+
+      // Update gallery images for a specific product
+      updateGalleryForProduct(productId) {
+        const product = this.products[productId];
+        if (product && product.images && product.images.length > 0) {
+          // Reset to first image when switching products
+          this.currentImageIndex = 0;
+        }
+      },
+
+      // Get flavor description from data (with fallback)
+      getFlavorDescription(productId) {
+        if (!productId) return '';
+        const data = this.flavorData[productId];
+        if (data && data.description) {
+          return data.description;
+        }
+        // Fallback to product description
+        const product = this.products[productId];
+        return product ? product.title.replace('Overnight Gut Oats |', '').trim() + ' - delicious and nutritious.' : '';
+      },
+
+      // Get testimonial data for flavor
+      getFlavorTestimonial(productId) {
+        if (!productId) return { quote: '', author: '' };
+        const data = this.flavorData[productId];
+        if (data) {
+          return {
+            quote: data.testimonialQuote || '',
+            author: data.testimonialAuthor || 'Customer'
+          };
+        }
+        return { quote: '', author: 'Customer' };
+      },
+
+      // Check if free shipping is unlocked (£40 threshold)
+      isFreeShippingUnlocked() {
+        return this.getTotalPrice(this.subscribe) >= 4000; // £40 in pence
+      },
+
+      // Scroll the flavor carousel
+      scrollCarousel(direction) {
+        const carousel = this.$refs.flavorCarousel;
+        if (!carousel) return;
+
+        const cardWidth = carousel.querySelector('.flavor-carousel__card')?.offsetWidth || 150;
+        const gap = 12;
+        const scrollAmount = cardWidth + gap;
+
+        if (direction === 'next') {
+          carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        } else {
+          carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      },
+
+      // Select a flavor option (handles both bundles and individual flavors)
+      selectOption(productId, isBundle) {
+        if (isBundle) {
+          // Selecting a bundle clears individual selections
+          this.selectedBundle = (this.selectedBundle === productId) ? null : productId;
+          this.selectedFlavors = [];
+        } else {
+          // Selecting an individual flavor clears bundle selection
+          this.selectedBundle = null;
+          this.toggleFlavor(productId);
+        }
         this.currentImageIndex = 0;
-        this.pickOwnExpanded = false; // Collapse Pick Your Own dropdown
+        this.pickOwnExpanded = false;
+      },
+
+      // Legacy method for backwards compatibility
+      selectMixedBox() {
+        if (this.bundleProductIds.length > 0) {
+          this.selectOption(this.bundleProductIds[0], true);
+        }
       },
 
       selectPickMode() {
-        this.flavorMode = 'pick';
+        this.selectedBundle = null;
       },
 
       toggleFlavor(productId) {
-        if (this.flavorMode !== 'pick') {
-          this.flavorMode = 'pick';
-        }
-
-        const index = this.selectedFlavors.indexOf(productId);
-        if (index > -1) {
-          this.selectedFlavors.splice(index, 1);
-        } else if (this.selectedFlavors.length < 3) {
-          this.selectedFlavors.push(productId);
+        // Clear bundle selection when toggling individual flavors
+        if (this.selectedBundle !== null) {
+          this.selectedBundle = null;
+          this.selectedFlavors = [productId];
+        } else {
+          // Toggle the flavor in the array
+          const index = this.selectedFlavors.indexOf(productId);
+          if (index > -1) {
+            this.selectedFlavors.splice(index, 1);
+          } else if (this.selectedFlavors.length < 3) {
+            this.selectedFlavors.push(productId);
+          }
         }
         this.currentImageIndex = 0;
       },
@@ -1842,17 +2900,17 @@ CRO-optimized product purchase page with:
 
       getPrice(packSize) {
         // Returns total price in pence for the given pack size
+        // For bundle selections, returns bundle price
         // For multi-flavor selections, returns sum of all selected flavors
-        if (this.flavorMode === 'mixed') {
-          const variant = this.getVariantForSize(this.mixedBoxProduct.id, packSize);
+        if (this.selectedBundle !== null) {
+          const variant = this.getVariantForSize(this.selectedBundle, packSize);
           return variant ? variant.price : 0;
         }
 
         // Sum up price for each selected flavor (or use one product for calculation if none selected)
-        const count = this.effectiveFlavorCount;
         if (this.selectedFlavors.length === 0) {
           const product = this.individualProducts[0];
-          const variant = this.getVariantForSize(product.id, packSize);
+          const variant = this.getVariantForSize(product?.id, packSize);
           return variant ? variant.price : 0;
         }
 
@@ -1892,7 +2950,7 @@ CRO-optimized product purchase page with:
 
       getPerPackPrice(withSubscription) {
         const packSize = this.selectedSize;
-        const flavorCount = this.flavorMode === 'mixed' ? 1 : Math.max(1, this.selectedFlavors.length);
+        const flavorCount = this.selectedBundle !== null ? 1 : Math.max(1, this.selectedFlavors.length);
         const totalPacks = packSize * flavorCount;
         const totalPrice = this.getTotalPrice(withSubscription);
         const perPack = totalPrice / totalPacks;
@@ -1906,8 +2964,10 @@ CRO-optimized product purchase page with:
       getOrderSummary() {
         const packSize = this.selectedSize;
 
-        if (this.flavorMode === 'mixed') {
-          return `1× Mixed Box (${packSize} packs)`;
+        if (this.selectedBundle !== null) {
+          const product = this.products[this.selectedBundle];
+          const name = product ? product.title.replace('Overnight Gut Oats |', '').trim() : 'Bundle';
+          return `1× ${name} (${packSize} packs)`;
         } else if (this.selectedFlavors.length === 0) {
           return 'Select a flavor';
         } else if (this.selectedFlavors.length === 1) {
@@ -1929,15 +2989,27 @@ CRO-optimized product purchase page with:
         const packSize = this.selectedSize;
         let items = [];
 
-        if (this.flavorMode === 'mixed') {
-          const variant = this.getVariantForSize(this.mixedBoxProduct.id, packSize);
+        // Use selected frequency or default selling plan
+        const getSellingPlanForVariant = (variant) => {
+          if (!this.subscribe) return null;
+          // If a frequency is selected and matches an allocation, use it
+          if (this.selectedFrequency) {
+            return this.selectedFrequency;
+          }
+          // Fall back to default selling plan from variant
+          return variant.sellingPlanId;
+        };
+
+        if (this.selectedBundle !== null) {
+          const variant = this.getVariantForSize(this.selectedBundle, packSize);
           if (variant) {
             const item = {
               id: variant.id,
               quantity: 1
             };
-            if (this.subscribe && variant.sellingPlanId) {
-              item.selling_plan = variant.sellingPlanId;
+            const sellingPlan = getSellingPlanForVariant(variant);
+            if (sellingPlan) {
+              item.selling_plan = sellingPlan;
             }
             items.push(item);
           }
@@ -1949,8 +3021,9 @@ CRO-optimized product purchase page with:
                 id: variant.id,
                 quantity: 1
               };
-              if (this.subscribe && variant.sellingPlanId) {
-                item.selling_plan = variant.sellingPlanId;
+              const sellingPlan = getSellingPlanForVariant(variant);
+              if (sellingPlan) {
+                item.selling_plan = sellingPlan;
               }
               items.push(item);
             }
@@ -2135,46 +3208,54 @@ CRO-optimized product purchase page with:
       "default": "Choose your size"
     },
     {
+      "type": "header",
+      "content": "Best Seller Badge"
+    },
+    {
       "type": "text",
-      "id": "mixed_box_name",
-      "label": "Mixed box name",
-      "default": "Mixed Box"
+      "id": "bestseller_badge_text",
+      "label": "Badge text",
+      "default": "BEST SELLER"
+    },
+    {
+      "type": "color",
+      "id": "bestseller_badge_bg",
+      "label": "Badge background color",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "color",
+      "id": "bestseller_badge_text_color",
+      "label": "Badge text color",
+      "default": "#000000"
     },
     {
       "type": "image_picker",
-      "id": "mixed_box_image",
-      "label": "Mixed box image",
-      "info": "Image displayed on the left side of the Mixed Box option"
+      "id": "bestseller_badge_icon",
+      "label": "Badge icon",
+      "info": "Small image displayed left of badge text"
     },
     {
-      "type": "text",
-      "id": "mixed_box_description",
-      "label": "Mixed box description",
-      "default": "All 3 flavors in one box — can't decide? This is the one for you."
+      "type": "header",
+      "content": "Box Size Images"
     },
     {
-      "type": "text",
-      "id": "mixed_box_badge",
-      "label": "Mixed box badge",
-      "default": "⭐ Popular"
+      "type": "image_picker",
+      "id": "size_card_image_9",
+      "label": "9-pack image",
+      "info": "Stacked product image for 9-pack option"
     },
     {
-      "type": "text",
-      "id": "mixed_box_flavor_list",
-      "label": "Mixed box flavor list",
-      "default": "All 3: Cacao, Strawberry Goji, Cinnamon"
+      "type": "image_picker",
+      "id": "size_card_image_18",
+      "label": "18-pack image",
+      "info": "Stacked product image for 18-pack option"
     },
     {
-      "type": "text",
-      "id": "pick_own_name",
-      "label": "Pick your own name",
-      "default": "Pick your own"
-    },
-    {
-      "type": "text",
-      "id": "pick_own_description",
-      "label": "Pick your own description",
-      "default": "Select 1-3 individual flavors"
+      "type": "image_picker",
+      "id": "size_card_image_27",
+      "label": "27-pack image",
+      "info": "Stacked product image for 27-pack option"
     },
     {
       "type": "header",
@@ -2196,13 +3277,35 @@ CRO-optimized product purchase page with:
       "type": "text",
       "id": "sub_benefit_2",
       "label": "Benefit 2",
-      "default": "Monthly, straight to your door"
+      "default": "Change your flavours"
     },
     {
       "type": "text",
       "id": "sub_benefit_3",
       "label": "Benefit 3",
-      "default": "Commit to Cult & save 20%"
+      "default": "Save 20% on future orders"
+    },
+    {
+      "type": "header",
+      "content": "Subscription Benefit Cards"
+    },
+    {
+      "type": "image_picker",
+      "id": "sub_benefit_card_1",
+      "label": "20% OFF card image",
+      "info": "Image for the '20% OFF ALWAYS' benefit card"
+    },
+    {
+      "type": "image_picker",
+      "id": "sub_benefit_card_2_unlocked",
+      "label": "Free Delivery - Unlocked",
+      "info": "Image shown when free shipping is unlocked (order ≥ £40)"
+    },
+    {
+      "type": "image_picker",
+      "id": "sub_benefit_card_2_locked",
+      "label": "Free Delivery - Locked",
+      "info": "Pre-blurred image shown when free shipping is locked (order < £40)"
     },
     {
       "type": "header",
@@ -2212,7 +3315,7 @@ CRO-optimized product purchase page with:
       "type": "text",
       "id": "cta_button_text",
       "label": "Checkout button text",
-      "default": "Checkout"
+      "default": "BUY NOW"
     },
     {
       "type": "header",
@@ -2258,7 +3361,7 @@ CRO-optimized product purchase page with:
       ]
     },
     {
-      "type": "flavor",
+      "type": "flavor_option",
       "name": "Flavor Option",
       "settings": [
         {
@@ -2267,34 +3370,104 @@ CRO-optimized product purchase page with:
           "label": "Product"
         },
         {
+          "type": "checkbox",
+          "id": "is_bundle",
+          "label": "Bundle option (mutually exclusive)",
+          "default": false,
+          "info": "When selected, deselects all other options. Use for mixed/variety packs."
+        },
+        {
           "type": "image_picker",
-          "id": "image",
-          "label": "Flavor image"
+          "id": "card_image",
+          "label": "Card image",
+          "info": "Product image displayed on the card"
+        },
+        {
+          "type": "image_picker",
+          "id": "card_background",
+          "label": "Card background",
+          "info": "Full-bleed background image (optional)"
         },
         {
           "type": "text",
           "id": "name_override",
-          "label": "Display name (optional)",
-          "info": "Overrides the product title"
+          "label": "Display name",
+          "info": "Overrides product title on the card"
         },
         {
           "type": "text",
-          "id": "badge",
-          "label": "Badge text (optional)",
-          "info": "e.g., 'POPULAR'"
+          "id": "subtitle",
+          "label": "Subtitle",
+          "info": "Text below the name (e.g., 'All 3' for mixed box)"
         },
         {
-          "type": "text",
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": false
+        },
+        {
+          "type": "textarea",
           "id": "description",
           "label": "Description",
-          "default": "Delicious & nutritious"
+          "info": "Shown when this option's tab is active"
+        },
+        {
+          "type": "header",
+          "content": "Testimonial"
+        },
+        {
+          "type": "text",
+          "id": "testimonial_quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "testimonial_author",
+          "label": "Author"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Shop Purchase Flow"
+      "name": "Shop Purchase Flow",
+      "blocks": [
+        {
+          "type": "flavor_option",
+          "settings": {
+            "is_bundle": true,
+            "name_override": "THE CULT MIX",
+            "subtitle": "All 3",
+            "show_badge": true,
+            "description": "All 3 flavors in one box — can't decide? This is the one for you."
+          }
+        },
+        {
+          "type": "flavor_option",
+          "settings": {
+            "is_bundle": false,
+            "name_override": "CACAO",
+            "description": "Rich chocolate oats for a satisfying start."
+          }
+        },
+        {
+          "type": "flavor_option",
+          "settings": {
+            "is_bundle": false,
+            "name_override": "STRAWBERRY",
+            "description": "Sweet strawberry goji for a fruity morning."
+          }
+        },
+        {
+          "type": "flavor_option",
+          "settings": {
+            "is_bundle": false,
+            "name_override": "CINNAMON",
+            "description": "Warming cinnamon spice for cozy mornings."
+          }
+        }
+      ]
     }
   ]
 }
