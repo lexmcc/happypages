@@ -66,6 +66,7 @@ CRO-optimized product purchase page with:
     --spf-selector-selected-border: {{ section.settings.selected_border | default: '#B45B7E' }};
     --spf-selector-selected-text: {{ section.settings.selected_text | default: '#000000' }};
     --spf-selector-radius: 8px;
+
     --spf-subscribe-selected: #fef3c7;
     --spf-subscribe-border: #f59e0b;
     --spf-savings-color: var(--color-pink-dark);
@@ -1293,13 +1294,13 @@ CRO-optimized product purchase page with:
   }
 
   .flavor-tab--active {
-    background: var(--spf-text-color);
-    color: white;
-    border-color: var(--spf-text-color);
+    background: #3C1B04;
+    color: #FFFFFF;
+    border-color: #3C1B04;
   }
 
   .flavor-tab--active:hover {
-    background: var(--spf-text-color);
+    background: #3C1B04;
   }
 
   /* ============================================
@@ -2037,6 +2038,7 @@ CRO-optimized product purchase page with:
                   <button
                     class="flavor-tab"
                     :class="{ 'flavor-tab--active': activeFlavorTab === {{ flavor_product.id }} }"
+                    :style="activeFlavorTab === {{ flavor_product.id }} ? 'background: {{ block.settings.pill_selected_bg | default: '#3C1B04' }}; color: {{ block.settings.pill_selected_text | default: '#FFFFFF' }}; border-color: {{ block.settings.pill_selected_border | default: '#3C1B04' }};' : ''"
                     @click="setFlavorTab({{ flavor_product.id }})"
                     role="tab"
                     :aria-selected="activeFlavorTab === {{ flavor_product.id }}"
@@ -3322,7 +3324,7 @@ CRO-optimized product purchase page with:
       "label": "Selected text color",
       "default": "#000000",
       "info": "Text color for selected options"
-    }
+    },
   ],
   "blocks": [
     {
@@ -3376,6 +3378,28 @@ CRO-optimized product purchase page with:
           "id": "description",
           "label": "Description",
           "info": "Shown when this option's tab is active"
+        },
+        {
+          "type": "header",
+          "content": "Pill Styling"
+        },
+        {
+          "type": "color",
+          "id": "pill_selected_bg",
+          "label": "Selected background",
+          "default": "#3C1B04"
+        },
+        {
+          "type": "color",
+          "id": "pill_selected_text",
+          "label": "Selected text",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "pill_selected_border",
+          "label": "Selected border",
+          "default": "#3C1B04"
         },
         {
           "type": "header",
