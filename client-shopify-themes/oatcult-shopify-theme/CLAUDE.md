@@ -84,6 +84,7 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 - Liquid variables persist across the template - a `{% assign %}` inside a `<script>` tag is still available later in the same file
 - **Never use `scrollIntoView()` for horizontal carousels** - it scrolls all ancestors including the page. Use `container.scrollTo()` instead to avoid mobile horizontal overflow.
 - **CSS cascade order matters** - base styles appearing AFTER media queries will override them. Place base styles before media queries, or remove conflicting properties from base styles.
+- **Pseudo-elements stack above content without z-index** - `::after` renders after regular children, so it stacks on top. Add explicit `z-index` to content that should appear above overlays.
 
 ## Shop Purchase Flow Architecture
 

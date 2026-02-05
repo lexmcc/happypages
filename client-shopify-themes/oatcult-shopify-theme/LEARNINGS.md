@@ -4,6 +4,22 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 ## Gotchas & Bug Fixes
 
+### Locked Card Text Invisible Due to Z-Index (Feb 5, 2026)
+
+**Issue:** White text ("27 PACKS UNLOCKS" / "FREE DELIVERY") on locked delivery card was invisible.
+
+**Root Cause:** The `::after` pseudo-element (dark brown overlay) had no z-index, and CSS stacking rules put it on top of the `.sub-benefit-card__locked-overlay` element (which also had no z-index). Since `::after` appears later in render order, it stacked above the text content.
+
+```
+.sub-benefit-card--locked           (position: relative)
+├── ::after                         (position: absolute, no z-index) ← dark overlay
+└── .sub-benefit-card__locked-overlay  (position: absolute, no z-index) ← text, BEHIND ::after!
+```
+
+**Fix:** Add `z-index: 1` to `.sub-benefit-card__locked-overlay` so text appears above the overlay.
+
+**Lesson:** When absolutely positioned elements don't have explicit z-index, render order determines stacking. Pseudo-elements (`::before`/`::after`) render after regular content, so they stack on top. Always set explicit z-index when layering absolutely positioned elements.
+
 ### Gallery Reset on Selection (Feb 5, 2026)
 
 **Issue:** Gallery would reset to index 0 when clicking flavor selector cards.

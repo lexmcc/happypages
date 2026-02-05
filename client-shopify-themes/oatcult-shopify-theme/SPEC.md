@@ -70,6 +70,7 @@ Shopify theme for Oat Cult based on the Impact theme (v6.0.1) by Maestrooo. Onli
 
 | Date | Change |
 |------|--------|
+| Feb 5, 2026 | Fix locked delivery card white text visibility (z-index stacking) |
 | Feb 5, 2026 | Fix sticky gallery CSS cascade issue (base styles overriding media query) |
 | Feb 5, 2026 | Fix mobile horizontal overflow (scrollIntoView → scrollTo) |
 | Feb 5, 2026 | Fix thumbnail scroll-into-view on click |

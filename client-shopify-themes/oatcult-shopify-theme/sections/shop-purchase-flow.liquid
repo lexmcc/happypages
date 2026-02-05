@@ -1587,7 +1587,7 @@ CRO-optimized product purchase page with:
     padding: var(--spacing-3);
     border-radius: var(--spf-selector-radius);
     border: 1px solid var(--color-border-light);
-    background: #f5f3ef;
+    background: var(--gradient-unselected);
     text-align: left;
     cursor: pointer;
     transition: transform var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
@@ -1785,7 +1785,7 @@ CRO-optimized product purchase page with:
   }
 
   .sub-section--active .sub-section__title {
-    color: white;
+    color: #361A05;
   }
 
   .sub-section__subtitle {
@@ -1794,7 +1794,7 @@ CRO-optimized product purchase page with:
   }
 
   .sub-section--active .sub-section__subtitle {
-    color: white;
+    color: #361A05;
     opacity: 0.9;
   }
 
@@ -1809,7 +1809,7 @@ CRO-optimized product purchase page with:
   }
 
   .sub-section--active .sub-section__price {
-    color: white;
+    color: #361A05;
   }
 
   .sub-section__per-pack {
@@ -1818,8 +1818,11 @@ CRO-optimized product purchase page with:
   }
 
   .sub-section--active .sub-section__per-pack {
-    color: white;
-    opacity: 0.9;
+    background: #6CDFFF;
+    color: #361A05;
+    padding: 4px 12px;
+    border-radius: 20px;
+    opacity: 1;
   }
 
   /* iOS-style toggle */
@@ -1863,7 +1866,7 @@ CRO-optimized product purchase page with:
 
   .sub-benefit-card {
     flex: 1;
-    aspect-ratio: 1;
+    max-width: 150px;
     border-radius: var(--spf-selector-radius);
     overflow: hidden;
     position: relative;
@@ -1873,6 +1876,11 @@ CRO-optimized product purchase page with:
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .sub-benefit-card--unlocked {
+    background: #FFFFFF;
+    border: 1px solid #B45B7E;
   }
 
   .sub-benefit-card--locked {
@@ -1896,16 +1904,140 @@ CRO-optimized product purchase page with:
     z-index: 2;
   }
 
+  /* 20% OFF Always card variant */
+  .sub-benefit-card--discount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-3);
+    padding-top: var(--spacing-5);
+  }
+
+  .sub-benefit-card--discount img {
+    width: auto;
+    height: auto;
+    max-width: 70%;
+    max-height: 75px;
+    object-fit: contain;
+  }
+
+  .sub-benefit-card__banner {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* background and color set via inline styles */
+  }
+
+  .sub-benefit-card__label {
+    margin-top: var(--spacing-2);
+    font-weight: 700;
+    font-size: 12px;
+    text-align: center;
+    color: var(--spf-text-dark);
+  }
+
+  /* Free Delivery card variant */
+  .sub-benefit-card--delivery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-3);
+    padding-top: var(--spacing-5);
+  }
+
+  .sub-benefit-card--delivery img {
+    width: auto;
+    height: auto;
+    max-width: 70%;
+    max-height: 75px;
+    object-fit: contain;
+  }
+
+  /* Locked state overlay */
+  .sub-benefit-card__locked-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-3);
+    padding-top: var(--spacing-5);
+    width: 100%;
+    height: 100%;
+  }
+
+  .sub-benefit-card__locked-content img {
+    width: auto;
+    height: auto;
+    max-width: 70%;
+    max-height: 75px;
+    object-fit: contain;
+  }
+
+  .sub-benefit-card__locked-overlay {
+    position: absolute;
+    bottom: var(--spacing-3);
+    left: 0;
+    right: 0;
+    z-index: 1; /* appear above ::after overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  .sub-benefit-card__locked-overlay span:last-child {
+    font-size: 12px;
+  }
+
+  /* Unlocked content wrapper */
+  .sub-benefit-card__unlocked-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sub-benefit-card__unlocked-content img {
+    width: auto;
+    height: auto;
+    max-width: 70%;
+    max-height: 75px;
+    object-fit: contain;
+  }
+
+  .sub-benefit-card__placeholder {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-pink-border);
+  }
+
   /* Benefit list */
   .sub-section__list {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-2) var(--spacing-4);
-    padding: 0 var(--spacing-4) var(--spacing-4);
+    padding: var(--spacing-4);
+    margin: 0 var(--spacing-4) var(--spacing-4);
+    background: #FFFFFF;
+    border: 1px solid #B45B7E;
+    border-radius: var(--spf-selector-radius);
   }
 
   .sub-section__list-item {
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: var(--spacing-2);
     font-size: var(--text-sm);
@@ -1913,13 +2045,18 @@ CRO-optimized product purchase page with:
   }
 
   .sub-section--active .sub-section__list-item {
-    color: white;
+    color: var(--spf-text-color);
   }
 
   .sub-section__list-item img {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
+  }
+
+  .sub-section__list-item svg {
+    width: 24px;
+    height: 24px;
   }
 
   /* Frequency dropdown */
@@ -1934,7 +2071,8 @@ CRO-optimized product purchase page with:
     border-radius: var(--spf-selector-radius);
     background: white;
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
     color: var(--spf-text-color);
     cursor: pointer;
     appearance: none;
@@ -1945,18 +2083,21 @@ CRO-optimized product purchase page with:
     min-height: 44px;
   }
 
-  /* Savings callout */
-  .sub-section__savings {
-    padding: var(--spacing-3) var(--spacing-4);
-    text-align: center;
-    font-size: var(--text-sm);
-    font-weight: 700;
-    color: var(--color-pink-dark);
-    background: rgba(255, 255, 255, 0.3);
+  /* Savings callout - positioned pill */
+  .sub-section__savings-wrapper {
+    position: relative;
+    padding: 0 var(--spacing-4) var(--spacing-4);
   }
 
-  .sub-section--active .sub-section__savings {
-    color: white;
+  .sub-section__savings {
+    display: inline-block;
+    float: right;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: 20px;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    background: #361A05;
+    color: #6CDFFF;
   }
 
   /* ============================================
@@ -2023,9 +2164,44 @@ CRO-optimized product purchase page with:
       display: none;
     }
 
+    /* Header: toggle + title + price on row 1, subtitle on row 2 */
     .sub-section__header {
-      flex-wrap: wrap;
-      gap: var(--spacing-2);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: auto auto;
+      gap: var(--spacing-2) var(--spacing-3);
+      align-items: center;
+    }
+
+    .sub-section__title-row {
+      display: contents;
+    }
+
+    .sub-toggle {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .sub-section__title-row > div:last-child {
+      display: contents;
+    }
+
+    .sub-section__title {
+      grid-row: 1;
+      grid-column: 2;
+      align-self: center;
+    }
+
+    .sub-section__subtitle {
+      grid-row: 2;
+      grid-column: 1 / -1;
+      padding-top: var(--spacing-2);
+      text-align: left;
+    }
+
+    .sub-section__pricing {
+      grid-row: 1;
+      grid-column: 3;
     }
 
     .sub-section__benefits {
@@ -2036,8 +2212,11 @@ CRO-optimized product purchase page with:
     .sub-benefit-card {
       flex: 1 1 calc(50% - 4px);
       min-width: 100px;
-      aspect-ratio: auto;  /* Remove forced square */
-      min-height: 120px;   /* Ensure reasonable height */
+    }
+
+    /* Benefits list: keep flex wrap on mobile */
+    .sub-section__list {
+      gap: var(--spacing-2) var(--spacing-3);
     }
 
     .onetime-option {
@@ -2476,51 +2655,51 @@ CRO-optimized product purchase page with:
           <!-- Benefit Cards -->
           <div class="sub-section__benefits" x-show="subscribe" x-collapse>
             <!-- 20% OFF Always Card -->
-            <div class="sub-benefit-card">
+            <div class="sub-benefit-card sub-benefit-card--unlocked sub-benefit-card--discount">
+              {%- if section.settings.sub_benefit_badge_text != blank -%}
+                <div class="sub-benefit-card__banner" style="background: {{ section.settings.sub_benefit_badge_bg | default: '#ff6b35' }}; color: {{ section.settings.sub_benefit_badge_text_color | default: '#ffffff' }};">
+                  {{ section.settings.sub_benefit_badge_text }}
+                </div>
+              {%- endif -%}
               {%- if section.settings.sub_benefit_card_1 != blank -%}
                 <img src="{{ section.settings.sub_benefit_card_1 | image_url: width: 400 }}" alt="20% OFF ALWAYS" loading="lazy">
               {%- else -%}
-                <div style="background: var(--gradient-selected); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; text-align: center; padding: var(--spacing-2);">
-                  <div>
-                    <div style="font-size: 1.5rem;">20% OFF</div>
-                    <div style="font-size: var(--text-xs);">ALWAYS</div>
-                  </div>
-                </div>
+                <div class="sub-benefit-card__placeholder">20%</div>
               {%- endif -%}
+              <div class="sub-benefit-card__label">20% OFF ALWAYS</div>
             </div>
 
             <!-- Free Delivery Card (Locked/Unlocked) -->
             <div
               class="sub-benefit-card"
-              :class="{ 'sub-benefit-card--locked': !isFreeShippingUnlocked() }"
+              :class="{ 'sub-benefit-card--locked': !isFreeShippingUnlocked(), 'sub-benefit-card--unlocked sub-benefit-card--delivery': isFreeShippingUnlocked() }"
             >
-              <!-- Unlocked State -->
+              <!-- Locked State: image with overlay text -->
+              <template x-if="!isFreeShippingUnlocked()">
+                <div class="sub-benefit-card__locked-content">
+                  {%- if section.settings.sub_benefit_card_2_locked != blank -%}
+                    <img src="{{ section.settings.sub_benefit_card_2_locked | image_url: width: 400 }}" alt="FREE DELIVERY - LOCKED" loading="lazy">
+                  {%- else -%}
+                    <div class="sub-benefit-card__locked-fallback"></div>
+                  {%- endif -%}
+                  <div class="sub-benefit-card__locked-overlay">
+                    <span>27 PACKS UNLOCKS</span>
+                    <span>FREE DELIVERY</span>
+                  </div>
+                </div>
+              </template>
+
+              <!-- Unlocked State: image directly in card (matches discount card) -->
               <template x-if="isFreeShippingUnlocked()">
                 {%- if section.settings.sub_benefit_card_2_unlocked != blank -%}
                   <img src="{{ section.settings.sub_benefit_card_2_unlocked | image_url: width: 400 }}" alt="FREE DELIVERY UNLOCKED" loading="lazy">
                 {%- else -%}
-                  <div style="background: white; border: 1px solid var(--color-pink-border); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--spacing-2); border-radius: var(--spf-selector-radius);">
-                    <div>
-                      <div style="font-size: var(--text-xs); color: var(--spf-text-muted);">27 PACK UNLOCKS</div>
-                      <div style="font-size: 1rem; font-weight: 700;">FREE DELIVERY</div>
-                    </div>
-                  </div>
+                  <div class="sub-benefit-card__placeholder">🚚</div>
                 {%- endif -%}
               </template>
 
-              <!-- Locked State -->
-              <template x-if="!isFreeShippingUnlocked()">
-                {%- if section.settings.sub_benefit_card_2_locked != blank -%}
-                  <img src="{{ section.settings.sub_benefit_card_2_locked | image_url: width: 400 }}" alt="FREE DELIVERY - LOCKED" loading="lazy">
-                {%- else -%}
-                  <div style="background: var(--color-locked-overlay); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--spacing-2); border-radius: var(--spf-selector-radius); border: 1px solid var(--color-locked-border);">
-                    <div style="color: white; opacity: 0.7;">
-                      <div style="font-size: 1.5rem;">🔒</div>
-                      <div style="font-size: var(--text-xs);">FREE DELIVERY</div>
-                    </div>
-                  </div>
-                {%- endif -%}
-              </template>
+              <!-- Label (only shows when unlocked) -->
+              <div class="sub-benefit-card__label" x-show="isFreeShippingUnlocked()">FREE DELIVERY</div>
             </div>
           </div>
 
@@ -2528,9 +2707,9 @@ CRO-optimized product purchase page with:
           <div class="sub-section__list" x-show="subscribe" x-collapse>
             <div class="sub-section__list-item">
               {%- if section.settings.sub_tick_icon != blank -%}
-                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 48 }}" alt="" width="24" height="24">
               {%- else -%}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               {%- endif -%}
@@ -2538,9 +2717,9 @@ CRO-optimized product purchase page with:
             </div>
             <div class="sub-section__list-item">
               {%- if section.settings.sub_tick_icon != blank -%}
-                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 48 }}" alt="" width="24" height="24">
               {%- else -%}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               {%- endif -%}
@@ -2548,9 +2727,9 @@ CRO-optimized product purchase page with:
             </div>
             <div class="sub-section__list-item">
               {%- if section.settings.sub_tick_icon != blank -%}
-                <img src="{{ section.settings.sub_tick_icon | image_url: width: 32 }}" alt="" width="16" height="16">
+                <img src="{{ section.settings.sub_tick_icon | image_url: width: 48 }}" alt="" width="24" height="24">
               {%- else -%}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               {%- endif -%}
@@ -2572,8 +2751,10 @@ CRO-optimized product purchase page with:
           </div>
 
           <!-- Savings Callout -->
-          <div class="sub-section__savings" x-show="subscribe" x-collapse>
-            YOU'RE SAVING <span x-text="formatPrice(getSavings())"></span>
+          <div class="sub-section__savings-wrapper" x-show="subscribe" x-collapse>
+            <div class="sub-section__savings">
+              YOU'RE SAVING <span x-text="formatPrice(getSavings())"></span>
+            </div>
           </div>
         </div>
 
@@ -3547,6 +3728,28 @@ CRO-optimized product purchase page with:
       "id": "free_ship_badge_icon",
       "label": "Free shipping badge icon",
       "info": "Truck icon for free shipping badge"
+    },
+    {
+      "type": "paragraph",
+      "content": "Subscription Benefit Card Banner"
+    },
+    {
+      "type": "text",
+      "id": "sub_benefit_badge_text",
+      "label": "Subscription banner text",
+      "default": "ALL ORDERS"
+    },
+    {
+      "type": "color",
+      "id": "sub_benefit_badge_bg",
+      "label": "Subscription banner background",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "sub_benefit_badge_text_color",
+      "label": "Subscription banner text color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
