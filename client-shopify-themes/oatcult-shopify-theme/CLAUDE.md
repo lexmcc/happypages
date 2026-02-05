@@ -82,6 +82,7 @@ Global design tokens are defined in `snippets/css-variables.liquid`:
 - Custom fonts (Rudolph, Apercu) are loaded externally
 - Product handle matching (e.g., checking for "cacao" in handle) is fragile - handles may vary (cacao vs cocoa). Use block-level settings instead.
 - Liquid variables persist across the template - a `{% assign %}` inside a `<script>` tag is still available later in the same file
+- **Never use `scrollIntoView()` for horizontal carousels** - it scrolls all ancestors including the page. Use `container.scrollTo()` instead to avoid mobile horizontal overflow.
 
 ## Shop Purchase Flow Architecture
 

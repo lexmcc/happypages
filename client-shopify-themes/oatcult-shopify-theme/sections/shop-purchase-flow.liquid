@@ -77,6 +77,8 @@ CRO-optimized product purchase page with:
 
     padding: var(--spacing-8) var(--spacing-5);
     font-family: var(--text-font-family);
+    background-color: #FFF7EE;
+    overflow: hidden;
   }
 
   /* Reduced motion preference */
@@ -303,7 +305,6 @@ CRO-optimized product purchase page with:
   .shop-purchase__benefits {
     display: block;
     margin-top: var(--spacing-4);
-    padding: 16px;
   }
 
   /* ============================================
@@ -837,15 +838,7 @@ CRO-optimized product purchase page with:
     white-space: nowrap;
   }
 
-  .size-card__badge--popular {
-    background: var(--spf-badge-popular);
-    color: var(--spf-text-color);
-  }
-
-  .size-card__badge--free-ship {
-    background: var(--spf-badge-success);
-    color: white;
-  }
+  /* Badge colors now set via inline styles from section settings */
 
   .size-card__label {
     font-size: var(--text-xs);
@@ -1533,8 +1526,17 @@ CRO-optimized product purchase page with:
     }
 
     .flavor-carousel__card {
-      width: calc(33.333% - 8px);
-      min-width: 120px;
+      width: 160px;
+      min-width: 160px;
+    }
+
+    /* Extend carousel to viewport edge on mobile */
+    .flavor-carousel {
+      margin-right: calc(-1 * var(--spacing-5));
+    }
+
+    .flavor-carousel__wrapper {
+      padding-right: var(--spacing-5);
     }
   }
 
@@ -1567,16 +1569,11 @@ CRO-optimized product purchase page with:
     padding: var(--spacing-3);
     border-radius: var(--spf-selector-radius);
     border: 1px solid var(--color-border-light);
-    background: var(--gradient-unselected);
-    text-align: center;
+    background: #f5f3ef;
+    text-align: left;
     cursor: pointer;
-    transition: transform var(--transition-normal), border-color var(--transition-normal);
+    transition: transform var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
     min-height: 44px;
-  }
-
-  .size-card--redesign:hover {
-    transform: scale(1.02);
-    z-index: var(--z-card-hover);
   }
 
   .size-card--redesign.size-card--selected {
@@ -1584,37 +1581,101 @@ CRO-optimized product purchase page with:
     border-color: var(--color-pink-border);
   }
 
-  .size-card--redesign.size-card--selected .size-card__packs,
-  .size-card--redesign.size-card--selected .size-card__price,
-  .size-card--redesign.size-card--selected .size-card__per-pack {
-    color: white;
+  /* Keep text black when selected (no white override) */
+
+  .size-card--redesign.size-card--selected .size-card__compare-price {
+    color: rgba(0, 0, 0, 0.5);
   }
 
   .size-card--redesign .size-card__badge {
     position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 3px 8px;
+    top: 8px;
+    right: 8px;
+    left: auto;
+    transform: none;
+    padding: 4px 8px;
     border-radius: 4px;
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .size-card--redesign .size-card__badge-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  .size-card--redesign .size-card__packs {
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-2);
   }
 
   .size-card--redesign .size-card__image {
-    height: 80px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
   }
 
   .size-card--redesign .size-card__image img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .size-card--redesign .size-card__prices {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+
+  .size-card--redesign .size-card__price {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .size-card--redesign .size-card__compare-price {
+    font-size: 0.85rem;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .size-card--redesign .size-card__per-pack {
+    display: block;
+    background: #e5e5e5;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: var(--text-sm);
+    color: #666;
+    text-align: center;
+    width: fit-content;
+    margin: var(--spacing-1) auto 0;
+  }
+
+  .size-card--redesign.size-card--selected .size-card__per-pack {
+    background: #6CDFFF;
+    color: #1a1a1a;
+  }
+
+  .size-card--redesign .size-card__selected-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #ff584d;
+    margin-top: var(--spacing-2);
+    letter-spacing: 0.5px;
+    text-align: center;
   }
 
   @media screen and (max-width: 999px) {
@@ -1627,7 +1688,7 @@ CRO-optimized product purchase page with:
     }
 
     .size-card--redesign .size-card__image {
-      height: 60px;
+      height: 70px;
     }
 
     .size-card--redesign .size-card__packs {
@@ -1635,7 +1696,32 @@ CRO-optimized product purchase page with:
     }
 
     .size-card--redesign .size-card__price {
-      font-size: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .size-card--redesign .size-card__compare-price {
+      font-size: 0.75rem;
+    }
+
+    .size-card--redesign .size-card__badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      top: 8px;
+      right: 8px;
+    }
+
+    .size-card--redesign .size-card__badge-icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    .size-card--redesign .size-card__per-pack {
+      font-size: 12px;
+      padding: 3px 10px;
+    }
+
+    .size-card--redesign .size-card__packs .packs-suffix {
+      display: none;
     }
   }
 
@@ -2155,9 +2241,9 @@ CRO-optimized product purchase page with:
                     :class="{
                       'flavor-carousel__card--selected': {% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}
                     }"
-                    @click="selectOption({{ block_product.id }}, {{ is_bundle }})"
-                    @keydown.enter="selectOption({{ block_product.id }}, {{ is_bundle }})"
-                    @keydown.space.prevent="selectOption({{ block_product.id }}, {{ is_bundle }})"
+                    @click="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
+                    @keydown.enter="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
+                    @keydown.space.prevent="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
                     tabindex="0"
                     role="option"
                     :aria-selected="{% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}"
@@ -2212,9 +2298,9 @@ CRO-optimized product purchase page with:
                   :class="{
                     'flavor-carousel__card--selected': {% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}
                   }"
-                  @click="selectOption({{ product.id }}, {{ is_mixed }})"
-                  @keydown.enter="selectOption({{ product.id }}, {{ is_mixed }})"
-                  @keydown.space.prevent="selectOption({{ product.id }}, {{ is_mixed }})"
+                  @click="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
+                  @keydown.enter="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
+                  @keydown.space.prevent="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
                   tabindex="0"
                   role="option"
                   :aria-selected="{% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}"
@@ -2282,9 +2368,31 @@ CRO-optimized product purchase page with:
               role="option"
               :aria-selected="selectedSize === size.id"
             >
+              <!-- Pack label at top-left -->
+              <div class="size-card__packs">
+                <span x-text="size.packsLabel.split(' ')[0]"></span><span class="packs-suffix"> <span x-text="size.packsLabel.split(' ')[1]"></span></span>
+              </div>
+              <!-- Badge positioned absolute top-right -->
               <template x-if="size.badge">
-                <div class="size-card__badge" :class="size.badgeClass" x-text="size.badge"></div>
+                <div class="size-card__badge" :style="size.badgeStyle">
+                  <template x-if="size.badgeType === 'popular'">
+                    <span>
+                      {%- if section.settings.popular_badge_icon != blank -%}
+                        <img src="{{ section.settings.popular_badge_icon | image_url: width: 24 }}" alt="" class="size-card__badge-icon">
+                      {%- endif -%}
+                    </span>
+                  </template>
+                  <template x-if="size.badgeType === 'freeShip'">
+                    <span>
+                      {%- if section.settings.free_ship_badge_icon != blank -%}
+                        <img src="{{ section.settings.free_ship_badge_icon | image_url: width: 24 }}" alt="" class="size-card__badge-icon">
+                      {%- endif -%}
+                    </span>
+                  </template>
+                  <span x-text="size.badge"></span>
+                </div>
               </template>
+              <!-- Image centered -->
               <div class="size-card__image">
                 <template x-if="size.id === 9">
                   <div>
@@ -2308,9 +2416,14 @@ CRO-optimized product purchase page with:
                   </div>
                 </template>
               </div>
-              <div class="size-card__packs" x-text="size.packsLabel"></div>
-              <div class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></div>
-              <div class="size-card__per-pack" x-text="formatPrice(getSizePrice(size.id) / (size.id * effectiveFlavorCount)) + '/pack'"></div>
+              <div class="size-card__prices">
+                <span class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></span>
+                <span class="size-card__compare-price" x-show="getSizeComparePrice(size.id) > 0" x-text="formatPrice(getSizeComparePrice(size.id))"></span>
+              </div>
+              <div class="size-card__per-pack">
+                <span x-text="formatPrice(getSizePrice(size.id) / (size.id * effectiveFlavorCount))"></span><span class="per-pack-suffix">/pack</span>
+              </div>
+              <div class="size-card__selected-label" x-show="selectedSize === size.id">Selected</div>
             </div>
           </template>
         </div>
@@ -2519,6 +2632,20 @@ CRO-optimized product purchase page with:
 
 <script>
   function shopPurchaseFlow() {
+    // Badge configuration from section settings
+    const badgeConfig = {
+      popular: {
+        text: {{ section.settings.popular_badge_text | default: 'POPULAR' | json }},
+        bg: {{ section.settings.popular_badge_bg | default: '#fbbf24' | json }},
+        color: {{ section.settings.popular_badge_text_color | default: '#000000' | json }}
+      },
+      freeShip: {
+        text: {{ section.settings.free_ship_badge_text | default: 'FREE' | json }},
+        bg: {{ section.settings.free_ship_badge_bg | default: '#22c55e' | json }},
+        color: {{ section.settings.free_ship_badge_text_color | default: '#ffffff' | json }}
+      }
+    };
+
     return {
       // Product data (populated from Liquid)
       // Merge products from collection and flavor blocks
@@ -2553,6 +2680,7 @@ CRO-optimized product purchase page with:
                     id: {{ variant.id }},
                     title: {{ variant.title | json }},
                     price: {{ variant.price }},
+                    compareAtPrice: {{ variant.compare_at_price | default: 0 }},
                     packs: {{ variant.title | remove: 'Pack' | remove: ' ' | times: 1 }},
                     sellingPlanId: {% if variant.selling_plan_allocations.size > 0 %}{{ variant.selling_plan_allocations.first.selling_plan.id }}{% else %}null{% endif %},
                     discountPercent: {% if variant.selling_plan_allocations.size > 0 %}{{ variant.selling_plan_allocations.first.price_adjustments.first.value | default: 0 }}{% else %}0{% endif %}
@@ -2593,6 +2721,7 @@ CRO-optimized product purchase page with:
                       id: {{ variant.id }},
                       title: {{ variant.title | json }},
                       price: {{ variant.price }},
+                      compareAtPrice: {{ variant.compare_at_price | default: 0 }},
                       packs: {{ variant.title | remove: 'Pack' | remove: ' ' | times: 1 }},
                       sellingPlanId: {% if variant.selling_plan_allocations.size > 0 %}{{ variant.selling_plan_allocations.first.selling_plan.id }}{% else %}null{% endif %},
                       discountPercent: {% if variant.selling_plan_allocations.size > 0 %}{{ variant.selling_plan_allocations.first.price_adjustments.first.value | default: 0 }}{% else %}0{% endif %}
@@ -2735,20 +2864,20 @@ CRO-optimized product purchase page with:
 
         if (count === 1) {
           return [
-            { id: 9, label: 'Starter', packsLabel: '9 packs', duration: '~1 week', perPack: '2.00', badge: '', badgeClass: '' },
-            { id: 18, label: 'Popular', packsLabel: '18 packs', duration: '~2 weeks', perPack: '2.00', badge: '⭐ POPULAR', badgeClass: 'size-card__badge--popular' },
-            { id: 27, label: 'Best Value', packsLabel: '27 packs', duration: '~3 weeks', perPack: '2.00', badge: '🚚 FREE SHIP', badgeClass: 'size-card__badge--free-ship' }
+            { id: 9, label: 'Starter', packsLabel: '9 PACK', duration: '~1 week', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
+            { id: 18, label: 'Popular', packsLabel: '18 PACK', duration: '~2 weeks', perPack: '2.00', badge: badgeConfig.popular.text, badgeType: 'popular', badgeStyle: `background: ${badgeConfig.popular.bg}; color: ${badgeConfig.popular.color};` },
+            { id: 27, label: 'Best Value', packsLabel: '27 PACK', duration: '~3 weeks', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
           ];
         } else if (count === 2) {
           return [
-            { id: 9, label: '9 Each', packsLabel: '18 total', duration: '9 per flavor', perPack: '2.00', badge: '', badgeClass: '' },
-            { id: 18, label: '18 Each', packsLabel: '36 total', duration: '18 per flavor', perPack: '2.00', badge: '🚚 FREE SHIP', badgeClass: 'size-card__badge--free-ship' }
+            { id: 9, label: '9 Each', packsLabel: '18 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
+            { id: 18, label: '18 Each', packsLabel: '36 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
           ];
         } else {
           // 3 flavors
           return [
-            { id: 9, label: '9 Each', packsLabel: '27 total', duration: '9 per flavor', perPack: '2.00', badge: '', badgeClass: '' },
-            { id: 18, label: '18 Each', packsLabel: '54 total', duration: '18 per flavor', perPack: '2.00', badge: '🚚 FREE SHIP', badgeClass: 'size-card__badge--free-ship' }
+            { id: 9, label: '9 Each', packsLabel: '27 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
+            { id: 18, label: '18 Each', packsLabel: '54 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
           ];
         }
       },
@@ -2839,10 +2968,15 @@ CRO-optimized product purchase page with:
         this.activeFlavorTab = productId;
 
         // Scroll the active tab into view (for mobile horizontal scroll)
+        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
         this.$nextTick(() => {
           const activeTab = document.querySelector('.flavor-tab--active');
           if (activeTab) {
-            activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            const container = activeTab.closest('.flavor-tabs');
+            if (container) {
+              const scrollLeft = activeTab.offsetLeft - (container.offsetWidth / 2) + (activeTab.offsetWidth / 2);
+              container.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
+            }
           }
         });
 
@@ -2864,11 +2998,13 @@ CRO-optimized product purchase page with:
 
         // Also scroll thumbnail strip to show this image
         // Query by active class instead of children index (unreliable with Alpine's x-for)
+        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
         this.$nextTick(() => {
           const thumbs = this.$refs.galleryThumbs;
           const activeThumb = thumbs?.querySelector('.shop-gallery__thumb--active');
-          if (activeThumb) {
-            activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          if (activeThumb && thumbs) {
+            const scrollLeft = activeThumb.offsetLeft - (thumbs.offsetWidth / 2) + (activeThumb.offsetWidth / 2);
+            thumbs.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
           }
         });
       },
@@ -2920,7 +3056,7 @@ CRO-optimized product purchase page with:
       },
 
       // Select a flavor option (handles both bundles and individual flavors)
-      selectOption(productId, isBundle) {
+      selectOption(productId, isBundle, event) {
         if (isBundle) {
           // Selecting a bundle clears individual selections
           this.selectedBundle = (this.selectedBundle === productId) ? null : productId;
@@ -2931,6 +3067,19 @@ CRO-optimized product purchase page with:
           this.toggleFlavor(productId);
         }
         this.pickOwnExpanded = false;
+
+        // Scroll clicked card into view (for mobile horizontal carousel)
+        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
+        if (event && event.currentTarget) {
+          const card = event.currentTarget;
+          this.$nextTick(() => {
+            const wrapper = card.closest('.flavor-carousel__wrapper');
+            if (wrapper) {
+              const scrollLeft = card.offsetLeft - (wrapper.offsetWidth / 2) + (card.offsetWidth / 2);
+              wrapper.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
+            }
+          });
+        }
       },
 
       // Legacy method for backwards compatibility
@@ -2999,6 +3148,34 @@ CRO-optimized product purchase page with:
           return Math.round(basePrice * (1 - this.discountPercent / 100));
         }
         return basePrice;
+      },
+
+      getSizeComparePrice(packSize) {
+        // Returns compare_at_price for size card display (for strikethrough)
+        // Only returns value if there's a compare_at_price set in Shopify
+        if (this.selectedBundle !== null) {
+          const variant = this.getVariantForSize(this.selectedBundle, packSize);
+          return variant?.compareAtPrice || 0;
+        }
+
+        if (this.selectedFlavors.length === 0) {
+          const product = this.individualProducts[0];
+          const variant = this.getVariantForSize(product?.id, packSize);
+          return variant?.compareAtPrice || 0;
+        }
+
+        let total = 0;
+        let hasComparePrice = false;
+        for (const productId of this.selectedFlavors) {
+          const variant = this.getVariantForSize(productId, packSize);
+          if (variant?.compareAtPrice > 0) {
+            total += variant.compareAtPrice;
+            hasComparePrice = true;
+          } else if (variant) {
+            total += variant.price;
+          }
+        }
+        return hasComparePrice ? total : 0;
       },
 
       getTotalPrice(withSubscription) {
@@ -3277,31 +3454,91 @@ CRO-optimized product purchase page with:
     },
     {
       "type": "header",
-      "content": "Best Seller Badge"
+      "content": "Badge Configuration"
+    },
+    {
+      "type": "paragraph",
+      "content": "Bestseller Badge (Flavor Cards)"
     },
     {
       "type": "text",
       "id": "bestseller_badge_text",
-      "label": "Badge text",
+      "label": "Bestseller badge text",
       "default": "BEST SELLER"
     },
     {
       "type": "color",
       "id": "bestseller_badge_bg",
-      "label": "Badge background color",
+      "label": "Bestseller badge background",
       "default": "#fbbf24"
     },
     {
       "type": "color",
       "id": "bestseller_badge_text_color",
-      "label": "Badge text color",
+      "label": "Bestseller badge text color",
       "default": "#000000"
     },
     {
       "type": "image_picker",
       "id": "bestseller_badge_icon",
-      "label": "Badge icon",
+      "label": "Bestseller badge icon",
       "info": "Small image displayed left of badge text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Popular Badge (Size Cards)"
+    },
+    {
+      "type": "text",
+      "id": "popular_badge_text",
+      "label": "Popular badge text",
+      "default": "POPULAR"
+    },
+    {
+      "type": "color",
+      "id": "popular_badge_bg",
+      "label": "Popular badge background",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "color",
+      "id": "popular_badge_text_color",
+      "label": "Popular badge text color",
+      "default": "#000000"
+    },
+    {
+      "type": "image_picker",
+      "id": "popular_badge_icon",
+      "label": "Popular badge icon",
+      "info": "Star icon for Popular badge"
+    },
+    {
+      "type": "paragraph",
+      "content": "Free Shipping Badge (Size Cards)"
+    },
+    {
+      "type": "text",
+      "id": "free_ship_badge_text",
+      "label": "Free shipping badge text",
+      "default": "FREE"
+    },
+    {
+      "type": "color",
+      "id": "free_ship_badge_bg",
+      "label": "Free shipping badge background",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "free_ship_badge_text_color",
+      "label": "Free shipping badge text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "image_picker",
+      "id": "free_ship_badge_icon",
+      "label": "Free shipping badge icon",
+      "info": "Truck icon for free shipping badge"
     },
     {
       "type": "header",
