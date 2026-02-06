@@ -147,7 +147,63 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Flip support_unencrypted_data to false after confirming encryption
 - [ ] Full app submission for Shopify review
 
-## Planned Features
+## Shopify App Submission
+
+### Pre-Deploy
+- [ ] Deploy app + webhooks: `cd happypages-referrals && shopify app deploy --force`
+- [ ] Verify webhook subscriptions in Partner Dashboard
+
+### Partner Dashboard
+- [ ] Add privacy policy URL: `https://app.happypages.co/privacy`
+- [ ] Verify protected customer data access approved (email, first_name)
+- [ ] Verify network access approval for theme extension
+- [ ] Upload walkthrough video (.mp4, 1080p, < 3 min)
+- [ ] Fill in testing instructions
+- [ ] App intro (100 chars), app details (500 chars), feature bullets (80 chars each)
+- [ ] Submit for review
+
+### Walkthrough Video Scenes
+1. Install flow — OAuth from app listing → grant screen → redirect to admin
+2. First-time setup — Configure extension in admin UI → save → live preview
+3. Referral page — Visit `/:shop_slug/refer`
+4. Customer journey — Checkout → thank you page shows extension → share link
+5. Referral tracked — Referred order via webhook → reward code generated
+6. Analytics — Admin analytics dashboard
+
+### Test Store Cleanup (`happypages-test-store`)
+- [ ] Remove messy test/dummy orders
+- [ ] Ensure theme has extension block enabled and visible
+- [ ] Verify referral page loads at `/:slug/refer`
+- [ ] Test fresh install flow (uninstall → reinstall)
+
+### Testing Instructions (for reviewer)
+1. Install the app via the provided URL
+2. Navigate to the app admin → configure referral settings
+3. Visit your store's thank you page after a test checkout → see the referral extension
+4. Visit `{your-store}/refer` → see the referral page
+5. Note: Awtomic/Klaviyo integrations require separate API keys — core referral features work independently
+
+---
+
+## App Hardening
+
+| Priority | Issue | Notes |
+|----------|-------|-------|
+| High | No API auth on `/api/*` endpoints | Header-only shop identification, no HMAC/token |
+| High | Zero automated tests | No test suite at all — model + webhook tests at minimum |
+| Medium | Broad `rescue => e` in webhooks | Swallows errors silently — rescue specific exceptions |
+| Medium | Missing DB indices | `analytics_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` |
+| Low | CORS gem included but unconfigured | `rack-cors` in Gemfile, no initializer |
+| Low | No rate limiting | Public API endpoints have no throttling |
+
+---
+
+## Housekeeping
+- [ ] Delete old custom distribution app from Partner Dashboard
+
+---
+
+## Planned Features (Landing Page)
 
 - [ ] Services/features grid
 - [ ] Testimonials section
