@@ -130,6 +130,23 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] White-labeled URLs: shop-specific referral URLs (e.g., /shop-slug/refer)
 - [x] Auto-generated slugs from shop name with uniqueness handling
 
+### PII Compliance & Data Protection
+- [x] Privacy policy page at /privacy
+- [x] Security incident response plan (SECURITY.md)
+- [x] Active Record Encryption on PII fields (email, first_name)
+- [x] Audit logging system (AuditLog model with JSONB details)
+- [x] Compliance webhooks: customers/data_request, customers/redact, shop/redact
+- [x] HMAC signature verification on all webhooks
+- [x] Webhook fallback safety: no Shop.active.first fallback on destructive actions
+- [x] SSL enforced in production (force_ssl, assume_ssl)
+- [x] Host authorization configured for app.happypages.co
+- [x] Data protection questionnaire submitted in Partner Dashboard
+- [x] Protected customer data access requested (email, first_name)
+- [x] Public distribution app with unlisted visibility (client_id: 98f21e1016de2f503ac53f40072eb71b)
+- [ ] Privacy policy URL added to app listing
+- [ ] Flip support_unencrypted_data to false after confirming encryption
+- [ ] Full app submission for Shopify review
+
 ## Planned Features
 
 - [ ] Services/features grid
@@ -141,6 +158,10 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 
 | Date | Changes |
 |------|---------|
+| 2026-02-06 | PII compliance: encryption, audit logs, compliance webhooks, privacy policy |
+| 2026-02-06 | Recreated app with public distribution (unlisted) for multi-merchant installs |
+| 2026-02-06 | Fixed critical webhook fallback bug (Shop.active.first on destructive actions) |
+| 2026-02-06 | SSL, host authorization, and mailer config enabled in production |
 | 2026-01-29 | White-labeled URLs: shop-specific referral pages with auto-generated slugs |
 | 2026-01-29 | Railway deployment: Rails backend + Shopify extension deployed to app.happypages.co |
 | 2026-01-29 | Shopify OAuth: Self-service app installation with redirect URL configuration |

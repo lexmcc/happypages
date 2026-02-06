@@ -79,6 +79,18 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Jan 29** - Auto-generated slugs with backfill for existing shops
 - **Jan 29** - Database startup improvements: db:prepare + slug backfill in start.sh
 
+### Week 5: PII Compliance & App Distribution (Feb 6, 2026)
+
+- **Feb 6** - PII compliance implementation: privacy policy, audit logging, Active Record Encryption on email/first_name
+- **Feb 6** - Compliance webhooks: customers/data_request, customers/redact, shop/redact with HMAC verification
+- **Feb 6** - SSL and host authorization enabled in production
+- **Feb 6** - Critical bug fix: removed Shop.active.first fallback that let test webhooks delete real shop data
+- **Feb 6** - Recreated Shopify app with public distribution (custom distribution can't install on non-Plus stores)
+- **Feb 6** - New client_id: 98f21e1016de2f503ac53f40072eb71b (old: a0199e1c2d876f0982e33fb33a1d1c0a)
+- **Feb 6** - Data protection questionnaire submitted, protected customer data access requested
+- **Feb 6** - All webhooks deployed and released (orders/create + 3 compliance topics)
+- **Feb 6** - App re-installed on dev store with new credentials, verified working
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed
@@ -91,6 +103,8 @@ A chronicle of the referral app's evolution from initial commit to production-re
 8. **Multi-tenant architecture complete** - Jan 26: Platform-agnostic, encrypted credentials
 9. **Self-service OAuth onboarding** - Jan 26: Merchants can install independently
 10. **Production deployment** - Jan 29: Rails app live at app.happypages.co with PostgreSQL
+11. **PII compliance complete** - Feb 6: Encryption, audit logs, compliance webhooks, privacy policy
+12. **Public distribution app** - Feb 6: Recreated app for multi-merchant installs
 
 ## Architecture Evolution
 
@@ -115,6 +129,14 @@ Week 4: Multi-Tenant Platform
 ## Session Notes
 
 _This section is updated by the doc-checkpoint skill at the end of each working session._
+
+### Feb 6, 2026
+- **Critical bug**: `Current.shop ||= Shop.active.first` fallback in `set_shop_from_webhook` caused test compliance webhooks (with fake `{shop}.myshopify.com` domain) to match the real shop. The `shop/redact` handler then called `shop.destroy!`, cascade-deleting all data. Fix: removed fallback entirely, webhooks now only match by exact domain.
+- **Shopify distribution is permanent**: Can't change Custom → Public. Had to create a new app entirely.
+- **Protected customer data chicken-and-egg**: Can't deploy `orders/create` or compliance webhooks until protected data access is approved. Workaround: deploy without webhooks first, request access, then re-deploy with webhooks.
+- **Network access approval**: Theme extensions making external API calls need network access approved in Dev Dashboard before the version can be released.
+- **Railway SSH path**: The Rails app lives at `/rails` in the container, not `/app`. Use `cd /rails && bin/rails console`.
+- **Re-installing the app via OAuth** is the cleanest way to recreate shop records (rather than `shop:setup` which depends on `SHOPIFY_SHOP_URL` env var).
 
 ### Jan 28, 2026
 - Simplified architecture decision: use single `app.happypages.co` subdomain for both API and dashboard (instead of separate `api.` and `app.` subdomains)

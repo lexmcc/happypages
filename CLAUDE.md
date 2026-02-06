@@ -193,13 +193,25 @@ Step cards use different media for desktop vs mobile:
 ## Rails Backend (happypages-app/)
 
 See `happypages-app/HISTORY.md` for detailed session notes.
+See `happypages-app/LEARNINGS.md` for gotchas, bug fixes, and environment tips.
 
 ### Key Patterns
 - **Multi-tenant**: `Current.shop` thread-isolated context, shop lookup via `X-Shop-Domain` header
 - **White-labeled URLs**: `/:shop_slug/refer` routes with auto-generated slugs from shop name
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
 
+### Shopify App Identity
+- **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
+- **Distribution**: Public (unlisted) — installable via link on any store
+- **TOML config**: `shopify.app.happypages-friendly-referrals.toml` is the linked config file
+
 ### Gotchas
+- **Never use `Shop.active.first` as webhook fallback** — test webhooks with fake domains will match real shops and destroy data
+- **Shopify distribution is permanent** — can't change Custom → Public after creation
+- **Protected customer data must be approved** before deploying webhooks containing customer data (`orders/create`, compliance topics)
+- **Network access approval** required for theme extensions making external calls
+- **Railway SSH**: use `railway ssh --service happypages-app`, Rails app lives at `/rails` in container
 - Railway UI "no tables" can be stale - verify with `rails runner "puts ActiveRecord::Base.connection.tables.count"`
 - `before_validation :generate_slug, on: :create` won't backfill existing records - remove `on: :create` or add explicit backfill
 - Shopify OAuth redirect URLs: check the **linked** TOML file (`shopify.app.*.toml`), not just `shopify.app.toml`
+- Re-installing the app via OAuth is the cleanest way to recreate shop records
