@@ -144,7 +144,7 @@ Simple, responsive landing page promoting ongoing conversion and growth optimisa
 - [x] Protected customer data access requested (email, first_name)
 - [x] Public distribution app with unlisted visibility (client_id: 98f21e1016de2f503ac53f40072eb71b)
 - [ ] Privacy policy URL added to app listing
-- [ ] Flip support_unencrypted_data to false after confirming encryption
+- [x] Flip support_unencrypted_data to false after confirming encryption
 - [ ] Full app submission for Shopify review
 
 ## Planned Features
