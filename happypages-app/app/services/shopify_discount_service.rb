@@ -4,9 +4,15 @@ require "json"
 class ShopifyDiscountService
   API_VERSION = "2025-10"
 
-  def initialize
-    @shop_url = ENV.fetch("SHOPIFY_SHOP_URL")
-    @access_token = ENV.fetch("SHOPIFY_ACCESS_TOKEN")
+  def initialize(shop = nil)
+    if shop
+      credentials = shop.shopify_credentials
+      @shop_url = credentials[:url]
+      @access_token = credentials[:token]
+    else
+      @shop_url = ENV.fetch("SHOPIFY_SHOP_URL")
+      @access_token = ENV.fetch("SHOPIFY_ACCESS_TOKEN")
+    end
   end
 
   def register_webhook(callback_url:)

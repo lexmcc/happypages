@@ -82,8 +82,8 @@ module Providers
 
       def execute_graphql(query, variables)
         credentials = shop.shopify_credentials
-        shop_url = credentials[:url] || ENV.fetch("SHOPIFY_SHOP_URL")
-        access_token = credentials[:token] || ENV.fetch("SHOPIFY_ACCESS_TOKEN")
+        shop_url = credentials[:url]
+        access_token = credentials[:token]
 
         uri = URI("https://#{shop_url}/admin/api/#{API_VERSION}/graphql.json")
 

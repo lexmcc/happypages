@@ -27,7 +27,7 @@
                 <div class="relative w-full lg:w-auto">
                   <button
                     data-action="click->clipboard#copy"
-                    data-clipboard-text-value="https://<%= ENV['SHOPIFY_SHOP_URL'] %>/discount/<%= @referral.referral_code %>?share_source=copylink"
+                    data-clipboard-text-value="https://<%= Current.shop&.domain %>/discount/<%= @referral.referral_code %>?share_source=copylink"
                     class="w-full lg:w-auto px-6 py-3 text-white rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-2"
                     style="background-color: var(--primary);"
                     onmouseover="this.style.opacity='0.9'"
@@ -118,7 +118,7 @@
 
         <div class="mt-8 text-center">
           <a
-            href="https://<%= ENV['SHOPIFY_SHOP_URL'] %>"
+            href="https://<%= Current.shop&.domain %>"
             class="font-medium transition-colors"
             style="color: var(--primary);"
           >
