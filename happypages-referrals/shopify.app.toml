@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "a0199e1c2d876f0982e33fb33a1d1c0a"
+client_id = "98f21e1016de2f503ac53f40072eb71b"
 name = "Happypages Friendly Referrals"
 application_url = "https://app.happypages.co"
 embedded = true
