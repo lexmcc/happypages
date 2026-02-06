@@ -34,8 +34,13 @@ Rails.application.routes.draw do
   post "admin/register_webhook", to: "admin#register_webhook"
 
   namespace :admin do
-    resource :config, only: [:edit, :update]
-    resources :analytics, only: [:index]
+    # Dashboard as landing page
+    get "/", to: "dashboard#index", as: :dashboard
+
+    # Campaigns page (list discount groups)
+    resources :campaigns, only: [:index], controller: "discount_groups"
+
+    # Discount group CRUD
     resources :discount_groups, only: [:new, :create, :edit, :update] do
       member do
         post :activate
@@ -43,7 +48,24 @@ Rails.application.routes.draw do
         post :cancel_override
       end
     end
-    resources :progress, only: [:index]
+
+    # Analytics
+    resources :analytics, only: [:index]
+
+    # Thank-You Card editor
+    resource :thank_you_card, only: [:edit, :update], controller: "thank_you_card"
+
+    # Referral Page editor
+    resource :referral_page, only: [:edit, :update], controller: "referral_page"
+
+    # Integrations
+    resource :integrations, only: [:edit, :update], controller: "integrations"
+
+    # Settings (shop slug)
+    resource :settings, only: [:edit, :update], controller: "settings"
+
+    # Legacy config route — redirect to dashboard
+    resource :config, only: [:edit, :update]
   end
 
   # Public pages

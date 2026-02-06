@@ -1,0 +1,167 @@
+<%
+  # Compute effective discount values from active group
+  discount_type = @active_group&.effective_referred_type || 'percentage'
+  discount_val = @active_group&.effective_referred_value || '50'
+  reward_type = @active_group&.effective_reward_type || 'percentage'
+  reward_val = @active_group&.effective_reward_value || '50'
+  discount_str = discount_type == 'percentage' ? "#{discount_val}%" : "£#{discount_val}"
+  reward_str = reward_type == 'percentage' ? "#{reward_val}%" : "£#{reward_val}"
+%>
+
+<div class="min-h-screen bg-[#f9f9f9] py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+      <p class="text-gray-600 mt-2">Overview of your referral program</p>
+    </header>
+
+    <%# Active Campaign Card %>
+    <% if @active_group %>
+      <section class="mb-8">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900">Active Campaign</h2>
+              <p class="text-sm text-gray-500"><%= @active_group.name %></p>
+            </div>
+            <%= link_to edit_admin_discount_group_path(@active_group), class: "px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" do %>
+              Edit
+            <% end %>
+          </div>
+
+          <div class="p-6">
+            <div class="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+              <div>
+                <span class="text-gray-400">Referred discount:</span>
+                <span class="font-semibold text-gray-900 ml-1"><%= discount_str %></span>
+              </div>
+              <div>
+                <span class="text-gray-400">Referrer reward:</span>
+                <span class="font-semibold text-gray-900 ml-1"><%= reward_str %></span>
+              </div>
+              <div>
+                <span class="text-gray-400">Codes:</span>
+                <span class="font-semibold text-gray-900 ml-1"><%= @active_group.current_generation&.codes_count || 0 %></span>
+              </div>
+
+              <% if @active_group.override_active? %>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-200">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                  </svg>
+                  Boost active until <%= @active_group.override_ends_at.strftime('%b %d') %>
+                </div>
+              <% end %>
+
+              <%# Sync status %>
+              <div>
+                <% if @active_group.current_generation&.synced? %>
+                  <span class="inline-flex items-center gap-1.5 text-sm text-emerald-600">
+                    <span class="size-2 bg-emerald-500 rounded-full"></span>
+                    Synced
+                  </span>
+                <% elsif @active_group.current_generation.present? %>
+                  <span class="inline-flex items-center gap-1.5 text-sm text-amber-600">
+                    <span class="size-2 bg-amber-500 rounded-full"></span>
+                    Not synced
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% else %>
+      <section class="mb-8">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-8 text-center">
+          <p class="text-gray-500 mb-4">No active campaign yet. Create your first discount group to get started.</p>
+          <%= link_to "Create Campaign", new_admin_discount_group_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm" %>
+        </div>
+      </section>
+    <% end %>
+
+    <%# Today's Metrics %>
+    <section class="mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Today's Activity</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 text-center">
+          <p class="text-3xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@extension_loads_today) %></p>
+          <p class="text-sm text-gray-500 mt-1">Extension Loads</p>
+        </div>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 text-center">
+          <p class="text-3xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@share_clicks_today) %></p>
+          <p class="text-sm text-gray-500 mt-1">Share Clicks</p>
+        </div>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 text-center">
+          <p class="text-3xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@page_views_today) %></p>
+          <p class="text-sm text-gray-500 mt-1">Page Views</p>
+        </div>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 text-center">
+          <p class="text-3xl font-bold text-gray-900 tabular-nums"><%= number_with_delimiter(@code_copies_today) %></p>
+          <p class="text-sm text-gray-500 mt-1">Code Copies</p>
+        </div>
+      </div>
+    </section>
+
+    <%# Referral URL %>
+    <% if @shop&.slug.present? %>
+      <section class="mb-8">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900">Referral URL</h2>
+              <p class="text-sm text-gray-500">Share this link with customers</p>
+            </div>
+            <%= link_to "Settings", edit_admin_settings_path, class: "text-sm text-[#ff584d] hover:underline" %>
+          </div>
+          <div class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <code class="flex-1 px-4 py-2.5 bg-[#f9f9f9] border border-black/10 rounded-lg text-sm text-gray-700 font-mono truncate">https://app.happypages.co/<%= @shop.slug %>/refer</code>
+              <button
+                type="button"
+                onclick="navigator.clipboard.writeText('https://app.happypages.co/<%= @shop.slug %>/refer').then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500) })"
+                class="px-4 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm flex-shrink-0"
+              >Copy</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% end %>
+
+    <%# Quick Links %>
+    <section>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Links</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <%= link_to edit_admin_thank_you_card_path, class: "bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 hover:shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_8px_16px_rgba(0,0,0,0.1)] transition-shadow group" do %>
+          <div class="size-10 bg-[#ff584d]/10 rounded-lg flex items-center justify-center mb-3">
+            <svg class="size-5 text-[#ff584d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"></path>
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-gray-900 group-hover:text-[#ff584d] transition-colors">Customize Thank-You Card</p>
+          <p class="text-xs text-gray-500 mt-0.5">Edit the post-checkout share card</p>
+        <% end %>
+
+        <%= link_to edit_admin_referral_page_path, class: "bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 hover:shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_8px_16px_rgba(0,0,0,0.1)] transition-shadow group" do %>
+          <div class="size-10 bg-[#ff584d]/10 rounded-lg flex items-center justify-center mb-3">
+            <svg class="size-5 text-[#ff584d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-gray-900 group-hover:text-[#ff584d] transition-colors">Customize Referral Page</p>
+          <p class="text-xs text-gray-500 mt-0.5">Edit colors, text, and layout</p>
+        <% end %>
+
+        <%= link_to admin_analytics_path, class: "bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-5 hover:shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_8px_16px_rgba(0,0,0,0.1)] transition-shadow group" do %>
+          <div class="size-10 bg-[#ff584d]/10 rounded-lg flex items-center justify-center mb-3">
+            <svg class="size-5 text-[#ff584d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-gray-900 group-hover:text-[#ff584d] transition-colors">View Analytics</p>
+          <p class="text-xs text-gray-500 mt-0.5">Track engagement and conversions</p>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

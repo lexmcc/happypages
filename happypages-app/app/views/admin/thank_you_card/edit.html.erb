@@ -1,0 +1,196 @@
+<%
+  # Compute effective discount values from active group
+  discount_type = @active_group&.effective_referred_type || 'percentage'
+  discount_val = @active_group&.effective_referred_value || '50'
+  reward_type = @active_group&.effective_reward_type || 'percentage'
+  reward_val = @active_group&.effective_reward_value || '50'
+  discount_str = discount_type == 'percentage' ? "#{discount_val}%" : "£#{discount_val}"
+  reward_str = reward_type == 'percentage' ? "#{reward_val}%" : "£#{reward_val}"
+%>
+
+<div class="min-h-screen bg-[#f9f9f9] py-8" data-controller="preview" data-preview-discount-value="<%= discount_str %>" data-preview-reward-value="<%= reward_str %>">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <%# Floating action buttons %>
+    <div
+      data-preview-target="buttonContainer"
+      class="float-right sticky top-4 z-10 flex gap-3 items-center transition-all duration-200 rounded-xl"
+    >
+      <button
+        type="button"
+        data-preview-target="undoButton"
+        data-action="click->preview#undoAll"
+        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors opacity-50 cursor-not-allowed"
+        disabled
+      >
+        Undo All Changes
+      </button>
+
+      <div class="relative">
+        <button
+          type="submit"
+          form="config-form"
+          data-preview-target="saveButton"
+          data-action="click->preview#handleSave"
+          class="px-5 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium cursor-pointer flex items-center gap-2"
+        >
+          <span data-preview-target="saveButtonText">Save Changes</span>
+          <svg data-preview-target="saveSpinner" class="hidden animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+
+        <%# Success tooltip %>
+        <div
+          data-preview-target="successTooltip"
+          class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1.5 bg-[#34d399] text-white text-sm rounded-lg whitespace-nowrap opacity-0 transition-opacity duration-200 pointer-events-none"
+        >
+          Successfully saved
+          <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 size-2 bg-[#34d399] rotate-45"></div>
+        </div>
+      </div>
+    </div>
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Thank-You Card</h1>
+      <p class="text-gray-600 mt-2">Customize the card displayed on the Shopify thank-you page after checkout</p>
+    </header>
+
+    <%# Hidden notice data for Stimulus to detect %>
+    <% if notice %>
+      <div data-preview-target="noticeData" data-notice="<%= notice %>" class="hidden"></div>
+    <% end %>
+
+    <%= form_with url: admin_thank_you_card_path, method: :patch, local: true, id: "config-form", data: { preview_target: "form" } do |form| %>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <%# Card Settings %>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900 text-balance">Card Settings</h3>
+            <p class="text-sm text-gray-500 text-pretty">Displayed on the Shopify thank you page after checkout</p>
+          </div>
+
+          <div class="p-6 space-y-6">
+            <%# Banner Image URL %>
+            <div>
+              <label for="configs_extension_banner_image" class="block text-sm font-medium text-gray-700 mb-1">
+                Banner Image URL
+              </label>
+              <input
+                type="url"
+                name="configs[extension_banner_image]"
+                id="configs_extension_banner_image"
+                value="<%= @configs['extension_banner_image']&.config_value %>"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+                placeholder="https://..."
+                data-preview-target="bannerImage"
+                data-action="input->preview#updatePreview"
+              >
+            </div>
+
+            <%# Heading %>
+            <div>
+              <label for="configs_extension_heading" class="block text-sm font-medium text-gray-700 mb-1">
+                Heading
+              </label>
+              <textarea
+                name="configs[extension_heading]"
+                id="configs_extension_heading"
+                rows="1"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                data-preview-target="heading"
+                data-action="input->preview#updatePreview input->preview#autoResize"
+              ><%= @configs['extension_heading']&.config_value %></textarea>
+              <div class="mt-2 flex gap-2">
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="heading" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+              </div>
+            </div>
+
+            <%# Subtitle %>
+            <div>
+              <label for="configs_extension_subtitle" class="block text-sm font-medium text-gray-700 mb-1">
+                Subtitle
+              </label>
+              <textarea
+                name="configs[extension_subtitle]"
+                id="configs_extension_subtitle"
+                rows="1"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                data-preview-target="subtitle"
+                data-action="input->preview#updatePreview input->preview#autoResize"
+              ><%= @configs['extension_subtitle']&.config_value %></textarea>
+              <div class="mt-2 flex gap-2">
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="subtitle" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+              </div>
+            </div>
+
+            <%# Button Text %>
+            <div>
+              <label for="configs_extension_button_text" class="block text-sm font-medium text-gray-700 mb-1">
+                Button Text
+              </label>
+              <textarea
+                name="configs[extension_button_text]"
+                id="configs_extension_button_text"
+                rows="1"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d] resize-none overflow-hidden"
+                data-preview-target="buttonText"
+                data-action="input->preview#updatePreview input->preview#autoResize"
+              ><%= @configs['extension_button_text']&.config_value %></textarea>
+              <div class="mt-2 flex gap-2">
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{firstName}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Name</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{discount}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Discount</button>
+                <button type="button" data-action="click->preview#insertVariable" data-variable="{reward}" data-target-field="buttonText" class="px-2 py-1 text-xs bg-[#e8e8e4] text-gray-600 rounded hover:bg-[#ddddd9] transition-colors">Reward</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Live Preview %>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden lg:sticky lg:top-20">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900 text-balance">Live Preview</h3>
+            <p class="text-sm text-gray-500 text-pretty">Preview shows how the card appears in checkout</p>
+          </div>
+
+          <div class="p-6">
+            <%# Preview Card - matches Shopify checkout extension styling %>
+            <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <%# Banner Image %>
+              <img
+                data-preview-target="previewImage"
+                src="<%= @configs['extension_banner_image']&.config_value.presence || 'https://via.placeholder.com/400x267/e5e7eb/9ca3af?text=Banner+Image' %>"
+                alt="Preview banner"
+                class="w-full object-cover aspect-[3/2]"
+                data-action="error->preview#handleImageError"
+              >
+
+              <%# Content area %>
+              <div class="p-4 space-y-2">
+                <h3
+                  data-preview-target="previewHeading"
+                  class="text-lg font-semibold text-gray-900"
+                ><%= (@configs['extension_heading']&.config_value.presence || '{firstName}, Refer A Friend').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></h3>
+
+                <p
+                  data-preview-target="previewSubtitle"
+                  class="text-sm text-gray-500"
+                ><%= (@configs['extension_subtitle']&.config_value.presence || 'Give 50% And Get 50% Off').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></p>
+
+                <button
+                  type="button"
+                  data-preview-target="previewButton"
+                  class="w-full mt-2 px-4 py-2 bg-black text-white rounded-md font-medium cursor-default"
+                ><%= (@configs['extension_button_text']&.config_value.presence || 'Share Now').gsub('{firstName}', 'Friend').gsub('{discount}', discount_str).gsub('{reward}', reward_str) %></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

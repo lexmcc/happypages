@@ -1,13 +1,11 @@
-<%= render "admin/shared/tabs" %>
-
 <div class="min-h-screen bg-[#f9f9f9] py-8">
-  <div class="max-w-2xl mx-auto px-4">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6">
     <header class="mb-8">
-      <%= link_to edit_admin_config_path, class: "inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm mb-4" do %>
+      <%= link_to admin_campaigns_path, class: "inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm mb-4" do %>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back to Configuration
+        Back to Campaigns
       <% end %>
       <div class="flex items-center gap-3">
         <h1 class="text-3xl font-bold text-gray-900">Edit: <%= @group.name %></h1>
@@ -113,7 +111,7 @@
         </div>
 
         <div class="flex items-center justify-end gap-4">
-          <%= link_to "Cancel", edit_admin_config_path, class: "px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium" %>
+          <%= link_to "Cancel", admin_campaigns_path, class: "px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium" %>
           <%= form.submit "Save Changes", class: "px-5 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium cursor-pointer", data: { discount_form_target: "submitButton" } %>
         </div>
       <% end %>

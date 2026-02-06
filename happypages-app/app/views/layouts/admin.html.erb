@@ -12,6 +12,11 @@
   </head>
 
   <body class="bg-gray-50">
-    <%= yield %>
+    <div class="flex min-h-screen">
+      <%= render "admin/shared/sidebar" %>
+      <main class="flex-1 min-w-0 lg:ml-0">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

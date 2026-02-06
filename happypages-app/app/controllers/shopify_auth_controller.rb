@@ -91,12 +91,12 @@ class ShopifyAuthController < ApplicationController
       end
     end
 
-    return_to = session.delete(:return_to) || edit_admin_config_path
+    return_to = session.delete(:return_to) || admin_dashboard_path
 
     if @returning
       redirect_to return_to, notice: "Welcome back! You're now logged in."
     else
-      redirect_to edit_admin_config_path, notice: "App installed successfully! Configure your referral program below."
+      redirect_to admin_dashboard_path, notice: "App installed successfully! Configure your referral program below."
     end
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error "OAuth user/shop creation failed: #{e.message}"

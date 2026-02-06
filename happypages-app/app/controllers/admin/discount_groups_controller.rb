@@ -1,5 +1,10 @@
 class Admin::DiscountGroupsController < Admin::BaseController
 
+  def index
+    @discount_groups = discount_groups_scope.includes(:discount_generations).order(is_active: :desc, created_at: :asc)
+    @active_group = SharedDiscount.current(Current.shop)
+  end
+
   def new
     @group = SharedDiscount.new(
       referred_discount_type: "percentage",
@@ -19,7 +24,7 @@ class Admin::DiscountGroupsController < Admin::BaseController
       # Auto-activate if it's the first group for this shop
       @group.activate! if discount_groups_scope.count == 1
 
-      redirect_to edit_admin_config_path, notice: "Discount group '#{@group.name}' created successfully!"
+      redirect_to admin_campaigns_path, notice: "Discount group '#{@group.name}' created successfully!"
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,7 +47,7 @@ class Admin::DiscountGroupsController < Admin::BaseController
         create_new_generation_for_group(@group)
       end
 
-      redirect_to edit_admin_config_path, notice: "Discount group '#{@group.name}' updated successfully!"
+      redirect_to admin_campaigns_path, notice: "Discount group '#{@group.name}' updated successfully!"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -51,7 +56,7 @@ class Admin::DiscountGroupsController < Admin::BaseController
   def activate
     @group = find_group(params[:id])
     @group.activate!
-    redirect_to edit_admin_config_path, notice: "'#{@group.name}' is now the active discount group."
+    redirect_to admin_campaigns_path, notice: "'#{@group.name}' is now the active discount group."
   end
 
   def schedule_override
@@ -91,20 +96,20 @@ class Admin::DiscountGroupsController < Admin::BaseController
     if @group.override_starts_at <= Time.current
       @group.apply_override_to_shopify!
       @group.update!(override_applied: true)
-      redirect_to edit_admin_config_path, notice: "Boost activated immediately!"
+      redirect_to admin_campaigns_path, notice: "Boost activated immediately!"
     else
-      redirect_to edit_admin_config_path, notice: "Boost scheduled: #{@group.override_starts_at.strftime('%b %d')} to #{@group.override_ends_at.strftime('%b %d')}"
+      redirect_to admin_campaigns_path, notice: "Boost scheduled: #{@group.override_starts_at.strftime('%b %d')} to #{@group.override_ends_at.strftime('%b %d')}"
     end
   rescue => e
-    redirect_to edit_admin_config_path, alert: "Failed to schedule boost: #{e.message}"
+    redirect_to admin_campaigns_path, alert: "Failed to schedule boost: #{e.message}"
   end
 
   def cancel_override
     @group = find_group(params[:id])
     @group.clear_override!
-    redirect_to edit_admin_config_path, notice: "Boost cancelled for '#{@group.name}'."
+    redirect_to admin_campaigns_path, notice: "Boost cancelled for '#{@group.name}'."
   rescue => e
-    redirect_to edit_admin_config_path, alert: "Failed to cancel boost: #{e.message}"
+    redirect_to admin_campaigns_path, alert: "Failed to cancel boost: #{e.message}"
   end
 
   private

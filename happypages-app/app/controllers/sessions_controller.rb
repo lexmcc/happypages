@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   def new
     # Show login page with "Install via Shopify" button
     if current_user
-      redirect_to edit_admin_config_path
+      redirect_to admin_dashboard_path
     end
   end
 

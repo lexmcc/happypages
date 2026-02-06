@@ -1,0 +1,50 @@
+<div class="min-h-screen bg-[#f9f9f9] py-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Integrations</h1>
+      <p class="text-gray-600 mt-2">Connect and configure third-party services</p>
+    </header>
+
+    <% if notice %>
+      <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-sm">
+        <%= notice %>
+      </div>
+    <% end %>
+
+    <%= form_with url: admin_integrations_path, method: :patch, local: true, class: "space-y-8" do |form| %>
+      <%# Klaviyo %>
+      <section>
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900">Klaviyo</h3>
+            <p class="text-sm text-gray-500">Configure automated share reminder timing</p>
+          </div>
+
+          <div class="p-6">
+            <div class="max-w-xs">
+              <label for="configs_klaviyo_reminder_delay_days" class="block text-sm font-medium text-gray-700 mb-1">
+                Share reminder delay (days)
+              </label>
+              <input
+                type="number"
+                name="configs[klaviyo_reminder_delay_days]"
+                id="configs_klaviyo_reminder_delay_days"
+                value="<%= @configs['klaviyo_reminder_delay_days']&.config_value.presence || '3' %>"
+                min="1"
+                max="30"
+                class="w-full px-4 py-2 bg-[#f9f9f9] border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff584d] focus:border-[#ff584d]"
+              >
+              <p class="mt-1 text-xs text-gray-500">Days after referral creation before sending a share reminder (if no share activity detected)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="flex justify-end">
+        <button type="submit" class="px-5 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium cursor-pointer">
+          Save Changes
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
