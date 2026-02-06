@@ -5,6 +5,31 @@ class WebhooksController < ApplicationController
   before_action :set_shop_from_webhook
   before_action :verify_webhook_signature
 
+  # Shopify compliance webhook dispatcher
+  # All compliance topics arrive at the same URI, differentiated by X-Shopify-Topic header
+  def compliance
+    topic = request.headers["X-Shopify-Topic"]
+
+    request.body.rewind
+    payload = JSON.parse(request.body.read)
+
+    case topic
+    when "customers/data_request"
+      handle_customers_data_request(payload)
+    when "customers/redact"
+      handle_customers_redact(payload)
+    when "shop/redact"
+      handle_shop_redact(payload)
+    else
+      Rails.logger.warn "Unknown compliance webhook topic: #{topic}"
+    end
+
+    head :ok
+  rescue JSON::ParserError => e
+    Rails.logger.error "Compliance webhook JSON parse error: #{e.message}"
+    head :bad_request
+  end
+
   def orders
     request.body.rewind
     payload = JSON.parse(request.body.read)
@@ -101,6 +126,88 @@ class WebhooksController < ApplicationController
     return nil unless id
     id.to_s.include?("gid://") ? id.to_s : "gid://shopify/Customer/#{id}"
   end
+
+  # --- Compliance webhook handlers ---
+
+  def handle_customers_data_request(payload)
+    AuditLog.log(
+      action: "data_request",
+      actor: "webhook",
+      shop: Current.shop,
+      actor_identifier: payload.dig("customer", "email"),
+      details: {
+        shopify_customer_id: payload.dig("customer", "id"),
+        orders_requested: payload["orders_requested"],
+        shop_domain: payload["shop_domain"]
+      }
+    )
+    Rails.logger.info "Customers data request received for #{payload.dig('customer', 'email')} (shop: #{payload['shop_domain']})"
+  end
+
+  def handle_customers_redact(payload)
+    customer_email = payload.dig("customer", "email")
+    customer_id = payload.dig("customer", "id")
+    shop_domain = payload["shop_domain"]
+
+    shop = Current.shop || Shop.find_by(domain: shop_domain)
+
+    unless shop && customer_email.present?
+      Rails.logger.warn "Customer redact: could not find shop (#{shop_domain}) or missing email"
+      return
+    end
+
+    referrals = shop.referrals.where(email: customer_email)
+    referral_count = referrals.count
+    referrals.find_each do |referral|
+      referral.update!(
+        email: "deleted-#{referral.id}@redacted",
+        first_name: "Deleted"
+      )
+    end
+
+    events_count = shop.analytics_events.where(email: customer_email).count
+    shop.analytics_events.where(email: customer_email).delete_all
+
+    AuditLog.log(
+      action: "customer_redact",
+      actor: "webhook",
+      shop: shop,
+      actor_identifier: "shopify:#{customer_id}",
+      details: {
+        shop_domain: shop_domain,
+        referrals_anonymised: referral_count,
+        events_deleted: events_count
+      }
+    )
+    Rails.logger.info "Customer redact complete for shop #{shop_domain}: #{referral_count} referrals anonymised, #{events_count} events deleted"
+  end
+
+  def handle_shop_redact(payload)
+    shop_domain = payload["shop_domain"]
+    shop = Current.shop || Shop.find_by(domain: shop_domain)
+
+    unless shop
+      Rails.logger.warn "Shop redact: could not find shop #{shop_domain}"
+      return
+    end
+
+    AuditLog.log(
+      action: "shop_redact",
+      actor: "webhook",
+      shop: nil,
+      details: {
+        shop_domain: shop_domain,
+        shop_id: shop.id,
+        referral_count: shop.referrals.count,
+        event_count: shop.analytics_events.count
+      }
+    )
+
+    shop.destroy!
+    Rails.logger.info "Shop redact complete: all data deleted for #{shop_domain}"
+  end
+
+  # --- Order webhook helpers ---
 
   def find_referral_by_code(code)
     # Scope to current shop if set

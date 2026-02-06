@@ -1,6 +1,8 @@
 class AnalyticsEvent < ApplicationRecord
   belongs_to :shop, optional: true  # Optional during transition
 
+  encrypts :email, deterministic: true
+
   before_validation :set_shop_from_current, on: :create
 
   # Event types

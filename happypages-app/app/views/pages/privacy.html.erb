@@ -1,0 +1,144 @@
+<% content_for(:title) { "Privacy Policy - Happy Pages" } %>
+
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white shadow sm:rounded-lg px-6 py-8 sm:px-10">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Privacy Policy</h1>
+      <p class="text-sm text-gray-500 mb-8">Last updated: <%= Date.today.strftime("%B %d, %Y") %></p>
+
+      <div class="prose prose-gray max-w-none space-y-6">
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Who we are</h2>
+          <p class="text-gray-700 leading-relaxed">
+            Happy Pages Ltd ("we", "us", "our") operates the Happy Pages referral platform
+            at <strong>app.happypages.co</strong>. We provide referral program tools for
+            e-commerce merchants via Shopify.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">2. Data we collect</h2>
+          <p class="text-gray-700 leading-relaxed mb-3">
+            When a merchant installs our Shopify app, we access limited customer data
+            through Shopify's APIs to operate the referral program:
+          </p>
+          <table class="min-w-full divide-y divide-gray-200 mt-4">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Data</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Purpose</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700">Customer email</td>
+                <td class="px-4 py-3 text-sm text-gray-700">Unique identifier for referral tracking; links referrals across sessions</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700">Customer first name</td>
+                <td class="px-4 py-3 text-sm text-gray-700">Personalisation of referral pages and codes (e.g. "JOHN847")</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700">Shopify customer ID</td>
+                <td class="px-4 py-3 text-sm text-gray-700">Links referrals to the correct Shopify customer record</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700">Order data (order ID, discount codes used)</td>
+                <td class="px-4 py-3 text-sm text-gray-700">Determines when a referral code has been used and triggers rewards</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-gray-700 leading-relaxed mt-4">
+            We do <strong>not</strong> collect phone numbers, shipping addresses, payment
+            information, or full order history.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">3. How we use data</h2>
+          <p class="text-gray-700 leading-relaxed">We use collected data solely to:</p>
+          <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+            <li>Generate and track referral codes for customers</li>
+            <li>Detect when a referral code is used on an order</li>
+            <li>Issue discount rewards to referring customers</li>
+            <li>Display personalised referral pages</li>
+            <li>Send referral lifecycle events to merchant-configured integrations (e.g. Klaviyo)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">4. Data storage and encryption</h2>
+          <p class="text-gray-700 leading-relaxed">
+            Data is stored in a PostgreSQL database hosted on Railway (US-based infrastructure).
+            Personally identifiable information (email, first name) is encrypted at rest using
+            Rails Active Record Encryption. API credentials and access tokens are also encrypted.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">5. Data retention</h2>
+          <p class="text-gray-700 leading-relaxed">We retain customer data for as long as:</p>
+          <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+            <li>The merchant's app installation remains active, <strong>or</strong></li>
+            <li>A customer requests deletion (processed within 30 days)</li>
+          </ul>
+          <p class="text-gray-700 leading-relaxed mt-3">
+            When a merchant uninstalls the app, all associated data (referrals, analytics events,
+            rewards, and credentials) is permanently deleted within 48 hours via Shopify's
+            <code class="text-sm bg-gray-100 px-1 rounded">shop/redact</code> webhook.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">6. Data sharing</h2>
+          <p class="text-gray-700 leading-relaxed">
+            We do not sell or share customer data with third parties. Data may be sent to
+            merchant-configured integrations (such as Klaviyo or Awtomic) only at the
+            merchant's explicit request and using the merchant's own API credentials.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">7. Customer rights</h2>
+          <p class="text-gray-700 leading-relaxed">
+            Customers of merchants using our app can exercise their data rights through
+            Shopify's built-in privacy tools. When a customer requests data access or
+            deletion through Shopify, we receive and process the request automatically:
+          </p>
+          <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+            <li><strong>Data access requests</strong> are logged and fulfilled within 30 days</li>
+            <li><strong>Deletion requests</strong> result in anonymisation or removal of all PII</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">8. Merchant responsibilities</h2>
+          <p class="text-gray-700 leading-relaxed">
+            Merchants using our app are responsible for including our data processing in
+            their own privacy policies and for ensuring they have a lawful basis to share
+            customer data with our platform.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">9. Changes to this policy</h2>
+          <p class="text-gray-700 leading-relaxed">
+            We may update this policy from time to time. Material changes will be
+            communicated to merchants via the app dashboard.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-3">10. Contact</h2>
+          <p class="text-gray-700 leading-relaxed">
+            For privacy inquiries, data requests, or concerns:
+          </p>
+          <p class="text-gray-700 mt-2">
+            <strong>Email:</strong> support@happypages.co<br>
+            <strong>Company:</strong> Happy Pages Ltd
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

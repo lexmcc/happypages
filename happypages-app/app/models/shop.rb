@@ -8,6 +8,7 @@ class Shop < ApplicationRecord
   has_many :discount_configs, dependent: :destroy
   has_many :analytics_events, dependent: :destroy
   has_many :referrals, dependent: :destroy
+  has_many :audit_logs, dependent: :destroy
 
   validates :name, presence: true
   validates :domain, presence: true, uniqueness: true

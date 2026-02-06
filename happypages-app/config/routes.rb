@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   # Webhook endpoint for Shopify order notifications
   post "webhooks/orders", to: "webhooks#orders"
 
+  # Shopify compliance webhooks (mandatory for protected customer data)
+  # All compliance topics route to same endpoint, dispatched by X-Shopify-Topic header
+  post "webhooks/compliance", to: "webhooks#compliance"
+
   # Webhook endpoint for Awtomic subscription events
   post "webhooks/awtomic", to: "awtomic_webhooks#handle"
 
@@ -41,6 +45,9 @@ Rails.application.routes.draw do
     end
     resources :progress, only: [:index]
   end
+
+  # Public pages
+  get "privacy", to: "pages#privacy"
 
   # Health check for Railway/load balancers
   get "up" => "rails/health#show", as: :rails_health_check

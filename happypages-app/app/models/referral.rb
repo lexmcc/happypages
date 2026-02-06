@@ -3,6 +3,9 @@ class Referral < ApplicationRecord
   belongs_to :discount_generation, optional: true
   has_many :referral_rewards, dependent: :destroy
 
+  encrypts :email, deterministic: true
+  encrypts :first_name
+
   before_validation :set_shop_from_current, on: :create
   before_validation :generate_referral_code, on: :create
 
