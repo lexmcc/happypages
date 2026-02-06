@@ -60,7 +60,7 @@ class WebhooksController < ApplicationController
   private
 
   def set_shop_from_webhook
-    # Try to identify shop from webhook headers
+    # Identify shop from webhook headers
     domain = Providers::Shopify::OrderHandler.extract_shop_domain(request) ||
              Providers::Custom::OrderHandler.extract_shop_domain(request)
 
@@ -68,8 +68,9 @@ class WebhooksController < ApplicationController
       Current.shop = Shop.find_by(domain: domain)
     end
 
-    # Fallback: use first active shop during transition
-    Current.shop ||= Shop.active.first
+    unless Current.shop
+      Rails.logger.warn "Webhook received for unknown shop domain: #{domain}"
+    end
   end
 
   def verify_webhook_signature
