@@ -140,12 +140,24 @@ CRO-optimized product purchase page with:
     .shop-purchase__header {
       grid-column: 1 / -1;
       grid-row: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-12);
+      align-items: start;
+    }
+
+    .shop-purchase__benefits {
+      margin-top: 0;
     }
 
     .flavor-grid-column {
       grid-column: 1;
       grid-row: 2;
       align-self: start;
+    }
+
+    .flavor-grid-column .shop-purchase__section-title {
+      margin-bottom: var(--spacing-6);
     }
 
     .shop-purchase {
@@ -335,7 +347,7 @@ CRO-optimized product purchase page with:
     }
 
     .flavor-grid__name {
-      font-size: 11px;
+      font-size: var(--text-sm);
     }
 
     .flavor-grid__choose {
@@ -2181,15 +2193,17 @@ CRO-optimized product purchase page with:
   <div class="shop-purchase-flow__container">
     <!-- HEADER (moved outside shop-purchase for mobile reordering) -->
     <div class="shop-purchase__header">
-      <h1 class="shop-purchase__title">{{ section.settings.title }}</h1>
-      <p class="shop-purchase__subtitle">{{ section.settings.subtitle }}</p>
-      <div class="shop-purchase__rating">
-        {%- if section.settings.rating_image != blank -%}
-          <img class="shop-purchase__stars-image" src="{{ section.settings.rating_image | image_url: width: 200 }}" alt="5 star rating" height="20">
-        {%- else -%}
-          <span class="shop-purchase__stars">★★★★★</span>
-        {%- endif -%}
-        <span>{{ section.settings.reviews_text }}</span>
+      <div class="shop-purchase__header-text">
+        <h1 class="shop-purchase__title">{{ section.settings.title }}</h1>
+        <p class="shop-purchase__subtitle">{{ section.settings.subtitle }}</p>
+        <div class="shop-purchase__rating">
+          {%- if section.settings.rating_image != blank -%}
+            <img class="shop-purchase__stars-image" src="{{ section.settings.rating_image | image_url: width: 200 }}" alt="5 star rating" height="20">
+          {%- else -%}
+            <span class="shop-purchase__stars">★★★★★</span>
+          {%- endif -%}
+          <span>{{ section.settings.reviews_text }}</span>
+        </div>
       </div>
 
       <!-- Benefits -->
