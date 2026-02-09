@@ -131,9 +131,507 @@
         "selected_border": "#6cdfff",
         "selected_text": "#000000"
       }
+    },
+    "scroller_kQnHmf": {
+      "type": "scroller",
+      "blocks": {
+        "text_RmqCFp": {
+          "type": "text",
+          "settings": {
+            "text": "High in fibre"
+          }
+        },
+        "text_FcRd4j": {
+          "type": "text",
+          "settings": {
+            "text": "No added sugar"
+          }
+        },
+        "text_DXgiEY": {
+          "type": "text",
+          "settings": {
+            "text": "Join the cult"
+          }
+        },
+        "text_cWnLkJ": {
+          "type": "text",
+          "settings": {
+            "text": "Join the cult"
+          }
+        },
+        "text_bHF9B6": {
+          "type": "text",
+          "settings": {
+            "text": "Ready overnight"
+          }
+        },
+        "text_EXjCdY": {
+          "type": "text",
+          "settings": {
+            "text": "Improved digestion"
+          }
+        },
+        "text_Na7ank": {
+          "type": "text",
+          "settings": {
+            "text": "3 Delicious flavours"
+          }
+        }
+      },
+      "block_order": [
+        "text_RmqCFp",
+        "text_FcRd4j",
+        "text_DXgiEY",
+        "text_cWnLkJ",
+        "text_bHF9B6",
+        "text_EXjCdY",
+        "text_Na7ank"
+      ],
+      "settings": {
+        "full_width": true,
+        "text_size": "xsmall",
+        "text_style": "fill",
+        "scrolling_speed": 20,
+        "background": "#3c1b01",
+        "background_gradient": "",
+        "text_color": "#ee6a92",
+        "text_gradient": ""
+      }
+    },
+    "rich_text_Rng8p6": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_CTppAj": {
+          "type": "subheading",
+          "disabled": true,
+          "settings": {
+            "text": "REVIEWS"
+          }
+        },
+        "heading_7phDTx": {
+          "type": "heading",
+          "settings": {
+            "text": "What Cult Members Say",
+            "heading_tag": "h1",
+            "text_color": "",
+            "gradient": ""
+          }
+        },
+        "richtext_W6UyHm": {
+          "type": "richtext",
+          "settings": {
+            "content": ""
+          }
+        }
+      },
+      "block_order": [
+        "subheading_CTppAj",
+        "heading_7phDTx",
+        "richtext_W6UyHm"
+      ],
+      "settings": {
+        "full_width": true,
+        "content_width": "small",
+        "text_position": "center",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "1724929924e02be4a3": {
+      "type": "apps",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "174056040910600de2": {
+      "type": "apps",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "media_with_text_qG6irt": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_MW3HiL": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_packs3_84740937-d6a2-40b6-82c5-fb7831520d55.jpg",
+            "media_width": 50,
+            "image_below_text": "shopify://shop_images/Oat_cult_benifits_monk4.jpg",
+            "media_position": "end",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "icon_width": 48,
+            "subheading": "SIMPLE NIGHTS, MAGIC MORNINGS",
+            "title": "Oats + Milk = Breakfast Magic",
+            "content": "<p>Forget complicated morning routines. Our easy process is ridiculously simple. Our three delicious blends are packed with gut-worshipping bacteria, chia seeds, flak seeds, nuts, and all the good stuff. Add milk, let them work their magic overnight—or just dive in straight away!</p>",
+            "accordion_title_1": "",
+            "accordion_content_1": "",
+            "accordion_title_2": "",
+            "accordion_content_2": "",
+            "accordion_title_3": "",
+            "accordion_content_3": "",
+            "link_text": "Explore flavours",
+            "link_url": "shopify://products/overnight-gut-oats-cinnamon-mix",
+            "background": "#f0e9de",
+            "background_gradient": "",
+            "text_color": "#3a2e1b",
+            "text_gradient": "",
+            "button_background": "#3c1b01",
+            "button_text_color": "#acdbe7"
+          }
+        }
+      },
+      "block_order": [
+        "image_MW3HiL"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing": "none"
+      }
+    },
+    "testimonials_V6xtTf": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_wbaXJW": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "John S.",
+            "title": "",
+            "content": "<p>The overnight oats from Oat Cult are absolutely delicious! They are the perfect breakfast option for busy mornings.</p>"
+          }
+        },
+        "testimonial_kVXzer": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "John S.",
+            "title": "",
+            "content": "<p>The overnight oats from Oat Cult are absolutely delicious! They are the perfect breakfast option for busy mornings.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_wbaXJW",
+        "testimonial_kVXzer"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "stack_testimonials": true,
+        "subheading": "",
+        "title": "",
+        "content": "",
+        "link_url": "",
+        "link_text": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "testimonial_card_background": "",
+        "testimonial_card_text_color": ""
+      }
+    },
+    "media_with_text_3LpRWg": {
+      "type": "media-with-text",
+      "blocks": {
+        "image_9gzEJa": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Oat_Sachet_Packaging_Mockup_cocoa_pink.jpg",
+            "media_width": 50,
+            "media_position": "end",
+            "text_position": "place-self-center-start text-start",
+            "icon": "none",
+            "custom_icon": "shopify://shop_images/Figma_2024-07-15_11.20.25.png",
+            "icon_width": 80,
+            "subheading": "The Benefits of Oat Cult Overnight Oats",
+            "title": "Why Overnight Oats?",
+            "content": "<p>Overnight oats are soaked rather than cooked, breaking down starches and making them easier to digest. This process helps maintain the nutrients in the ingredients, ensuring maximum health benefits.</p><h5><br/>What Makes Oat Cult Special?</h5><h5><br/></h5><h6>Gut Health: </h6><p>Packed with probiotics like Bacillus subtilis, scientifically proven to reach the gut and support a healthy microbiome.</p><h6>No Added Sugar:</h6><p>Naturally sweetened, better for gut health. Sugar: Can disrupt the balance of gut bacteria, leading to digestive issues and inflammation.</p><h6>No Artificial Sweeteners:</h6><p>Keeps your digestive system happy and avoids potential gut disruption. Artificial Sweeteners can negatively affect gut health by altering gut bacteria composition.</p><h6>All-Natural Ingredients:</h6><p>Free from preservatives and fillers.</p><h6>1 Billion Live Cultures:</h6><p>Each serving contains 1 billion live cultures to ensure maximum gut health benefits.</p><h6>Improved Digestion:</h6><p>Fiber-rich ingredients promote regular bowel movements.</p><h6>Stable Blood Sugar:</h6><p>Fiber and healthy fats help prevent cravings and energy crashes.</p><h6>Enhanced Satiety:</h6><p>Keeps you full longer, reducing the need for snacking.</p><h6>Heart Health:</h6><p>Oats are rich in beta-glucan, which helps lower cholesterol.</p><h6>Anti-Inflammatory:</h6><p>Ingredients like cinnamon have anti-inflammatory properties.<br/><br/></p><h5>Your gut will love you</h5><p>A healthy gut supports digestion, boosts immunity, enhances mood, and improves overall well-being.</p>",
+            "accordion_title_1": "",
+            "accordion_content_1": "",
+            "accordion_title_2": "",
+            "accordion_content_2": "",
+            "accordion_title_3": "",
+            "accordion_content_3": "",
+            "link_text": "PICK A CULT",
+            "link_url": "#",
+            "background": "#ffffff",
+            "background_gradient": "",
+            "text_color": "#1a1a1a",
+            "text_gradient": "",
+            "button_background": "",
+            "button_text_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_9gzEJa"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": false,
+        "spacing": "none"
+      }
+    },
+    "multi_column_PW9gAL": {
+      "type": "multi-column",
+      "blocks": {
+        "item_X9kMRq": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new4.jpg",
+            "column_size": "3",
+            "title": "1: Pour",
+            "heading_tag": "h4",
+            "content": "<p>Empty your chosen Oat Cult pack into a jar or bowl. Any vessel will do—no judgment here.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_DWwNce": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new42.jpg",
+            "column_size": "3",
+            "title": "2: Fill",
+            "heading_tag": "h4",
+            "content": "<p>Add your favourite milk (yohgurt) or alternative until the oats are just covered. Stir gently to make sure every oat gets some love.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_txeTi8": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Oat_cult_icons_new43.jpg",
+            "column_size": "3",
+            "title": "3: Enjoy",
+            "heading_tag": "h4",
+            "content": "<p>Leave overnight for maximum magic—or dig in straight away if you can't wait. Heat it up if that's your thing.</p>",
+            "link_url": "#",
+            "link_text": "",
+            "link_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "item_X9kMRq",
+        "item_DWwNce",
+        "item_txeTi8"
+      ],
+      "custom_css": [
+        "img.rounded {max-width: 80px; margin: 0 auto;}"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": false,
+        "gap": "medium",
+        "text_alignment": "center",
+        "subheading": "",
+        "title": "How to awaken your oats",
+        "content": "",
+        "background": "#f0ece9",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "press_zkMDqT": {
+      "type": "press",
+      "blocks": {
+        "quote_ENr9gY": {
+          "type": "quote",
+          "settings": {
+            "logo_width": 125,
+            "author": "Founder's Mum",
+            "content": "The overnight oats from Oat Cult are a game-changer! They are delicious and so convenient to prepare. I love waking up to a nutritious and filling breakfast.",
+            "show_rating": true,
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "quote_ENr9gY"
+      ],
+      "settings": {
+        "full_width": false,
+        "content_size": "medium",
+        "background": "#f7aac1",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "logo_item_background": "",
+        "logo_item_border": ""
+      }
+    },
+    "accordion_content_iEMrHf": {
+      "type": "accordion-content",
+      "blocks": {
+        "item_h4eQ3n": {
+          "type": "item",
+          "settings": {
+            "title": "How to store?",
+            "content": "<p>To store our overnight oats, simply keep them in a cool, dry place away from direct sunlight. Once opened, make sure to seal the package tightly to maintain freshness.</p>"
+          }
+        },
+        "item_zM9jAa": {
+          "type": "item",
+          "settings": {
+            "title": "How long does it last?",
+            "content": "<p>Our overnight oats have a shelf life of 12 months from the date of production. Please refer to the packaging for the exact expiration date.</p>"
+          }
+        },
+        "item_8DHNDP": {
+          "type": "item",
+          "settings": {
+            "title": "How to prepare?",
+            "content": "<p>Preparing our overnight oats is easy. Simply add your preferred milk or dairy-free alternative to the oats, stir well, and refrigerate overnight. In the morning, give it a good mix and enjoy!</p>"
+          }
+        },
+        "item_6HqPxK": {
+          "type": "item",
+          "settings": {
+            "title": "Are they gluten-free?",
+            "content": "<p>Yes, our overnight oats are gluten-free. We use certified gluten-free oats and ensure that our production facilities maintain strict standards to prevent cross-contamination.</p>"
+          }
+        },
+        "item_NBBAh6": {
+          "type": "item",
+          "disabled": true,
+          "settings": {
+            "title": "Question 3",
+            "content": "<p>Write content to help your customers to better understand your products or policies.</p>"
+          }
+        },
+        "item_NYzUXz": {
+          "type": "item",
+          "settings": {
+            "title": "Are they vegan?",
+            "content": "<p>Absolutely! Our overnight oats are 100% vegan-friendly. We do not use any animal-derived ingredients in our products.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_h4eQ3n",
+        "item_zM9jAa",
+        "item_8DHNDP",
+        "item_6HqPxK",
+        "item_NBBAh6",
+        "item_NYzUXz"
+      ],
+      "settings": {
+        "full_width": false,
+        "subheading": "",
+        "title": "Frequently Asked Questions",
+        "content": "<p>Find answers to commonly asked questions about our product, including storage instructions, shelf life, and preparation tips.</p>",
+        "button_text": "",
+        "button_url": "",
+        "text_position": "center",
+        "background": "#f2f2f2",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "button_background": "",
+        "button_text_color": "#f2f2f2",
+        "accordion_background": "",
+        "accordion_text_color": ""
+      }
+    },
+    "rich_text_PTjc9x": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_FRANyU": {
+          "type": "heading",
+          "settings": {
+            "text": "Still have questions?",
+            "heading_tag": "h3",
+            "text_color": "",
+            "gradient": ""
+          }
+        },
+        "richtext_FwqAbc": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Contact us for further assistance.</p>"
+          }
+        },
+        "button_JQxxRA": {
+          "type": "button",
+          "settings": {
+            "style": "fill",
+            "size": "base",
+            "text": "Contact",
+            "url": "shopify://pages/contact",
+            "background": "#3c1b01",
+            "text_color": "#acdbe7"
+          }
+        }
+      },
+      "block_order": [
+        "heading_FRANyU",
+        "richtext_FwqAbc",
+        "button_JQxxRA"
+      ],
+      "custom_css": [],
+      "settings": {
+        "full_width": true,
+        "content_width": "small",
+        "text_position": "center",
+        "background": "#f7aac1",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "scrolling_text_bxqrfF": {
+      "type": "scrolling-text",
+      "settings": {
+        "full_width": true,
+        "text": "+ JOIN THE CULT +",
+        "text_size": "small",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 20,
+        "background": "#3c1b01",
+        "background_gradient": "",
+        "text_color": "#ee6a92",
+        "text_gradient": ""
+      }
     }
   },
   "order": [
-    "shop_purchase_flow"
+    "shop_purchase_flow",
+    "scroller_kQnHmf",
+    "rich_text_Rng8p6",
+    "1724929924e02be4a3",
+    "174056040910600de2",
+    "media_with_text_qG6irt",
+    "testimonials_V6xtTf",
+    "media_with_text_3LpRWg",
+    "multi_column_PW9gAL",
+    "press_zkMDqT",
+    "accordion_content_iEMrHf",
+    "rich_text_PTjc9x",
+    "scrolling_text_bxqrfF"
   ]
 }
