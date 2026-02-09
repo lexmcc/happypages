@@ -79,53 +79,13 @@
             "testimonial_quote": "Goji berries are key in this one they add so much to the flavour. Nice one.",
             "testimonial_author": "Kat"
           }
-        },
-        "gallery_image_Wig3QK": {
-          "type": "gallery_image",
-          "settings": {
-            "image": "shopify://shop_images/Oat_Cult_ALL_top_mix_9_pink_UPDATED_LORES.jpg",
-            "alt": "Product image"
-          }
-        },
-        "gallery_image_MACiXU": {
-          "type": "gallery_image",
-          "settings": {
-            "image": "shopify://shop_images/Oat_cult_packs_new7_0da71485-addb-4701-acd5-e8e8b9929aca.jpg",
-            "alt": "Product image"
-          }
-        },
-        "gallery_image_wPLV3H": {
-          "type": "gallery_image",
-          "settings": {
-            "image": "shopify://shop_images/Oat_cult_packs_new9_c4f2fe12-26bc-4988-9e6b-580df2dd65d3.jpg",
-            "alt": "Product image"
-          }
-        },
-        "gallery_image_fgzfVf": {
-          "type": "gallery_image",
-          "settings": {
-            "image": "shopify://shop_images/Oat_cult_packs_new11.jpg",
-            "alt": "Product image"
-          }
-        },
-        "gallery_image_xDFNUK": {
-          "type": "gallery_image",
-          "settings": {
-            "image": "shopify://shop_images/Oat_cult_packs_new10.jpg",
-            "alt": "Product image"
-          }
         }
       },
       "block_order": [
         "flavor_option_4k6Bpz",
         "flavor_option_G4NdW8",
         "flavor_option_yM7DEh",
-        "flavor_option_VHeVh9",
-        "gallery_image_Wig3QK",
-        "gallery_image_MACiXU",
-        "gallery_image_wPLV3H",
-        "gallery_image_fgzfVf",
-        "gallery_image_xDFNUK"
+        "flavor_option_VHeVh9"
       ],
       "settings": {
         "title": "Overnight Gut Oats",

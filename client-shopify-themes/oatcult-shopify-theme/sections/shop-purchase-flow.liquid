@@ -138,127 +138,255 @@ CRO-optimized product purchase page with:
     }
 
     .shop-purchase__header {
-      grid-column: 2;
+      grid-column: 1 / -1;
       grid-row: 1;
     }
 
-    .shop-gallery {
+    .flavor-grid-column {
       grid-column: 1;
-      grid-row: 1 / -1;  /* Span all rows */
-      position: sticky;
-      top: calc(var(--sticky-area-height) + 20px);
-      height: fit-content;  /* Critical for sticky in grid */
-      align-self: start;    /* Not stretch - sticky needs start alignment */
+      grid-row: 2;
+      align-self: start;
     }
 
     .shop-purchase {
       grid-column: 2;
       grid-row: 2;
+      position: sticky;
+      top: calc(var(--sticky-area-height) + 20px);
+      height: fit-content;
+      align-self: start;
     }
   }
 
   /* ============================================
-     GALLERY COLUMN
+     FLAVOR GRID (2×2 Card Layout)
      ============================================ */
-  .shop-gallery {
-    min-width: 0;  /* Force grid item to respect column width */
+  .flavor-grid-column {
+    min-width: 0;
   }
 
-  .shop-gallery__main {
+  .flavor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .flavor-grid__card {
     position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
     border-radius: 12px;
-    overflow: hidden;
-    background: #f5f5f5;
-  }
-
-  .shop-gallery__main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.3s ease;
-  }
-
-  .shop-gallery__nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    border: 2px solid var(--color-border-light);
+    background: var(--gradient-unselected);
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .flavor-grid__card--has-bg {
+    background-image: var(--card-bg-image, none), var(--gradient-unselected);
+    background-size: cover, auto;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+  }
+
+  .flavor-grid__card--selected {
+    background: var(--gradient-selected);
+    border-color: var(--color-pink-border);
+  }
+
+  .flavor-grid__card--has-bg.flavor-grid__card--selected {
+    background-image: var(--card-bg-image, none), var(--gradient-selected);
+    background-size: cover, auto;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+  }
+
+  .flavor-grid__card--selected:hover {
+    border-color: var(--color-pink-border);
+  }
+
+  .flavor-grid__badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .flavor-grid__badge-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  .flavor-grid__info {
+    position: absolute;
+    top: 13px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-light);
+    background: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    font-size: 14px;
+    color: var(--spf-text-muted);
+    z-index: 2;
+    transition: background var(--transition-normal);
   }
 
-  .shop-gallery__main:hover .shop-gallery__nav {
-    opacity: 1;
-  }
-
-  .shop-gallery__nav--prev { left: 12px; }
-  .shop-gallery__nav--next { right: 12px; }
-
-  .shop-gallery__nav:hover {
+  .flavor-grid__info:hover {
     background: white;
+    color: var(--spf-text-color);
   }
 
-  .shop-gallery__thumbs {
+  .flavor-grid__body {
+    flex: 1;
     display: flex;
-    gap: 8px;
-    margin-top: 12px;
+    flex-direction: column;
+    padding: var(--spacing-3);
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  .flavor-grid__name {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--spf-text-color);
+    line-height: 1.2;
+    padding-top: 10px;
+    padding-right: 32px; /* space for info icon */
+  }
+
+  .flavor-grid__image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2);
+    min-height: 0;
+  }
+
+  .flavor-grid__image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* When card has background image, hide the image wrapper */
+  .flavor-grid__card--has-bg .flavor-grid__image {
+    display: none;
+  }
+
+  .flavor-grid__card--has-bg .flavor-grid__body {
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  .flavor-grid__choose {
+    display: block;
+    width: calc(100% - var(--spacing-3) * 2);
+    margin: 0 var(--spacing-3) var(--spacing-3);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-pink-border);
+    background: var(--color-pink-dark);
+    color: white;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flavor-grid__choose:hover {
+    opacity: 0.9;
+  }
+
+  .flavor-grid__card--selected .flavor-grid__choose {
+    background: var(--color-cream);
+    color: var(--spf-text-color);
+    border-color: var(--color-border-light);
+  }
+
+  /* Mobile: slightly smaller cards */
+  @media screen and (max-width: 767px) {
+    .flavor-grid {
+      gap: 8px;
+    }
+
+    .flavor-grid__name {
+      font-size: 11px;
+    }
+
+    .flavor-grid__choose {
+      font-size: 11px;
+      padding: 6px 12px;
+      min-height: 32px;
+    }
+  }
+
+  /* ============================================
+     INFO DRAWER
+     ============================================ */
+  .flavor-drawer__gallery {
+    margin-bottom: var(--spacing-4);
+  }
+
+  .flavor-drawer__images {
+    display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    border-radius: 12px;
   }
 
-  .shop-gallery__thumbs::-webkit-scrollbar {
+  .flavor-drawer__images::-webkit-scrollbar {
     display: none;
   }
 
-  .shop-gallery__thumb {
+  .flavor-drawer__image {
     flex-shrink: 0;
-    width: 72px;
-    height: 72px;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid transparent;
-    scroll-snap-align: start;
-    transition: border-color 0.15s ease;
-  }
-
-  .shop-gallery__thumb--active {
-    border-color: var(--spf-text-color);
-  }
-
-  .shop-gallery__thumb:hover:not(.shop-gallery__thumb--active) {
-    border-color: #ccc;
-  }
-
-  .shop-gallery__thumb img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    scroll-snap-align: start;
   }
 
-  /* Mobile dots */
-  .shop-gallery__dots {
-    display: none;
+  .flavor-drawer__image img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .flavor-drawer__dots {
+    display: flex;
     justify-content: center;
     gap: 8px;
     padding: 12px 0;
   }
 
-  .shop-gallery__dot {
+  .flavor-drawer__dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -269,29 +397,72 @@ CRO-optimized product purchase page with:
     transition: background 0.15s ease;
   }
 
-  .shop-gallery__dot--active {
-    background: var(--spf-text-color);
+  .flavor-drawer__dot--active {
+    background: var(--color-pink-dark);
   }
 
-  @media screen and (max-width: 767px) {
-    .shop-gallery {
-      min-width: 0;
-      overflow: hidden;
-    }
+  .flavor-drawer__description {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--spf-text-color);
+    margin-bottom: var(--spacing-4);
+  }
 
-    .shop-gallery__main {
-      border-radius: 8px;
-      margin: 0;
-      width: 100%;
-    }
+  .flavor-drawer__quote {
+    margin-bottom: var(--spacing-6);
+  }
 
-    .shop-gallery__nav {
-      display: none;
-    }
+  .flavor-drawer__quote blockquote {
+    background: rgba(240, 94, 135, 0.08);
+    padding: var(--spacing-4);
+    border-radius: var(--spf-selector-radius);
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--spf-text-color);
+    margin: 0;
+    line-height: 1.5;
+  }
 
-    .shop-gallery__thumbs {
-      max-width: 100%;
-    }
+  .flavor-drawer__quote blockquote::before {
+    content: '\201C';
+    font-size: 2rem;
+    line-height: 0;
+    vertical-align: -0.5em;
+    color: var(--color-pink-dark);
+    margin-right: 4px;
+  }
+
+  .flavor-drawer__author {
+    display: block;
+    text-align: right;
+    font-size: var(--text-xs);
+    color: var(--spf-text-muted);
+    margin-top: var(--spacing-2);
+  }
+
+  .flavor-drawer__cta {
+    width: 100%;
+    padding: var(--spacing-4);
+    border-radius: 9999px;
+    border: 2px solid var(--color-pink-border);
+    background: var(--color-pink-dark);
+    color: white;
+    font-size: var(--text-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: var(--spacing-4);
+  }
+
+  .flavor-drawer__cta:hover {
+    opacity: 0.9;
+  }
+
+  .flavor-drawer__cta--remove {
+    background: var(--color-cream);
+    color: var(--spf-text-color);
+    border-color: var(--color-border-light);
   }
 
   /* Benefits badges */
@@ -1265,313 +1436,9 @@ CRO-optimized product purchase page with:
     margin-top: var(--spacing-2);
   }
 
-  /* ============================================
-     FLAVOR TABS (New Design)
-     ============================================ */
-  .flavor-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: var(--spacing-4);
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-  }
+  /* (Flavor tabs + description + carousel removed — replaced by 2×2 grid + drawer) */
 
-  .flavor-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .flavor-tab {
-    flex-shrink: 0;
-    padding: 10px 20px;
-    border-radius: 9999px;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    border: 1px solid var(--color-border-light);
-    background: white;
-    color: var(--spf-text-color);
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .flavor-tab:hover {
-    border-color: var(--spf-text-color);
-  }
-
-  .flavor-tab--active {
-    background: #3C1B04;
-    color: #FFFFFF;
-    border-color: #3C1B04;
-  }
-
-  .flavor-tab--active:hover {
-    background: #3C1B04;
-  }
-
-  /* ============================================
-     FLAVOR DESCRIPTION BLOCK (New Design)
-     ============================================ */
-  .flavor-description {
-    margin-bottom: var(--spacing-6);
-  }
-
-  .flavor-description__text {
-    font-size: var(--text-base);
-    line-height: 1.6;
-    color: var(--spf-text-color);
-    margin: 0 0 var(--spacing-4) 0;
-  }
-
-  .flavor-quote {
-    /* Container only - white box styling moved to __text */
-  }
-
-  .flavor-quote__text {
-    background: white;
-    padding: var(--spacing-4);
-    border-radius: var(--spf-selector-radius);
-    font-size: var(--text-sm);
-    font-style: italic;
-    color: var(--spf-text-color);
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  .flavor-quote__text::before {
-    content: '"';
-  }
-
-  .flavor-quote__text::after {
-    content: '"';
-  }
-
-  .flavor-quote__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--spacing-2);
-    font-size: var(--text-xs);
-    color: var(--spf-text-muted);
-    padding-top: var(--spacing-2);
-  }
-
-  .flavor-quote__stars {
-    color: var(--spf-star-color);
-    letter-spacing: 1px;
-  }
-
-  .flavor-quote__stars-image {
-    height: 14px;
-    width: auto;
-  }
-
-  /* ============================================
-     FLAVOR CAROUSEL (New Design)
-     ============================================ */
-  .flavor-carousel {
-    position: relative;
-    margin-bottom: var(--spacing-2);
-  }
-
-  .flavor-carousel__wrapper {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 4px;
-    margin: -4px;
-  }
-
-  .flavor-carousel__wrapper::-webkit-scrollbar {
-    display: none;
-  }
-
-  .flavor-carousel__card {
-    flex-shrink: 0;
-    width: calc(33.333% - 8px); /* Match size cards: 3 per row */
-    aspect-ratio: 3 / 4;
-    border-radius: var(--spf-selector-radius);
-    border: 1px solid var(--color-border-light);
-    background: var(--gradient-unselected);
-    cursor: pointer;
-    transition: transform var(--transition-normal), border-color var(--transition-normal);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    scroll-snap-align: start;
-    background-image: var(--card-bg-image, none), var(--gradient-unselected);
-    background-size: cover, auto;
-    background-position: center, center;
-    background-repeat: no-repeat, no-repeat;
-  }
-
-  .flavor-carousel__card:hover {
-    z-index: var(--z-card-hover);
-  }
-
-  .flavor-carousel__card--selected {
-    background-image: var(--card-bg-image, none), var(--gradient-selected);
-    border-color: var(--color-pink-border);
-  }
-
-  .flavor-carousel__card--selected:hover {
-    border-color: var(--color-pink-border);
-  }
-
-  .flavor-carousel__badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    background: var(--badge-bg, #fbbf24);
-    color: var(--badge-text, #000000);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .flavor-carousel__badge-icon {
-    width: 12px;
-    height: 12px;
-    object-fit: contain;
-  }
-
-  /* Image wrapper - hidden when using background image */
-  .flavor-carousel__image {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-3);
-  }
-
-  .flavor-carousel__image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
-  /* When card has background image, hide the image wrapper */
-  .flavor-carousel__card--has-bg .flavor-carousel__image {
-    display: none;
-  }
-
-  .flavor-carousel__card--has-bg {
-    justify-content: flex-end;
-  }
-
-  .flavor-carousel__footer {
-    padding: var(--spacing-2) var(--spacing-3);
-    text-align: center;
-  }
-
-  .flavor-carousel__name {
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--spf-text-color);
-    margin-bottom: 2px;
-  }
-
-  .flavor-carousel__card--selected .flavor-carousel__name {
-    color: var(--spf-text-color); /* Stay dark */
-  }
-
-  .flavor-carousel__label {
-    font-size: 10px;
-    color: var(--spf-text-muted);
-    text-transform: uppercase;
-  }
-
-  .flavor-carousel__card--selected .flavor-carousel__label {
-    color: #BD376B; /* Pink selected label */
-  }
-
-  /* Carousel navigation - below carousel, right-aligned */
-  .flavor-carousel__nav {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: var(--spacing-3);
-  }
-
-  .flavor-carousel__arrow {
-    position: static;
-    transform: none;
-    width: 40px;
-    height: 40px;
-    min-width: 44px;
-    min-height: 44px;
-    border-radius: 8px;
-    background: var(--gradient-unselected);
-    border: 1px solid var(--color-border-light);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity var(--transition-normal);
-  }
-
-  .flavor-carousel__arrow:hover {
-    opacity: 0.9;
-  }
-
-  .flavor-carousel__arrow svg {
-    width: 20px;
-    height: 20px;
-    color: var(--color-chevron);
-  }
-
-  /* Mobile: hide arrows (users swipe instead) */
-  @media screen and (max-width: 999px) {
-    .flavor-carousel__nav {
-      display: none;
-    }
-
-    .flavor-carousel__card {
-      width: 160px;
-      min-width: 160px;
-    }
-
-    /* Extend carousel to viewport edge on mobile */
-    .flavor-carousel {
-      margin-right: calc(-1 * var(--spacing-5));
-    }
-
-    .flavor-carousel__wrapper {
-      padding-right: var(--spacing-5);
-    }
-  }
-
-  /* Desktop: extend carousel past container to viewport edge */
-  @media screen and (min-width: 1000px) {
-    .flavor-carousel {
-      margin-right: calc(-1 * (100vw - 1200px) / 2);
-    }
-
-    .flavor-carousel__wrapper {
-      padding-right: calc((100vw - 1200px) / 2);
-    }
-
-    .flavor-carousel__nav {
-      margin-right: calc((100vw - 1200px) / 2);
-    }
-  }
+  /* (Flavor carousel CSS removed — replaced by 2×2 grid above) */
 
   /* ============================================
      BOX SIZE CARDS (New Design)
@@ -2086,7 +1953,7 @@ CRO-optimized product purchase page with:
   /* Savings callout - positioned pill */
   .sub-section__savings-wrapper {
     position: relative;
-    padding: 0 var(--spacing-4) var(--spacing-4);
+    padding: 0 var(--spacing-4) var(--spacing-14);
   }
 
   .sub-section__savings {
@@ -2104,13 +1971,13 @@ CRO-optimized product purchase page with:
      ONE-TIME PURCHASE OPTION
      ============================================ */
   .onetime-option {
+    display: none;
     padding: var(--spacing-4);
     border-radius: var(--spf-selector-radius);
     border: 1px solid var(--color-border-light);
     background: var(--gradient-unselected);
     cursor: pointer;
     transition: border-color var(--transition-normal);
-    display: flex;
     justify-content: space-between;
     align-items: center;
     min-height: 44px;
@@ -2283,262 +2150,86 @@ CRO-optimized product purchase page with:
       </div>
     </div>
 
-    <!-- GALLERY COLUMN -->
-    <div class="shop-gallery">
-      <!-- Main Image -->
-      <div class="shop-gallery__main" @touchstart="touchStart($event)" @touchend="touchEnd($event)">
-        <template x-for="(image, index) in currentImages" :key="image.id">
-          <img
-            :src="image.src"
-            :alt="image.alt"
-            class="shop-gallery__main-image"
-            x-show="currentImageIndex === index"
-            x-transition.opacity.duration.300ms
-            style="position: absolute; top: 0; left: 0;"
-          >
-        </template>
-
-        <button
-          class="shop-gallery__nav shop-gallery__nav--prev"
-          @click="prevImage()"
-          x-show="currentImages.length > 1"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-        <button
-          class="shop-gallery__nav shop-gallery__nav--next"
-          @click="nextImage()"
-          x-show="currentImages.length > 1"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Thumbnail Strip (Desktop) -->
-      <div class="shop-gallery__thumbs" x-ref="galleryThumbs">
-        <template x-for="(image, index) in currentImages" :key="image.id">
-          <button
-            class="shop-gallery__thumb"
-            :class="{ 'shop-gallery__thumb--active': currentImageIndex === index }"
-            @click="selectImage(index)"
-          >
-            <img :src="image.thumb" :alt="image.alt">
-          </button>
-        </template>
-      </div>
-
-      <!-- Dot Indicators (Mobile) -->
-      <div class="shop-gallery__dots">
-        <template x-for="(image, index) in currentImages" :key="'dot-' + image.id">
-          <button
-            class="shop-gallery__dot"
-            :class="{ 'shop-gallery__dot--active': currentImageIndex === index }"
-            @click="selectImage(index)"
-          ></button>
-        </template>
-      </div>
-    </div>
-
-    <!-- PURCHASE COLUMN -->
-    <div class="shop-purchase">
-      <!-- FLAVOR TABS (New Design) -->
-      <div class="flavor-selection">
-        <div class="flavor-tabs" role="tablist">
-          {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
-          {%- if flavor_blocks.size > 0 -%}
-            {%- comment -%} Only render tabs for non-bundle flavors (individual flavors) {%- endcomment -%}
-            {%- for block in flavor_blocks -%}
-              {%- unless block.settings.is_bundle -%}
-                {%- assign flavor_product = block.settings.product -%}
-                {%- if flavor_product != blank -%}
-                  {%- assign flavor_name = block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                  <button
-                    class="flavor-tab"
-                    :class="{ 'flavor-tab--active': activeFlavorTab === {{ flavor_product.id }} }"
-                    :style="activeFlavorTab === {{ flavor_product.id }} ? 'background: {{ block.settings.pill_selected_bg | default: '#3C1B04' }}; color: {{ block.settings.pill_selected_text | default: '#FFFFFF' }}; border-color: {{ block.settings.pill_selected_border | default: '#3C1B04' }};' : ''"
-                    @click="setFlavorTab({{ flavor_product.id }})"
-                    role="tab"
-                    :aria-selected="activeFlavorTab === {{ flavor_product.id }}"
-                    {{ block.shopify_attributes }}
+    <!-- FLAVOR GRID COLUMN (Left) -->
+    <div class="flavor-grid-column">
+      <p class="shop-purchase__section-title">{{ section.settings.flavors_title | default: 'Choose your cults' }}</p>
+      {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
+      <div class="flavor-grid" role="listbox" aria-label="Flavor options">
+        {%- if flavor_blocks.size > 0 -%}
+          {%- for block in flavor_blocks -%}
+            {%- assign block_product = block.settings.product -%}
+            {%- if block_product != blank -%}
+              {%- assign display_name = block.settings.name_override | default: block_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+              {%- assign card_bg = block.settings.card_background -%}
+              {%- assign card_image = block.settings.card_image -%}
+              {%- assign is_bundle = block.settings.is_bundle -%}
+              <div
+                class="flavor-grid__card{% if card_bg != blank %} flavor-grid__card--has-bg{% endif %}"
+                :class="{
+                  'flavor-grid__card--selected': {% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}
+                }"
+                {%- if card_bg != blank %}
+                style="--card-bg-image: url('{{ card_bg | image_url: width: 600 }}')"
+                {%- endif %}
+                {{ block.shopify_attributes }}
+              >
+                {%- comment -%} Badge (optional, half-off top edge) {%- endcomment -%}
+                {%- if block.settings.show_badge and section.settings.bestseller_badge_text != blank -%}
+                  <span
+                    class="flavor-grid__badge"
+                    style="background: {{ section.settings.bestseller_badge_bg | default: '#fbbf24' }}; color: {{ section.settings.bestseller_badge_text_color | default: '#000000' }};"
                   >
-                    {{ flavor_name }}
-                  </button>
+                    {%- if section.settings.bestseller_badge_icon != blank -%}
+                      <img class="flavor-grid__badge-icon" src="{{ section.settings.bestseller_badge_icon | image_url: width: 24 }}" alt="">
+                    {%- endif -%}
+                    {{ section.settings.bestseller_badge_text }}
+                  </span>
                 {%- endif -%}
-              {%- endunless -%}
-            {%- endfor -%}
-          {%- else -%}
-            {%- comment -%} Fallback: render tabs from collection {%- endcomment -%}
-            {%- for product in collections['breakfast'].products limit: 4 -%}
-              {%- unless product.title contains 'Mixed' -%}
-                {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+
+                {%- comment -%} Info icon (opens drawer) {%- endcomment -%}
                 <button
-                  class="flavor-tab"
-                  :class="{ 'flavor-tab--active': activeFlavorTab === {{ product.id }} }"
-                  @click="setFlavorTab({{ product.id }})"
-                  role="tab"
-                  :aria-selected="activeFlavorTab === {{ product.id }}"
+                  class="flavor-grid__info"
+                  @click.stop="openDrawer({{ block_product.id }}, {{ is_bundle }})"
+                  aria-label="More info about {{ display_name }}"
                 >
-                  {{ flavor_name }}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 </button>
-              {%- endunless -%}
-            {%- endfor -%}
-          {%- endif -%}
-        </div>
 
-        <!-- Flavor Description Block -->
-        <div class="flavor-description">
-          <p class="flavor-description__text" x-text="getFlavorDescription(activeFlavorTab)"></p>
-          <div class="flavor-quote" x-show="getFlavorTestimonial(activeFlavorTab).quote">
-            <p class="flavor-quote__text" x-text="getFlavorTestimonial(activeFlavorTab).quote"></p>
-            <div class="flavor-quote__footer">
-              {%- if section.settings.rating_image != blank -%}
-                <img class="flavor-quote__stars-image" src="{{ section.settings.rating_image | image_url: width: 100 }}" alt="5 stars" height="14">
-              {%- else -%}
-                <span class="flavor-quote__stars">★★★★★</span>
-              {%- endif -%}
-              <span x-text="getFlavorTestimonial(activeFlavorTab).author + ', verified buyer'"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="shop-purchase__divider">
-
-      <!-- FLAVOR CAROUSEL (New Design) -->
-      <div>
-        <p class="shop-purchase__section-title">{{ section.settings.flavors_title | default: 'Choose your flavours' }}</p>
-        <div class="flavor-carousel">
-          <div class="flavor-carousel__wrapper" x-ref="flavorCarousel">
-            {%- comment -%} Render all flavor_option blocks uniformly {%- endcomment -%}
-            {%- if flavor_blocks.size > 0 -%}
-              {%- for block in flavor_blocks -%}
-                {%- assign block_product = block.settings.product -%}
-                {%- if block_product != blank -%}
-                  {%- assign display_name = block.settings.name_override | default: block_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                  {%- assign card_bg = block.settings.card_background -%}
-                  {%- assign card_image = block.settings.card_image -%}
-                  {%- assign is_bundle = block.settings.is_bundle -%}
-                  {%- assign subtitle = block.settings.subtitle -%}
-                  <div
-                    class="flavor-carousel__card{% if card_bg != blank %} flavor-carousel__card--has-bg{% endif %}"
-                    :class="{
-                      'flavor-carousel__card--selected': {% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}
-                    }"
-                    @click="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
-                    @keydown.enter="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
-                    @keydown.space.prevent="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
-                    tabindex="0"
-                    role="option"
-                    :aria-selected="{% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}"
-                    {{ block.shopify_attributes }}
-                    {%- if card_bg != blank %}
-                    style="--card-bg-image: url('{{ card_bg | image_url: width: 600 }}')"
-                    {%- endif %}
-                  >
-                    {%- if block.settings.show_badge and section.settings.bestseller_badge_text != blank -%}
-                      <span
-                        class="flavor-carousel__badge"
-                        style="--badge-bg: {{ section.settings.bestseller_badge_bg | default: '#fbbf24' }}; --badge-text: {{ section.settings.bestseller_badge_text_color | default: '#000000' }};"
-                      >
-                        {%- if section.settings.bestseller_badge_icon != blank -%}
-                          <img
-                            class="flavor-carousel__badge-icon"
-                            src="{{ section.settings.bestseller_badge_icon | image_url: width: 24 }}"
-                            alt=""
-                          >
-                        {%- endif -%}
-                        {{ section.settings.bestseller_badge_text }}
-                      </span>
-                    {%- endif -%}
-                    <div class="flavor-carousel__image">
-                      {%- if card_image != blank -%}
-                        <img src="{{ card_image | image_url: width: 300 }}" alt="{{ display_name }}" loading="lazy">
-                      {%- elsif block_product.featured_image != blank -%}
-                        <img src="{{ block_product.featured_image | image_url: width: 300 }}" alt="{{ display_name }}" loading="lazy">
-                      {%- endif -%}
-                    </div>
-                    <div class="flavor-carousel__footer">
-                      <div class="flavor-carousel__name">{{ display_name }}</div>
-                      {%- if is_bundle -%}
-                        <div class="flavor-carousel__label" x-text="selectedBundle === {{ block_product.id }} ? 'Selected' : '{{ subtitle | default: '' }}'"></div>
-                      {%- else -%}
-                        <div class="flavor-carousel__label" x-text="selectedFlavors.includes({{ block_product.id }}) ? 'Selected' : '{{ subtitle | default: '' }}'"></div>
-                      {%- endif -%}
-                    </div>
-                  </div>
-                {%- endif -%}
-              {%- endfor -%}
-            {%- else -%}
-              {%- comment -%} Fallback: render from collection if no blocks configured {%- endcomment -%}
-              {%- for product in collections['breakfast'].products limit: 4 -%}
-                {%- assign flavor_name = product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
-                {%- assign is_mixed = false -%}
-                {%- if product.title contains 'Mixed' -%}
-                  {%- assign is_mixed = true -%}
-                {%- endif -%}
-                <div
-                  class="flavor-carousel__card"
-                  :class="{
-                    'flavor-carousel__card--selected': {% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}
-                  }"
-                  @click="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
-                  @keydown.enter="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
-                  @keydown.space.prevent="selectOption({{ product.id }}, {{ is_mixed }}, $event)"
-                  tabindex="0"
-                  role="option"
-                  :aria-selected="{% if is_mixed %}selectedBundle === {{ product.id }}{% else %}selectedFlavors.includes({{ product.id }}){% endif %}"
-                >
-                  <div class="flavor-carousel__image">
-                    {%- if product.featured_image != blank -%}
-                      <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ flavor_name }}" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                  <div class="flavor-carousel__footer">
-                    <div class="flavor-carousel__name">{{ flavor_name }}</div>
-                    {%- if is_mixed -%}
-                      <div class="flavor-carousel__label" x-text="selectedBundle === {{ product.id }} ? 'Selected' : 'All 3'"></div>
-                    {%- else -%}
-                      <div class="flavor-carousel__label" x-text="selectedFlavors.includes({{ product.id }}) ? 'Selected' : ''"></div>
+                {%- comment -%} Card body (tap opens drawer) {%- endcomment -%}
+                <div class="flavor-grid__body" @click="openDrawer({{ block_product.id }}, {{ is_bundle }})">
+                  <div class="flavor-grid__name">{{ display_name }}</div>
+                  <div class="flavor-grid__image">
+                    {%- if card_image != blank -%}
+                      <img src="{{ card_image | image_url: width: 400 }}" alt="{{ display_name }}" loading="lazy">
+                    {%- elsif block_product.featured_image != blank -%}
+                      <img src="{{ block_product.featured_image | image_url: width: 400 }}" alt="{{ display_name }}" loading="lazy">
                     {%- endif -%}
                   </div>
                 </div>
-              {%- endfor -%}
+
+                {%- comment -%} Choose/Chosen button (tap selects) {%- endcomment -%}
+                <button
+                  class="flavor-grid__choose"
+                  @click.stop="selectOption({{ block_product.id }}, {{ is_bundle }}, $event)"
+                  role="option"
+                  :aria-selected="{% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %}"
+                >
+                  <span x-text="{% if is_bundle %}selectedBundle === {{ block_product.id }}{% else %}selectedFlavors.includes({{ block_product.id }}){% endif %} ? 'Chosen' : 'Choose'"></span>
+                </button>
+              </div>
             {%- endif -%}
-          </div>
-
-          <div class="flavor-carousel__nav">
-            <button
-              class="flavor-carousel__arrow"
-              @click="scrollCarousel('prev')"
-              aria-label="Previous flavor"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <button
-              class="flavor-carousel__arrow"
-              @click="scrollCarousel('next')"
-              aria-label="Next flavor"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Error message -->
-        <div class="flavor-error" x-show="selectedBundle === null && selectedFlavors.length === 0" x-cloak>
-          Please select at least one flavor
-        </div>
+          {%- endfor -%}
+        {%- endif -%}
       </div>
 
-      <hr class="shop-purchase__divider">
+      <!-- Error message -->
+      <div class="flavor-error" x-show="selectedBundle === null && selectedFlavors.length === 0" x-cloak>
+        Please select at least one flavor
+      </div>
+    </div>
+
+    <!-- PURCHASE COLUMN (Right, sticky on desktop) -->
+    <div class="shop-purchase">
 
       <!-- SIZE CARDS (New Design) -->
       <div>
@@ -2801,6 +2492,43 @@ CRO-optimized product purchase page with:
     </div>
   </div>
 
+  <!-- INFO DRAWER (single drawer, content swapped via Alpine) -->
+  <x-drawer id="flavor-info-drawer" class="drawer drawer--lg">
+    <span class="h5" slot="header" x-text="drawerFlavorName"></span>
+
+    <!-- Gallery -->
+    <div class="flavor-drawer__gallery" x-show="drawerImages.length > 0">
+      <div class="flavor-drawer__images" x-ref="drawerGallery">
+        <template x-for="(img, i) in drawerImages" :key="'dimg-'+i">
+          <div class="flavor-drawer__image">
+            <img :src="img.src" :alt="img.alt" loading="lazy">
+          </div>
+        </template>
+      </div>
+      <div class="flavor-drawer__dots" x-show="drawerImages.length > 1">
+        <template x-for="(img, i) in drawerImages" :key="'ddot-'+i">
+          <button
+            class="flavor-drawer__dot"
+            :class="{ 'flavor-drawer__dot--active': drawerImageIndex === i }"
+            @click="scrollDrawerTo(i)"
+          ></button>
+        </template>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="flavor-drawer__description" x-text="drawerDescription"></div>
+
+    <!-- Testimonial -->
+    <div class="flavor-drawer__quote" x-show="drawerQuote">
+      <blockquote>
+        <p x-text="drawerQuote"></p>
+      </blockquote>
+      <span class="flavor-drawer__author" x-text="drawerAuthor + ', verified buyer'"></span>
+    </div>
+
+  </x-drawer>
+
   <!-- Mobile Sticky CTA -->
   <div class="sticky-cta" x-cloak x-show="stickyCtaVisible"
     x-transition:enter="transition ease-out duration-200"
@@ -2945,17 +2673,22 @@ CRO-optimized product purchase page with:
           {%- endfor -%}
         {%- endif -%}
       ],
-      firstFlavorId: {%- for block in flavor_blocks -%}{%- unless block.settings.is_bundle -%}{%- if block.settings.product != blank -%}{{ block.settings.product.id }}{%- break -%}{%- endif -%}{%- endunless -%}{%- endfor -%},
       selectedSize: 18, // 9, 18, or 27 packs
       subscribe: true,
-      currentImageIndex: 0,
       discountPercent: 20, // Default, will be set from first variant with selling plan
       pickOwnExpanded: false, // Manual toggle for Pick Your Own dropdown
       stickyCtaVisible: false, // Mobile sticky CTA visibility (shown after scrolling to sub-section)
-
-      // NEW STATE for redesign
-      activeFlavorTab: null, // Product ID of active tab (for preview/description)
       selectedFrequency: null, // Selling plan ID (default to 4-week plan)
+
+      // Drawer state
+      drawerProductId: null,
+      drawerIsBundle: false,
+      drawerFlavorName: '',
+      drawerDescription: '',
+      drawerQuote: '',
+      drawerAuthor: '',
+      drawerImages: [],
+      drawerImageIndex: 0,
 
       // Flavor data with descriptions and testimonials (from Liquid)
       flavorData: {
@@ -2967,6 +2700,7 @@ CRO-optimized product purchase page with:
             {%- unless flavor_data_first -%},{%- endunless -%}
             {%- assign flavor_data_first = false -%}
             {{ flavor_product.id }}: {
+              displayName: {{ block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | upcase | json }},
               description: {{ block.settings.description | default: flavor_product.description | strip_html | truncate: 300 | json }},
               testimonialQuote: {{ block.settings.testimonial_quote | default: '' | json }},
               testimonialAuthor: {{ block.settings.testimonial_author | default: 'Customer' | json }}
@@ -3003,33 +2737,6 @@ CRO-optimized product purchase page with:
         {%- endfor -%}
       ],
 
-      // Gallery images from all individual flavor products (not bundles)
-      galleryImages: [
-        {%- assign gallery_first = true -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'flavor_option' and block.settings.is_bundle != true -%}
-            {%- assign flavor_product = block.settings.product -%}
-            {%- if flavor_product != blank -%}
-              {%- for image in flavor_product.images -%}
-                {%- unless gallery_first -%},{%- endunless -%}
-                {%- assign gallery_first = false -%}
-                {
-                  id: 'gallery-{{ flavor_product.id }}-{{ forloop.index }}',
-                  src: {{ image | image_url: width: 800 | json }},
-                  thumb: {{ image | image_url: width: 150 | json }},
-                  alt: {{ image.alt | default: flavor_product.title | json }},
-                  flavorId: {{ flavor_product.id }}
-                }
-              {%- endfor -%}
-            {%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-      ],
-
-      // Touch tracking for swipe
-      touchStartX: 0,
-      touchEndX: 0,
-
       // Computed
       get mixedBoxProduct() {
         return Object.values(this.products).find(p => p.isMixed);
@@ -3037,10 +2744,6 @@ CRO-optimized product purchase page with:
 
       get individualProducts() {
         return Object.values(this.products).filter(p => !p.isMixed);
-      },
-
-      get currentImages() {
-        return this.galleryImages;
       },
 
       get effectiveFlavorCount() {
@@ -3087,13 +2790,6 @@ CRO-optimized product purchase page with:
             }
           }
           if (this.discountPercent !== 20) break;
-        }
-
-        // Set default active flavor tab (first non-bundle block in visual order)
-        if (this.firstFlavorId) {
-          this.activeFlavorTab = this.firstFlavorId;
-        } else if (this.individualProducts[0]) {
-          this.activeFlavorTab = this.individualProducts[0].id;
         }
 
         // Set default frequency (prefer 4 weeks, or first available)
@@ -3148,54 +2844,113 @@ CRO-optimized product purchase page with:
             }, { threshold: 0.5 });
             observer.observe(subSection);
           }
+
+        }
+
+        // Keep drawer inside Alpine scope so reactive bindings survive show/hide
+        const drawer = document.getElementById('flavor-info-drawer');
+        if (drawer) {
+          Object.defineProperty(drawer, 'shouldAppendToBody', { get: () => false });
         }
       },
 
-      // Set active flavor tab (for preview/description, doesn't affect selection)
-      // Also scrolls gallery to that flavor's first image
-      setFlavorTab(productId) {
-        this.activeFlavorTab = productId;
+      // Open the info drawer for a flavor
+      openDrawer(productId, isBundle) {
+        this.drawerProductId = productId;
+        this.drawerIsBundle = isBundle;
 
-        // Scroll the active tab into view (for mobile horizontal scroll)
-        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
+        const product = this.products[productId];
+        if (!product) return;
+
+        // Populate drawer content
+        const data = this.flavorData[productId];
+        this.drawerFlavorName = (data && data.displayName) || product.title.replace('Overnight Gut Oats |', '').trim().toUpperCase();
+        this.drawerDescription = this.getFlavorDescription(productId);
+
+        const testimonial = this.getFlavorTestimonial(productId);
+        this.drawerQuote = testimonial.quote;
+        this.drawerAuthor = testimonial.author;
+
+        // Populate gallery from product images
+        this.drawerImages = product.images.map((img, i) => ({
+          src: img.src,
+          alt: img.alt,
+          id: i
+        }));
+        this.drawerImageIndex = 0;
+
+        // Open the drawer
+        const drawer = document.getElementById('flavor-info-drawer');
+        if (drawer && drawer.show) {
+          drawer.show();
+        }
+
+        // Sync carousel dots with manual scroll/swipe
         this.$nextTick(() => {
-          const activeTab = document.querySelector('.flavor-tab--active');
-          if (activeTab) {
-            const container = activeTab.closest('.flavor-tabs');
-            if (container) {
-              const scrollLeft = activeTab.offsetLeft - (container.offsetWidth / 2) + (activeTab.offsetWidth / 2);
-              container.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
+          const gallery = this.$refs.drawerGallery;
+          if (gallery && !gallery._dotObserver) {
+            gallery._dotObserver = new IntersectionObserver((entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  const images = gallery.querySelectorAll('.flavor-drawer__image');
+                  const idx = Array.from(images).indexOf(entry.target);
+                  if (idx >= 0) this.drawerImageIndex = idx;
+                }
+              }
+            }, { root: gallery, threshold: 0.5 });
+
+            this.$nextTick(() => {
+              gallery.querySelectorAll('.flavor-drawer__image').forEach(img => {
+                gallery._dotObserver.observe(img);
+              });
+            });
+          } else if (gallery && gallery._dotObserver) {
+            // Re-observe new images when drawer opens for a different product
+            gallery._dotObserver.disconnect();
+            this.$nextTick(() => {
+              gallery.querySelectorAll('.flavor-drawer__image').forEach(img => {
+                gallery._dotObserver.observe(img);
+              });
+            });
+          }
+        });
+      },
+
+      // Scroll drawer gallery to a specific image
+      scrollDrawerTo(index) {
+        this.drawerImageIndex = index;
+        const gallery = this.$refs.drawerGallery;
+        if (gallery) {
+          const imageEl = gallery.querySelectorAll('.flavor-drawer__image')[index];
+          if (imageEl) {
+            gallery.scrollTo({ left: imageEl.offsetLeft, behavior: 'smooth' });
+          }
+        }
+      },
+
+      // Check if the flavor currently shown in the drawer is selected
+      isDrawerFlavorSelected() {
+        if (!this.drawerProductId) return false;
+        if (this.drawerIsBundle) {
+          return this.selectedBundle === this.drawerProductId;
+        }
+        return this.selectedFlavors.includes(this.drawerProductId);
+      },
+
+      // Toggle selection from within the drawer
+      toggleFromDrawer() {
+        if (!this.drawerProductId) return;
+        this.selectOption(this.drawerProductId, this.drawerIsBundle);
+
+        // Auto-close drawer on mobile after selecting
+        if (window.innerWidth <= 999) {
+          setTimeout(() => {
+            const drawer = document.getElementById('flavor-info-drawer');
+            if (drawer && drawer.hide) {
+              drawer.hide();
             }
-          }
-        });
-
-        // Scroll gallery to this flavor's first image
-        const index = this.getFlavorImageIndex(productId);
-        if (index >= 0) {
-          this.scrollToImage(index);
+          }, 300);
         }
-      },
-
-      // Find the index of the first gallery image belonging to a flavor
-      getFlavorImageIndex(flavorId) {
-        return this.galleryImages.findIndex(img => img.flavorId === flavorId);
-      },
-
-      // Scroll gallery to a specific image index with smooth scroll
-      scrollToImage(index) {
-        this.currentImageIndex = index;
-
-        // Also scroll thumbnail strip to show this image
-        // Query by active class instead of children index (unreliable with Alpine's x-for)
-        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
-        this.$nextTick(() => {
-          const thumbs = this.$refs.galleryThumbs;
-          const activeThumb = thumbs?.querySelector('.shop-gallery__thumb--active');
-          if (activeThumb && thumbs) {
-            const scrollLeft = activeThumb.offsetLeft - (thumbs.offsetWidth / 2) + (activeThumb.offsetWidth / 2);
-            thumbs.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
-          }
-        });
       },
 
       // Get flavor description from data (with fallback)
@@ -3228,22 +2983,6 @@ CRO-optimized product purchase page with:
         return this.getTotalPrice(this.subscribe) >= 4000; // £40 in pence
       },
 
-      // Scroll the flavor carousel
-      scrollCarousel(direction) {
-        const carousel = this.$refs.flavorCarousel;
-        if (!carousel) return;
-
-        const cardWidth = carousel.querySelector('.flavor-carousel__card')?.offsetWidth || 150;
-        const gap = 12;
-        const scrollAmount = cardWidth + gap;
-
-        if (direction === 'next') {
-          carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        } else {
-          carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-        }
-      },
-
       // Select a flavor option (handles both bundles and individual flavors)
       selectOption(productId, isBundle, event) {
         if (isBundle) {
@@ -3256,19 +2995,6 @@ CRO-optimized product purchase page with:
           this.toggleFlavor(productId);
         }
         this.pickOwnExpanded = false;
-
-        // Scroll clicked card into view (for mobile horizontal carousel)
-        // Use scrollTo on container instead of scrollIntoView to avoid scrolling the entire page
-        if (event && event.currentTarget) {
-          const card = event.currentTarget;
-          this.$nextTick(() => {
-            const wrapper = card.closest('.flavor-carousel__wrapper');
-            if (wrapper) {
-              const scrollLeft = card.offsetLeft - (wrapper.offsetWidth / 2) + (card.offsetWidth / 2);
-              wrapper.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
-            }
-          });
-        }
       },
 
       // Legacy method for backwards compatibility
@@ -3340,31 +3066,10 @@ CRO-optimized product purchase page with:
       },
 
       getSizeComparePrice(packSize) {
-        // Returns compare_at_price for size card display (for strikethrough)
-        // Only returns value if there's a compare_at_price set in Shopify
-        if (this.selectedBundle !== null) {
-          const variant = this.getVariantForSize(this.selectedBundle, packSize);
-          return variant?.compareAtPrice || 0;
-        }
-
-        if (this.selectedFlavors.length === 0) {
-          const product = this.individualProducts[0];
-          const variant = this.getVariantForSize(product?.id, packSize);
-          return variant?.compareAtPrice || 0;
-        }
-
-        let total = 0;
-        let hasComparePrice = false;
-        for (const productId of this.selectedFlavors) {
-          const variant = this.getVariantForSize(productId, packSize);
-          if (variant?.compareAtPrice > 0) {
-            total += variant.compareAtPrice;
-            hasComparePrice = true;
-          } else if (variant) {
-            total += variant.price;
-          }
-        }
-        return hasComparePrice ? total : 0;
+        if (!this.subscribe) return 0;
+        const oneOffPrice = this.getPrice(packSize);
+        const subPrice = this.getSizePrice(packSize);
+        return oneOffPrice > subPrice ? oneOffPrice : 0;
       },
 
       getTotalPrice(withSubscription) {
@@ -3494,38 +3199,6 @@ CRO-optimized product purchase page with:
         }
       },
 
-      // Image gallery
-      nextImage() {
-        this.currentImageIndex = (this.currentImageIndex + 1) % this.currentImages.length;
-      },
-
-      prevImage() {
-        this.currentImageIndex = (this.currentImageIndex - 1 + this.currentImages.length) % this.currentImages.length;
-      },
-
-      selectImage(index) {
-        this.scrollToImage(index);
-      },
-
-      touchStart(event) {
-        this.touchStartX = event.changedTouches[0].screenX;
-      },
-
-      touchEnd(event) {
-        this.touchEndX = event.changedTouches[0].screenX;
-        this.handleSwipe();
-      },
-
-      handleSwipe() {
-        const diff = this.touchStartX - this.touchEndX;
-        if (Math.abs(diff) > 50) {
-          if (diff > 0) {
-            this.nextImage();
-          } else {
-            this.prevImage();
-          }
-        }
-      }
     };
   }
 </script>
@@ -3563,14 +3236,6 @@ CRO-optimized product purchase page with:
       "id": "rating_image",
       "label": "Rating stars image",
       "info": "Upload a custom stars image (e.g., pink stars)"
-    },
-    {
-      "type": "header",
-      "content": "Gallery"
-    },
-    {
-      "type": "paragraph",
-      "content": "Add gallery images using the blocks below"
     },
     {
       "type": "header",
@@ -3945,23 +3610,6 @@ CRO-optimized product purchase page with:
           "type": "text",
           "id": "testimonial_author",
           "label": "Author"
-        }
-      ]
-    },
-    {
-      "type": "gallery_image",
-      "name": "Gallery Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "alt",
-          "label": "Alt text",
-          "default": "Product image"
         }
       ]
     }
