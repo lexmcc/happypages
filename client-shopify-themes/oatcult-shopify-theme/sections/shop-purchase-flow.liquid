@@ -1472,30 +1472,6 @@ CRO-optimized product purchase page with:
     color: rgba(0, 0, 0, 0.5);
   }
 
-  .size-card--redesign .size-card__badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    left: auto;
-    transform: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .size-card--redesign .size-card__badge-icon {
-    width: 12px;
-    height: 12px;
-    object-fit: contain;
-  }
-
   .size-card--redesign .size-card__packs {
     font-weight: 700;
     font-size: var(--text-sm);
@@ -1588,18 +1564,6 @@ CRO-optimized product purchase page with:
       font-size: 0.75rem;
     }
 
-    .size-card--redesign .size-card__badge {
-      font-size: 10px;
-      padding: 4px 8px;
-      top: 8px;
-      right: 8px;
-    }
-
-    .size-card--redesign .size-card__badge-icon {
-      width: 12px;
-      height: 12px;
-    }
-
     .size-card--redesign .size-card__per-pack {
       font-size: 12px;
       padding: 3px 10px;
@@ -1607,6 +1571,113 @@ CRO-optimized product purchase page with:
 
     .size-card--redesign .size-card__packs .packs-suffix {
       display: none;
+    }
+  }
+
+  /* ============================================
+     SIZE BADGE ROW (above cards)
+     ============================================ */
+  .size-badge-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    min-height: 28px;
+    margin-bottom: 6px;
+  }
+
+  .size-badge-row__cell {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .size-badge-row__badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .size-badge-row__badge-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  /* ============================================
+     SIZE PROGRESS BAR
+     ============================================ */
+  .size-progress {
+    height: 6px;
+    background: #D4F5FF;
+    border-radius: 3px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .size-progress__fill {
+    height: 100%;
+    background: #00B8E6;
+    border-radius: 3px;
+    transition: width 300ms ease;
+  }
+
+  /* ============================================
+     GHOST CARD (disabled placeholder)
+     ============================================ */
+  .size-card--ghost {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    border-style: dashed;
+  }
+
+  .size-card--ghost .size-card__image,
+  .size-card--ghost .size-card__prices,
+  .size-card--ghost .size-card__per-pack,
+  .size-card--ghost .size-card__selected-label {
+    display: none;
+  }
+
+  /* ============================================
+     SIZE CARDS SLIDE ANIMATION
+     ============================================ */
+  @keyframes sizeCardSlideOut {
+    0% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(-20px); }
+  }
+
+  @keyframes sizeCardSlideIn {
+    0% { opacity: 0; transform: translateX(20px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  .size-cards--animating .size-card--redesign {
+    animation: sizeCardSlideOut 200ms ease forwards, sizeCardSlideIn 200ms ease 200ms forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .size-cards--animating .size-card--redesign {
+      animation: none;
+    }
+  }
+
+  /* ============================================
+     MOBILE OVERRIDES FOR BADGE ROW & PROGRESS
+     ============================================ */
+  @media screen and (max-width: 999px) {
+    .size-badge-row {
+      gap: 8px;
+    }
+
+    .size-progress {
+      height: 4px;
+      margin-bottom: 8px;
     }
   }
 
@@ -2231,77 +2302,101 @@ CRO-optimized product purchase page with:
     <!-- PURCHASE COLUMN (Right, sticky on desktop) -->
     <div class="shop-purchase">
 
-      <!-- SIZE CARDS (New Design) -->
-      <div>
+      <!-- SIZE SELECTION (Redesigned: badges → progress bar → cards) -->
+      <div class="size-selection-wrapper">
         <p class="shop-purchase__section-title">{{ section.settings.size_title | default: 'Choose your box size' }}</p>
-        <div class="size-cards size-cards--redesign">
-          <template x-for="size in availableSizes" :key="size.id">
-            <div
-              class="size-card size-card--redesign"
-              :class="{ 'size-card--selected': selectedSize === size.id }"
-              @click="selectedSize = size.id"
-              @keydown.enter="selectedSize = size.id"
-              @keydown.space.prevent="selectedSize = size.id"
-              tabindex="0"
-              role="option"
-              :aria-selected="selectedSize === size.id"
-            >
-              <!-- Pack label at top-left -->
-              <div class="size-card__packs">
-                <span x-text="size.packsLabel.split(' ')[0]"></span><span class="packs-suffix"> <span x-text="size.packsLabel.split(' ')[1]"></span></span>
-              </div>
-              <!-- Badge positioned absolute top-right -->
-              <template x-if="size.badge">
-                <div class="size-card__badge" :style="size.badgeStyle">
+
+        <!-- Badge row above cards -->
+        <div class="size-badge-row">
+          <template x-for="size in availableSizes" :key="'badge-' + size.id">
+            <div class="size-badge-row__cell">
+              <template x-if="size.badge && !size.disabled">
+                <div class="size-badge-row__badge" :style="size.badgeStyle">
                   <template x-if="size.badgeType === 'popular'">
                     <span>
                       {%- if section.settings.popular_badge_icon != blank -%}
-                        <img src="{{ section.settings.popular_badge_icon | image_url: width: 24 }}" alt="" class="size-card__badge-icon">
+                        <img src="{{ section.settings.popular_badge_icon | image_url: width: 24 }}" alt="" class="size-badge-row__badge-icon">
                       {%- endif -%}
                     </span>
                   </template>
                   <template x-if="size.badgeType === 'freeShip'">
                     <span>
                       {%- if section.settings.free_ship_badge_icon != blank -%}
-                        <img src="{{ section.settings.free_ship_badge_icon | image_url: width: 24 }}" alt="" class="size-card__badge-icon">
+                        <img src="{{ section.settings.free_ship_badge_icon | image_url: width: 24 }}" alt="" class="size-badge-row__badge-icon">
                       {%- endif -%}
                     </span>
                   </template>
                   <span x-text="size.badge"></span>
                 </div>
               </template>
-              <!-- Image centered -->
-              <div class="size-card__image">
-                <template x-if="size.id === 9">
-                  <div>
-                    {%- if section.settings.size_card_image_9 != blank -%}
-                      <img src="{{ section.settings.size_card_image_9 | image_url: width: 200 }}" alt="9 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
-                <template x-if="size.id === 18">
-                  <div>
-                    {%- if section.settings.size_card_image_18 != blank -%}
-                      <img src="{{ section.settings.size_card_image_18 | image_url: width: 200 }}" alt="18 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
-                <template x-if="size.id === 27">
-                  <div>
-                    {%- if section.settings.size_card_image_27 != blank -%}
-                      <img src="{{ section.settings.size_card_image_27 | image_url: width: 200 }}" alt="27 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
+            </div>
+          </template>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="size-progress">
+          <div class="size-progress__fill" :style="'width: ' + progressWidth"></div>
+        </div>
+
+        <!-- Size cards (always 3 columns, with ghost card when < 3 valid sizes) -->
+        <div
+          class="size-cards size-cards--redesign"
+          :class="{ 'size-cards--animating': sizeCardsAnimating }"
+        >
+          <template x-for="size in availableSizes" :key="size.id">
+            <div
+              class="size-card size-card--redesign"
+              :class="{
+                'size-card--selected': selectedSize === size.id && !size.disabled,
+                'size-card--ghost': size.disabled
+              }"
+              @click="!size.disabled && (selectedSize = size.id)"
+              @keydown.enter="!size.disabled && (selectedSize = size.id)"
+              @keydown.space.prevent="!size.disabled && (selectedSize = size.id)"
+              :tabindex="size.disabled ? -1 : 0"
+              role="option"
+              :aria-selected="selectedSize === size.id && !size.disabled"
+              :aria-disabled="size.disabled"
+            >
+              <!-- Pack label (always shown) -->
+              <div class="size-card__packs">
+                <span x-text="size.packsLabel.split(' ')[0]"></span><span class="packs-suffix"> <span x-text="size.packsLabel.split(' ')[1]"></span></span>
               </div>
-              <div class="size-card__prices">
+              <!-- Image (hidden for ghost cards) -->
+              <template x-if="!size.disabled">
+                <div class="size-card__image">
+                  <template x-if="size.id === 9">
+                    <div>
+                      {%- if section.settings.size_card_image_9 != blank -%}
+                        <img src="{{ section.settings.size_card_image_9 | image_url: width: 200 }}" alt="9 pack" loading="lazy">
+                      {%- endif -%}
+                    </div>
+                  </template>
+                  <template x-if="size.id === 18">
+                    <div>
+                      {%- if section.settings.size_card_image_18 != blank -%}
+                        <img src="{{ section.settings.size_card_image_18 | image_url: width: 200 }}" alt="18 pack" loading="lazy">
+                      {%- endif -%}
+                    </div>
+                  </template>
+                  <template x-if="size.id === 27">
+                    <div>
+                      {%- if section.settings.size_card_image_27 != blank -%}
+                        <img src="{{ section.settings.size_card_image_27 | image_url: width: 200 }}" alt="27 pack" loading="lazy">
+                      {%- endif -%}
+                    </div>
+                  </template>
+                </div>
+              </template>
+              <!-- Prices (hidden for ghost cards via CSS) -->
+              <div class="size-card__prices" x-show="!size.disabled">
                 <span class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></span>
                 <span class="size-card__compare-price" x-show="getSizeComparePrice(size.id) > 0" x-text="formatPrice(getSizeComparePrice(size.id))"></span>
               </div>
-              <div class="size-card__per-pack">
+              <div class="size-card__per-pack" x-show="!size.disabled">
                 <span x-text="formatPrice(getSizePrice(size.id) / (size.id * effectiveFlavorCount))"></span><span class="per-pack-suffix">/pack</span>
               </div>
-              <div class="size-card__selected-label" x-show="selectedSize === size.id">Selected</div>
+              <div class="size-card__selected-label" x-show="selectedSize === size.id && !size.disabled">Selected</div>
             </div>
           </template>
         </div>
@@ -2678,6 +2773,7 @@ CRO-optimized product purchase page with:
       discountPercent: 20, // Default, will be set from first variant with selling plan
       pickOwnExpanded: false, // Manual toggle for Pick Your Own dropdown
       stickyCtaVisible: false, // Mobile sticky CTA visibility (shown after scrolling to sub-section)
+      sizeCardsAnimating: false, // Slide animation when flavor count changes
       selectedFrequency: null, // Selling plan ID (default to 4-week plan)
 
       // Drawer state
@@ -2755,23 +2851,39 @@ CRO-optimized product purchase page with:
         const count = this.effectiveFlavorCount;
 
         if (count === 1) {
+          // 1 flavor: 9 / 18 / 27 — all selectable
           return [
-            { id: 9, label: 'Starter', packsLabel: '9 PACK', duration: '~1 week', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
-            { id: 18, label: 'Popular', packsLabel: '18 PACK', duration: '~2 weeks', perPack: '2.00', badge: badgeConfig.popular.text, badgeType: 'popular', badgeStyle: `background: ${badgeConfig.popular.bg}; color: ${badgeConfig.popular.color};` },
-            { id: 27, label: 'Best Value', packsLabel: '27 PACK', duration: '~3 weeks', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
+            { id: 9, label: 'Starter', packsLabel: '9 PACK', duration: '~1 week', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '', disabled: false },
+            { id: 18, label: 'Popular', packsLabel: '18 PACK', duration: '~2 weeks', perPack: '2.00', badge: badgeConfig.popular.text, badgeType: 'popular', badgeStyle: `background: ${badgeConfig.popular.bg}; color: ${badgeConfig.popular.color};`, disabled: false },
+            { id: 27, label: 'Best Value', packsLabel: '27 PACK', duration: '~3 weeks', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};`, disabled: false }
           ];
         } else if (count === 2) {
+          // 2 flavors: 9 each (18 total) / ghost 27 / 18 each (36 total, free delivery)
           return [
-            { id: 9, label: '9 Each', packsLabel: '18 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
-            { id: 18, label: '18 Each', packsLabel: '36 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
+            { id: 9, label: '9 Each', packsLabel: '18 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '', disabled: false },
+            { id: 27, label: '', packsLabel: '27 PACK', duration: '', perPack: '', badge: '', badgeType: '', badgeStyle: '', disabled: true },
+            { id: 18, label: '18 Each', packsLabel: '36 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};`, disabled: false }
           ];
         } else {
-          // 3 flavors
+          // 3 flavors: 9 each (27 total) / ghost 36 / 18 each (54 total, free delivery)
           return [
-            { id: 9, label: '9 Each', packsLabel: '27 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '' },
-            { id: 18, label: '18 Each', packsLabel: '54 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};` }
+            { id: 9, label: '9 Each', packsLabel: '27 TOTAL', duration: '9 per flavor', perPack: '2.00', badge: '', badgeType: '', badgeStyle: '', disabled: false },
+            { id: 36, label: '', packsLabel: '36 PACK', duration: '', perPack: '', badge: '', badgeType: '', badgeStyle: '', disabled: true },
+            { id: 18, label: '18 Each', packsLabel: '54 TOTAL', duration: '18 per flavor', perPack: '2.00', badge: badgeConfig.freeShip.text, badgeType: 'freeShip', badgeStyle: `background: ${badgeConfig.freeShip.bg}; color: ${badgeConfig.freeShip.color};`, disabled: false }
           ];
         }
+      },
+
+      get progressWidth() {
+        // Full bar when total packs >= 27
+        if (this.selectedSize * this.effectiveFlavorCount >= 27) return '100%';
+        const sizes = this.availableSizes;
+        const idx = sizes.findIndex(s => s.id === this.selectedSize);
+        if (idx === -1) return '0%';
+        // Map to right-edge of the selected card column (accounting for 12px gaps in 3-col grid)
+        if (idx === 0) return 'calc(33.333% - 8px)';
+        if (idx === 1) return 'calc(66.666% - 4px)';
+        return '100%';
       },
 
       get canCheckout() {
@@ -2804,10 +2916,15 @@ CRO-optimized product purchase page with:
 
         // Ensure selected size is valid for current flavor count
         this.$watch('effectiveFlavorCount', (count) => {
-          const validSizes = this.availableSizes.map(s => s.id);
+          const validSizes = this.availableSizes.filter(s => !s.disabled).map(s => s.id);
           if (!validSizes.includes(this.selectedSize)) {
-            this.selectedSize = validSizes[0];
+            // Auto-bump up: prefer next size >= current, fallback to largest available
+            const bumped = validSizes.find(s => s >= this.selectedSize);
+            this.selectedSize = bumped || validSizes[validSizes.length - 1];
           }
+          // Trigger slide animation
+          this.sizeCardsAnimating = true;
+          setTimeout(() => { this.sizeCardsAnimating = false; }, 400);
         });
 
         // Auto-select first bundle if no flavors selected (prevent empty state)
@@ -2985,6 +3102,7 @@ CRO-optimized product purchase page with:
 
       // Select a flavor option (handles both bundles and individual flavors)
       selectOption(productId, isBundle, event) {
+        const prevCount = this.effectiveFlavorCount;
         if (isBundle) {
           // Selecting a bundle clears individual selections
           this.selectedBundle = (this.selectedBundle === productId) ? null : productId;
@@ -2995,6 +3113,7 @@ CRO-optimized product purchase page with:
           this.toggleFlavor(productId);
         }
         this.pickOwnExpanded = false;
+        this.validateSelectedSize(prevCount);
       },
 
       // Legacy method for backwards compatibility
@@ -3021,6 +3140,25 @@ CRO-optimized product purchase page with:
           } else if (this.selectedFlavors.length < 3) {
             this.selectedFlavors.push(productId);
           }
+        }
+      },
+
+      validateSelectedSize(prevCount) {
+        const newCount = this.effectiveFlavorCount;
+        const validSizes = this.availableSizes.filter(s => !s.disabled).map(s => s.id);
+
+        if (prevCount !== undefined && newCount !== prevCount) {
+          // Preserve total pack count across flavor count changes
+          const prevTotal = this.selectedSize * prevCount;
+          const idealSize = prevTotal / newCount;
+          const bumped = validSizes.find(s => s >= idealSize);
+          this.selectedSize = bumped || validSizes[validSizes.length - 1];
+
+          this.sizeCardsAnimating = true;
+          setTimeout(() => { this.sizeCardsAnimating = false; }, 400);
+        } else if (!validSizes.includes(this.selectedSize)) {
+          const bumped = validSizes.find(s => s >= this.selectedSize);
+          this.selectedSize = bumped || validSizes[validSizes.length - 1];
         }
       },
 
