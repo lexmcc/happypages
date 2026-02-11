@@ -36,7 +36,9 @@
         </div>
         <div class="px-6 py-5 flex-1">
           <p class="text-sm text-gray-600 leading-relaxed">Subscription management — automatically apply referral rewards to Awtomic subscriptions.</p>
-          <% unless awtomic_connected %>
+          <% if awtomic_connected %>
+            <%= button_to "Disconnect", admin_integrations_path, method: :delete, class: "mt-4 inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 cursor-pointer transition-colors", data: { turbo_confirm: "Remove Awtomic API key?" } %>
+          <% else %>
             <details class="mt-4">
               <summary class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#ff584d] hover:bg-[#e64d43] cursor-pointer transition-colors list-none [&::-webkit-details-marker]:hidden">
                 Connect

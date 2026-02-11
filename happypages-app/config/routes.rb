@@ -59,7 +59,7 @@ Rails.application.routes.draw do
     resource :referral_page, only: [:edit, :update], controller: "referral_page"
 
     # Integrations
-    resource :integrations, only: [:edit, :update], controller: "integrations"
+    resource :integrations, only: [:edit, :update, :destroy], controller: "integrations"
 
     # Settings (shop slug)
     resource :settings, only: [:edit, :update], controller: "settings"
