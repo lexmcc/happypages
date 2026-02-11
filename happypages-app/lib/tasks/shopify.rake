@@ -1,14 +1,17 @@
 namespace :shopify do
-  desc "Register webhook for orders/create"
+  desc "Register webhook for orders/create (SHOP_DOMAIN required)"
   task register_webhook: :environment do
+    shop = Shop.find_by!(domain: ENV.fetch("SHOP_DOMAIN"))
+
     callback_url = ENV.fetch("WEBHOOK_CALLBACK_URL") do
       "https://app.happypages.co/webhooks/orders"
     end
 
     puts "Registering webhook for orders/create..."
+    puts "Shop: #{shop.domain}"
     puts "Callback URL: #{callback_url}"
 
-    service = ShopifyDiscountService.new
+    service = ShopifyDiscountService.new(shop)
     result = service.register_webhook(callback_url: callback_url)
 
     if result.dig("data", "webhookSubscriptionCreate", "userErrors")&.any?
@@ -26,9 +29,10 @@ namespace :shopify do
     end
   end
 
-  desc "List all webhooks"
+  desc "List all webhooks (SHOP_DOMAIN required)"
   task list_webhooks: :environment do
-    service = ShopifyDiscountService.new
+    shop = Shop.find_by!(domain: ENV.fetch("SHOP_DOMAIN"))
+    service = ShopifyDiscountService.new(shop)
 
     query = <<~GRAPHQL
       query {

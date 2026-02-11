@@ -195,7 +195,7 @@ class WebhooksController < ApplicationController
     AuditLog.log(
       action: "shop_redact",
       actor: "webhook",
-      shop: nil,
+      shop: shop,
       details: {
         shop_domain: shop_domain,
         shop_id: shop.id,
@@ -211,10 +211,8 @@ class WebhooksController < ApplicationController
   # --- Order webhook helpers ---
 
   def find_referral_by_code(code)
-    # Scope to current shop if set
-    scope = Referral.all
-    scope = scope.where(shop: Current.shop) if Current.shop
-    scope.find_by(referral_code: code)
+    return nil unless Current.shop
+    Current.shop.referrals.find_by(referral_code: code)
   end
 
   def process_referral_usage(referral, order)
@@ -239,7 +237,8 @@ class WebhooksController < ApplicationController
   end
 
   def process_reward_consumption(code, order_id)
-    reward = ReferralReward.find_by(code: code)
+    return unless Current.shop
+    reward = ReferralReward.joins(:referral).where(referrals: { shop_id: Current.shop.id }).find_by(code: code)
     if reward && !reward.consumed?
       reward.mark_consumed!
       Rails.logger.info "Reward #{code} consumed via order #{order_id}"
@@ -260,10 +259,8 @@ class WebhooksController < ApplicationController
 
     return unless email.present?
 
-    # Skip if referral already exists (idempotent) - scope to shop
-    scope = Referral.all
-    scope = scope.where(shop: Current.shop) if Current.shop
-    existing = scope.find_by(email: email)
+    return unless Current.shop
+    existing = Current.shop.referrals.find_by(email: email)
 
     if existing
       Rails.logger.info "Referral already exists for #{email}, skipping webhook creation"

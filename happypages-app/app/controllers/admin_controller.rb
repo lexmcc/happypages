@@ -18,9 +18,7 @@ class AdminController < ApplicationController
       return render json: { error: "No shop configured" }, status: :unprocessable_entity
     end
 
-    # Use legacy service for webhook registration (one-time admin operation)
-    # ShopifyDiscountService uses ENV credentials which match Current.shop
-    service = ShopifyDiscountService.new
+    service = ShopifyDiscountService.new(Current.shop)
     result = service.register_webhook(callback_url: callback_url)
 
     if result.dig("data", "webhookSubscriptionCreate", "userErrors")&.any?

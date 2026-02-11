@@ -4,15 +4,11 @@ require "json"
 class ShopifyDiscountService
   API_VERSION = "2025-10"
 
-  def initialize(shop = nil)
-    if shop
-      credentials = shop.shopify_credentials
-      @shop_url = credentials[:url]
-      @access_token = credentials[:token]
-    else
-      @shop_url = ENV.fetch("SHOPIFY_SHOP_URL")
-      @access_token = ENV.fetch("SHOPIFY_ACCESS_TOKEN")
-    end
+  def initialize(shop)
+    @shop = shop
+    credentials = shop.shopify_credentials
+    @shop_url = credentials[:url]
+    @access_token = credentials[:token]
   end
 
   def register_webhook(callback_url:)
@@ -222,7 +218,7 @@ class ShopifyDiscountService
   # Shared Discount Methods for Mass Updates
 
   def get_or_create_shared_discount(discount_type:, discount_value:, initial_code:)
-    shared = SharedDiscount.current
+    shared = SharedDiscount.current(@shop)
 
     # If we have a shared discount, verify it still exists in Shopify
     if shared&.shopify_discount_id.present?
@@ -259,7 +255,7 @@ class ShopifyDiscountService
   end
 
   def add_code_to_shared_discount(code:, discount_type:, discount_value:)
-    shared = SharedDiscount.current
+    shared = SharedDiscount.current(@shop)
 
     # If no shared discount exists yet, create it with this code as the first
     unless shared&.shopify_discount_id.present?
@@ -307,7 +303,7 @@ class ShopifyDiscountService
   end
 
   def update_shared_discount(discount_type:, discount_value:)
-    shared = SharedDiscount.current
+    shared = SharedDiscount.current(@shop)
     return { success: false, error: "No shared discount found" } unless shared&.shopify_discount_id.present?
 
     mutation = <<~GRAPHQL
@@ -359,7 +355,7 @@ class ShopifyDiscountService
   end
 
   def get_shared_discount_status
-    group = SharedDiscount.current
+    group = SharedDiscount.current(@shop)
     generation = group&.current_generation
     return { exists: false, synced: false } unless generation&.shopify_discount_id.present?
 

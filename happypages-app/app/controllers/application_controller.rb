@@ -9,14 +9,9 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Set Current.shop for multi-tenant context
-  # During transition: loads from session or falls back to first active shop
-  # TODO: Phase 6 will add proper shop identification (domain, API key, etc.)
   def set_current_shop
     Current.shop = if session[:shop_id]
       Shop.find_by(id: session[:shop_id])
-    else
-      Shop.active.first
     end
   end
 end

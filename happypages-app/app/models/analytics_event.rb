@@ -1,5 +1,5 @@
 class AnalyticsEvent < ApplicationRecord
-  belongs_to :shop, optional: true  # Optional during transition
+  belongs_to :shop
 
   encrypts :email, deterministic: true
 

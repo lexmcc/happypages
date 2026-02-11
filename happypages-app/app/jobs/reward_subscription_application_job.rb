@@ -2,21 +2,25 @@ class RewardSubscriptionApplicationJob < ApplicationJob
   queue_as :default
 
   def perform(reward_id)
-    # Expire any rewards past their expiration date
-    ReferralReward.expired_but_not_marked.find_each do |r|
-      r.mark_expired!
-      Rails.logger.info "[RewardApplication] Expired reward: #{r.code}"
-    end
-
     reward = ReferralReward.find_by(id: reward_id)
     return unless reward
     return unless reward.status == "created"
 
     referral = reward.referral
+    shop = referral&.shop
+    return unless shop
     return unless referral.shopify_customer_id.present?
-    return unless ENV["AWTOMIC_API_KEY"].present?
 
-    awtomic = AwtomicService.new
+    # Expire rewards scoped to this shop
+    ReferralReward.expired_but_not_marked.joins(referral: :shop).where(referrals: { shop_id: shop.id }).find_each do |r|
+      r.mark_expired!
+      Rails.logger.info "[RewardApplication] Expired reward: #{r.code}"
+    end
+
+    awtomic_key = shop.awtomic_credentials[:api_key]
+    return unless awtomic_key.present?
+
+    awtomic = AwtomicService.new(awtomic_key)
     customer_id = extract_numeric_id(referral.shopify_customer_id)
 
     Rails.logger.info "[RewardApplication] Applying #{reward.code} for customer #{customer_id}"

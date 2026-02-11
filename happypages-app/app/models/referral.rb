@@ -1,5 +1,5 @@
 class Referral < ApplicationRecord
-  belongs_to :shop, optional: true  # Optional during transition
+  belongs_to :shop
   belongs_to :discount_generation, optional: true
   has_many :referral_rewards, dependent: :destroy
 

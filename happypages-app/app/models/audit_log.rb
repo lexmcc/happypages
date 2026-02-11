@@ -1,5 +1,5 @@
 class AuditLog < ApplicationRecord
-  belongs_to :shop, optional: true
+  belongs_to :shop
 
   ACTIONS = %w[
     view create update delete export
@@ -16,7 +16,7 @@ class AuditLog < ApplicationRecord
   scope :compliance, -> { where(action: %w[data_request customer_redact shop_redact]) }
   scope :recent, -> { order(created_at: :desc) }
 
-  def self.log(action:, actor:, shop: nil, resource: nil, actor_ip: nil, actor_identifier: nil, details: {})
+  def self.log(action:, actor:, shop:, resource: nil, actor_ip: nil, actor_identifier: nil, details: {})
     create!(
       shop: shop,
       action: action,

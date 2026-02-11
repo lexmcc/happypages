@@ -1,5 +1,5 @@
 class DiscountConfig < ApplicationRecord
-  belongs_to :shop, optional: true  # Optional during transition
+  belongs_to :shop
 
   before_validation :set_shop_from_current, on: :create
 

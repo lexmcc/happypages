@@ -16,7 +16,7 @@ class RewardApplicationJob < ApplicationJob
   def expire_old_rewards
     expired_count = 0
 
-    ReferralReward.expired_but_not_marked.find_each do |reward|
+    ReferralReward.expired_but_not_marked.joins(referral: :shop).find_each do |reward|
       reward.mark_expired!
       expired_count += 1
       Rails.logger.info "[RewardApplicationJob] Expired reward: #{reward.code}"
@@ -29,20 +29,21 @@ class RewardApplicationJob < ApplicationJob
 
   def cancel_rewards_on_inactive_subscriptions
     cancelled_count = 0
-    awtomic = AwtomicService.new
-    pause_behavior = DiscountConfig.find_by(config_key: "subscription_pause_behavior")&.config_value || "keep"
 
-    # Group applied rewards by subscription
     ReferralReward.applied.not_expired.includes(referral: :shop).group_by(&:awtomic_subscription_id).each do |subscription_id, rewards|
       next if subscription_id.blank?
 
       begin
-        # Set shop context from the referral
         shop = rewards.first.referral&.shop
-        next unless shop  # Skip if no shop associated
+        next unless shop
+
+        awtomic_key = shop.awtomic_credentials[:api_key]
+        next unless awtomic_key.present?
+
+        awtomic = AwtomicService.new(awtomic_key)
+        pause_behavior = shop.discount_configs.find_by(config_key: "subscription_pause_behavior")&.config_value || "keep"
         discount_provider = shop.discount_provider
 
-        # Check subscription status in Awtomic
         customer_id = rewards.first.awtomic_customer_id
         next if customer_id.blank?
 
@@ -58,7 +59,6 @@ class RewardApplicationJob < ApplicationJob
 
         if should_cancel
           rewards.each do |reward|
-            # Check if reward was actually used
             usage_count = discount_provider.get_discount_usage_count(reward.code)
 
             if usage_count.nil? || usage_count == 0
@@ -83,11 +83,18 @@ class RewardApplicationJob < ApplicationJob
 
   def apply_pending_rewards
     applied_count = 0
-    awtomic = AwtomicService.new
 
     ReferralReward.unapplied.not_expired.includes(referral: :shop).find_each do |reward|
       referral = reward.referral
       next unless referral.shopify_customer_id.present?
+
+      shop = referral.shop
+      next unless shop
+
+      awtomic_key = shop.awtomic_credentials[:api_key]
+      next unless awtomic_key.present?
+
+      awtomic = AwtomicService.new(awtomic_key)
 
       begin
         customer_id = extract_numeric_id(referral.shopify_customer_id)

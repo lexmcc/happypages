@@ -1,5 +1,5 @@
 class SharedDiscount < ApplicationRecord
-  belongs_to :shop, optional: true  # Optional during transition
+  belongs_to :shop
 
   before_validation :set_shop_from_current, on: :create
 
@@ -17,12 +17,8 @@ class SharedDiscount < ApplicationRecord
 
   scope :active, -> { where(is_active: true) }
 
-  # Returns the current active discount for the given shop
-  # Falls back to global lookup if no shop provided (backward compatibility)
-  def self.current(shop = nil)
-    scope = active
-    scope = scope.where(shop: shop) if shop
-    scope.first
+  def self.current(shop)
+    active.where(shop: shop).first
   end
 
   # Effective values consider override if active
@@ -95,12 +91,11 @@ class SharedDiscount < ApplicationRecord
     )
   end
 
-  # Activate this group (deactivates all others for this shop)
   def activate!
+    raise "shop_id required" if shop_id.nil?
+
     transaction do
-      scope = SharedDiscount.all
-      scope = scope.where(shop_id: shop_id) if shop_id
-      scope.update_all(is_active: false)
+      SharedDiscount.where(shop_id: shop_id).update_all(is_active: false)
       update!(is_active: true)
     end
   end
