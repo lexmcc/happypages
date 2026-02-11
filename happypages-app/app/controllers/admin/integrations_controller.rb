@@ -2,7 +2,6 @@ class Admin::IntegrationsController < Admin::BaseController
   include Admin::ConfigSaving
 
   def edit
-    load_configs
   end
 
   def update
