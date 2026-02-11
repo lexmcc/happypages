@@ -1,0 +1,88 @@
+<%= content_for(:title, "Happypages Friendly Referrals") %>
+
+<% content_for(:head) do %>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Hanken Grotesk', sans-serif;
+      background: #F4F4F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      letter-spacing: -0.03em;
+    }
+
+    .embedded-card {
+      background: #f9f9f9;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,1),
+        inset -1px -1px 0 rgba(0,0,0,0.05),
+        0 4px 8px rgba(0,0,0,0.05);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .embedded-card__icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+    }
+
+    .embedded-card__icon img {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+    }
+
+    .embedded-card__title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.07em;
+      text-transform: lowercase;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .embedded-card__tagline {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.4;
+    }
+
+    .embedded-card__button {
+      display: inline-block;
+      background: #ff584d;
+      color: #fff;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      transition: background 200ms;
+    }
+
+    .embedded-card__button:hover {
+      background: #e64d43;
+    }
+  </style>
+<% end %>
+
+<div class="embedded-card">
+  <div class="embedded-card__icon">
+    <img src="/icon.png" alt="Happypages">
+  </div>
+  <h1 class="embedded-card__title">happypages friendly referrals.</h1>
+  <p class="embedded-card__tagline">manage your referral program, discount codes, and thank-you cards.</p>
+  <a href="https://app.happypages.co/admin" target="_blank" rel="noopener" class="embedded-card__button">go to dashboard</a>
+</div>

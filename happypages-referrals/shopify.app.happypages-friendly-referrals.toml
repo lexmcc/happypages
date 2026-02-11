@@ -2,7 +2,7 @@
 
 client_id = "98f21e1016de2f503ac53f40072eb71b"
 name = "Happypages Friendly Referrals"
-application_url = "https://app.happypages.co"
+application_url = "https://app.happypages.co/embedded"
 embedded = true
 
 [build]

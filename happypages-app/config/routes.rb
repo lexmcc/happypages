@@ -68,6 +68,9 @@ Rails.application.routes.draw do
     resource :config, only: [:edit, :update]
   end
 
+  # Embedded app landing page (loaded in Shopify admin iframe)
+  get "embedded", to: "embedded#show"
+
   # Public pages
   get "privacy", to: "pages#privacy"
 
