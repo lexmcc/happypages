@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  layout "public", only: :new
   skip_before_action :set_current_shop
 
   def new
