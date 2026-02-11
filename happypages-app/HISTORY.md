@@ -39,6 +39,11 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 6** - Public distribution Shopify app for multi-merchant installs
 - **Feb 6** - Data protection questionnaire submitted
 
+### Week 6: Oatcult Shop Page Polish + Integrations (Feb 10-11, 2026)
+
+- **Feb 10** - Mobile sticky basket fixes: full-width slots, progress bar + badge always visible, scroll no longer closes drawer
+- **Feb 11** - Awtomic API key connect/disconnect flow on integrations page
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

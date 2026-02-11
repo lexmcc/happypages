@@ -31,6 +31,19 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 ## Patterns & Best Practices
 
+### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
+- `x-if` removes elements from DOM entirely — use when an element should not occupy space
+- `x-show` hides with `display: none` — use when element participates in flex layout (e.g., progress bar in a flex row)
+- When moving an element from conditional to always-visible, switch from `<template x-if>` wrapper to a plain `<div>` (or remove the wrapper entirely)
+- For mobile sticky bars: prefer always showing progress/badge with `x-show` toggling only the empty-state message
+
+### Credential Save Pattern for Integrations (Feb 11, 2026)
+- Use `Current.shop.shop_credential || Current.shop.build_shop_credential` to find-or-build
+- `has_one` + FK constraint prevents duplicates — `build_` is safe
+- `save!` will raise if Active Record Encryption env vars are missing (expected in dev without setup)
+- Rake tasks that consume credentials should `abort` early with a clear message if key is blank
+- `<details>` element is a zero-JS way to toggle inline forms — no Stimulus needed
+
 ### Webhook Domain Matching
 - Shopify sends `X-Shopify-Shop-Domain` header with real domain on production webhooks
 - Always match shop by exact domain, never fall back to first/any shop
@@ -62,4 +75,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Check the version URL in deploy output for approval link
 
 ---
-*Updated: Feb 6, 2026*
+*Updated: Feb 11, 2026*

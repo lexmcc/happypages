@@ -192,8 +192,10 @@ Step cards use different media for desktop vs mobile:
 
 ## Rails Backend (happypages-app/)
 
+See `happypages-app/SPEC.md` for the living app spec (current state + what's next).
 See `happypages-app/HISTORY.md` for detailed session notes.
 See `happypages-app/LEARNINGS.md` for gotchas, bug fixes, and environment tips.
+See `CHANGELOG.md` for dated record of shipped features (both products).
 
 ### Key Patterns
 - **Multi-tenant**: `Current.shop` thread-isolated context, shop lookup via `X-Shop-Domain` header
