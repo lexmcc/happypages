@@ -103,31 +103,6 @@
       </div>
     </section>
 
-    <%# Referral URL %>
-    <% if @shop&.slug.present? %>
-      <section class="mb-8">
-        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
-          <div class="px-6 py-4 border-b border-black/5 flex items-center justify-between">
-            <div>
-              <h2 class="text-lg font-semibold text-gray-900">Referral URL</h2>
-              <p class="text-sm text-gray-500">Share this link with customers</p>
-            </div>
-            <%= link_to "Settings", edit_admin_settings_path, class: "text-sm text-[#ff584d] hover:underline" %>
-          </div>
-          <div class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <code class="flex-1 px-4 py-2.5 bg-[#f9f9f9] border border-black/10 rounded-lg text-sm text-gray-700 font-mono truncate">https://app.happypages.co/<%= @shop.slug %>/refer</code>
-              <button
-                type="button"
-                onclick="navigator.clipboard.writeText('https://app.happypages.co/<%= @shop.slug %>/refer').then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500) })"
-                class="px-4 py-2.5 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm flex-shrink-0"
-              >Copy</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    <% end %>
-
     <%# Quick Links %>
     <section>
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Links</h2>
