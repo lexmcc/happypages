@@ -1,13 +1,18 @@
-<% content_for(:title) { "Login - Referral App" } %>
+<% content_for(:title) { "Login — Happypages" } %>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center bg-[#f9f9f9] py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-        Referral App
+    <div class="flex flex-col items-center">
+      <div class="size-12 bg-[#ff584d] rounded-xl flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+        </svg>
+      </div>
+      <h2 class="mt-4 text-center text-3xl font-bold text-gray-900 tracking-tight">
+        happypages.
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Sign in to manage your referral program
+      <p class="mt-2 text-center text-sm text-gray-500">
+        sign in to manage your referral program.
       </p>
     </div>
 
@@ -32,19 +37,19 @@
     <% end %>
 
     <div class="mt-8 space-y-6">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-[#f4f4f0] p-8 rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)]">
         <div class="space-y-6">
           <div>
             <label for="shop" class="block text-sm font-medium text-gray-700">
-              Your Shopify Store Domain
+              your shopify store domain
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="mt-1 flex rounded-lg shadow-sm">
               <input type="text"
                      name="shop"
                      id="shop"
-                     class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                     class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-lg border border-black/10 bg-[#f9f9f9] focus:ring-[#ff584d] focus:border-[#ff584d] sm:text-sm"
                      placeholder="your-store">
-              <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+              <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-black/10 bg-[#f9f9f9] text-gray-500 sm:text-sm">
                 .myshopify.com
               </span>
             </div>
@@ -52,16 +57,16 @@
 
           <button type="button"
                   onclick="redirectToShopify()"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Install / Login with Shopify
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#ff584d] hover:bg-[#e64d43] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff584d]">
+            connect with shopify
           </button>
         </div>
       </div>
 
       <p class="text-center text-xs text-gray-500">
-        New merchants will be guided through the Shopify app installation process.
+        new merchants will be guided through the shopify app installation process.
         <br>
-        Existing users will be logged in automatically.
+        existing users will be logged in automatically.
       </p>
     </div>
   </div>
