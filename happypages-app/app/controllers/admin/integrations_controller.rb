@@ -1,17 +1,15 @@
 class Admin::IntegrationsController < Admin::BaseController
-  include Admin::ConfigSaving
-
   def edit
   end
 
   def update
-    save_configs(allowed_keys)
-    redirect_to edit_admin_integrations_path, notice: "Integration settings saved successfully!"
-  end
-
-  private
-
-  def allowed_keys
-    %w[klaviyo_reminder_delay_days]
+    if params[:awtomic_api_key].present?
+      credential = Current.shop.shop_credential || Current.shop.build_shop_credential
+      credential.awtomic_api_key = params[:awtomic_api_key]
+      credential.save!
+      redirect_to edit_admin_integrations_path, notice: "Awtomic connected successfully!"
+    else
+      redirect_to edit_admin_integrations_path, alert: "API key can't be blank."
+    end
   end
 end
