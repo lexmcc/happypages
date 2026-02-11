@@ -5,7 +5,7 @@ class KlaviyoService
   BASE_URL = "https://a.klaviyo.com/api"
   API_REVISION = "2024-10-15"
 
-  def initialize(api_key = ENV["KLAVIYO_API_KEY"])
+  def initialize(api_key)
     @api_key = api_key
   end
 

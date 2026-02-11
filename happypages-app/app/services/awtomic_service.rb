@@ -4,7 +4,7 @@ require 'json'
 class AwtomicService
   BASE_URL = 'https://api.awtomic.com'
 
-  def initialize(api_key = ENV['AWTOMIC_API_KEY'])
+  def initialize(api_key)
     @api_key = api_key
   end
 

@@ -22,6 +22,7 @@ class OverrideSchedulerJob < ApplicationJob
       Rails.logger.info "Starting override for group: #{group.name}"
 
       begin
+        Current.shop = group.shop
         group.apply_override_to_shopify!
         group.update!(override_applied: true)
         Rails.logger.info "Override started successfully for: #{group.name}"
@@ -38,6 +39,7 @@ class OverrideSchedulerJob < ApplicationJob
       Rails.logger.info "Ending override for group: #{group.name}"
 
       begin
+        Current.shop = group.shop
         group.clear_override!
         Rails.logger.info "Override ended successfully for: #{group.name}"
       rescue => e

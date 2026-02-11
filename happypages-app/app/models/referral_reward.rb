@@ -1,9 +1,12 @@
 class ReferralReward < ApplicationRecord
   belongs_to :referral
+  belongs_to :shop
 
   STATUSES = %w[created applied_to_subscription consumed expired released cancelled].freeze
 
-  validates :code, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: { scope: :shop_id }
+
+  before_validation :set_shop_from_referral, on: :create
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :usage_number, presence: true
 
@@ -65,5 +68,11 @@ class ReferralReward < ApplicationRecord
 
   def expired?
     status == "expired" || (expires_at.present? && expires_at <= Time.current)
+  end
+
+  private
+
+  def set_shop_from_referral
+    self.shop_id ||= referral&.shop_id
   end
 end

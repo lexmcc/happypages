@@ -36,6 +36,7 @@ class RewardApplicationJob < ApplicationJob
       begin
         shop = rewards.first.referral&.shop
         next unless shop
+        Current.shop = shop
 
         awtomic_key = shop.awtomic_credentials[:api_key]
         next unless awtomic_key.present?
@@ -90,6 +91,7 @@ class RewardApplicationJob < ApplicationJob
 
       shop = referral.shop
       next unless shop
+      Current.shop = shop
 
       awtomic_key = shop.awtomic_credentials[:api_key]
       next unless awtomic_key.present?

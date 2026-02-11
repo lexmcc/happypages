@@ -1,7 +1,8 @@
 namespace :awtomic do
-  desc "Register Awtomic webhooks for reward lifecycle tracking"
+  desc "Register Awtomic webhooks for reward lifecycle tracking (SHOP_DOMAIN required)"
   task register_webhooks: :environment do
-    awtomic = AwtomicService.new
+    shop = Shop.find_by!(domain: ENV.fetch("SHOP_DOMAIN"))
+    awtomic = AwtomicService.new(shop.awtomic_credentials[:api_key])
     base_url = ENV.fetch("WEBHOOK_BASE_URL") { raise "WEBHOOK_BASE_URL environment variable required" }
     url = "#{base_url}/webhooks/awtomic"
 
@@ -25,9 +26,10 @@ namespace :awtomic do
     puts "3. Deploy the application"
   end
 
-  desc "List registered Awtomic webhooks"
+  desc "List registered Awtomic webhooks (SHOP_DOMAIN required)"
   task list_webhooks: :environment do
-    awtomic = AwtomicService.new
+    shop = Shop.find_by!(domain: ENV.fetch("SHOP_DOMAIN"))
+    awtomic = AwtomicService.new(shop.awtomic_credentials[:api_key])
 
     puts "Fetching registered webhooks..."
     begin

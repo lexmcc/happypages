@@ -9,6 +9,7 @@ class RewardSubscriptionApplicationJob < ApplicationJob
     referral = reward.referral
     shop = referral&.shop
     return unless shop
+    Current.shop = shop
     return unless referral.shopify_customer_id.present?
 
     # Expire rewards scoped to this shop
