@@ -86,3 +86,10 @@
   <p class="embedded-card__tagline">manage your referral program, discount codes, and thank-you cards.</p>
   <a href="https://app.happypages.co/admin" target="_blank" rel="noopener" class="embedded-card__button">go to dashboard</a>
 </div>
+
+<script>
+  fetch('/embedded/authenticate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  }).catch(function() {});
+</script>

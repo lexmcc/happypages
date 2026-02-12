@@ -70,6 +70,7 @@ Rails.application.routes.draw do
 
   # Embedded app landing page (loaded in Shopify admin iframe)
   get "embedded", to: "embedded#show"
+  post "embedded/authenticate", to: "embedded#authenticate"
 
   # Public pages
   get "privacy", to: "pages#privacy"
