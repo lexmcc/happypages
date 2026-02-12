@@ -14,7 +14,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **Shopify OAuth** — self-service install flow, creates Shop + ShopCredential + User in one transaction
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
-- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified
+- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom)
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII)
 - **Audit logging** — AuditLog model with JSONB details for compliance events
 

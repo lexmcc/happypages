@@ -208,6 +208,7 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **TOML config**: `shopify.app.happypages-friendly-referrals.toml` is the linked config file
 
 ### Gotchas
+- **Shopify signs webhooks with `SHOPIFY_CLIENT_SECRET`** — not a per-shop secret or `SHOPIFY_WEBHOOK_SECRET`. Never `return true` when a signing secret is blank.
 - **Never use `Shop.active.first` as webhook fallback** — test webhooks with fake domains will match real shops and destroy data
 - **Shopify distribution is permanent** — can't change Custom → Public after creation
 - **Protected customer data must be approved** before deploying webhooks containing customer data (`orders/create`, compliance topics)

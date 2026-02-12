@@ -4,6 +4,14 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 ## Gotchas & Bug Fixes
 
+### Webhook HMAC `return true if secret.blank?` Bypass (Feb 12, 2026)
+- Both `Shopify::OrderHandler` and `Custom::OrderHandler` had `return true if secret.blank?` at the top of `verify_signature`
+- This meant any request was accepted without verification when the signing secret wasn't configured
+- Shopify's automated app check sends a POST to `/webhooks/compliance` with an invalid HMAC and expects 401 — we returned 200
+- Additionally, Shopify signs webhooks with `SHOPIFY_CLIENT_SECRET` (the app's client secret), but we were looking at `SHOPIFY_WEBHOOK_SECRET` which didn't exist
+- **Fix**: Removed the blank-secret bypass from both handlers. Controller now checks: HMAC present + no secret → 401, no HMAC + no secret → skip (local dev). Always use `SHOPIFY_CLIENT_SECRET` for Shopify.
+- **Lesson**: Never `return true` on a missing secret — that's an auth bypass, not a graceful fallback
+
 ### Shop.active.first Fallback (Feb 6, 2026)
 - `set_shop_from_webhook` had `Current.shop ||= Shop.active.first` as a fallback for when webhook domain didn't match any shop
 - Test compliance webhooks from Shopify CLI send `{shop}.myshopify.com` as domain, which doesn't match any real shop
@@ -49,6 +57,12 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Always match shop by exact domain, never fall back to first/any shop
 - Compliance handlers have secondary lookup from payload `shop_domain` field
 
+### Webhook Signing Secrets (Feb 12, 2026)
+- Shopify signs ALL webhooks (including mandatory compliance) with the **app client secret** (`SHOPIFY_CLIENT_SECRET`), not a per-shop or per-webhook secret
+- `SHOPIFY_WEBHOOK_SECRET` was a red herring — this env var was never needed
+- The `shop_credential.shopify_webhook_secret` DB column is effectively dead; don't store secrets there for Shopify
+- Custom platform webhooks use per-shop `webhook_secret` (stored in `shop_credential`) — this is correct for non-Shopify
+
 ### Re-creating Shop Records
 - Re-installing app via OAuth (`/auth/shopify?shop=domain.myshopify.com`) is cleanest way to recreate shop
 - `shop:setup` rake task depends on `SHOPIFY_SHOP_URL` env var which may not be set
@@ -75,4 +89,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Check the version URL in deploy output for approval link
 
 ---
-*Updated: Feb 11, 2026*
+*Updated: Feb 12, 2026*

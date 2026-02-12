@@ -2,6 +2,12 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-12
+
+- Fixed webhook HMAC validation: invalid signatures now return 401 instead of 200
+- Removed `return true if secret.blank?` auth bypasses from Shopify and Custom order handlers
+- Switched webhook signing secret from `SHOPIFY_WEBHOOK_SECRET` to `SHOPIFY_CLIENT_SECRET` (what Shopify actually signs with)
+
 ## 2026-02-11
 
 - Awtomic API key connect/disconnect flow on integrations page
