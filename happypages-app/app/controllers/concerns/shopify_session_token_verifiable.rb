@@ -31,12 +31,27 @@ module ShopifySessionTokenVerifiable
     claims = JSON.parse(payload_json)
     now = Time.now.to_i
 
-    return nil if claims["exp"] && now > claims["exp"]
-    return nil if claims["nbf"] && now < (claims["nbf"] - 10) # 10s clock skew grace
-    return nil if claims["aud"] && claims["aud"] != client_id
+    # Require exp, nbf, aud — Shopify always sends these; reject tokens missing them
+    return nil unless claims["exp"].is_a?(Integer)
+    return nil unless claims["nbf"].is_a?(Integer)
+    return nil unless claims["aud"].is_a?(String)
+
+    return nil if now > claims["exp"]
+    return nil if now < (claims["nbf"] - 10) # 10s clock skew grace
+    return nil if claims["aud"] != client_id
+
+    # Validate iss present and consistent with dest
+    iss = claims["iss"]
+    dest = claims["dest"]
+    if iss.present? && dest.present?
+      iss_host = URI.parse(iss).host
+      dest_host = URI.parse(dest).host
+      return nil unless iss_host == dest_host
+    end
 
     claims
-  rescue JSON::ParserError, ArgumentError
+  rescue JSON::ParserError, ArgumentError => e
+    Rails.logger.warn("[JWT] Verification failed: #{e.class}: #{e.message}")
     nil
   end
 

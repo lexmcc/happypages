@@ -91,5 +91,5 @@
   fetch('/embedded/authenticate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
-  }).catch(function() {});
+  }).catch(function(e) { console.warn('authenticate:', e) });
 </script>

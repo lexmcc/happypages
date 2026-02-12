@@ -1,7 +1,7 @@
 class EmbeddedController < ApplicationController
   include ShopifySessionTokenVerifiable
 
-  skip_forgery_protection
+  skip_forgery_protection only: [:authenticate]
   skip_before_action :set_current_shop
 
   layout "embedded"
@@ -32,12 +32,16 @@ class EmbeddedController < ApplicationController
     end
 
     shop_domain = URI.parse(dest).host
+    unless shop_domain&.match?(/\A[\w-]+\.myshopify\.com\z/)
+      return render json: { error: "Invalid shop domain" }, status: :unauthorized
+    end
+
     shop = Shop.find_by(domain: shop_domain, status: "active")
     unless shop
       return render json: { error: "Shop not found" }, status: :not_found
     end
 
-    user = shop.users.first
+    user = shop.users.order(:id).first
     unless user
       return render json: { error: "User not found" }, status: :not_found
     end
@@ -55,6 +59,7 @@ class EmbeddedController < ApplicationController
   private
 
   def allow_shopify_iframe
+    response.headers.delete("X-Frame-Options")
     response.headers["Content-Security-Policy"] = "frame-ancestors https://*.myshopify.com https://admin.shopify.com"
   end
 end

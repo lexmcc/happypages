@@ -54,7 +54,7 @@ class ShopifyAuthController < ApplicationController
         # NOTE: Does NOT touch awtomic_api_key, klaviyo_api_key, webhook_secret
 
         # Create user if missing (upgrade path for pre-OAuth shops)
-        user = existing_shop.users.first || User.create!(
+        user = existing_shop.users.order(:id).first || User.create!(
           shop: existing_shop,
           email: shop_info[:email],
           shopify_user_id: shop_info[:owner_id]
