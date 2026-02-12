@@ -44,9 +44,11 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 10** - Mobile sticky basket fixes: full-width slots, progress bar + badge always visible, scroll no longer closes drawer
 - **Feb 11** - Awtomic API key connect/disconnect flow on integrations page
 
-### Week 7: Security Hardening (Feb 12, 2026)
+### Week 7: Security Hardening + Embedded Auth (Feb 12, 2026)
 
 - **Feb 12** - Fixed webhook HMAC validation to reject invalid signatures (Shopify app check compliance)
+- **Feb 12** - App Bridge + session token auth on embedded page for Shopify automated checks
+- **Feb 12** - Security audit: hardened JWT verification (required claims, iss↔dest validation, domain checks)
 
 ## Key Milestones
 

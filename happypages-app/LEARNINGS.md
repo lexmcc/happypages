@@ -37,6 +37,20 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - But `data_request` and `customer_redact` logs with `shop_id` set are lost on shop destruction
 - Consider: should compliance audit logs survive shop deletion? May need `dependent: :nullify` instead
 
+### Hand-Rolled JWT Claims Must Be Required (Feb 12, 2026)
+- Initial implementation used `claims["exp"] && now > claims["exp"]` — this silently skipped validation when the claim was missing
+- A forged token omitting `exp`, `nbf`, or `aud` would bypass all time/audience checks
+- **Fix**: Changed to `return nil unless claims["exp"].is_a?(Integer)` before comparison — claim must be present AND valid type
+- Also added `iss` ↔ `dest` host cross-validation and `*.myshopify.com` domain format check on `dest`
+- **Lesson**: When hand-rolling JWT verification, require every claim you check — optional-if-present is a security gap
+
+### X-Frame-Options Conflicts with CSP frame-ancestors (Feb 12, 2026)
+- Rails sets `X-Frame-Options: SAMEORIGIN` by default
+- The embedded controller set `Content-Security-Policy: frame-ancestors ...` but never removed X-Frame-Options
+- Modern browsers prefer CSP over X-Frame-Options, but having both is technically conflicting
+- **Fix**: Added `response.headers.delete("X-Frame-Options")` before setting CSP
+- **Lesson**: Always delete X-Frame-Options when setting frame-ancestors
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -87,6 +101,13 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Theme extensions making external API calls need "Allow network access" approved in Dev Dashboard
 - Deploy will succeed but version won't be released until approved
 - Check the version URL in deploy output for approval link
+
+### Session Tokens in Iframes and Third-Party Cookies (Feb 12, 2026)
+- Safari blocks third-party cookies by default; Chrome is phasing this in
+- The embedded page (`app.happypages.co`) inside the Shopify admin iframe is a third-party context
+- Cookies set via fetch inside the iframe may be silently dropped
+- The "go to dashboard" link uses `target="_blank"` (first-party context in new tab), which helps
+- **Lesson**: Don't rely on iframe-set cookies persisting in Safari — consider token-based auth for cross-context flows
 
 ---
 *Updated: Feb 12, 2026*

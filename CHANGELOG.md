@@ -4,6 +4,10 @@ Dated record of shipped features across both products.
 
 ## 2026-02-12
 
+- App Bridge 4.x + session token auth on embedded page (passes Shopify automated app checks)
+- Hardened JWT verification: required claims (exp/nbf/aud), iss↔dest cross-validation, domain format check, logged failures
+- Removed conflicting X-Frame-Options header on embedded page
+- Explicit user ordering (`order(:id).first`) in both OAuth and embedded auth flows
 - Fixed webhook HMAC validation: invalid signatures now return 401 instead of 200
 - Removed `return true if secret.blank?` auth bypasses from Shopify and Custom order handlers
 - Switched webhook signing secret from `SHOPIFY_WEBHOOK_SECRET` to `SHOPIFY_CLIENT_SECRET` (what Shopify actually signs with)
