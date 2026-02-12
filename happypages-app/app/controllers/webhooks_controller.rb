@@ -74,40 +74,31 @@ class WebhooksController < ApplicationController
   end
 
   def verify_webhook_signature
-    # Use provider-based verification if shop is set
     if Current.shop
-      secret = Current.shop.webhook_secret || ENV["SHOPIFY_WEBHOOK_SECRET"]
       handler = Current.shop.order_handler
-
-      request.body.rewind
-      unless handler.verify_signature(request, secret)
-        Rails.logger.warn "Invalid webhook signature for shop #{Current.shop.domain}"
-        head :unauthorized
-        return false
-      end
+      # Shopify signs webhooks with the app client secret, not a per-shop secret
+      secret = Current.shop.shopify? ? ENV["SHOPIFY_CLIENT_SECRET"] : Current.shop.webhook_secret
     else
-      # Legacy verification
-      verify_shopify_webhook_legacy
+      secret = ENV["SHOPIFY_CLIENT_SECRET"]
+      handler = Providers::Shopify::OrderHandler.new(nil)
     end
-  end
 
-  def verify_shopify_webhook_legacy
-    hmac_header = request.headers["X-Shopify-Hmac-Sha256"]
-    webhook_secret = ENV["SHOPIFY_WEBHOOK_SECRET"]
+    hmac_header = request.headers["X-Shopify-Hmac-Sha256"] ||
+                  request.headers["X-Webhook-Signature"]
 
-    return true if webhook_secret.blank?
-
-    request.body.rewind
-    data = request.body.read
-
-    calculated_hmac = Base64.strict_encode64(
-      OpenSSL::HMAC.digest("sha256", webhook_secret, data)
-    )
-
-    unless ActiveSupport::SecurityUtils.secure_compare(calculated_hmac, hmac_header.to_s)
-      Rails.logger.warn "Invalid Shopify webhook signature"
+    # If a signature header is present but we have no secret to verify, reject
+    if hmac_header.present? && secret.blank?
       head :unauthorized
-      false
+      return false
+    end
+
+    # Skip verification only when there's no signature and no secret (local dev)
+    return if hmac_header.blank? && secret.blank?
+
+    unless handler.verify_signature(request, secret)
+      Rails.logger.warn "Invalid webhook signature#{Current.shop ? " for shop #{Current.shop.domain}" : ""}"
+      head :unauthorized
+      return false
     end
   end
 

@@ -16,10 +16,14 @@ module Providers
       end
 
       def verify_signature(request, secret)
-        return true if secret.blank?
+        signature_header = request.headers["X-Webhook-Signature"]
+        return false if signature_header.blank?
 
-        expected = OpenSSL::HMAC.hexdigest("SHA256", secret, request.raw_post)
-        ActiveSupport::SecurityUtils.secure_compare(expected, request.headers["X-Webhook-Signature"].to_s)
+        request.body.rewind
+        data = request.body.read
+
+        expected = OpenSSL::HMAC.hexdigest("SHA256", secret, data)
+        ActiveSupport::SecurityUtils.secure_compare(expected, signature_header)
       end
 
       def self.extract_shop_domain(request)

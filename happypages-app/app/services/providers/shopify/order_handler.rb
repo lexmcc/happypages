@@ -14,9 +14,8 @@ module Providers
       end
 
       def verify_signature(request, secret)
-        return true if secret.blank?
-
         hmac_header = request.headers["X-Shopify-Hmac-Sha256"]
+        return false if hmac_header.blank?
 
         request.body.rewind
         data = request.body.read
@@ -25,7 +24,7 @@ module Providers
           OpenSSL::HMAC.digest("sha256", secret, data)
         )
 
-        ActiveSupport::SecurityUtils.secure_compare(calculated_hmac, hmac_header.to_s)
+        ActiveSupport::SecurityUtils.secure_compare(calculated_hmac, hmac_header)
       end
 
       def self.extract_shop_domain(request)

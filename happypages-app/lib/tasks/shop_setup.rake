@@ -34,7 +34,7 @@ namespace :shop do
       credential = shop.shop_credential || shop.build_shop_credential
       credential.assign_attributes(
         shopify_access_token: ENV["SHOPIFY_ACCESS_TOKEN"],
-        shopify_webhook_secret: ENV["SHOPIFY_WEBHOOK_SECRET"],
+        shopify_webhook_secret: nil, # Shopify signs webhooks with client secret (ENV["SHOPIFY_CLIENT_SECRET"])
         awtomic_api_key: ENV["AWTOMIC_API_KEY"],
         awtomic_webhook_secret: ENV["AWTOMIC_WEBHOOK_SECRET"],
         klaviyo_api_key: ENV["KLAVIYO_API_KEY"]
