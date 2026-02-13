@@ -7,7 +7,7 @@ class AuditLog < ApplicationRecord
     webhook_received config_access
   ].freeze
 
-  ACTORS = %w[webhook admin system customer].freeze
+  ACTORS = %w[webhook admin system customer super_admin].freeze
 
   validates :action, presence: true, inclusion: { in: ACTIONS }
   validates :actor, presence: true, inclusion: { in: ACTORS }

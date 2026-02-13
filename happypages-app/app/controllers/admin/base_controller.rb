@@ -22,6 +22,12 @@ class Admin::BaseController < ApplicationController
     unless current_user
       session[:return_to] = request.fullpath
       redirect_to login_path, alert: "Please log in"
+      return
+    end
+
+    if current_user.shop&.suspended?
+      reset_session
+      redirect_to login_path, alert: "Your shop has been suspended"
     end
   end
 

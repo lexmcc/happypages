@@ -1,0 +1,52 @@
+<div data-controller="sidebar">
+  <%# Mobile hamburger button %>
+  <button
+    data-action="click->sidebar#toggle"
+    class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 border border-slate-700 rounded-lg shadow-lg"
+    aria-label="Toggle navigation"
+  >
+    <svg class="size-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+  <%# Backdrop %>
+  <div
+    data-sidebar-target="backdrop"
+    data-action="click->sidebar#close"
+    class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"
+  ></div>
+
+  <%# Sidebar %>
+  <aside
+    data-sidebar-target="sidebar"
+    class="fixed lg:sticky top-0 left-0 z-40 h-screen w-60 bg-slate-900 border-r border-slate-800 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200"
+  >
+    <%# Header with badge %>
+    <div class="px-5 py-5 border-b border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <img src="/refrral-app-icon-large.png" alt="Happypages" class="size-8 rounded-lg">
+        <div>
+          <span class="text-base font-semibold text-white">Happypages</span>
+          <span class="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">Super</span>
+        </div>
+      </div>
+    </div>
+
+    <%# Navigation %>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <%= link_to superadmin_root_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/shops') || request.path == '/superadmin' || request.path == '/superadmin/' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'}" do %>
+        <svg class="size-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349M3.75 9.349a3 3 0 01-.938-2.307l.563-6.032A1.5 1.5 0 014.87 0h14.26a1.5 1.5 0 011.495 1.01l.563 6.032a3 3 0 01-.938 2.307"></path>
+        </svg>
+        Shops
+      <% end %>
+    </nav>
+
+    <%# Logout %>
+    <div class="px-4 py-4 border-t border-slate-800">
+      <p class="text-xs text-slate-500 truncate mb-2"><%= session[:super_admin_email] %></p>
+      <%= button_to "Logout", superadmin_logout_path, method: :delete, class: "text-xs text-slate-400 hover:text-slate-200 transition-colors" %>
+    </div>
+  </aside>
+</div>

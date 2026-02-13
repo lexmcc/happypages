@@ -1,0 +1,58 @@
+<div class="py-8" data-controller="superadmin-tabs">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <%# Header %>
+    <div class="flex items-start justify-between mb-8">
+      <div>
+        <%= link_to superadmin_root_path, class: "text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2 inline-block" do %>
+          &larr; Back to shops
+        <% end %>
+        <h1 class="text-3xl font-bold text-gray-900"><%= @shop.name %></h1>
+        <p class="text-gray-500 mt-1"><%= @shop.domain %></p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <% badge_class = case @shop.status
+           when "active" then "bg-green-100 text-green-700 border-green-200"
+           when "suspended" then "bg-red-100 text-red-700 border-red-200"
+           when "uninstalled" then "bg-gray-100 text-gray-500 border-gray-200"
+           end %>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border <%= badge_class %>">
+          <%= @shop.status %>
+        </span>
+
+        <% if @shop.active? %>
+          <%= button_to "Suspend", suspend_superadmin_shop_path(@shop), method: :post,
+              data: { turbo_confirm: "Suspend #{@shop.name}? This will block their admin access." },
+              class: "px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors" %>
+        <% elsif @shop.suspended? %>
+          <%= button_to "Reactivate", reactivate_superadmin_shop_path(@shop), method: :post,
+              data: { turbo_confirm: "Reactivate #{@shop.name}?" },
+              class: "px-4 py-2 bg-green-50 text-green-700 border border-green-200 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Tab navigation %>
+    <div class="border-b border-gray-200 mb-6">
+      <nav class="flex gap-6" role="tablist">
+        <% %w[Referrals Campaigns Analytics Credentials].each_with_index do |tab, i| %>
+          <button
+            data-superadmin-tabs-target="tab"
+            data-action="click->superadmin-tabs#switch"
+            data-index="<%= i %>"
+            role="tab"
+            class="pb-3 text-sm font-medium border-b-2 transition-colors <%= i == 0 ? 'border-slate-900 text-slate-900' : 'border-transparent text-gray-500 hover:text-gray-700' %>"
+          >
+            <%= tab %>
+          </button>
+        <% end %>
+      </nav>
+    </div>
+
+    <%# Tab panels %>
+    <div data-superadmin-tabs-target="panel"><%= render "referrals_tab" %></div>
+    <div data-superadmin-tabs-target="panel" class="hidden"><%= render "campaigns_tab" %></div>
+    <div data-superadmin-tabs-target="panel" class="hidden"><%= render "analytics_tab" %></div>
+    <div data-superadmin-tabs-target="panel" class="hidden"><%= render "credentials_tab" %></div>
+  </div>
+</div>

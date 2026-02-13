@@ -1,0 +1,41 @@
+<%# Summary cards %>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <% [
+    ["Extension Loads", @analytics_totals[:extension_loads]],
+    ["Share Clicks", @analytics_totals[:share_clicks]],
+    ["Page Views", @analytics_totals[:page_views]],
+    ["Code Copies", @analytics_totals[:code_copies]]
+  ].each do |label, count| %>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <p class="text-sm text-gray-500"><%= label %></p>
+      <p class="text-2xl font-bold text-gray-900 mt-1 tabular-nums"><%= number_with_delimiter(count) %></p>
+    </div>
+  <% end %>
+</div>
+
+<%# Daily chart - last 30 days %>
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+  <h3 class="text-sm font-semibold text-gray-700 mb-4">Last 30 Days</h3>
+  <div class="h-64">
+    <%
+      chart_data = {}
+      {
+        "Extension Loads" => AnalyticsEvent::EXTENSION_LOAD,
+        "Share Clicks" => AnalyticsEvent::SHARE_CLICK,
+        "Page Views" => AnalyticsEvent::PAGE_LOAD,
+        "Code Copies" => AnalyticsEvent::COPY_CLICK
+      }.each do |label, event_type|
+        series = {}
+        @daily_events.each do |(type, date), count|
+          series[date] = count if type == event_type
+        end
+        chart_data[label] = series if series.any?
+      end
+    %>
+    <% if chart_data.any? %>
+      <%= line_chart chart_data, colors: ["#ff584d", "#34d399", "#3b82f6", "#a855f7"] %>
+    <% else %>
+      <div class="flex items-center justify-center h-full text-gray-400 text-sm">No analytics data in the last 30 days</div>
+    <% end %>
+  </div>
+</div>
