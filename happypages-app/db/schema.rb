@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_100001) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_13_141800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "analytics_events", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -66,6 +94,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100001) do
     t.index ["shared_discount_id"], name: "index_discount_generations_on_shared_discount_id"
   end
 
+  create_table "media_assets", force: :cascade do |t|
+    t.integer "byte_size", null: false
+    t.string "content_type", null: false
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.bigint "shop_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "created_at"], name: "index_media_assets_on_shop_id_and_created_at"
+    t.index ["shop_id"], name: "index_media_assets_on_shop_id"
+  end
+
   create_table "referral_rewards", force: :cascade do |t|
     t.datetime "applied_at"
     t.string "awtomic_customer_id"
@@ -76,15 +115,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100001) do
     t.datetime "created_at", null: false
     t.datetime "expires_at"
     t.bigint "referral_id", null: false
+    t.bigint "shop_id", null: false
     t.string "shopify_discount_id"
     t.string "shopify_order_id"
     t.string "status", default: "created", null: false
     t.datetime "updated_at", null: false
     t.integer "usage_number", null: false
     t.index ["awtomic_subscription_id"], name: "index_referral_rewards_on_awtomic_subscription_id"
-    t.index ["code"], name: "index_referral_rewards_on_code", unique: true
     t.index ["referral_id", "shopify_order_id"], name: "index_referral_rewards_on_referral_id_and_shopify_order_id", unique: true
     t.index ["referral_id"], name: "index_referral_rewards_on_referral_id"
+    t.index ["shop_id", "code"], name: "index_referral_rewards_on_shop_id_and_code", unique: true
+    t.index ["shop_id"], name: "index_referral_rewards_on_shop_id"
     t.index ["status", "expires_at"], name: "index_referral_rewards_on_status_and_expires_at"
     t.index ["status"], name: "index_referral_rewards_on_status"
   end
@@ -158,6 +199,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100001) do
     t.string "platform_type", null: false
     t.string "slug", null: false
     t.string "status", default: "active", null: false
+    t.string "storefront_url"
     t.datetime "updated_at", null: false
     t.index ["domain"], name: "index_shops_on_domain", unique: true
     t.index ["platform_type"], name: "index_shops_on_platform_type"
@@ -177,11 +219,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100001) do
     t.index ["shop_id"], name: "index_users_on_shop_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analytics_events", "shops"
   add_foreign_key "audit_logs", "shops"
   add_foreign_key "discount_configs", "shops"
   add_foreign_key "discount_generations", "shared_discounts"
+  add_foreign_key "media_assets", "shops"
   add_foreign_key "referral_rewards", "referrals"
+  add_foreign_key "referral_rewards", "shops"
   add_foreign_key "referrals", "discount_generations"
   add_foreign_key "referrals", "shops"
   add_foreign_key "shared_discounts", "shops"

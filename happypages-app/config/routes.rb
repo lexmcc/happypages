@@ -58,6 +58,9 @@ Rails.application.routes.draw do
     # Referral Page editor
     resource :referral_page, only: [:edit, :update], controller: "referral_page"
 
+    # Media library
+    resources :media_assets, only: [:index, :create, :destroy]
+
     # Integrations
     resource :integrations, only: [:edit, :update, :destroy], controller: "integrations"
 
@@ -74,6 +77,20 @@ Rails.application.routes.draw do
 
   # Public pages
   get "privacy", to: "pages#privacy"
+
+  # Super admin dashboard
+  namespace :superadmin do
+    get "login", to: "sessions#new", as: :login
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy", as: :logout
+    root to: "shops#index"
+    resources :shops, only: [:index, :show] do
+      member do
+        post :suspend
+        post :reactivate
+      end
+    end
+  end
 
   # Health check for Railway/load balancers
   get "up" => "rails/health#show", as: :rails_health_check

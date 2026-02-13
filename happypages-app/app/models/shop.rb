@@ -10,6 +10,7 @@ class Shop < ApplicationRecord
   has_many :referrals, dependent: :destroy
   has_many :referral_rewards, dependent: :destroy
   has_many :audit_logs, dependent: :destroy
+  has_many :media_assets, dependent: :destroy
 
   validates :name, presence: true
   validates :domain, presence: true, uniqueness: true
