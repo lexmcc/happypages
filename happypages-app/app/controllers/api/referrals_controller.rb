@@ -123,6 +123,14 @@ module Api
         else
           Rails.logger.error "Failed to add customer note: #{result[:errors]}"
         end
+
+        # Write referral code to customer metafield
+        customer_provider.set_metafield(
+          customer_id: customer_id,
+          namespace: "app--happypages-friendly-referrals",
+          key: "referral_code",
+          value: referral.referral_code
+        )
       else
         Rails.logger.warn "No customer found for #{referral.email}, skipping note"
       end

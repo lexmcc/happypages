@@ -5,29 +5,41 @@ class ReferralsController < ApplicationController
   before_action :set_shop_from_slug
 
   def show
-    first_name = params[:firstName].presence || params[:first_name].presence
-    email = params[:email].presence
+    if params[:code].present?
+      # Code-based lookup (no PII in URL)
+      scope = Referral.all
+      scope = scope.where(shop: Current.shop) if Current.shop
+      @referral = scope.find_by(referral_code: params[:code])
 
-    if first_name.blank? || email.blank?
-      @error = "Missing required parameters. Please access this page from the checkout confirmation."
-      return render :error
-    end
-
-    # Find existing referral by email or create new one - scope to shop
-    scope = Referral.all
-    scope = scope.where(shop: Current.shop) if Current.shop
-    @referral = scope.find_by(email: email)
-
-    if @referral.nil?
-      @referral = Referral.new(first_name: first_name, email: email, shop: Current.shop)
-
-      if @referral.save
-        create_discount(@referral)
-        add_customer_note(@referral)
-        track_klaviyo(:referral_created, @referral)
-      else
-        @error = "Could not create referral: #{@referral.errors.full_messages.join(', ')}"
+      unless @referral
+        @error = "Referral not found."
         return render :error
+      end
+    else
+      # Email fallback (backward compat)
+      first_name = params[:firstName].presence || params[:first_name].presence
+      email = params[:email].presence
+
+      if first_name.blank? || email.blank?
+        @error = "Missing required parameters. Please access this page from the checkout confirmation."
+        return render :error
+      end
+
+      scope = Referral.all
+      scope = scope.where(shop: Current.shop) if Current.shop
+      @referral = scope.find_by(email: email)
+
+      if @referral.nil?
+        @referral = Referral.new(first_name: first_name, email: email, shop: Current.shop)
+
+        if @referral.save
+          create_discount(@referral)
+          add_customer_note(@referral)
+          track_klaviyo(:referral_created, @referral)
+        else
+          @error = "Could not create referral: #{@referral.errors.full_messages.join(', ')}"
+          return render :error
+        end
       end
     end
 
@@ -149,6 +161,14 @@ class ReferralsController < ApplicationController
       else
         Rails.logger.error "Failed to add customer note: #{result[:errors]}"
       end
+
+      # Write referral code to customer metafield
+      customer_provider.set_metafield(
+        customer_id: customer_id,
+        namespace: "app--happypages-friendly-referrals",
+        key: "referral_code",
+        value: referral.referral_code
+      )
     else
       Rails.logger.warn "No customer found for #{referral.email}, skipping note"
     end

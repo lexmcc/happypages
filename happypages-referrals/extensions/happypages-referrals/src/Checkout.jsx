@@ -53,6 +53,7 @@ function Extension() {
   const [discounts, setDiscounts] = useState(DEFAULT_DISCOUNTS);
   const [shopSlug, setShopSlug] = useState(null);
   const [referralBaseUrl, setReferralBaseUrl] = useState(REFERRAL_APP_URL);
+  const [referralCode, setReferralCode] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Try customer account first (logged-in users)
@@ -108,7 +109,14 @@ function Extension() {
           ...(shopDomain && { 'X-Shop-Domain': shopDomain })
         },
         body: JSON.stringify({ first_name: firstName, email })
-      }).catch(() => {}); // Silent fail - user can still click button
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.referral_code) {
+            setReferralCode(data.referral_code);
+          }
+        })
+        .catch(() => {}); // Silent fail - user can still click button with fallback URL
     }
   }, [firstName, email]);
 
@@ -140,10 +148,13 @@ function Extension() {
   const subtitle = replaceVariables(config.subtitle || 'Give 50% And Get 50% Off');
   const buttonText = replaceVariables(config.button_text || 'Share Now');
 
-  // Build referral URL with user params (use shop slug for white-labeled URL if available)
+  // Build referral URL — prefer code-based (no PII), fall back to email params
+  const referralParams = referralCode
+    ? `code=${encodeURIComponent(referralCode)}`
+    : `firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
   const referralUrl = shopSlug
-    ? `${referralBaseUrl}/${shopSlug}/refer?firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`
-    : `${referralBaseUrl}/refer?firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
+    ? `${referralBaseUrl}/${shopSlug}/refer?${referralParams}`
+    : `${referralBaseUrl}/refer?${referralParams}`;
 
   // Track share button click before navigation
   const handleShareClick = () => {

@@ -95,7 +95,7 @@ class KlaviyoService
   end
 
   def track_share_reminder(referral)
-    referral_url = "#{ENV.fetch('APP_URL', 'https://app.example.com')}/refer?email=#{CGI.escape(referral.email)}&firstName=#{CGI.escape(referral.first_name)}"
+    referral_url = "#{ENV.fetch('APP_URL', 'https://app.example.com')}/refer?code=#{CGI.escape(referral.referral_code)}"
 
     track_event(
       email: referral.email,

@@ -20,6 +20,11 @@ module Providers
         raise NotImplementedError
       end
 
+      # Set a metafield on a customer
+      def set_metafield(customer_id:, namespace:, key:, value:, type: "single_line_text_field")
+        raise NotImplementedError
+      end
+
       protected
 
       attr_reader :shop

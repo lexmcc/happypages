@@ -78,6 +78,32 @@ module Providers
         end
       end
 
+      def set_metafield(customer_id:, namespace:, key:, value:, type: "single_line_text_field")
+        mutation = <<~GRAPHQL
+          mutation customerUpdate($input: CustomerInput!) {
+            customerUpdate(input: $input) {
+              customer { id }
+              userErrors { field message }
+            }
+          }
+        GRAPHQL
+
+        variables = {
+          input: {
+            id: customer_id,
+            metafields: [{ namespace: namespace, key: key, value: value, type: type }]
+          }
+        }
+
+        result = execute_graphql(mutation, variables)
+        errors = result.dig("data", "customerUpdate", "userErrors")
+        if errors.blank?
+          { success: true }
+        else
+          { success: false, errors: errors }
+        end
+      end
+
       private
 
       def execute_graphql(query, variables)
