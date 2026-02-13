@@ -2,11 +2,18 @@ require "rack/cors"
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # Allow requests from Shopify checkout domains
-    origins(
+    # Allow requests from Shopify checkout domains and custom storefront domains
+    shopify_origins = [
       /\Ahttps:\/\/.*\.shopify\.com\z/,
       /\Ahttps:\/\/.*\.myshopify\.com\z/
-    )
+    ]
+
+    custom_origins = ENV.fetch("CORS_ALLOWED_ORIGINS", "")
+      .split(",")
+      .map(&:strip)
+      .reject(&:empty?)
+
+    origins(*shopify_origins, *custom_origins)
 
     resource "/api/referrals",
       headers: :any,

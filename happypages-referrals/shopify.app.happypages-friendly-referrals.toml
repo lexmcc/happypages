@@ -33,6 +33,7 @@ access.storefront = "public_read"
 name = "Shop Slug"
 description = "Shop's referral page URL slug"
 type = "single_line_text_field"
+access.storefront = "public_read"
 
 [auth]
 redirect_urls = [ "https://app.happypages.co/auth/shopify/callback" ]
