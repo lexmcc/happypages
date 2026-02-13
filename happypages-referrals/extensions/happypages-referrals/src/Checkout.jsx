@@ -98,7 +98,7 @@ function Extension() {
       });
   }, []);
 
-  // Auto-create referral on page load (non-blocking)
+  // Auto-create referral on page load — blocks button URL until code is ready
   useEffect(() => {
     if (firstName && email) {
       const shopDomain = getShopDomain();
@@ -114,9 +114,13 @@ function Extension() {
         .then(data => {
           if (data.referral_code) {
             setReferralCode(data.referral_code);
+          } else {
+            setReferralCode('_fallback');
           }
         })
-        .catch(() => {}); // Silent fail - user can still click button with fallback URL
+        .catch(() => {
+          setReferralCode('_fallback');
+        });
     }
   }, [firstName, email]);
 
@@ -148,13 +152,16 @@ function Extension() {
   const subtitle = replaceVariables(config.subtitle || 'Give 50% And Get 50% Off');
   const buttonText = replaceVariables(config.button_text || 'Share Now');
 
-  // Build referral URL — prefer code-based (no PII), fall back to email params
-  const referralParams = referralCode
+  // Build referral URL — code-based (no PII), email fallback only if POST failed
+  const referralReady = referralCode && referralCode !== '_fallback';
+  const referralParams = referralReady
     ? `code=${encodeURIComponent(referralCode)}`
     : `firstName=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
-  const referralUrl = shopSlug
-    ? `${referralBaseUrl}/${shopSlug}/refer?${referralParams}`
-    : `${referralBaseUrl}/refer?${referralParams}`;
+  const referralUrl = referralCode
+    ? (shopSlug
+        ? `${referralBaseUrl}/${shopSlug}/refer?${referralParams}`
+        : `${referralBaseUrl}/refer?${referralParams}`)
+    : null; // null while POST is in-flight
 
   // Track share button click before navigation
   const handleShareClick = () => {
@@ -178,8 +185,9 @@ function Extension() {
             variant="primary"
             inlineSize="fill"
             onClick={handleShareClick}
+            disabled={!referralUrl}
           >
-            {buttonText}
+            {referralUrl ? buttonText : 'Loading...'}
           </s-button>
         </s-stack>
       </s-box>
