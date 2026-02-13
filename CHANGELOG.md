@@ -4,6 +4,14 @@ Dated record of shipped features across both products.
 
 ## 2026-02-13
 
+- **Super admin dashboard** at `/superadmin` — master view of all onboarded shops with status filters, referral/campaign/analytics/credentials tabs, and suspend/reactivate actions
+- Super admin env-var BCrypt auth with 2-hour session timeout, rate-limited login (5/min/IP), failed login logging
+- Suspended shops are now blocked from `/admin` access (admin base controller guard)
+- Reactivate guarded to suspended-only — can't accidentally reactivate uninstalled shops
+- **Media library** — admin page for uploading and managing banner images with drag-and-drop
+- **Inline media pickers** on Referral Page and Thank You Card editors replace URL text inputs
+- **Automatic image resizing** to optimized WebP variants (1200x400 referral, 600x400 extension, 300x200 thumbnail)
+- **Railway Bucket storage** (Tigris, S3-compatible) via Active Storage with presigned URL redirects
 - Storefront URL field in admin settings for Hydrogen/headless stores (referral links + back-to-store adapt automatically)
 - Extracted `Api::BaseController` — all API controllers inherit from `ActionController::API` with shared shop auth
 - `rack-attack` rate limiting on POST /api/referrals (500 req/min per IP)

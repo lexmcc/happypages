@@ -16,7 +16,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
 - **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom)
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII)
-- **Audit logging** — AuditLog model with JSONB details for compliance events
+- **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin.
 - **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
 
 ### Integrations
@@ -27,10 +27,22 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 ### Admin UI
 
 - **Dashboard** — analytics overview with event tracking
-- **Referral Page** — configurable customer-facing referral page editor
-- **Thank You Card** — checkout extension configuration
+- **Referral Page** — configurable customer-facing referral page editor with inline media picker
+- **Thank You Card** — checkout extension configuration with inline media picker
+- **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback.
 - **Integrations** — Awtomic connect/disconnect, Klaviyo (coming soon)
 - **Settings** — shop slug management + optional storefront URL for headless storefronts (Hydrogen, etc.)
+- **Suspended shop guard** — admin base controller checks `shop.suspended?` and forces logout if the shop has been suspended via super admin
+
+### Super Admin (`/superadmin`)
+
+Master dashboard for the app owner to manage all onboarded shops. Env-var-based BCrypt auth (no DB migration), 2-hour session timeout, dark slate theme to distinguish from shop admin.
+
+- **Login** — email + BCrypt password verified against `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_PASSWORD_DIGEST` env vars. Rate-limited to 5 attempts/min/IP. Failed attempts logged.
+- **Shop list** — all shops ordered by install date, filterable by status (active/suspended/uninstalled). Shows referral counts per shop.
+- **Shop detail** — four-tab view (Referrals, Campaigns, Analytics, Credentials) with audit logging on each view. Referral search by code only (encrypted fields can't be queried). No emails displayed.
+- **Suspend / Reactivate** — status management with confirmation dialogs and audit trail. Reactivate guarded to suspended-only (can't reactivate uninstalled shops).
+- **Credentials tab** — shows integration connection status (Present/Missing/Connected) without exposing actual tokens.
 
 ### API Layer
 
@@ -39,7 +51,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **`GET /api/referrals/:id`** — lookup referral by code, returns `referral_code`, `usage_count`, `share_url` (no PII)
 - **`GET /api/config`** — extension configuration including `storefront_url` for Hydrogen stores
 - **`POST /api/analytics`** — event tracking from checkout extension
-- **Rate limiting** — `rack-attack` throttles POST /api/referrals at 500 req/min per IP
+- **Rate limiting** — `rack-attack` throttles POST /api/referrals at 500 req/min per IP, POST /superadmin/login at 5 req/min per IP
 - **CORS** — Shopify + custom origins for referrals (GET + POST), open for config and analytics endpoints
 
 ### Hydrogen / Headless Storefront Support

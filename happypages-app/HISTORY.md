@@ -50,6 +50,8 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 12** - App Bridge + session token auth on embedded page for Shopify automated checks
 - **Feb 12** - Security audit: hardened JWT verification (required claims, iss↔dest validation, domain checks)
 - **Feb 13** - Hydrogen readiness: storefront URL setting, API base controller, rate limiting, GET referral endpoint
+- **Feb 13** - Media upload & image management: admin media library, inline media pickers on editors, Railway Bucket (Tigris) storage with automatic WebP variant generation
+- **Feb 13** - Super admin dashboard: `/superadmin` with shop list, detail tabs, suspend/reactivate, audit logging, env-var BCrypt auth
 
 ## Key Milestones
 

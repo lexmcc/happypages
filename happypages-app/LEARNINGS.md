@@ -61,6 +61,32 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Must add `gem "rack-attack"` to Gemfile and create `config/initializers/rack_attack.rb`
 - Throttle rules use `Rack::Attack.throttle` with a block returning a discriminator (e.g., `req.ip`) or nil to skip
 
+### Railway Bucket Env Var Names Are Preset-Dependent (Feb 13, 2026)
+- Railway's "Connect Service to Bucket" dialog has a preset dropdown (AWS SDK Generic, Ruby on Rails ActiveStorage, Django, etc.)
+- Each preset injects **different env var names** for the same bucket
+- "AWS SDK (Generic)" injects: `AWS_BUCKET`, `AWS_ENDPOINT`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- "Ruby on Rails (ActiveStorage)" would inject: `AWS_S3_BUCKET_NAME`, `AWS_ENDPOINT_URL`, `AWS_DEFAULT_REGION`, etc.
+- **Always check `railway variables` to see the actual injected names** — don't assume from the preset label
+- **Lesson**: After linking a bucket, run `railway variables | grep AWS` to confirm var names before configuring `storage.yml`
+
+### Active Storage Variant Processing Requires libvips (Feb 13, 2026)
+- `image_processing` gem uses `ruby-vips` (libvips) by default in Rails 8.x, not ImageMagick
+- Local dev needs `brew install vips` — the Docker image for Railway already includes it
+- Variant `.processed` call triggers the actual image transformation — fails at runtime, not at boot
+- **Lesson**: Install vips locally before testing variant generation
+
+### BCrypt Digest in Railway Env Vars (Feb 13, 2026)
+- BCrypt hashes contain `$` characters (e.g., `$2a$12$...`) which can be stripped or interpreted by shell/env var UIs
+- Railway dashboard stripped the `$` signs, leaving a truncated hash that always failed verification
+- **Fix**: Generated the digest directly on the Railway container via `bin/rails runner` and pasted the full output into the dashboard
+- **Lesson**: After setting a BCrypt digest as an env var, always verify with `puts ENV['VAR_NAME']` on the actual container to confirm `$2a$` prefix is intact
+
+### Super Admin Session Isolation (Feb 13, 2026)
+- Super admin and shop admin share the same Rails session (cookie-based)
+- `reset_session` on super admin login/logout clears ALL session data, including any concurrent shop admin session
+- Acceptable since only the app owner uses both, but worth knowing
+- **Lesson**: If multi-user super admin is ever needed, consider separate session stores or token-based auth
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -125,5 +151,12 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - All customer-facing URLs (copy-link, back-to-store, config API) go through this helper
 - The `/discount/:code` route is a **Shopify Online Store** feature — Hydrogen stores may need a custom route on their end to handle discount codes
 
+### Active Storage + Stimulus Media Picker Pattern (Feb 13, 2026)
+- MediaAsset model owns the metadata (filename, content_type, byte_size); Active Storage `has_one_attached :file` handles the blob
+- Variants defined as model methods (`thumbnail_variant`, `referral_banner_variant`) — centralized sizing
+- Controller serializes variant URLs via `url_for(asset.variant)` — produces stable `/rails/active_storage/representations/redirect/...` URLs
+- Stimulus media picker writes the variant URL to a hidden `<input>` with the same `data-*-target` as the old URL input — existing preview controllers work without changes
+- Dispatching `new Event("input", { bubbles: true })` on the hidden field triggers connected Stimulus controllers (save detection, preview update)
+
 ---
-*Updated: Feb 13, 2026*
+*Updated: Feb 13, 2026 (super admin session)*

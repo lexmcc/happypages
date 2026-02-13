@@ -203,12 +203,19 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **API controllers**: inherit `Api::BaseController` (ActionController::API + ShopIdentifiable) — no CSRF, no session
 - **Storefront URLs**: `shop.customer_facing_url` returns `storefront_url` or `https://#{domain}` — use for all customer-facing links
 - **Rate limiting**: `rack-attack` gem, config in `config/initializers/rack_attack.rb`
+- **Super admin**: `/superadmin` namespace, env-var BCrypt auth (`SUPER_ADMIN_EMAIL` + `SUPER_ADMIN_PASSWORD_DIGEST`), 2-hour session timeout, dark slate theme. Controllers inherit `Superadmin::BaseController`.
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
 
 ### Shopify App Identity
 - **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
 - **Distribution**: Public (unlisted) — installable via link on any store
 - **TOML config**: `shopify.app.happypages-friendly-referrals.toml` is the linked config file
+
+### Media & Storage
+- **Active Storage** with Railway Bucket (Tigris, S3-compatible) — config in `config/storage.yml`, production uses `:tigris` service
+- **MediaAsset model** — `has_one_attached :file`, variant methods: `thumbnail_variant` (300x200), `referral_banner_variant` (1200x400), `extension_banner_variant` (600x400), all WebP
+- **Railway bucket env vars**: `AWS_BUCKET`, `AWS_ENDPOINT`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` — check with `railway variables` if changed
+- **Local dev** requires `brew install vips` for variant generation
 
 ### Gotchas
 - **Shopify signs webhooks with `SHOPIFY_CLIENT_SECRET`** — not a per-shop secret or `SHOPIFY_WEBHOOK_SECRET`. Never `return true` when a signing secret is blank.
