@@ -2,6 +2,14 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-13
+
+- Storefront URL field in admin settings for Hydrogen/headless stores (referral links + back-to-store adapt automatically)
+- Extracted `Api::BaseController` — all API controllers inherit from `ActionController::API` with shared shop auth
+- `rack-attack` rate limiting on POST /api/referrals (500 req/min per IP)
+- GET /api/referrals/:id endpoint — lookup referral by code (no PII exposed)
+- CORS updated: GET + wildcard for /api/referrals, storefront_url returned from config API
+
 ## 2026-02-12
 
 - App Bridge 4.x + session token auth on embedded page (passes Shopify automated app checks)

@@ -200,6 +200,9 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 ### Key Patterns
 - **Multi-tenant**: `Current.shop` thread-isolated context, shop lookup via `X-Shop-Domain` header
 - **White-labeled URLs**: `/:shop_slug/refer` routes with auto-generated slugs from shop name
+- **API controllers**: inherit `Api::BaseController` (ActionController::API + ShopIdentifiable) — no CSRF, no session
+- **Storefront URLs**: `shop.customer_facing_url` returns `storefront_url` or `https://#{domain}` — use for all customer-facing links
+- **Rate limiting**: `rack-attack` gem, config in `config/initializers/rack_attack.rb`
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
 
 ### Shopify App Identity

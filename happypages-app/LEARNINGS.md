@@ -51,6 +51,16 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Added `response.headers.delete("X-Frame-Options")` before setting CSP
 - **Lesson**: Always delete X-Frame-Options when setting frame-ancestors
 
+### Api::BaseController Extraction (Feb 13, 2026)
+- API controllers previously inherited `ApplicationController` and skipped `verify_authenticity_token` + `set_current_shop`, then re-included `ShopIdentifiable` — 4 lines of boilerplate per controller
+- `Api::BaseController` inherits `ActionController::API` (no CSRF, no session, no browser middleware) and includes `ShopIdentifiable` once
+- **Gotcha**: `ActionController::API` doesn't include `ActionController::Base` middleware — no `verify_authenticity_token` to skip, no `set_current_shop` to skip. Clean inheritance.
+
+### rack-attack Requires Separate Gem (Feb 13, 2026)
+- `rack-attack` is NOT bundled with Rails despite being Rack middleware
+- Must add `gem "rack-attack"` to Gemfile and create `config/initializers/rack_attack.rb`
+- Throttle rules use `Rack::Attack.throttle` with a block returning a discriminator (e.g., `req.ip`) or nil to skip
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -109,5 +119,11 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - The "go to dashboard" link uses `target="_blank"` (first-party context in new tab), which helps
 - **Lesson**: Don't rely on iframe-set cookies persisting in Safari — consider token-based auth for cross-context flows
 
+### Hydrogen / Headless Storefront URLs (Feb 13, 2026)
+- Hydrogen stores don't use `.myshopify.com` domain or the Shopify Online Store `/discount/` route
+- Added optional `storefront_url` to shops table — `customer_facing_url` helper falls back to `https://{domain}`
+- All customer-facing URLs (copy-link, back-to-store, config API) go through this helper
+- The `/discount/:code` route is a **Shopify Online Store** feature — Hydrogen stores may need a custom route on their end to handle discount codes
+
 ---
-*Updated: Feb 12, 2026*
+*Updated: Feb 13, 2026*
