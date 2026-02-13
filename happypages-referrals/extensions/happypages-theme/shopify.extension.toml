@@ -1,7 +1,0 @@
-api_version = "2026-04"
-
-[[extensions]]
-name = "Happypages Referral Link"
-handle = "happypages-theme"
-uid = "54e20395-c1b4-a1d6-abc1-03746b2ce00d8dba126d"
-type = "theme"

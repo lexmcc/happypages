@@ -68,31 +68,45 @@
       </section>
     <% end %>
 
-    <section class="mt-6">
-      <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div class="px-6 py-4 border-b border-black/5">
-          <h3 class="text-lg font-semibold text-gray-900">Refer a Friend Link</h3>
-          <p class="text-sm text-gray-500">Add a referral link anywhere in your theme — no code required</p>
-        </div>
-
-        <div class="p-6 space-y-4">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Available</span>
+    <% if @shop&.slug.present? %>
+      <section class="mt-6">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900">Theme Integration</h3>
+            <p class="text-sm text-gray-500">Add a referral link to your Shopify theme</p>
           </div>
 
-          <p class="text-sm text-gray-700 font-medium">Add the Refer a Friend link to your theme:</p>
-          <ol class="text-sm text-gray-600 space-y-2 list-decimal list-inside">
-            <li>Go to <strong>Online Store &gt; Themes &gt; Customize</strong></li>
-            <li>Open the section where you want the link (e.g. Header)</li>
-            <li>Click <strong>Add block</strong> &rarr; select <strong>Happypages Referral Link</strong></li>
-            <li>Save</li>
-          </ol>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-gray-700">Paste this Liquid snippet into your theme (e.g. header, account page, or navigation) to show a "My Referrals" link to logged-in customers:</p>
 
-          <p class="text-xs text-gray-500 mt-3 border-t border-black/5 pt-3">
-            The link only appears to logged-in customers who have a referral code. It inherits your theme's styles automatically.
-          </p>
+            <div class="relative">
+              <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{% raw %}{%- assign slug = shop.metafields['app--happypages-friendly-referrals'].shop_slug -%}
+{%- assign code = customer.metafields['app--happypages-friendly-referrals'].referral_code -%}
+{%- if slug and code -%}
+  <a href="https://app.happypages.co/{{ slug }}/refer?code={{ code }}">
+    My Referrals
+  </a>
+{%- endif -%}{% endraw %}</code></pre>
+              <button
+                type="button"
+                onclick="navigator.clipboard.writeText(this.closest('.relative').querySelector('code').textContent).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 2000); })"
+                class="absolute top-2 right-2 px-2.5 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs rounded transition-colors"
+              >
+                Copy
+              </button>
+            </div>
+
+            <p class="text-xs text-gray-500 border-t border-black/5 pt-3">
+              The link only appears when the customer is logged in and has a referral code. The URL updates automatically if you change your slug above.
+            </p>
+
+            <details class="text-xs text-gray-500">
+              <summary class="cursor-pointer hover:text-gray-700">Using a headless storefront (Hydrogen, etc.)?</summary>
+              <p class="mt-2">Query the <code class="bg-gray-100 px-1 rounded">shop_slug</code> and <code class="bg-gray-100 px-1 rounded">referral_code</code> metafields via the <a href="https://shopify.dev/docs/api/storefront" target="_blank" class="text-[#ff584d] hover:underline">Storefront API</a> and build the URL client-side.</p>
+            </details>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    <% end %>
   </div>
 </div>
