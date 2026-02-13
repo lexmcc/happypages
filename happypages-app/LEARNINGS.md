@@ -151,6 +151,19 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - All customer-facing URLs (copy-link, back-to-store, config API) go through this helper
 - The `/discount/:code` route is a **Shopify Online Store** feature — Hydrogen stores may need a custom route on their end to handle discount codes
 
+### Hidden Form Inputs Still Submit (Feb 13, 2026)
+- HTML inputs inside `display: none` containers (CSS `hidden` class, tab panels) are still submitted with the form
+- A single `form_with` wrapping two tab panels means clicking either save button submits ALL inputs, including hidden tabs
+- In our case, saving the slug card submitted `storefront_url=""` from the hidden Hydrogen tab, and `.presence` converted it to `nil`, wiping the saved value
+- **Fix**: Split into two independent `<form>` elements — one per save action. Controller uses `params.key?(:storefront_url)` guard to only touch the field when explicitly submitted.
+- **Lesson**: When tabs contain form fields, either use separate forms per tab, or disable/exclude inputs in inactive tabs
+
+### Overwriting Existing Stimulus Controllers (Feb 13, 2026)
+- A `tabs_controller.js` already existed with a different API (name-based tabs, `showTab()`, coral colors)
+- Copying `superadmin_tabs_controller.js` over it replaced the API entirely
+- In this case no breakage occurred because the old controller was dead code (no views referenced it)
+- **Lesson**: Before overwriting a controller, grep for `data-controller="<name>"` to check if any views use it
+
 ### Active Storage + Stimulus Media Picker Pattern (Feb 13, 2026)
 - MediaAsset model owns the metadata (filename, content_type, byte_size); Active Storage `has_one_attached :file` handles the blob
 - Variants defined as model methods (`thumbnail_variant`, `referral_banner_variant`) — centralized sizing
@@ -159,4 +172,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Dispatching `new Event("input", { bubbles: true })` on the hidden field triggers connected Stimulus controllers (save detection, preview update)
 
 ---
-*Updated: Feb 13, 2026 (super admin session)*
+*Updated: Feb 13, 2026 (tabbed theme integration + audit fix)*

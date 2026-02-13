@@ -4,6 +4,9 @@ Dated record of shipped features across both products.
 
 ## 2026-02-13
 
+- **Tabbed theme integration UI** — Settings page now has Shopify Theme / Hydrogen tabs. Hydrogen tab includes storefront URL field and copyable discount route snippet (`discount.$code.tsx`) for Hydrogen stores.
+- Fixed storefront_url silently wiped when saving slug (split into separate forms, controller guards with `params.key?`)
+- Renamed `superadmin_tabs_controller` → shared `tabs_controller` used by both admin and superadmin views
 - **Super admin dashboard** at `/superadmin` — master view of all onboarded shops with status filters, referral/campaign/analytics/credentials tabs, and suspend/reactivate actions
 - Super admin env-var BCrypt auth with 2-hour session timeout, rate-limited login (5/min/IP), failed login logging
 - Suspended shops are now blocked from `/admin` access (admin base controller guard)

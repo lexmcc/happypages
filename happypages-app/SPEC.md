@@ -31,7 +31,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **Thank You Card** — checkout extension configuration with inline media picker
 - **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback.
 - **Integrations** — Awtomic connect/disconnect, Klaviyo (coming soon)
-- **Settings** — shop slug management + optional storefront URL for headless storefronts (Hydrogen, etc.)
+- **Settings** — shop slug management + tabbed theme integration (Shopify Theme snippet / Hydrogen discount route). Storefront URL field lives in the Hydrogen tab, separate form per section to prevent cross-field interference.
 - **Suspended shop guard** — admin base controller checks `shop.suspended?` and forces logout if the shop has been suspended via super admin
 
 ### Super Admin (`/superadmin`)
@@ -56,10 +56,11 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 
 ### Hydrogen / Headless Storefront Support
 
-- Optional `storefront_url` field on Shop — merchants set this in Settings for headless storefronts
+- Optional `storefront_url` field on Shop — merchants set this in Settings (Hydrogen tab) for headless storefronts
 - `customer_facing_url` helper returns `storefront_url` or falls back to `https://{domain}`
 - Referral copy-link, back-to-store link, and config API all use `customer_facing_url`
 - `shop_slug` and `referral_code` metafields have storefront API read access for Liquid/Storefront API queries
+- **Discount route snippet** — copyable `app/routes/discount.$code.tsx` Remix route file provided in admin Settings. Uses Storefront API `cartCreate` mutation to apply discount code and redirect to homepage, replicating Online Store's built-in `/discount/CODE` route for Hydrogen stores.
 
 ### Data Protection
 
