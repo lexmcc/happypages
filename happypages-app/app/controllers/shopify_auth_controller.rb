@@ -2,7 +2,7 @@ class ShopifyAuthController < ApplicationController
   skip_before_action :set_current_shop
   skip_before_action :verify_authenticity_token, only: [:callback]
 
-  SCOPES = "read_customers,write_customer_metafields,write_discounts,read_orders"
+  SCOPES = "read_customers,write_customers,write_discounts,read_orders"
 
   # GET /auth/shopify?shop=my-store.myshopify.com
   def initiate
