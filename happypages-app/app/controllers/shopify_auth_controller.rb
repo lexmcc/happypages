@@ -2,7 +2,7 @@ class ShopifyAuthController < ApplicationController
   skip_before_action :set_current_shop
   skip_before_action :verify_authenticity_token, only: [:callback]
 
-  SCOPES = "read_customers,write_customers,write_discounts,read_orders"
+  SCOPES = "read_customers,write_customers,write_discounts,read_orders,read_products,read_themes"
 
   # GET /auth/shopify?shop=my-store.myshopify.com
   def initiate
@@ -93,6 +93,9 @@ class ShopifyAuthController < ApplicationController
 
     # Write shop slug to Shopify metafield (fire-and-forget)
     sync_shop_slug_metafield(@shop)
+
+    # Scrape brand identity (async) — runs on install and re-auth to pick up new scopes
+    BrandScrapeJob.perform_later(@shop.id) unless @shop.brand_scraped?
 
     return_to = session.delete(:return_to) || admin_dashboard_path
 

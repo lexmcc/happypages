@@ -35,7 +35,7 @@
     <%# Tab navigation %>
     <div class="border-b border-gray-200 mb-6">
       <nav class="flex gap-6" role="tablist">
-        <% %w[Referrals Campaigns Analytics Credentials].each_with_index do |tab, i| %>
+        <% ["Referrals", "Campaigns", "Analytics", "Brand & AI", "Credentials"].each_with_index do |tab, i| %>
           <button
             data-tabs-target="tab"
             data-action="click->tabs#switch"
@@ -53,6 +53,7 @@
     <div data-tabs-target="panel"><%= render "referrals_tab" %></div>
     <div data-tabs-target="panel" class="hidden"><%= render "campaigns_tab" %></div>
     <div data-tabs-target="panel" class="hidden"><%= render "analytics_tab" %></div>
+    <div data-tabs-target="panel" class="hidden"><%= render "brand_ai_tab" %></div>
     <div data-tabs-target="panel" class="hidden"><%= render "credentials_tab" %></div>
   </div>
 </div>

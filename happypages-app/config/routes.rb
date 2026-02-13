@@ -64,6 +64,13 @@ Rails.application.routes.draw do
     # Integrations
     resource :integrations, only: [:edit, :update, :destroy], controller: "integrations"
 
+    # AI image generation
+    resources :image_generations, only: [:create] do
+      collection do
+        get :status
+      end
+    end
+
     # Settings (shop slug)
     resource :settings, only: [:edit, :update], controller: "settings"
 
@@ -88,6 +95,13 @@ Rails.application.routes.draw do
       member do
         post :suspend
         post :reactivate
+        post :rescrape_brand
+      end
+    end
+    resources :scene_assets, except: [:show]
+    resources :prompt_templates, except: [:show] do
+      member do
+        post :test_generate
       end
     end
   end

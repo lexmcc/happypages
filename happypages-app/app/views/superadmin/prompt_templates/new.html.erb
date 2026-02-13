@@ -1,0 +1,9 @@
+<div class="py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <%= link_to superadmin_prompt_templates_path, class: "text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2 inline-block" do %>
+      &larr; Back to templates
+    <% end %>
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">New Prompt Template</h1>
+    <%= render "form", prompt_template: @prompt_template %>
+  </div>
+</div>

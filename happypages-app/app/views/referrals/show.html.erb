@@ -1,3 +1,19 @@
+<% content_for :head do %>
+  <meta property="og:title" content="<%= Current.shop&.name %> — Get <%= @discount_display %> off your first order">
+  <meta property="og:description" content="<%= @referral.first_name %> wants to share a discount with you. Use their referral code for <%= @discount_display %> off.">
+  <meta property="og:type" content="website">
+  <% og_image_url = referral_config('og_image_url').presence || referral_config('referral_banner_image').presence %>
+  <% if og_image_url.present? %>
+    <meta property="og:image" content="<%= og_image_url %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= og_image_url %>">
+  <% end %>
+  <meta name="twitter:title" content="<%= Current.shop&.name %> — Get <%= @discount_display %> off">
+  <meta name="twitter:description" content="Use <%= @referral.first_name %>'s referral code for <%= @discount_display %> off your first order.">
+<% end %>
+
 <div class="min-h-screen py-8"
      style="--primary: <%= referral_config('referral_primary_color') %>;
             --secondary: <%= referral_config('referral_secondary_color') %>;

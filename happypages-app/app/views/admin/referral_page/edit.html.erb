@@ -56,6 +56,10 @@
       <p class="text-gray-600 mt-2">Customize the /refer page appearance</p>
     </header>
 
+    <div class="mb-6">
+      <%= render "admin/shared/regenerate_banner", surface: "referral_banner" %>
+    </div>
+
     <%# Hidden notice data for Stimulus to detect %>
     <% if notice %>
       <div data-referral-page-save-target="noticeData" data-notice="<%= notice %>" class="hidden"></div>

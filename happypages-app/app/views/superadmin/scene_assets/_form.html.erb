@@ -1,0 +1,60 @@
+<%= form_with(model: [:superadmin, scene_asset], class: "space-y-6") do |f| %>
+  <% if scene_asset.errors.any? %>
+    <div class="px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+      <ul class="list-disc pl-4 space-y-1">
+        <% scene_asset.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+      <% if scene_asset.file.attached? %>
+        <div class="mb-3">
+          <%= image_tag scene_asset.file.variant(resize_to_fill: [400, 230], format: :webp),
+              class: "rounded-lg border border-gray-200" %>
+        </div>
+      <% end %>
+      <%= f.file_field :file, accept: "image/jpeg,image/png,image/webp",
+          class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-slate-900 file:text-white hover:file:bg-slate-800" %>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+      <%= f.select :category, SceneAsset::CATEGORIES.map { |c| [c.capitalize, c] },
+          { prompt: "Select category" },
+          class: "block w-full rounded-lg border-gray-300 shadow-sm text-sm focus:border-slate-500 focus:ring-slate-500" %>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Mood</label>
+      <%= f.select :mood, SceneAsset::MOODS.map { |m| [m.capitalize, m] },
+          { include_blank: "None" },
+          class: "block w-full rounded-lg border-gray-300 shadow-sm text-sm focus:border-slate-500 focus:ring-slate-500" %>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <%= f.text_area :description, rows: 3, placeholder: "Two friends sharing a drink at a sunlit cafe table",
+          class: "block w-full rounded-lg border-gray-300 shadow-sm text-sm focus:border-slate-500 focus:ring-slate-500" %>
+      <p class="text-xs text-gray-400 mt-1">Describe the scene — used in prompt generation</p>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+      <%= f.text_field :tag_list, value: scene_asset.tag_list, placeholder: "sharing, coffee, warm, friends",
+          class: "block w-full rounded-lg border-gray-300 shadow-sm text-sm focus:border-slate-500 focus:ring-slate-500" %>
+      <p class="text-xs text-gray-400 mt-1">Comma-separated — used for matching scenes to brands</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit scene_asset.persisted? ? "Update scene" : "Create scene",
+        class: "px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", superadmin_scene_assets_path,
+        class: "px-4 py-2 text-gray-600 text-sm font-medium hover:text-gray-800" %>
+  </div>
+<% end %>

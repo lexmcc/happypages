@@ -1,0 +1,166 @@
+<div class="space-y-6">
+  <%# Brand Profile Card %>
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-gray-900">Brand Profile</h3>
+      <div class="flex items-center gap-2">
+        <% if @shop.brand_scraped? %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Scraped</span>
+          <span class="text-xs text-gray-400">
+            <%= time_ago_in_words(Time.parse(@shop.brand_profile["scraped_at"])) %> ago
+          </span>
+        <% else %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Not scraped</span>
+        <% end %>
+        <%= button_to "Rescrape", rescrape_brand_superadmin_shop_path(@shop), method: :post,
+            data: { turbo_confirm: "Re-scrape brand identity for #{@shop.name}?" },
+            class: "px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors" %>
+      </div>
+    </div>
+
+    <% if @shop.brand_scraped? %>
+      <div class="p-6 grid grid-cols-2 gap-6">
+        <div>
+          <table class="w-full">
+            <tbody class="divide-y divide-gray-50">
+              <tr>
+                <td class="py-2 text-sm font-medium text-gray-500 w-32">Category</td>
+                <td class="py-2 text-sm text-gray-900"><%= @shop.brand_category || "—" %></td>
+              </tr>
+              <tr>
+                <td class="py-2 text-sm font-medium text-gray-500">Style</td>
+                <td class="py-2 text-sm text-gray-900"><%= @shop.brand_style || "—" %></td>
+              </tr>
+              <tr>
+                <td class="py-2 text-sm font-medium text-gray-500">Vibe</td>
+                <td class="py-2 text-sm text-gray-900"><%= @shop.brand_vibe || "—" %></td>
+              </tr>
+              <tr>
+                <td class="py-2 text-sm font-medium text-gray-500">Fonts</td>
+                <td class="py-2 text-sm text-gray-900"><%= (@shop.brand_profile["fonts"] || []).join(", ").presence || "—" %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <%# Color palette %>
+          <p class="text-sm font-medium text-gray-500 mb-2">Palette</p>
+          <div class="flex gap-2 mb-4">
+            <% @shop.brand_colors.each do |color| %>
+              <% next unless color.to_s.match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
+              <div class="flex items-center gap-1.5">
+                <div class="size-6 rounded border border-gray-200" style="background-color: <%= color %>"></div>
+                <span class="text-xs font-mono text-gray-500"><%= color %></span>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Products detected %>
+          <p class="text-sm font-medium text-gray-500 mb-2">Products (<%= @shop.brand_products.size %>)</p>
+          <div class="space-y-1">
+            <% @shop.brand_products.first(5).each do |product| %>
+              <div class="flex items-center gap-2">
+                <% if product["image_url"].present? %>
+                  <img src="<%= product["image_url"] %>" class="size-6 rounded object-cover" loading="lazy" />
+                <% end %>
+                <span class="text-xs text-gray-700"><%= product["title"] %></span>
+                <% if product["type"].present? %>
+                  <span class="text-xs text-gray-400">(<%= product["type"] %>)</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="p-6 text-center text-gray-500 text-sm">
+        No brand profile yet. Click "Rescrape" to analyze this shop's brand identity.
+      </div>
+    <% end %>
+  </div>
+
+  <%# Credits Card %>
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900 mb-1">Generation Credits</h3>
+        <p class="text-2xl font-bold text-gray-900">
+          <%= @shop.generation_credits_remaining.to_i %>
+          <span class="text-sm font-normal text-gray-400">/ 10 remaining</span>
+        </p>
+        <% if @shop.credits_reset_at.present? %>
+          <p class="text-xs text-gray-400 mt-1">Last reset: <%= @shop.credits_reset_at.strftime("%b %d, %Y") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Generation History %>
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h3 class="text-sm font-semibold text-gray-900">Generation History</h3>
+    </div>
+
+    <% if @generation_logs.any? %>
+      <table class="min-w-full">
+        <thead>
+          <tr class="bg-gray-50 border-b border-gray-100">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Surface</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quality</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Retry</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prompt</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @generation_logs.each do |log| %>
+            <tr>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                  <%= log.surface.humanize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <% if log.quality_score %>
+                  <% color = log.quality_score >= 7 ? "text-green-600" : "text-amber-600" %>
+                  <span class="<%= color %> font-medium"><%= log.quality_score %>/10</span>
+                <% else %>
+                  <span class="text-gray-400">—</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <%= log.cost_cents ? "$#{'%.2f' % (log.cost_cents / 100.0)}" : "—" %>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <% if log.is_retry? %>
+                  <span class="text-amber-600">Yes</span>
+                <% else %>
+                  <span class="text-gray-400">No</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                <% if log.prompt_text.present? %>
+                  <details>
+                    <summary class="cursor-pointer text-blue-600 hover:text-blue-800">View prompt</summary>
+                    <pre class="mt-2 text-xs whitespace-pre-wrap font-mono bg-gray-50 rounded p-2 max-h-40 overflow-y-auto"><%= h log.prompt_text %></pre>
+                  </details>
+                <% else %>
+                  —
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                <%= log.created_at.strftime("%b %d %H:%M") %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="p-6 text-center text-gray-500 text-sm">
+        No generations yet
+      </div>
+    <% end %>
+  </div>
+</div>

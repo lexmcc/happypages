@@ -1,5 +1,5 @@
 class Superadmin::ShopsController < Superadmin::BaseController
-  before_action :set_shop, only: [:show, :suspend, :reactivate]
+  before_action :set_shop, only: [:show, :suspend, :reactivate, :rescrape_brand]
 
   def index
     @shops = Shop.all.order(created_at: :desc)
@@ -31,6 +31,7 @@ class Superadmin::ShopsController < Superadmin::BaseController
       .transform_keys { |(type, date)| [type, date.to_date] }
 
     @credential = @shop.shop_credential
+    @generation_logs = @shop.generation_logs.recent.limit(50)
   end
 
   def suspend
@@ -52,6 +53,12 @@ class Superadmin::ShopsController < Superadmin::BaseController
     redirect_to superadmin_shop_path(@shop), notice: "Shop reactivated"
   rescue ActiveRecord::RecordInvalid => e
     redirect_to superadmin_shop_path(@shop), alert: "Failed to reactivate: #{e.message}"
+  end
+
+  def rescrape_brand
+    BrandScrapeJob.perform_later(@shop.id)
+    audit!(action: "rescrape_brand", shop: @shop)
+    redirect_to superadmin_shop_path(@shop), notice: "Brand scrape queued"
   end
 
   private

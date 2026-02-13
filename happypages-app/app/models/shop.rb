@@ -11,6 +11,7 @@ class Shop < ApplicationRecord
   has_many :referral_rewards, dependent: :destroy
   has_many :audit_logs, dependent: :destroy
   has_many :media_assets, dependent: :destroy
+  has_many :generation_logs, dependent: :destroy
 
   validates :name, presence: true
   validates :domain, presence: true, uniqueness: true
@@ -86,6 +87,32 @@ class Shop < ApplicationRecord
 
   def custom?
     platform_type == "custom"
+  end
+
+  # Brand profile accessors (brand_profile defaults to {} via migration)
+  def brand_colors    = (brand_profile || {})["palette"] || []
+  def brand_category  = (brand_profile || {})["category"]
+  def brand_logo_url  = (brand_profile || {})["logo_url"]
+  def brand_products  = (brand_profile || {})["products"] || []
+  def brand_vibe      = (brand_profile || {})["vibe"]
+  def brand_style     = (brand_profile || {})["style"]
+  def brand_scraped?  = (brand_profile || {})["scraped_at"].present?
+
+  # Credit methods
+  def can_generate?
+    generation_credits_remaining.to_i > 0
+  end
+
+  def use_credit!
+    # Atomic decrement — only succeeds if credits > 0
+    rows = self.class.where(id: id).where("generation_credits_remaining > 0")
+      .update_all("generation_credits_remaining = generation_credits_remaining - 1")
+    raise "No generation credits remaining" if rows == 0
+    reload
+  end
+
+  def reset_credits!(amount = 10)
+    update!(generation_credits_remaining: amount, credits_reset_at: Time.current)
   end
 
   # Status helpers

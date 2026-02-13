@@ -10,7 +10,8 @@ module ReferralsHelper
     "referral_step_2" => "They get {discount} off their first order",
     "referral_step_3" => "You earn {reward} when they purchase!",
     "referral_copy_button_text" => "Copy",
-    "referral_back_button_text" => "Back to Store"
+    "referral_back_button_text" => "Back to Store",
+    "og_image_url" => ""
   }.freeze
 
   def referral_config(key)
