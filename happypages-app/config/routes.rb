@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # API endpoints for checkout extension
   namespace :api do
-    resources :referrals, only: [:create]
+    resources :referrals, only: [:create, :show]
     resource :config, only: [:show]
     resources :analytics, only: [:create]
   end

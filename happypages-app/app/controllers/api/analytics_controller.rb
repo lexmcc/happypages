@@ -1,9 +1,5 @@
-class Api::AnalyticsController < ApplicationController
+class Api::AnalyticsController < Api::BaseController
   include KlaviyoTrackable
-  include ShopIdentifiable
-  skip_before_action :verify_authenticity_token
-  skip_before_action :set_current_shop
-  before_action :set_shop_from_header
 
   def create
     # sendBeacon() sends as text/plain, so parse JSON from raw body

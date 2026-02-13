@@ -1,8 +1,4 @@
-class Api::ConfigsController < ApplicationController
-  include ShopIdentifiable
-  skip_before_action :verify_authenticity_token
-  skip_before_action :set_current_shop
-  before_action :set_shop_from_header
+class Api::ConfigsController < Api::BaseController
 
   def show
     # Scope configs to current shop
@@ -30,7 +26,8 @@ class Api::ConfigsController < ApplicationController
         }
       },
       shop_slug: Current.shop&.slug,
-      referral_base_url: "https://app.happypages.co"
+      referral_base_url: "https://app.happypages.co",
+      storefront_url: Current.shop&.customer_facing_url
     }
   end
 

@@ -22,6 +22,9 @@ gem "jbuilder"
 # Enable CORS for API endpoints
 gem "rack-cors"
 
+# Rate limiting for API endpoints
+gem "rack-attack"
+
 # Analytics charts
 gem "chartkick"
 gem "groupdate"

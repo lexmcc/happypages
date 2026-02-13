@@ -15,9 +15,9 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     origins(*shopify_origins, *custom_origins)
 
-    resource "/api/referrals",
+    resource "/api/referrals*",
       headers: :any,
-      methods: [:post, :options]
+      methods: [:get, :post, :options]
   end
 
   # Config endpoint needs to allow all origins for checkout extensions

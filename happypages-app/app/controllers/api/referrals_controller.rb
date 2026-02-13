@@ -1,10 +1,19 @@
 module Api
-  class ReferralsController < ApplicationController
+  class ReferralsController < Api::BaseController
     include KlaviyoTrackable
-    include ShopIdentifiable
-    skip_before_action :verify_authenticity_token
-    skip_before_action :set_current_shop
-    before_action :set_shop_from_header
+
+    def show
+      referral = Current.shop.referrals.find_by(referral_code: params[:id])
+      if referral
+        render json: {
+          referral_code: referral.referral_code,
+          usage_count: referral.usage_count,
+          share_url: "#{Current.shop.customer_facing_url}/discount/#{referral.referral_code}"
+        }
+      else
+        render json: { error: "Referral not found" }, status: :not_found
+      end
+    end
 
     def create
       first_name = params[:first_name].presence || params[:firstName].presence

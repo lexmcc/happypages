@@ -74,6 +74,10 @@ class Shop < ApplicationRecord
     @order_handler ||= provider_class("OrderHandler").new(self)
   end
 
+  def customer_facing_url
+    storefront_url.presence || "https://#{domain}"
+  end
+
   # Platform type helpers
   def shopify?
     platform_type == "shopify"

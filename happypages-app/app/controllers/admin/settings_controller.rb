@@ -5,12 +5,18 @@ class Admin::SettingsController < Admin::BaseController
   end
 
   def update
-    if params[:shop_slug].present? && Current.shop
-      if Current.shop.update(slug: params[:shop_slug])
-        sync_shop_slug_metafield(Current.shop)
+    if Current.shop
+      attrs = {}
+      attrs[:slug] = params[:shop_slug] if params[:shop_slug].present?
+      attrs[:storefront_url] = params[:storefront_url].presence
+
+      if attrs.any? && Current.shop.update(attrs)
+        sync_shop_slug_metafield(Current.shop) if attrs.key?(:slug)
         redirect_to edit_admin_settings_path, notice: "Settings saved successfully!"
+      elsif attrs.empty?
+        redirect_to edit_admin_settings_path
       else
-        redirect_to edit_admin_settings_path, alert: "Could not update slug: #{Current.shop.errors.full_messages.join(', ')}"
+        redirect_to edit_admin_settings_path, alert: "Could not save: #{Current.shop.errors.full_messages.join(', ')}"
       end
     else
       redirect_to edit_admin_settings_path
