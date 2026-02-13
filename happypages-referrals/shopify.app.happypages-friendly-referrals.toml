@@ -29,5 +29,10 @@ description = "Customer's unique referral code from Happypages"
 type = "single_line_text_field"
 access.storefront = "public_read"
 
+[shop.metafields.app.shop_slug]
+name = "Shop Slug"
+description = "Shop's referral page URL slug"
+type = "single_line_text_field"
+
 [auth]
 redirect_urls = [ "https://app.happypages.co/auth/shopify/callback" ]

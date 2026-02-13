@@ -91,6 +91,9 @@ class ShopifyAuthController < ApplicationController
       end
     end
 
+    # Write shop slug to Shopify metafield (fire-and-forget)
+    sync_shop_slug_metafield(@shop)
+
     return_to = session.delete(:return_to) || admin_dashboard_path
 
     if @returning
@@ -104,6 +107,14 @@ class ShopifyAuthController < ApplicationController
   end
 
   private
+
+  def sync_shop_slug_metafield(shop)
+    return unless shop.shopify? && shop.slug.present?
+
+    ShopMetafieldWriter.new(shop).write_slug
+  rescue => e
+    Rails.logger.error "Failed to sync shop slug metafield: #{e.message}"
+  end
 
   def valid_shopify_domain?(domain)
     domain.present? && domain.match?(/\A[\w-]+\.myshopify\.com\z/)
