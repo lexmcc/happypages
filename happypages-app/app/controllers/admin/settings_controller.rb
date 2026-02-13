@@ -8,7 +8,7 @@ class Admin::SettingsController < Admin::BaseController
     if Current.shop
       attrs = {}
       attrs[:slug] = params[:shop_slug] if params[:shop_slug].present?
-      attrs[:storefront_url] = params[:storefront_url].presence
+      attrs[:storefront_url] = params[:storefront_url].presence if params.key?(:storefront_url)
 
       if attrs.any? && Current.shop.update(attrs)
         sync_shop_slug_metafield(Current.shop) if attrs.key?(:slug)
