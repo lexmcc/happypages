@@ -158,7 +158,9 @@ class BrandScraper
 
   def analyze_brand(raw_data)
     prompt = build_analysis_prompt(raw_data)
-    @gemini.generate_json(prompt)
+    result = @gemini.generate_json(prompt)
+    result = result.first if result.is_a?(Array)
+    result.is_a?(Hash) ? result : raise(GeminiClient::ApiError, "Unexpected response type: #{result.class}")
   rescue GeminiClient::Error => e
     Rails.logger.error "[BrandScraper] Gemini analysis failed: #{e.message}"
     # Return sensible defaults so the pipeline doesn't break
