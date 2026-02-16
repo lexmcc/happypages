@@ -3,6 +3,7 @@ class Admin::MediaAssetsController < Admin::BaseController
 
   def index
     @assets = Current.shop.media_assets.recent.with_attached_file
+    @assets = @assets.for_surface(params[:surface]) if params[:surface].present?
 
     respond_to do |format|
       format.html # renders index.html.erb
@@ -24,7 +25,8 @@ class Admin::MediaAssetsController < Admin::BaseController
     asset = Current.shop.media_assets.build(
       filename: file.original_filename,
       content_type: file.content_type,
-      byte_size: file.size
+      byte_size: file.size,
+      surface: surface_from_context(params[:context])
     )
 
     unless asset.valid?
@@ -44,6 +46,13 @@ class Admin::MediaAssetsController < Admin::BaseController
   end
 
   private
+
+  def surface_from_context(context)
+    case context
+    when "referral" then "referral_banner"
+    when "extension" then "extension_card"
+    end
+  end
 
   def serialize(asset)
     {

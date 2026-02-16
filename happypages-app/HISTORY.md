@@ -58,6 +58,7 @@ A chronicle of the referral app's evolution from initial commit to production-re
 
 - **Feb 14** - Brand scraper + AI imagery generator: automatic brand analysis on install, Gemini-powered marketing image generation for three surfaces
 - **Feb 14** - SolidQueue for background jobs, superadmin prompt template & scene asset management
+- **Feb 16** - Surface-filtered media pickers: each admin tab shows only relevant images (referral banner / extension card)
 - **Feb 16** - 3-layer CLAUDE.md architecture: global rules, project context, session memory separated
 
 ## Key Milestones

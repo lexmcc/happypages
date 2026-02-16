@@ -171,5 +171,17 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Stimulus media picker writes the variant URL to a hidden `<input>` with the same `data-*-target` as the old URL input — existing preview controllers work without changes
 - Dispatching `new Event("input", { bubbles: true })` on the hidden field triggers connected Stimulus controllers (save detection, preview update)
 
+### Dead Code in Filename Fallbacks (Feb 16, 2026)
+- `ImageryGenerator#store_image` had `processed[:filename] || "generated-#{surface}.webp"` — the fallback is dead code because `post_process` always sets `filename` to `SecureRandom.hex(8).webp`
+- A migration backfill using `LIKE 'generated-referral_banner%'` was a no-op because no records ever had that filename pattern
+- **Fix**: Removed the dead fallback; simplified migration to column-add only
+- **Lesson**: When writing backfill migrations, verify the pattern you're matching actually exists in the data — test with a `SELECT COUNT(*)` first
+
+### Surface Filtering — NULL-Inclusive Scope Pattern (Feb 16, 2026)
+- `MediaAsset.for_surface(s)` uses `where(surface: [s, nil])` — this includes untagged assets in every filtered view
+- This is intentional: user uploads default to `surface: nil` (appear everywhere), AI-generated images get tagged to a specific surface
+- The `og_image` surface has no picker context — it's AI-only, set via `ImageryGenerator`. The referral banner is the OG meta tag fallback.
+- Adding a new surface requires changes in 4+ places: `ImageryGenerator::SURFACES`, JS `surfaceForContext()`, controller `surface_from_context`, and model `SURFACES` validation constant
+
 ---
-*Updated: Feb 13, 2026 (tabbed theme integration + audit fix)*
+*Updated: Feb 16, 2026 (surface filtering, dead code audit)*

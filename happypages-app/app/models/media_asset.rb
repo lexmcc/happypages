@@ -10,7 +10,12 @@ class MediaAsset < ApplicationRecord
     less_than_or_equal_to: 10.megabytes, message: "must be under 10 MB"
   }
 
+  SURFACES = %w[referral_banner extension_card og_image].freeze
+
+  validates :surface, inclusion: { in: SURFACES, allow_nil: true }
+
   scope :recent, -> { order(created_at: :desc) }
+  scope :for_surface, ->(s) { where(surface: [s, nil]) }
 
   after_create_commit -> { MediaVariantJob.perform_later(id) }
 

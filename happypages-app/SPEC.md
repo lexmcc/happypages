@@ -41,7 +41,7 @@ Automated brand analysis and marketing image generation pipeline powered by Gemi
 - **Dashboard** — analytics overview with event tracking
 - **Referral Page** — configurable customer-facing referral page editor with inline media picker
 - **Thank You Card** — checkout extension configuration with inline media picker
-- **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback.
+- **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback. Surface-filtered: each picker shows only images relevant to its context (referral banner or extension card) plus untagged uploads. AI-generated images are auto-tagged by surface; user uploads are tagged based on which picker they're uploaded from.
 - **Integrations** — Awtomic connect/disconnect, Klaviyo (coming soon)
 - **Settings** — shop slug management + tabbed theme integration (Shopify Theme snippet / Hydrogen discount route). Storefront URL field lives in the Hydrogen tab, separate form per section to prevent cross-field interference.
 - **Suspended shop guard** — admin base controller checks `shop.suspended?` and forces logout if the shop has been suspended via super admin

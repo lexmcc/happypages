@@ -215,7 +215,7 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 
 ### Media & Storage
 - **Active Storage** with Railway Bucket (Tigris, S3-compatible) — config in `config/storage.yml`, production uses `:tigris` service
-- **MediaAsset model** — `has_one_attached :file`, variant methods: `thumbnail_variant` (300x200), `referral_banner_variant` (1200x400), `extension_banner_variant` (600x400), all WebP
+- **MediaAsset model** — `has_one_attached :file`, variant methods: `thumbnail_variant` (300x200), `referral_banner_variant` (1200x400), `extension_banner_variant` (600x400), all WebP. Nullable `surface` column (`referral_banner`, `extension_card`, `og_image`, or nil). `for_surface(s)` scope returns matching + nil-surface assets.
 - **Railway bucket env vars**: `AWS_BUCKET`, `AWS_ENDPOINT`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` — check with `railway variables` if changed
 - **Local dev** requires `brew install vips` for variant generation
 

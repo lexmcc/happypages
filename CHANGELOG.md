@@ -4,6 +4,8 @@ Dated record of shipped features across both products.
 
 ## 2026-02-16
 
+- **Surface-filtered media pickers** — referral page tab shows only referral banner images, thank-you card tab shows only extension card images. AI-generated images auto-tagged by surface; user uploads tagged by picker context. Untagged images appear everywhere.
+- **MediaAsset surface validation** — model-level inclusion validation on `surface` column prevents invalid values
 - **3-layer CLAUDE.md** — global rules extracted to `~/.claude/CLAUDE.md`, project CLAUDE.md trimmed, MEMORY.md deduplicated
 - **doc-checkpoint skill rewrite** — added session context gathering (git log), CLAUDE.md improvement review across all three layers, auto-memory staleness check, session retrospective output
 

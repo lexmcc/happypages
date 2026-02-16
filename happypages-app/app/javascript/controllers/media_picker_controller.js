@@ -50,6 +50,7 @@ export default class extends Controller {
 
     const formData = new FormData()
     formData.append("file", file)
+    if (this.contextValue) formData.append("context", this.contextValue)
 
     try {
       const response = await fetch("/admin/media_assets", {
@@ -78,7 +79,11 @@ export default class extends Controller {
 
   async loadAssets() {
     try {
-      const response = await fetch("/admin/media_assets", {
+      const surface = this.surfaceForContext()
+      const url = surface
+        ? `/admin/media_assets?surface=${surface}`
+        : "/admin/media_assets"
+      const response = await fetch(url, {
         headers: { "Accept": "application/json" }
       })
       const assets = await response.json()
@@ -167,6 +172,14 @@ export default class extends Controller {
   }
 
   // --- Helpers ---
+
+  surfaceForContext() {
+    switch (this.contextValue) {
+      case "referral": return "referral_banner"
+      case "extension": return "extension_card"
+      default: return null
+    }
+  }
 
   variantUrlFor(asset) {
     if (this.contextValue === "extension") {

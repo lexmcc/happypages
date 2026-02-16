@@ -258,9 +258,10 @@ class ImageryGenerator
 
   def store_image(processed, surface, spec)
     media_asset = @shop.media_assets.create!(
-      filename: processed[:filename] || "generated-#{surface}.webp",
+      filename: processed[:filename],
       content_type: processed[:mime_type],
-      byte_size: processed[:bytes].size
+      byte_size: processed[:bytes].size,
+      surface: surface
     )
 
     io = StringIO.new(processed[:bytes])
