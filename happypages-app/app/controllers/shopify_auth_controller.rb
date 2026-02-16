@@ -41,9 +41,16 @@ class ShopifyAuthController < ApplicationController
     granted_scopes = token_response[:scope]
 
     # Log scope gaps — merchant must re-install to grant new scopes
-    granted = granted_scopes.split(",").map(&:strip).sort
-    required = SCOPES.split(",").map(&:strip).sort
-    missing = required - granted
+    granted = granted_scopes.split(",").map(&:strip)
+    required = SCOPES.split(",").map(&:strip)
+
+    # Shopify's write_X implicitly covers read_X
+    effective = granted.dup
+    granted.each do |scope|
+      effective << scope.sub("write_", "read_") if scope.start_with?("write_")
+    end
+
+    missing = required.sort - effective.uniq.sort
 
     if missing.any?
       Rails.logger.warn "[OAuth] Token missing scopes: #{missing.join(', ')} — merchant must re-install to grant"

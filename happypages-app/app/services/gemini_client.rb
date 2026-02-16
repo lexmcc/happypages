@@ -4,7 +4,7 @@ require "json"
 class GeminiClient
   BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
   DEFAULT_MODEL = "gemini-2.0-flash"
-  IMAGE_MODEL = "gemini-2.0-flash-exp"
+  IMAGE_MODEL = "gemini-2.5-flash-image"
 
   class Error < StandardError; end
   class RateLimitError < Error; end
