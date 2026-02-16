@@ -38,6 +38,22 @@ class ShopifyAuthController < ApplicationController
     end
 
     access_token = token_response[:access_token]
+    granted_scopes = token_response[:scope]
+
+    # Check if granted scopes cover everything we need
+    granted = granted_scopes.split(",").map(&:strip).sort
+    required = SCOPES.split(",").map(&:strip).sort
+    missing = required - granted
+
+    if missing.any?
+      Rails.logger.info "[OAuth] Missing scopes: #{missing.join(', ')} — re-initiating consent"
+      state = SecureRandom.hex(24)
+      session[:oauth_state] = state
+      session[:oauth_shop] = shop_domain
+      redirect_to shopify_oauth_url(shop_domain, state), allow_other_host: true
+      return
+    end
+
     shop_info = fetch_shop_info(shop_domain, access_token)
 
     unless shop_info[:success]
@@ -45,12 +61,19 @@ class ShopifyAuthController < ApplicationController
       return redirect_to login_path, alert: "Failed to fetch shop information"
     end
 
+    scopes_upgraded = false
+
     ActiveRecord::Base.transaction do
       existing_shop = Shop.find_by(domain: shop_domain)
 
       if existing_shop
-        # RETURNING SHOP - preserve all data, only refresh token
-        existing_shop.shop_credential.update!(shopify_access_token: access_token)
+        # RETURNING SHOP - preserve all data, only refresh token + scopes
+        old_scopes = existing_shop.shop_credential.granted_scopes
+        existing_shop.shop_credential.update!(
+          shopify_access_token: access_token,
+          granted_scopes: granted_scopes
+        )
+        scopes_upgraded = old_scopes != granted_scopes
         # NOTE: Does NOT touch awtomic_api_key, klaviyo_api_key, webhook_secret
 
         # Create user if missing (upgrade path for pre-OAuth shops)
@@ -75,7 +98,8 @@ class ShopifyAuthController < ApplicationController
         )
 
         @shop.create_shop_credential!(
-          shopify_access_token: access_token
+          shopify_access_token: access_token,
+          granted_scopes: granted_scopes
         )
 
         user = User.create!(
@@ -94,8 +118,10 @@ class ShopifyAuthController < ApplicationController
     # Write shop slug to Shopify metafield (fire-and-forget)
     sync_shop_slug_metafield(@shop)
 
-    # Scrape brand identity (async) — runs on install and re-auth to pick up new scopes
-    BrandScrapeJob.perform_later(@shop.id) unless @shop.brand_scraped?
+    # Scrape brand identity (async) — runs on install, re-auth, or scope upgrade
+    if !@shop.brand_scraped? || scopes_upgraded
+      BrandScrapeJob.perform_later(@shop.id)
+    end
 
     return_to = session.delete(:return_to) || admin_dashboard_path
 
@@ -152,7 +178,7 @@ class ShopifyAuthController < ApplicationController
     data = JSON.parse(response.body)
 
     if response.is_a?(Net::HTTPSuccess)
-      { success: true, access_token: data["access_token"] }
+      { success: true, access_token: data["access_token"], scope: data["scope"].to_s }
     else
       { success: false, error: data["error_description"] || "Token exchange failed" }
     end
