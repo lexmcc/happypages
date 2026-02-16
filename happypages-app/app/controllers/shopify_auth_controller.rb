@@ -40,18 +40,13 @@ class ShopifyAuthController < ApplicationController
     access_token = token_response[:access_token]
     granted_scopes = token_response[:scope]
 
-    # Check if granted scopes cover everything we need
+    # Log scope gaps — merchant must re-install to grant new scopes
     granted = granted_scopes.split(",").map(&:strip).sort
     required = SCOPES.split(",").map(&:strip).sort
     missing = required - granted
 
     if missing.any?
-      Rails.logger.info "[OAuth] Missing scopes: #{missing.join(', ')} — re-initiating consent"
-      state = SecureRandom.hex(24)
-      session[:oauth_state] = state
-      session[:oauth_shop] = shop_domain
-      redirect_to shopify_oauth_url(shop_domain, state), allow_other_host: true
-      return
+      Rails.logger.warn "[OAuth] Token missing scopes: #{missing.join(', ')} — merchant must re-install to grant"
     end
 
     shop_info = fetch_shop_info(shop_domain, access_token)
