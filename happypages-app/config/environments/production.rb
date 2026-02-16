@@ -51,6 +51,7 @@ Rails.application.configure do
 
   # Persistent job queue backed by PostgreSQL (runs inside Puma via SOLID_QUEUE_IN_PUMA)
   config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :primary } }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
