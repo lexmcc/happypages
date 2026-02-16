@@ -49,8 +49,8 @@ Rails.application.configure do
   # Use simple memory cache for prototype
   config.cache_store = :memory_store
 
-  # Use simple async queue for prototype
-  config.active_job.queue_adapter = :async
+  # Persistent job queue backed by PostgreSQL (runs inside Puma via SOLID_QUEUE_IN_PUMA)
+  config.active_job.queue_adapter = :solid_queue
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

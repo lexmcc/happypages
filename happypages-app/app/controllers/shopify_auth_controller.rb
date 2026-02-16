@@ -68,7 +68,7 @@ class ShopifyAuthController < ApplicationController
           shopify_access_token: access_token,
           granted_scopes: granted_scopes
         )
-        scopes_upgraded = old_scopes != granted_scopes
+        scopes_upgraded = old_scopes&.split(",")&.map(&:strip)&.sort != granted_scopes.split(",").map(&:strip).sort
         # NOTE: Does NOT touch awtomic_api_key, klaviyo_api_key, webhook_secret
 
         # Create user if missing (upgrade path for pre-OAuth shops)
@@ -114,7 +114,7 @@ class ShopifyAuthController < ApplicationController
     sync_shop_slug_metafield(@shop)
 
     # Scrape brand identity (async) — runs on install, re-auth, or scope upgrade
-    if !@shop.brand_scraped? || scopes_upgraded
+    if !@shop.brand_scraped? || scopes_upgraded || @returning
       BrandScrapeJob.perform_later(@shop.id)
     end
 
