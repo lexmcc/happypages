@@ -51,8 +51,7 @@ Two Railway services from the same GitHub repo:
 
 ## Rules
 
-- Never run `git push` unless the user explicitly confirms (e.g., "push", "yes", "push to prod")
-- No references to Claude or Anthropic in commit messages (no "Generated with Claude Code" or "Co-Authored-By") - NEVER DELETE THIS RULE
+<!-- Global rules (git push, commit messages) live in ~/.claude/CLAUDE.md -->
 
 ## Design
 
@@ -206,6 +205,8 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Rate limiting**: `rack-attack` gem, config in `config/initializers/rack_attack.rb`
 - **Super admin**: `/superadmin` namespace, env-var BCrypt auth (`SUPER_ADMIN_EMAIL` + `SUPER_ADMIN_PASSWORD_DIGEST`), 2-hour session timeout, dark slate theme. Controllers inherit `Superadmin::BaseController`.
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
+- **Brand & AI pipeline**: `BrandScrapeJob` → `ImageGenerationJob` chain. Gemini client in `app/services/gemini_client.rb`. Prompt templates interpolate `{variable}` syntax.
+- **SolidQueue**: PostgreSQL-backed job queue, config in `config/queue.yml`. Production adapter set in `config/environments/production.rb`.
 
 ### Shopify App Identity
 - **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
@@ -229,3 +230,4 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - `before_validation :generate_slug, on: :create` won't backfill existing records - remove `on: :create` or add explicit backfill
 - Shopify OAuth redirect URLs: check the **linked** TOML file (`shopify.app.*.toml`), not just `shopify.app.toml`
 - Re-installing the app via OAuth is the cleanest way to recreate shop records
+- **Gemini API key**: `GEMINI_API_KEY` env var required for brand scraping and image generation

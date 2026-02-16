@@ -2,6 +2,21 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-16
+
+- **3-layer CLAUDE.md** — global rules extracted to `~/.claude/CLAUDE.md`, project CLAUDE.md trimmed, MEMORY.md deduplicated
+- **doc-checkpoint skill rewrite** — added session context gathering (git log), CLAUDE.md improvement review across all three layers, auto-memory staleness check, session retrospective output
+
+## 2026-02-14
+
+- **Brand scraper** — automatic brand analysis on OAuth install via Gemini AI. Scrapes theme settings, products, and storefront HTML to build structured brand profile. Auto-sets referral page colors from extracted palette.
+- **AI imagery generator** — 8-step pipeline producing marketing images for three surfaces (referral banner, extension card, OG image). Gemini multimodal generation with product + scene reference images, quality review with retry, VIPS post-processing to WebP.
+- **Superadmin prompt templates** — CRUD for AI prompt templates with test-generate against any shop's brand profile
+- **Superadmin scene assets** — reference image library organized by category/mood for image generation
+- **SolidQueue** — PostgreSQL-backed background job queue for brand scraping and image generation
+- **OAuth scope re-consent** — returning shops with new scope requirements re-authorize and trigger brand re-scrape + imagery generation
+- Fixed OAuth redirect loop when shop already has required scopes
+
 ## 2026-02-13
 
 - **Tabbed theme integration UI** — Settings page now has Shopify Theme / Hydrogen tabs. Hydrogen tab includes storefront URL field and copyable discount route snippet (`discount.$code.tsx`) for Hydrogen stores.

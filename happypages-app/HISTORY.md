@@ -54,6 +54,12 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 13** - Super admin dashboard: `/superadmin` with shop list, detail tabs, suspend/reactivate, audit logging, env-var BCrypt auth
 - **Feb 13** - Tabbed theme integration UI with Hydrogen discount route snippet for headless stores
 
+### Week 8: AI Imagery Pipeline + Tooling (Feb 14-16, 2026)
+
+- **Feb 14** - Brand scraper + AI imagery generator: automatic brand analysis on install, Gemini-powered marketing image generation for three surfaces
+- **Feb 14** - SolidQueue for background jobs, superadmin prompt template & scene asset management
+- **Feb 16** - 3-layer CLAUDE.md architecture: global rules, project context, session memory separated
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

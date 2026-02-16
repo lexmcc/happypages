@@ -11,13 +11,25 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 
 ### Key Components
 
-- **Shopify OAuth** — self-service install flow, creates Shop + ShopCredential + User in one transaction
+- **Shopify OAuth** — self-service install flow, creates Shop + ShopCredential + User in one transaction. Detects scope upgrades on re-auth and triggers brand re-scrape + imagery generation for returning shops.
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
 - **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom)
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII)
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin.
 - **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
+
+### Brand Scraping & AI Imagery
+
+Automated brand analysis and marketing image generation pipeline powered by Gemini.
+
+- **Brand Scraper** — on OAuth install (or scope upgrade), scrapes Shopify theme settings, top products, and storefront HTML. Gemini analyzes the data and returns a structured `brand_profile` (category, style, vibe, palette, suggested scene). Auto-sets referral page colors from extracted palette if merchant hasn't customized.
+- **Imagery Generator** — 8-step pipeline: product selection → scene matching → prompt building → Gemini image generation (multimodal, with product + scene reference images) → quality review (score 1-10, retry if < 7) → VIPS post-processing → WebP storage as MediaAsset → applied to discount configs. Three surfaces: `referral_banner` (1200x400), `extension_card` (600x400), `og_image` (1200x630).
+- **Gemini Client** — HTTP wrapper for Google Generative AI API. Text, image analysis, image generation, and JSON modes. SSRF protection on image fetches. Models: `gemini-2.0-flash` (text), `gemini-2.0-flash-exp` (image gen).
+- **Prompt Templates** — reusable AI prompts with `{variable}` interpolation. Surfaces: referral_banner, extension_card, og_image, brand_analysis, quality_review, product_selection, scene_selection. Category-specific templates with universal fallback. Managed via superadmin UI.
+- **Scene Assets** — reference image library organized by category (food, fashion, beauty, etc.) and mood/tags. Managed via superadmin UI.
+- **Generation Logs** — audit trail per generation: prompt, image URL, quality score, cost, retry flag.
+- **SolidQueue** — PostgreSQL-backed job queue. `BrandScrapeJob` chains into `ImageGenerationJob` on successful scrape. Retry with exponential backoff on Gemini rate limits and network timeouts.
 
 ### Integrations
 
@@ -43,6 +55,9 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 - **Shop detail** — four-tab view (Referrals, Campaigns, Analytics, Credentials) with audit logging on each view. Referral search by code only (encrypted fields can't be queried). No emails displayed.
 - **Suspend / Reactivate** — status management with confirmation dialogs and audit trail. Reactivate guarded to suspended-only (can't reactivate uninstalled shops).
 - **Credentials tab** — shows integration connection status (Present/Missing/Connected) without exposing actual tokens.
+- **Brand & AI tab** — view shop's brand profile, trigger re-scrape, see generation logs and quality scores.
+- **Prompt Templates** (`/superadmin/prompt_templates`) — CRUD for AI prompt templates with test-generate against any shop's brand profile.
+- **Scene Assets** (`/superadmin/scene_assets`) — upload and manage reference images for image generation, organized by category/mood/tags.
 
 ### API Layer
 
