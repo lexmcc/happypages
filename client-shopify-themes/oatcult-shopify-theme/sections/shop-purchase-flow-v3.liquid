@@ -132,27 +132,11 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   @media screen and (min-width: 1000px) {
     .shop-purchase-flow__container {
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 1fr;
       gap: var(--spacing-12);
       align-items: start;
-    }
-
-    .shop-purchase__header {
-      grid-column: 1 / -1;
-      grid-row: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-12);
-      align-items: start;
-    }
-
-    .shop-purchase__benefits {
-      margin-top: 0;
     }
 
     .hero-gallery-column {
-      grid-column: 1;
-      grid-row: 2;
       position: sticky;
       top: calc(var(--sticky-area-height) + 20px);
       height: fit-content;
@@ -160,9 +144,17 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     }
 
     .shop-purchase {
-      grid-column: 2;
-      grid-row: 2;
       align-self: start;
+    }
+
+    #flavor-info-drawer {
+      width: min(calc(50vw - 1.5rem), 600px);
+      margin-left: max(0px, calc(50vw - 600px));
+    }
+
+    .hero-gallery__thumb {
+      width: 80px;
+      height: 80px;
     }
   }
 
@@ -170,21 +162,13 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
      HERO GALLERY
      ============================================ */
   .hero-gallery__track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    display: grid;
+    grid: auto / auto-flow 100%;
     border-radius: 12px;
     background: var(--color-cream);
   }
 
-  .hero-gallery__track::-webkit-scrollbar { display: none; }
-
   .hero-gallery__slide {
-    min-width: 100%;
-    flex-shrink: 0;
-    scroll-snap-align: start;
     aspect-ratio: 1;
     overflow: hidden;
   }
@@ -197,26 +181,43 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-radius: 12px;
   }
 
-  .hero-gallery__dots {
+  .hero-gallery__thumbs {
     display: flex;
-    justify-content: center;
     gap: 8px;
     padding: var(--spacing-3) 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .hero-gallery__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: none;
-    background: var(--color-border-light);
+  .hero-gallery__thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-gallery__thumb {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
     cursor: pointer;
+    border: 2px solid transparent;
     padding: 0;
-    transition: background 200ms ease;
+    background: var(--color-cream);
+    transition: border-color 200ms ease, opacity 200ms ease;
+    opacity: 0.6;
   }
 
-  .hero-gallery__dot--active {
-    background: var(--color-pink-dark);
+  .hero-gallery__thumb--active {
+    border-color: var(--color-pink-dark);
+    opacity: 1;
+  }
+
+  .hero-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   /* ============================================
@@ -231,34 +232,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     display: none;
   }
 
-  @media screen and (min-width: 1000px) {
-    .flavor-carousel__arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid var(--color-border-light);
-      background: rgba(255, 255, 255, 0.9);
-      cursor: pointer;
-      font-size: 18px;
-      z-index: var(--z-dropdown);
-      color: var(--spf-text-color);
-      transition: background 150ms ease;
-    }
-
-    .flavor-carousel__arrow:hover {
-      background: #fff;
-    }
-
-    .flavor-carousel__arrow--prev { left: -16px; }
-    .flavor-carousel__arrow--next { right: -16px; }
-  }
-
   /* ============================================
      FLAVOR GRID
      ============================================ */
@@ -268,30 +241,12 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     gap: 12px;
   }
 
-  /* Desktop: horizontal scroll carousel */
-  @media screen and (min-width: 1000px) {
-    .flavor-grid {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 12px;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .flavor-grid::-webkit-scrollbar { display: none; }
-    .flavor-grid__card {
-      min-width: 200px;
-      flex-shrink: 0;
-      scroll-snap-align: start;
-    }
-  }
-
   .flavor-grid__card {
     position: relative;
     aspect-ratio: 3 / 4;
     border-radius: 12px;
-    border: 1px solid var(--color-border-light);
-    background: var(--gradient-unselected);
+    border: 1px solid rgba(60, 27, 1, 0.5);
+    background: #FFFFFF;
     cursor: pointer;
     transition: all 0.25s ease;
     display: flex;
@@ -300,26 +255,26 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .flavor-grid__card--has-bg {
-    background-image: var(--card-bg-image, none), var(--gradient-unselected);
+    background-image: var(--card-bg-image, none), linear-gradient(#FFFFFF, #FFFFFF);
     background-size: cover, auto;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
   }
 
   .flavor-grid__card--selected {
-    background: var(--gradient-selected);
-    border-color: var(--color-pink-border);
+    background: #ED6B93;
+    border-color: rgba(60, 27, 1, 1);
   }
 
   .flavor-grid__card--has-bg.flavor-grid__card--selected {
-    background-image: var(--card-bg-image, none), var(--gradient-selected);
+    background-image: var(--card-bg-image, none), linear-gradient(#ED6B93, #ED6B93);
     background-size: cover, auto;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
   }
 
   .flavor-grid__card--selected:hover {
-    border-color: var(--color-pink-border);
+    border-color: rgba(60, 27, 1, 1);
   }
 
   .flavor-grid__badge {
@@ -330,7 +285,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-radius: 4px;
     font-size: 10px;
     font-weight: 700;
-    text-transform: uppercase;
     z-index: 2;
     display: flex;
     align-items: center;
@@ -383,7 +337,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .flavor-grid__name {
     font-size: var(--text-sm);
     font-weight: 700;
-    text-transform: uppercase;
     color: var(--spf-text-color);
     line-height: 1.2;
     padding-top: 10px;
@@ -393,7 +346,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .flavor-grid__subtitle {
     font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
     color: var(--spf-text-muted);
     letter-spacing: 0.05em;
     line-height: 1;
@@ -438,7 +390,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     height: 44px;
     border-radius: 9999px;
     background: var(--color-cream);
-    border: 1.5px solid var(--color-border-light);
+    border: 1px solid rgba(60, 27, 1, 0.5);
     overflow: hidden;
   }
 
@@ -451,7 +403,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--color-pink-dark);
+    color: rgba(60, 27, 1, 1);
     transition: background 0.15s ease;
   }
 
@@ -474,19 +426,19 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     text-align: center;
     font-size: var(--text-lg);
     font-weight: 700;
-    color: var(--color-pink-dark);
+    color: rgba(60, 27, 1, 1);
     font-variant-numeric: tabular-nums;
     min-width: 32px;
   }
 
   .flavor-grid__card--selected .qty-picker {
     background: white;
-    border-color: var(--color-pink-dark);
+    border-color: rgba(60, 27, 1, 1);
   }
 
   .qty-picker--empty {
-    background: var(--gradient-selected);
-    border-color: var(--color-pink-border);
+    background: #ED6B93;
+    border-color: rgba(60, 27, 1, 0.5);
   }
 
   .qty-picker__add {
@@ -652,37 +604,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-color: var(--color-border-light);
   }
 
-  /* Benefits badges */
-  .shop-gallery__benefit {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-2) 0;
-    font-size: var(--text-sm);
-    color: var(--spf-text-color);
-  }
-
-  .shop-gallery__benefit-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .shop-gallery__benefit-icon img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-  }
-
-  /* Benefits in purchase column (shown on both desktop and mobile) */
-  .shop-purchase__benefits {
-    display: block;
-    margin-top: var(--spacing-4);
-  }
-
   /* ============================================
      PURCHASE COLUMN
      ============================================ */
@@ -691,10 +612,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     flex-direction: column;
     gap: var(--spacing-6);
     min-width: 0;  /* Prevent grid blowout */
-  }
-
-  .shop-purchase__header {
-    text-align: left;
   }
 
   .shop-purchase__title {
@@ -737,7 +654,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .shop-purchase__section-title {
     font-size: var(--text-xs);
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--spf-text-muted);
     margin: 0 0 var(--spacing-3) 0;
@@ -1172,7 +1088,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-radius: 4px;
     font-size: 10px;
     font-weight: 700;
-    text-transform: uppercase;
     white-space: nowrap;
     display: flex;
     align-items: center;
@@ -1574,7 +1489,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     cursor: pointer;
     transition: all var(--transition-normal);
     border: 1px solid #E0C426;
-    text-transform: uppercase;
   }
 
   .cta-button:hover {
@@ -2238,8 +2152,49 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   data-section-id="{{ section.id }}"
 >
   <div class="shop-purchase-flow__container">
-    <!-- HEADER -->
-    <div class="shop-purchase__header">
+    <!-- HERO GALLERY COLUMN (Left, sticky on desktop) -->
+    <div class="hero-gallery-column">
+      <div class="hero-gallery">
+        <div class="hero-gallery__track scroll-area" x-ref="heroTrack">
+          {%- for i in (1..8) -%}
+            {%- assign hero_key = 'hero_image_' | append: i -%}
+            {%- assign hero_img = section.settings[hero_key] -%}
+            {%- if hero_img != blank -%}
+              <div class="hero-gallery__slide snap-start">
+                <img src="{{ hero_img | image_url: width: 800 }}" alt="{{ section.settings.title }}" loading="lazy">
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="hero-gallery__thumbs">
+          {%- for i in (1..8) -%}
+            {%- assign hero_key = 'hero_image_' | append: i -%}
+            {%- assign hero_img = section.settings[hero_key] -%}
+            {%- if hero_img != blank -%}
+              <button
+                class="hero-gallery__thumb"
+                :class="{ 'hero-gallery__thumb--active': heroImageIndex === {{ forloop.index0 }} }"
+                @click="scrollHeroTo({{ forloop.index0 }})"
+                aria-label="View image {{ forloop.index }}"
+              >
+                <img
+                  src="{{ hero_img | image_url: width: 200 }}"
+                  alt="{{ section.settings.title }} - image {{ forloop.index }}"
+                  loading="lazy"
+                  width="200"
+                  height="200"
+                >
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <!-- PURCHASE COLUMN (Right) -->
+    <div class="shop-purchase">
+
+      <!-- Title / Subtitle / Rating -->
       <div class="shop-purchase__header-text">
         <h1 class="shop-purchase__title">{{ section.settings.title }}</h1>
         <p class="shop-purchase__subtitle">{{ section.settings.subtitle }}</p>
@@ -2253,69 +2208,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
         </div>
       </div>
 
-      <!-- Benefits -->
-      <div class="shop-purchase__benefits">
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_1_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_1_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_1 }}</span>
-        </div>
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_2_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_2_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_2 }}</span>
-        </div>
-        <div class="shop-gallery__benefit">
-          {%- if section.settings.benefit_3_icon != blank -%}
-            <span class="shop-gallery__benefit-icon">
-              <img src="{{ section.settings.benefit_3_icon | image_url: width: 48 }}" alt="" width="24" height="24">
-            </span>
-          {%- endif -%}
-          <span>{{ section.settings.benefit_3 }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- HERO GALLERY COLUMN (Left, sticky on desktop) -->
-    <div class="hero-gallery-column">
-      <div class="hero-gallery">
-        <div class="hero-gallery__track" x-ref="heroTrack">
-          {%- for i in (1..4) -%}
-            {%- assign hero_key = 'hero_image_' | append: i -%}
-            {%- assign hero_img = section.settings[hero_key] -%}
-            {%- if hero_img != blank -%}
-              <div class="hero-gallery__slide">
-                <img src="{{ hero_img | image_url: width: 800 }}" alt="{{ section.settings.title }}" loading="lazy">
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-        <div class="hero-gallery__dots">
-          {%- for i in (1..4) -%}
-            {%- assign hero_key = 'hero_image_' | append: i -%}
-            {%- assign hero_img = section.settings[hero_key] -%}
-            {%- if hero_img != blank -%}
-              <button
-                class="hero-gallery__dot"
-                :class="{ 'hero-gallery__dot--active': heroImageIndex === {{ forloop.index0 }} }"
-                @click="scrollHeroTo({{ forloop.index0 }})"
-                aria-label="View image {{ forloop.index }}"
-              ></button>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      </div>
-    </div>
-
-    <!-- PURCHASE COLUMN (Right) -->
-    <div class="shop-purchase">
-
       <!-- FLAVOR CAROUSEL -->
       <p class="shop-purchase__section-title">{{ section.settings.flavors_title | default: 'Choose your cults' }}</p>
       {%- assign flavor_blocks = section.blocks | where: 'type', 'flavor_option' -%}
@@ -2326,7 +2218,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
             {%- for block in flavor_blocks -%}
               {%- assign block_product = block.settings.product -%}
               {%- if block_product != blank -%}
-                {%- assign display_name = block.settings.name_override | default: block_product.title | remove: 'Overnight Gut Oats |' | strip | upcase -%}
+                {%- assign display_name = block.settings.name_override | default: block_product.title | remove: 'Overnight Gut Oats |' | strip -%}
                 {%- assign card_bg = block.settings.card_background -%}
                 {%- assign card_image = block.settings.card_image -%}
                 <div
@@ -2364,7 +2256,7 @@ i
                   {%- comment -%} Card body (tap opens drawer) {%- endcomment -%}
                   <div class="flavor-grid__body" @click="openDrawer({{ block_product.id }})">
                     <div class="flavor-grid__name">{{ display_name }}</div>
-                    <div class="flavor-grid__subtitle">9 PACKS</div>
+                    <div class="flavor-grid__subtitle">9 pack</div>
                     <div class="flavor-grid__image">
                       {%- if card_image != blank -%}
                         <img src="{{ card_image | image_url: width: 400 }}" alt="{{ display_name }}" loading="lazy">
@@ -2381,7 +2273,7 @@ i
                       x-show="getQty({{ block_product.id }}) === 0"
                       @click.stop="incrementQty({{ block_product.id }})"
                       aria-label="Add {{ display_name }}"
-                    >Add</button>
+                    >Choose</button>
                     <template x-if="getQty({{ block_product.id }}) > 0">
                       <div style="display:flex;align-items:center;width:100%;height:100%;">
                         <button
@@ -2426,7 +2318,7 @@ i
               :class="{ 'size-card--selected': currentTier === size.id }"
             >
               <div class="size-card__packs">
-                <span x-text="size.packs + ' PACKS'"></span>
+                <span x-text="size.packs + ' Packs'"></span>
               </div>
               <div class="size-card__image">
                 <template x-if="size.id === 9">
@@ -2487,7 +2379,7 @@ i
                 <div class="sub-toggle__circle"></div>
               </div>
               <div>
-                <div class="sub-section__title">SUB & SAVE</div>
+                <div class="sub-section__title">Sub & Save</div>
                 <div class="sub-section__subtitle">Join the Cult and get rewarded for life</div>
               </div>
             </div>
@@ -2547,7 +2439,7 @@ i
           <!-- Savings Callout -->
           <div class="sub-section__savings-wrapper" x-show="subscribe" x-collapse>
             <div class="sub-section__savings">
-              YOU'RE SAVING <span x-text="formatPrice(savings)"></span>
+              You're saving <span x-text="formatPrice(savings)"></span>
             </div>
           </div>
         </div>
@@ -2575,7 +2467,7 @@ i
           @click="checkout()"
           :disabled="!hasItems"
         >
-          {{ section.settings.cta_button_text | default: 'BUY NOW' }} - <span x-text="formatPrice(displayPrice)"></span>
+          {{ section.settings.cta_button_text | default: 'Buy now' }} - <span x-text="formatPrice(displayPrice)"></span>
         </button>
       </div>
 
@@ -2596,7 +2488,7 @@ i
   </div>
 
   <!-- INFO DRAWER (single drawer, content swapped via Alpine) -->
-  <x-drawer id="flavor-info-drawer" class="drawer drawer--lg">
+  <x-drawer id="flavor-info-drawer" class="drawer drawer--lg" open-from="left">
     <span class="h5" slot="header" x-text="drawerFlavorName"></span>
 
     <!-- Gallery -->
@@ -2686,7 +2578,7 @@ i
       @click="checkout()"
       :disabled="!hasItems"
     >
-      {{ section.settings.cta_button_text | default: 'BUY NOW' }} — <span x-text="formatPrice(displayPrice)"></span>
+      {{ section.settings.cta_button_text | default: 'Buy now' }} — <span x-text="formatPrice(displayPrice)"></span>
     </button>
   </div>
 </div>
@@ -2803,7 +2695,7 @@ i
             {%- unless meta_first -%},{%- endunless -%}
             {%- assign meta_first = false -%}
             {{ bp.id }}: {
-              name: {{ block.settings.name_override | default: bp.title | remove: 'Overnight Gut Oats |' | strip | upcase | json }},
+              name: {{ block.settings.name_override | default: bp.title | remove: 'Overnight Gut Oats |' | strip | json }},
               image: {% if block.settings.card_image != blank %}{{ block.settings.card_image | image_url: width: 400 | json }}{% elsif block.settings.card_background != blank %}{{ block.settings.card_background | image_url: width: 400 | json }}{% elsif bp.featured_image != blank %}{{ bp.featured_image | image_url: width: 400 | json }}{% else %}null{% endif %}
             }
           {%- endif -%}
@@ -2841,7 +2733,7 @@ i
             {%- unless flavor_data_first -%},{%- endunless -%}
             {%- assign flavor_data_first = false -%}
             {{ flavor_product.id }}: {
-              displayName: {{ block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | upcase | json }},
+              displayName: {{ block.settings.name_override | default: flavor_product.title | remove: 'Overnight Gut Oats |' | strip | json }},
               description: {{ block.settings.description | default: flavor_product.description | strip_html | truncate: 300 | json }},
               testimonialQuote: {{ block.settings.testimonial_quote | default: '' | json }},
               testimonialAuthor: {{ block.settings.testimonial_author | default: 'Customer' | json }}
@@ -3014,6 +2906,14 @@ i
 
         // Init hero gallery dot observer
         this.$nextTick(() => this.initHeroObserver());
+
+        this.$watch('heroImageIndex', (idx) => {
+          const strip = this.$el.querySelector('.hero-gallery__thumbs');
+          const thumb = strip?.children[idx];
+          if (strip && thumb) {
+            thumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
       },
 
       // ── Quantity methods ──────────────────────────────────────
@@ -3282,6 +3182,26 @@ i
       "label": "Hero image 4"
     },
     {
+      "type": "image_picker",
+      "id": "hero_image_5",
+      "label": "Hero image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_6",
+      "label": "Hero image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_7",
+      "label": "Hero image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_8",
+      "label": "Hero image 8"
+    },
+    {
       "type": "header",
       "content": "Header Content"
     },
@@ -3308,43 +3228,6 @@ i
       "id": "rating_image",
       "label": "Rating stars image",
       "info": "Upload a custom stars image (e.g., pink stars)"
-    },
-    {
-      "type": "header",
-      "content": "Product Benefits"
-    },
-    {
-      "type": "text",
-      "id": "benefit_1",
-      "label": "Benefit 1",
-      "default": "1+ billion probiotics per serving"
-    },
-    {
-      "type": "image_picker",
-      "id": "benefit_1_icon",
-      "label": "Benefit 1 icon"
-    },
-    {
-      "type": "text",
-      "id": "benefit_2",
-      "label": "Benefit 2",
-      "default": "No artificial ingredients or added sugars"
-    },
-    {
-      "type": "image_picker",
-      "id": "benefit_2_icon",
-      "label": "Benefit 2 icon"
-    },
-    {
-      "type": "text",
-      "id": "benefit_3",
-      "label": "Benefit 3",
-      "default": "Supports healthy digestion"
-    },
-    {
-      "type": "image_picker",
-      "id": "benefit_3_icon",
-      "label": "Benefit 3 icon"
     },
     {
       "type": "header",
@@ -3390,7 +3273,7 @@ i
       "type": "text",
       "id": "bestseller_badge_text",
       "label": "Bestseller badge text",
-      "default": "BEST SELLER"
+      "default": "Best seller"
     },
     {
       "type": "color",
@@ -3418,7 +3301,7 @@ i
       "type": "text",
       "id": "popular_badge_text",
       "label": "Popular badge text",
-      "default": "POPULAR"
+      "default": "Popular"
     },
     {
       "type": "color",
@@ -3474,7 +3357,7 @@ i
       "type": "text",
       "id": "sub_benefit_badge_text",
       "label": "Subscription banner text",
-      "default": "ALL ORDERS"
+      "default": "All orders"
     },
     {
       "type": "color",
@@ -3568,7 +3451,7 @@ i
       "type": "text",
       "id": "cta_button_text",
       "label": "Checkout button text",
-      "default": "BUY NOW"
+      "default": "Buy now"
     },
     {
       "type": "header",
@@ -3694,7 +3577,7 @@ i
           "type": "flavor_option",
           "settings": {
             "is_bundle": true,
-            "name_override": "THE CULT MIX",
+            "name_override": "The Cult Mix",
             "subtitle": "All 3",
             "show_badge": true,
             "description": "All 3 flavors in one box — can't decide? This is the one for you."
@@ -3704,7 +3587,7 @@ i
           "type": "flavor_option",
           "settings": {
             "is_bundle": false,
-            "name_override": "CACAO",
+            "name_override": "Cacao",
             "description": "Rich chocolate oats for a satisfying start."
           }
         },
@@ -3712,7 +3595,7 @@ i
           "type": "flavor_option",
           "settings": {
             "is_bundle": false,
-            "name_override": "STRAWBERRY",
+            "name_override": "Strawberry",
             "description": "Sweet strawberry goji for a fruity morning."
           }
         },
@@ -3720,7 +3603,7 @@ i
           "type": "flavor_option",
           "settings": {
             "is_bundle": false,
-            "name_override": "CINNAMON",
+            "name_override": "Cinnamon",
             "description": "Warming cinnamon spice for cozy mornings."
           }
         }

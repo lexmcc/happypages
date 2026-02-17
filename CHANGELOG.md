@@ -2,6 +2,10 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-17
+
+- **Oatcult flavor card styling overhaul** — solid colors replace gradients (white unselected, #ED6B93 selected), warm brown (#3C1B01) borders with opacity states, "Choose" button text, "9 pack" subtitle
+
 ## 2026-02-16
 
 - **Surface-filtered media pickers** — referral page tab shows only referral banner images, thank-you card tab shows only extension card images. AI-generated images auto-tagged by surface; user uploads tagged by picker context. Untagged images appear everywhere.
