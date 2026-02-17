@@ -4,6 +4,7 @@ Dated record of shipped features across both products.
 
 ## 2026-02-17
 
+- **Oatcult hero gallery jiggle fix** — clicking non-adjacent thumbnails no longer jiggles through intermediates. CSS `scroll-snap-stop: normal` overrides theme's `always` + JS guard suppresses IntersectionObserver during programmatic scrolls.
 - **Oatcult flavor card styling overhaul** — solid colors replace gradients (white unselected, #ED6B93 selected), warm brown (#3C1B01) borders with opacity states, "Choose" button text, "9 pack" subtitle
 - **Oatcult size card viewport sliding** — fixed 12-tier sliding viewport that was stuck (CSS `width: 100%` fix + replaced `$watch` with computed getter)
 

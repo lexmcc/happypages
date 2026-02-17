@@ -16,9 +16,9 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
 
   .shop-purchase-flow {
     /* Local variables - map to theme variables for consistency */
-    --spf-text-color: rgb(var(--text-primary));
-    --spf-text-muted: rgb(var(--text-primary) / 0.6);
-    --spf-text-subtle: rgb(var(--text-primary) / 0.4);
+    --spf-text-color: #3C1B01;
+    --spf-text-muted: rgba(60, 27, 1, 0.6);
+    --spf-text-subtle: rgba(60, 27, 1, 0.4);
     --spf-background: rgb(var(--background-primary));
     --spf-border-color: rgb(var(--text-primary) / 0.12);
     --spf-accent: rgb(var(--accent));
@@ -129,6 +129,10 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     gap: var(--spacing-8);
   }
 
+  .hero-gallery-column {
+    min-width: 0;
+  }
+
   @media screen and (min-width: 1000px) {
     .shop-purchase-flow__container {
       grid-template-columns: 1fr 1fr;
@@ -171,6 +175,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .hero-gallery__slide {
     aspect-ratio: 1;
     overflow: hidden;
+    scroll-snap-stop: normal;
   }
 
   .hero-gallery__slide img {
@@ -1124,18 +1129,25 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     margin-bottom: var(--spacing-4);
   }
 
+  .size-progress-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 6px;
+  }
+
   .size-progress {
-    height: 6px;
+    height: 12px;
     background: #D4F5FF;
-    border-radius: 3px;
+    border: 1.5px solid #ACDBE7;
+    border-radius: 6px;
     margin-bottom: 12px;
     overflow: hidden;
   }
 
   .size-progress__fill {
     height: 100%;
-    background: #00B8E6;
-    border-radius: 3px;
+    background: #ACDBE7;
+    border-radius: 6px;
     transition: width 300ms ease;
   }
 
@@ -1159,6 +1171,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-radius: var(--spf-selector-radius);
     border: none;
     background: #FFFFFF;
+    color: #3C1B01;
     text-align: left;
     transition: border-color var(--transition-normal), background var(--transition-normal);
     min-height: 44px;
@@ -1170,7 +1183,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .size-card--redesign.size-card--selected .size-card__compare-price {
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(60, 27, 1, 0.5);
   }
 
   .size-card--redesign .size-card__packs {
@@ -1208,7 +1221,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
 
   .size-card--redesign .size-card__compare-price {
     font-size: 0.85rem;
-    color: #999;
+    color: rgba(60, 27, 1, 0.5);
     text-decoration: line-through;
   }
 
@@ -1218,7 +1231,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     padding: 4px 12px;
     border-radius: 20px;
     font-size: var(--text-sm);
-    color: #666;
+    color: rgba(60, 27, 1, 0.6);
     text-align: center;
     width: fit-content;
     margin: var(--spacing-1) auto 0;
@@ -1231,6 +1244,11 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
 
 
   @media screen and (max-width: 999px) {
+    .size-progress-row,
+    .size-progress {
+      display: none;
+    }
+
     .size-cards-viewport {
       --size-gap: 8px;
     }
@@ -1586,8 +1604,8 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
       right: 0;
       padding: var(--spacing-3) var(--spacing-4);
       padding-bottom: calc(var(--spacing-3) + env(safe-area-inset-bottom));
-      background: rgb(var(--background-primary));
-      border-top: 1px solid var(--spf-border-color);
+      background: #FFF7EE;
+      border-top: 1px solid #3C1B01;
       box-shadow: 0 -4px 12px rgb(var(--text-primary) / 0.08);
       z-index: 100;
     }
@@ -1608,32 +1626,65 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .sticky-cta--basket {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     padding: 8px 16px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
 
-  /* Summary row: badge/empty msg + progress + chevron */
-  .sticky-cta__summary {
+  /* Heading row: title + badge */
+  .sticky-cta__heading-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding-bottom: 6px;
+    justify-content: space-between;
   }
 
-  .sticky-cta__summary-progress {
-    flex: 1;
-    height: 4px;
+  .sticky-cta__title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #3C1B01;
+  }
+
+  /* Progress bar — full-width, matches inline bar style */
+  .sticky-cta__progress {
+    height: 12px;
     background: #D4F5FF;
-    border-radius: 2px;
+    border: 1.5px solid #ACDBE7;
+    border-radius: 6px;
     overflow: hidden;
   }
 
-  .sticky-cta__summary-progress-fill {
+  .sticky-cta__progress-fill {
     height: 100%;
-    background: #00B8E6;
-    border-radius: 2px;
+    background: #ACDBE7;
+    border-radius: 6px;
     transition: width 300ms ease;
+  }
+
+  /* Size pills row */
+  .sticky-cta__sizes {
+    display: flex;
+    gap: 6px;
+  }
+
+  .sticky-cta__size-pill {
+    flex: 1;
+    text-align: center;
+    padding: 6px 0;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: #3C1B01;
+    border: none;
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  .sticky-cta__size-pill--active {
+    background: #ACDBE7;
+    border: 1px solid #3C1B01;
+    color: #3C1B01;
+    font-weight: 600;
   }
 
   /* Compact badge variant for sticky CTA */
@@ -1663,11 +1714,12 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border: 1px solid var(--color-border-light);
     overflow: hidden;
     transition: opacity var(--transition-normal), filter var(--transition-normal);
+    color: #3C1B01;
   }
 
   .sub-section--active {
-    background: var(--gradient-sub-section);
-    border-color: var(--color-pink-border);
+    background: #F4E7DB;
+    border-color: #3C1B01;
   }
 
   .sub-section--inactive {
@@ -1692,12 +1744,11 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .sub-section__title {
     font-size: var(--text-base);
     font-weight: 700;
-    text-transform: uppercase;
     color: var(--spf-text-color);
   }
 
   .sub-section--active .sub-section__title {
-    color: #361A05;
+    color: #3C1B01;
   }
 
   .sub-section__subtitle {
@@ -1706,7 +1757,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .sub-section--active .sub-section__subtitle {
-    color: #361A05;
+    color: #3C1B01;
     opacity: 0.9;
   }
 
@@ -1721,7 +1772,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .sub-section--active .sub-section__price {
-    color: #361A05;
+    color: #3C1B01;
   }
 
   .sub-section__per-pack {
@@ -1730,8 +1781,8 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .sub-section--active .sub-section__per-pack {
-    background: #6CDFFF;
-    color: #361A05;
+    background: #ACDBE7;
+    color: #3C1B01;
     padding: 4px 12px;
     border-radius: 20px;
     opacity: 1;
@@ -1743,6 +1794,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     width: 52px;
     height: 32px;
     background: var(--color-border-light);
+    border: 1px solid transparent;
     border-radius: 16px;
     cursor: pointer;
     transition: background var(--transition-normal);
@@ -1750,16 +1802,18 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .sub-toggle--active {
-    background: var(--color-pink-dark);
+    background: #fff;
+    border: 1px solid #3C1B01;
   }
 
   .sub-toggle__circle {
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 28px;
-    height: 28px;
-    background: white;
+    width: 26px;
+    height: 26px;
+    background: #F4E7DB;
+    border: 1px solid #3C1B01;
     border-radius: 50%;
     transition: transform var(--transition-normal);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1854,7 +1908,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     font-weight: 700;
     font-size: 12px;
     text-align: center;
-    color: var(--spf-text-dark);
+    color: #3C1B01;
   }
 
   /* Free Delivery card variant */
@@ -1943,7 +1997,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     padding: var(--spacing-4);
     margin: 0 var(--spacing-4) var(--spacing-4);
     background: #FFFFFF;
-    border: 1px solid #B45B7E;
+    border: 1px solid #3C1B01;
     border-radius: var(--spf-selector-radius);
   }
 
@@ -1979,12 +2033,12 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .frequency-dropdown {
     width: 100%;
     padding: var(--spacing-3) var(--spacing-4);
-    border: 1px solid var(--color-border-light);
+    border: 1px solid #3C1B01;
     border-radius: var(--spf-selector-radius);
     background: white;
     font-size: var(--text-sm);
     font-weight: 700;
-    text-transform: uppercase;
+    text-transform: none;
     color: var(--spf-text-color);
     cursor: pointer;
     appearance: none;
@@ -2008,8 +2062,8 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     border-radius: 20px;
     font-size: var(--text-sm);
     font-weight: 700;
-    background: #361A05;
-    color: #6CDFFF;
+    background: #ACDBE7;
+    color: #3C1B01;
   }
 
   /* ============================================
@@ -2082,7 +2136,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
       grid-template-columns: auto 1fr auto;
       grid-template-rows: auto auto;
       gap: var(--spacing-2) var(--spacing-3);
-      align-items: center;
+      align-items: start;
     }
 
     .sub-section__title-row {
@@ -2101,7 +2155,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     .sub-section__title {
       grid-row: 1;
       grid-column: 2;
-      align-self: center;
     }
 
     .sub-section__subtitle {
@@ -2141,7 +2194,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
      REDUCED MOTION — NEW COMPONENTS
      ============================================ */
   @media (prefers-reduced-motion: reduce) {
-    .sticky-cta__summary-progress-fill,
+    .sticky-cta__progress-fill,
     .size-progress__fill {
       transition: none;
     }
@@ -2310,7 +2363,20 @@ i
       <div class="size-selection-wrapper">
         <p class="shop-purchase__section-title">{{ section.settings.size_title | default: 'Your box size' }}</p>
 
-        <!-- Free delivery progress bar -->
+        <!-- Free delivery progress bar + badge -->
+        <div class="size-progress-row">
+          <div class="basket-badge"
+            :class="{ 'basket-badge--unlocked': freeDelivery }"
+            :style="freeDelivery
+              ? 'background: {{ section.settings.free_ship_badge_bg | default: '#22c55e' }}; color: {{ section.settings.free_ship_badge_text_color | default: '#ffffff' }};'
+              : 'background: transparent; border: 1.5px solid {{ section.settings.free_ship_badge_bg | default: '#22c55e' }}; color: {{ section.settings.free_ship_badge_text_color | default: '#ffffff' }};'"
+          >
+            {%- if section.settings.free_ship_badge_icon != blank -%}
+              <img src="{{ section.settings.free_ship_badge_icon | image_url: width: 24 }}" alt="" class="basket-badge__icon">
+            {%- endif -%}
+            <span>{{ section.settings.free_ship_badge_text | default: 'FREE' }}</span>
+          </div>
+        </div>
         <div class="size-progress">
           <div class="size-progress__fill" :style="'width: ' + deliveryProgress + '%'"></div>
         </div>
@@ -2367,7 +2433,7 @@ i
                 <div class="sub-toggle__circle"></div>
               </div>
               <div>
-                <div class="sub-section__title">Sub & Save</div>
+                <div class="sub-section__title">Subscribe & save</div>
                 <div class="sub-section__subtitle">Join the Cult and get rewarded for life</div>
               </div>
             </div>
@@ -2419,7 +2485,7 @@ i
               aria-label="Delivery frequency"
             >
               <template x-for="plan in sellingPlans" :key="plan.id">
-                <option :value="plan.id" x-text="plan.name"></option>
+                <option :value="plan.id" x-text="plan.name.charAt(0).toUpperCase() + plan.name.slice(1).toLowerCase()"></option>
               </template>
             </select>
           </div>
@@ -2541,12 +2607,9 @@ i
     x-transition:enter-start="transform translate-y-full opacity-0"
     x-transition:enter-end="transform translate-y-0 opacity-100">
 
-    <!-- Summary row: progress bar + free delivery badge -->
-    <div class="sticky-cta__summary">
-      <div class="sticky-cta__summary-progress">
-        <div class="sticky-cta__summary-progress-fill" :style="'width: ' + deliveryProgress + '%'"></div>
-      </div>
-
+    <!-- Row 1: "Your box" heading + FREE DELIVERY badge -->
+    <div class="sticky-cta__heading-row">
+      <span class="sticky-cta__title">Your box</span>
       <div class="basket-badge basket-badge--compact"
         :class="{ 'basket-badge--unlocked': freeDelivery }"
         :style="freeDelivery
@@ -2556,17 +2619,32 @@ i
         {%- if section.settings.free_ship_badge_icon != blank -%}
           <img src="{{ section.settings.free_ship_badge_icon | image_url: width: 24 }}" alt="" class="basket-badge__icon">
         {%- endif -%}
-        <span>{{ section.settings.free_ship_badge_text | default: 'FREE' }}</span>
+        <span>{{ section.settings.free_ship_badge_text | default: 'FREE DELIVERY' }}</span>
       </div>
     </div>
 
-    <!-- CTA button -->
+    <!-- Row 2: Full-width progress bar -->
+    <div class="sticky-cta__progress">
+      <div class="sticky-cta__progress-fill" :style="'width: ' + deliveryProgress + '%'"></div>
+    </div>
+
+    <!-- Row 3: Size tier pills (sliding 3-tier window, read-only) -->
+    <div class="sticky-cta__sizes">
+      <template x-for="size in stickySizes" :key="size.id">
+        <div class="sticky-cta__size-pill"
+          :class="{ 'sticky-cta__size-pill--active': currentTier === size.id }">
+          <span x-text="size.packs + ' packs'"></span>
+        </div>
+      </template>
+    </div>
+
+    <!-- Row 4: CTA button -->
     <button
       class="cta-button cta-button--yellow"
       @click="checkout()"
       :disabled="!hasItems"
     >
-      {{ section.settings.cta_button_text | default: 'Buy now' }} — <span x-text="formatPrice(displayPrice)"></span>
+      {{ section.settings.cta_button_text | default: 'Checkout' }} — <span x-text="formatPrice(displayPrice)"></span>
     </button>
   </div>
 </div>
@@ -2858,6 +2936,16 @@ i
         return tier;
       },
 
+      /** 3-tier sliding window for sticky CTA size pills */
+      get stickySizes() {
+        const all = this.availableSizes;
+        const tier = this.currentTier;
+        if (!tier) return all.slice(0, 3);
+        const idx = all.findIndex(s => s.id === tier);
+        const start = Math.max(0, Math.min(idx - 1, all.length - 3));
+        return all.slice(start, start + 3);
+      },
+
       /** Viewport slide offset — centers active tier in 3-card window */
       get sizeViewportOffset() {
         const tier = this.currentTier;
@@ -2987,11 +3075,14 @@ i
 
       scrollHeroTo(index) {
         this.heroImageIndex = index;
+        this._heroScrolling = true;
         const track = this.$refs.heroTrack;
         if (track) {
           const slide = track.querySelectorAll('.hero-gallery__slide')[index];
           if (slide) {
             track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+            clearTimeout(this._heroScrollTimer);
+            this._heroScrollTimer = setTimeout(() => { this._heroScrolling = false; }, 600);
           }
         }
       },
@@ -3004,7 +3095,7 @@ i
             if (entry.isIntersecting) {
               const slides = track.querySelectorAll('.hero-gallery__slide');
               const idx = Array.from(slides).indexOf(entry.target);
-              if (idx >= 0) this.heroImageIndex = idx;
+              if (idx >= 0 && !this._heroScrolling) this.heroImageIndex = idx;
             }
           }
         }, { root: track, threshold: 0.5 });

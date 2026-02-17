@@ -183,6 +183,13 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - The `og_image` surface has no picker context — it's AI-only, set via `ImageryGenerator`. The referral banner is the OG meta tag fallback.
 - Adding a new surface requires changes in 4+ places: `ImageryGenerator::SURFACES`, JS `surfaceForContext()`, controller `surface_from_context`, and model `SURFACES` validation constant
 
+### scroll-snap-stop: always + IntersectionObserver Jiggle (Feb 17, 2026)
+- Theme's `.snap-start` utility includes `scroll-snap-stop: always`, forcing programmatic `scrollTo` to pause at every intermediate slide
+- An IntersectionObserver tracking 50% visibility fires for each intermediate slide during the scroll animation, updating state and causing thumbnail strip jiggle
+- **Fix (CSS)**: Override with `scroll-snap-stop: normal` on the slide elements — manual swipes still snap, but programmatic scroll can skip intermediates
+- **Fix (JS)**: Set a guard flag (`_heroScrolling`) in `scrollHeroTo`, cleared after 600ms timeout. Observer ignores index updates while flag is set.
+- **Lesson**: When combining scroll-snap galleries with IntersectionObserver, always guard the observer during programmatic scrolls. And check inherited `scroll-snap-stop` values from theme utility classes.
+
 ### CSS translateX(100%) References Element's Own Width (Feb 17, 2026)
 - `translateX(100%)` in CSS uses the **element's own width**, not the parent's
 - A flex container with 12 children has its own width = ~4× the viewport — `translateX(calc(... * 100%))` produces absurdly large values
@@ -196,4 +203,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: Prefer computed getters over `$watch` when a value is derivable from other state
 
 ---
-*Updated: Feb 17, 2026 (CSS translateX viewport fix, Alpine computed getters)*
+*Updated: Feb 17, 2026 (scroll-snap-stop jiggle fix, CSS translateX viewport fix, Alpine computed getters)*
