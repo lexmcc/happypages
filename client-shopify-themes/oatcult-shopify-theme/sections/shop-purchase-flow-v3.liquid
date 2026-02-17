@@ -237,13 +237,12 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
      ============================================ */
   .flavor-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
   }
 
   .flavor-grid__card {
     position: relative;
-    aspect-ratio: 3 / 4;
     border-radius: 12px;
     border: 1px solid rgba(60, 27, 1, 0.5);
     background: #FFFFFF;
@@ -252,6 +251,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     display: flex;
     flex-direction: column;
     overflow: visible;
+    min-height: 240px;
   }
 
   .flavor-grid__card--has-bg {
@@ -353,7 +353,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .flavor-grid__image {
-    flex: 1;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -458,7 +458,12 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   /* Mobile: slightly smaller cards */
   @media screen and (max-width: 767px) {
     .flavor-grid {
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+
+    .flavor-grid__card {
+      min-height: 200px;
     }
 
     .flavor-grid__name {
@@ -1134,26 +1139,34 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     transition: width 300ms ease;
   }
 
+  .size-cards-viewport {
+    --size-gap: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
   .size-cards--redesign {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: var(--size-gap);
+    transition: transform 300ms ease;
+    width: 100%;
   }
 
   .size-card--redesign {
+    flex: 0 0 calc((100% - 2 * var(--size-gap)) / 3);
     position: relative;
     padding: var(--spacing-3);
     border-radius: var(--spf-selector-radius);
-    border: 1px solid var(--color-border-light);
-    background: var(--gradient-unselected);
+    border: none;
+    background: #FFFFFF;
     text-align: left;
     transition: border-color var(--transition-normal), background var(--transition-normal);
     min-height: 44px;
   }
 
   .size-card--redesign.size-card--selected {
-    background: var(--gradient-selected);
-    border-color: var(--color-pink-border);
+    background: #ACDBE7;
+    border: 1px solid #3C1B01;
   }
 
   .size-card--redesign.size-card--selected .size-card__compare-price {
@@ -1163,7 +1176,6 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   .size-card--redesign .size-card__packs {
     font-weight: 700;
     font-size: var(--text-sm);
-    text-transform: uppercase;
     margin-bottom: var(--spacing-2);
   }
 
@@ -1213,23 +1225,14 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
   }
 
   .size-card--redesign.size-card--selected .size-card__per-pack {
-    background: #6CDFFF;
-    color: #1a1a1a;
+    background: #3C1B01;
+    color: #ACDBE7;
   }
 
-  .size-card--redesign .size-card__selected-label {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #ff584d;
-    margin-top: var(--spacing-2);
-    letter-spacing: 0.5px;
-    text-align: center;
-  }
 
   @media screen and (max-width: 999px) {
-    .size-cards--redesign {
-      gap: 8px;
+    .size-cards-viewport {
+      --size-gap: 8px;
     }
 
     .size-card--redesign {
@@ -2312,46 +2315,31 @@ i
           <div class="size-progress__fill" :style="'width: ' + deliveryProgress + '%'"></div>
         </div>
 
-        <div class="size-cards size-cards--redesign">
-          <template x-for="size in availableSizes" :key="size.id">
-            <div class="size-card size-card--redesign"
-              :class="{ 'size-card--selected': currentTier === size.id }"
-            >
-              <div class="size-card__packs">
-                <span x-text="size.packs + ' Packs'"></span>
+        <div class="size-cards-viewport">
+          <div class="size-cards size-cards--redesign"
+               :style="'transform: translateX(calc(-' + sizeViewportOffset + ' * (100% + var(--size-gap)) / 3))'">
+            <template x-for="size in availableSizes" :key="size.id">
+              <div class="size-card size-card--redesign"
+                :class="{ 'size-card--selected': currentTier === size.id }"
+              >
+                <div class="size-card__packs">
+                  <span x-text="size.packs + ' packs'"></span>
+                </div>
+                <div class="size-card__image">
+                  <img x-show="sizeCardImages[size.id]"
+                       :src="sizeCardImages[size.id]"
+                       :alt="size.packs + ' pack'"
+                       loading="lazy">
+                </div>
+                <div class="size-card__prices">
+                  <span class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></span>
+                </div>
+                <div class="size-card__per-pack">
+                  <span x-text="formatPrice(getSizePrice(size.id) / size.id)"></span><span>/pack</span>
+                </div>
               </div>
-              <div class="size-card__image">
-                <template x-if="size.id === 9">
-                  <div>
-                    {%- if section.settings.size_card_image_9 != blank -%}
-                      <img src="{{ section.settings.size_card_image_9 | image_url: width: 200 }}" alt="9 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
-                <template x-if="size.id === 18">
-                  <div>
-                    {%- if section.settings.size_card_image_18 != blank -%}
-                      <img src="{{ section.settings.size_card_image_18 | image_url: width: 200 }}" alt="18 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
-                <template x-if="size.id === 27">
-                  <div>
-                    {%- if section.settings.size_card_image_27 != blank -%}
-                      <img src="{{ section.settings.size_card_image_27 | image_url: width: 200 }}" alt="27 pack" loading="lazy">
-                    {%- endif -%}
-                  </div>
-                </template>
-              </div>
-              <div class="size-card__prices">
-                <span class="size-card__price" x-text="formatPrice(getSizePrice(size.id))"></span>
-              </div>
-              <div class="size-card__per-pack">
-                <span x-text="formatPrice(getSizePrice(size.id) / size.id)"></span><span>/pack</span>
-              </div>
-              <div class="size-card__selected-label" x-show="currentTier === size.id">Current</div>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </div>
 
@@ -2770,6 +2758,19 @@ i
         {%- endfor -%}
       ],
 
+      // ── Size card images (Liquid-interpolated) ──────────────────
+      sizeCardImages: {
+        {%- for i in (1..12) -%}
+          {%- assign pack_size = i | times: 9 -%}
+          {%- assign setting_key = 'size_card_image_' | append: pack_size -%}
+          {%- if section.settings[setting_key] != blank -%}
+            {{ pack_size }}: {{ section.settings[setting_key] | image_url: width: 200 | json }},
+          {%- else -%}
+            {{ pack_size }}: null,
+          {%- endif -%}
+        {%- endfor -%}
+      },
+
       // ── Computed (getters) ────────────────────────────────────
 
       /** Sum of all quantity values (number of 9-packs) */
@@ -2782,14 +2783,14 @@ i
         return this.totalItems * 9;
       },
 
-      /** Total price in pence — uses mapped variant (qty→packSize→variant) */
+      /** Total price in pence — decomposes qty into valid variants (27, 18, 9) */
       get totalPrice() {
         let total = 0;
         for (const [productId, qty] of Object.entries(this.quantities)) {
           if (qty <= 0) continue;
-          const packSize = qty * 9;
-          const variant = this.getVariantForSize(productId, packSize);
-          if (variant) total += variant.price;
+          for (const { variant } of this.getVariantBreakdown(productId, qty)) {
+            total += variant.price;
+          }
         }
         return total;
       },
@@ -2827,10 +2828,10 @@ i
         return Math.max(0, this.freeDeliveryThreshold - this.displayPrice);
       },
 
-      /** Delivery progress bar percentage (0-100) */
+      /** Delivery progress bar percentage (0-100) — pack-based, caps at 27 */
       get deliveryProgress() {
-        if (this.displayPrice <= 0) return 0;
-        return Math.min(100, (this.displayPrice / this.freeDeliveryThreshold) * 100);
+        if (this.totalPacks <= 0) return 0;
+        return Math.min(100, (this.totalPacks / 27) * 100);
       },
 
       /** Whether any items are in the basket */
@@ -2840,22 +2841,29 @@ i
 
       // ── Size card getters ──────────────────────────────────
 
-      /** Read-only size tiers — always 3 cards */
+      /** Read-only size tiers — 12 cards (9 through 108) */
       get availableSizes() {
-        return [
-          { id: 9, packs: 9 },
-          { id: 18, packs: 18 },
-          { id: 27, packs: 27 }
-        ];
+        const sizes = [];
+        for (let i = 1; i <= 12; i++) sizes.push({ id: i * 9, packs: i * 9 });
+        return sizes;
       },
 
-      /** Which tier is highlighted based on basket total */
+      /** Which tier is highlighted — largest tier ≤ totalPacks */
       get currentTier() {
         const packs = this.totalPacks;
-        if (packs >= 27) return 27;
-        if (packs >= 18) return 18;
-        if (packs >= 9) return 9;
-        return null;
+        if (packs <= 0) return null;
+        const tiers = this.availableSizes.map(s => s.id);
+        let tier = null;
+        for (const t of tiers) { if (packs >= t) tier = t; }
+        return tier;
+      },
+
+      /** Viewport slide offset — centers active tier in 3-card window */
+      get sizeViewportOffset() {
+        const tier = this.currentTier;
+        if (tier === null) return 0;
+        const tierIndex = Math.floor(tier / 9) - 1;
+        return Math.max(0, Math.min(tierIndex - 1, 9));
       },
 
       /** Per-pack price string (e.g. "£2.00") based on current display price */
@@ -2914,6 +2922,7 @@ i
             thumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
           }
         });
+
       },
 
       // ── Quantity methods ──────────────────────────────────────
@@ -2943,14 +2952,35 @@ i
         return Object.values(product.variants).find(v => v.packs === packSize) || null;
       },
 
-      /** Size card pricing — uses first product as reference */
+      /** Break qty (in 9-pack units) into valid variant sizes (27, 18, 9) */
+      getVariantBreakdown(productId, qty) {
+        const totalPacks = qty * 9;
+        const items = [];
+        let remaining = totalPacks;
+        for (const size of [27, 18, 9]) {
+          while (remaining >= size) {
+            const variant = this.getVariantForSize(productId, size);
+            if (variant) { items.push({ variant, size }); remaining -= size; }
+            else break;
+          }
+        }
+        return items;
+      },
+
+      /** Size card pricing — decomposes into valid variants for sizes > 27 */
       getSizePrice(packSize) {
         const firstProductId = this.blockProductIds[0];
         if (!firstProductId) return 0;
-        const variant = this.getVariantForSize(firstProductId, packSize);
-        if (!variant) return 0;
-        const price = variant.price;
-        return this.subscribe ? Math.round(price * (1 - this.discountPercent / 100)) : price;
+        let total = 0;
+        let remaining = packSize;
+        for (const size of [27, 18, 9]) {
+          while (remaining >= size) {
+            const variant = this.getVariantForSize(firstProductId, size);
+            if (variant) { total += variant.price; remaining -= size; }
+            else break;
+          }
+        }
+        return this.subscribe ? Math.round(total * (1 - this.discountPercent / 100)) : total;
       },
 
       // ── Hero gallery ──────────────────────────────────────
@@ -3104,16 +3134,14 @@ i
 
         for (const [productId, qty] of Object.entries(this.quantities)) {
           if (qty <= 0) continue;
-          const packSize = qty * 9;
-          const variant = this.getVariantForSize(productId, packSize);
-          if (!variant) continue;
-
-          const item = { id: variant.id, quantity: 1 };
-          const sellingPlan = getSellingPlan(variant);
-          if (sellingPlan) {
-            item.selling_plan = sellingPlan;
+          for (const { variant } of this.getVariantBreakdown(productId, qty)) {
+            const item = { id: variant.id, quantity: 1 };
+            const sellingPlan = getSellingPlan(variant);
+            if (sellingPlan) {
+              item.selling_plan = sellingPlan;
+            }
+            items.push(item);
           }
-          items.push(item);
         }
 
         if (items.length === 0) return;
@@ -3392,6 +3420,60 @@ i
       "id": "size_card_image_27",
       "label": "27-pack image",
       "info": "Stacked product image for 27-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_36",
+      "label": "36-pack image",
+      "info": "Stacked product image for 36-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_45",
+      "label": "45-pack image",
+      "info": "Stacked product image for 45-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_54",
+      "label": "54-pack image",
+      "info": "Stacked product image for 54-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_63",
+      "label": "63-pack image",
+      "info": "Stacked product image for 63-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_72",
+      "label": "72-pack image",
+      "info": "Stacked product image for 72-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_81",
+      "label": "81-pack image",
+      "info": "Stacked product image for 81-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_90",
+      "label": "90-pack image",
+      "info": "Stacked product image for 90-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_99",
+      "label": "99-pack image",
+      "info": "Stacked product image for 99-pack option"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_card_image_108",
+      "label": "108-pack image",
+      "info": "Stacked product image for 108-pack option"
     },
     {
       "type": "header",

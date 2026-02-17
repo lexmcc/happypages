@@ -183,5 +183,17 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - The `og_image` surface has no picker context — it's AI-only, set via `ImageryGenerator`. The referral banner is the OG meta tag fallback.
 - Adding a new surface requires changes in 4+ places: `ImageryGenerator::SURFACES`, JS `surfaceForContext()`, controller `surface_from_context`, and model `SURFACES` validation constant
 
+### CSS translateX(100%) References Element's Own Width (Feb 17, 2026)
+- `translateX(100%)` in CSS uses the **element's own width**, not the parent's
+- A flex container with 12 children has its own width = ~4× the viewport — `translateX(calc(... * 100%))` produces absurdly large values
+- **Fix**: Set `width: 100%` on the flex container so `100%` = viewport width. Children with `flex-shrink: 0` overflow as intended, hidden by the viewport's `overflow: hidden`.
+- **Lesson**: When using percentage-based `translateX` for sliding viewports, always constrain the sliding element's width to match the viewport
+
+### Alpine Computed Getters vs $watch (Feb 17, 2026)
+- `$watch('computedGetter', ...)` can be fragile — Alpine *should* track getter dependencies but the reactivity isn't always reliable
+- Replacing mutable state + `$watch` with a computed getter (`get prop()`) is simpler and guaranteed reactive since Alpine re-evaluates getters on dependency change
+- The `:style` binding already triggers re-render when the getter's value changes
+- **Lesson**: Prefer computed getters over `$watch` when a value is derivable from other state
+
 ---
-*Updated: Feb 16, 2026 (surface filtering, dead code audit)*
+*Updated: Feb 17, 2026 (CSS translateX viewport fix, Alpine computed getters)*
