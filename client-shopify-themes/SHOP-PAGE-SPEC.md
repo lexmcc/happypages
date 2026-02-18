@@ -310,6 +310,12 @@ Simplified from v2:
 
 ---
 
+## Header Checkout Button
+
+- **Shop-v3 page:** renders as "Checkout", starts `disabled` (grey, not-allowed cursor). Enables when `spf:has-items` event fires with `detail: true`. Dispatches `spf:checkout-request` on click.
+- **Non-shop pages:** renders as "Buy now", always enabled, navigates to `/pages/shop-v3`.
+- The purchase flow dispatches `spf:has-items` on `totalItems` change and on init (`$nextTick`), plus explicit calls in `incrementQty`/`decrementQty` for immediate feedback.
+
 ## Checkout Flow
 
 - Direct to checkout (no cart page) — same as v1/v2

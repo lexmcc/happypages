@@ -266,16 +266,68 @@ the underlying logic of the menu.
             </a>
           {%- endif -%}
 
-          <a href="{{ routes.cart_url }}" data-no-instant class="relative tap-area" {% if settings.cart_type != 'page' and request.page_type != 'cart' %}aria-controls="cart-drawer"{% endif %}>
-            <span class="sr-only">{{ 'header.general.open_cart' | t }}</span>
-            {%- render 'icon' with 'cart' -%}
+          <button type="button" id="header-checkout-btn"
+            {% if template.suffix == 'shop-v3' %}
+              disabled
+            {% else %}
+              data-shop-url="{{ pages['shop'].url | default: '/pages/shop-v3' }}"
+            {% endif %}
+          >
+            {%- if template.suffix == 'shop-v3' -%}
+              Checkout
+            {%- else -%}
+              Buy now
+            {%- endif -%}
+          </button>
 
-            <div class="header__cart-count">
-              <cart-count class="count-bubble {% if cart.item_count == 0 %}opacity-0{% endif %}" aria-hidden="true">
-                {{- cart.item_count -}}
-              </cart-count>
-            </div>
-          </a>
+          <style>
+            #header-checkout-btn {
+              padding: 8px 16px;
+              border-radius: 60px;
+              background: #FED700;
+              color: #3C1B01;
+              font-size: 13px;
+              font-weight: 700;
+              border: 1px solid #E0C426;
+              cursor: pointer;
+              transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+              white-space: nowrap;
+              line-height: 1;
+            }
+            #header-checkout-btn:hover {
+              background: #E8C300;
+              transform: translateY(-1px);
+              box-shadow: 0 3px 8px rgba(254, 215, 0, 0.4);
+            }
+            #header-checkout-btn:active { transform: translateY(0); }
+            #header-checkout-btn:disabled {
+              background: rgba(0,0,0,0.08);
+              color: #999;
+              border-color: rgba(0,0,0,0.1);
+              cursor: not-allowed;
+              transform: none;
+              box-shadow: none;
+            }
+          </style>
+
+          <script>
+            (function() {
+              var btn = document.getElementById('header-checkout-btn');
+              var shopUrl = btn.getAttribute('data-shop-url');
+
+              window.addEventListener('spf:has-items', function(e) {
+                btn.disabled = !e.detail;
+              });
+
+              btn.addEventListener('click', function() {
+                if (shopUrl) {
+                  window.location.href = shopUrl;
+                } else {
+                  window.dispatchEvent(new CustomEvent('spf:checkout-request'));
+                }
+              });
+            })();
+          </script>
         </div>
       </div>
     </div>

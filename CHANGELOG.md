@@ -2,6 +2,10 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-18
+
+- **Oatcult header checkout button disabled state** — "Checkout" button starts disabled (grey) on shop-v3 page when no items in box. Enables (yellow) when items are added via `spf:has-items` custom event bridge between purchase flow and header. "Buy now" on non-shop pages unaffected.
+
 ## 2026-02-17
 
 - **Oatcult mobile sticky CTA subscription pill** — "subscribing & saving £x.xx" pill appears next to "Your box" when subscribe & save is active. Dynamic savings amount, scale+fade transition on toggle, hidden when no items in box.

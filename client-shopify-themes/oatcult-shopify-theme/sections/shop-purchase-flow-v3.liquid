@@ -3055,6 +3055,16 @@ i
           });
         }
 
+        this._notifyHeader = () => {
+          window.dispatchEvent(new CustomEvent('spf:has-items', { detail: this.hasItems }));
+        };
+        this.$watch('totalItems', () => this._notifyHeader());
+        this.$nextTick(() => this._notifyHeader());
+
+        window.addEventListener('spf:checkout-request', () => {
+          if (this.hasItems) this.checkout();
+        });
+
         // Init hero gallery dot observer
         this.$nextTick(() => this.initHeroObserver());
 
@@ -3073,12 +3083,14 @@ i
       incrementQty(productId) {
         const current = this.quantities[productId] || 0;
         this.quantities[productId] = current + 1;
+        this._notifyHeader();
       },
 
       decrementQty(productId) {
         const current = this.quantities[productId] || 0;
         if (current > 0) {
           this.quantities[productId] = current - 1;
+          this._notifyHeader();
         }
       },
 

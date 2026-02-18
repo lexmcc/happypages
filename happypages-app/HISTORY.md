@@ -61,6 +61,7 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 16** - Surface-filtered media pickers: each admin tab shows only relevant images (referral banner / extension card)
 - **Feb 16** - 3-layer CLAUDE.md architecture: global rules, project context, session memory separated
 - **Feb 17** - Oatcult shop page v3: hero gallery jiggle fix, flavor card styling overhaul, size card viewport fix, mobile sticky CTA subscription savings pill
+- **Feb 18** - Header checkout button: disabled until items added on shop-v3, `spf:has-items` event bridge
 
 ## Key Milestones
 
