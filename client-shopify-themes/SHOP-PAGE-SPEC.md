@@ -305,6 +305,7 @@ Simplified from v2:
 - ✅ Free delivery progress bar
 - ✅ Free delivery badge
 - ✅ CTA checkout button with price
+- ✅ "subscribing & saving £x.xx" pill — shows when subscribe & save is on and items in box (dark brown bg, baby blue text, scale+fade transition)
 - Appears when scrolling past the purchase section
 
 ---
