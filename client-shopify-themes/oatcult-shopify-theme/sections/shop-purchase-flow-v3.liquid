@@ -468,7 +468,7 @@ V3 merges v1 size cards + v2 qty picker into a unified layout:
     }
 
     .flavor-grid__card {
-      min-height: 200px;
+      min-height: 240px;
     }
 
     .flavor-grid__name {
@@ -2986,6 +2986,73 @@ i
         const drawer = document.getElementById('flavor-info-drawer');
         if (drawer) {
           Object.defineProperty(drawer, 'shouldAppendToBody', { get: () => false });
+
+          // Pop-in/pop-out on desktop instead of clipPath slide
+          customElements.whenDefined('x-drawer').then(() => {
+            const isDesktop = () => window.matchMedia('screen and (min-width: 700px)').matches;
+            const origShow = drawer._showTransition.bind(drawer);
+            const origHide = drawer._hideTransition.bind(drawer);
+
+            drawer._showTransition = function(animate = true) {
+              if (!isDesktop()) return origShow(animate);
+
+              this._setInitialPosition();
+              const content = this.shadowRoot?.querySelector('[part="content"]');
+              const overlay = this.shadowRoot?.querySelector('[part="overlay"]');
+              const closeBtn = this.shadowRoot?.querySelector('[part="outside-close-button"]');
+
+              this.style.visibility = 'visible';
+              this.style.opacity = '1';
+
+              const overlayAnim = overlay?.animate(
+                { opacity: [0, 1] },
+                { duration: 150, fill: 'forwards', easing: 'ease-out' }
+              );
+              const contentAnim = content?.animate(
+                { opacity: [0, 1], transform: ['scale(0.95)', 'scale(1)'] },
+                { duration: 250, fill: 'forwards', easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+              );
+              const btnAnim = closeBtn?.animate(
+                { opacity: [0, 1] },
+                { duration: 150, fill: 'forwards', easing: 'ease-out', delay: 100 }
+              );
+
+              if (!animate) {
+                overlayAnim?.finish();
+                contentAnim?.finish();
+                btnAnim?.finish();
+              }
+
+              return contentAnim?.finished.then(() => this.classList.add('show-close-cursor'));
+            };
+
+            drawer._hideTransition = function() {
+              if (!isDesktop()) return origHide();
+
+              const content = this.shadowRoot?.querySelector('[part="content"]');
+              const overlay = this.shadowRoot?.querySelector('[part="overlay"]');
+              const closeBtn = this.shadowRoot?.querySelector('[part="outside-close-button"]');
+
+              closeBtn?.animate(
+                { opacity: [null, 0] },
+                { duration: 100, fill: 'forwards', easing: 'ease-in' }
+              );
+              const contentAnim = content?.animate(
+                { opacity: [null, 0], transform: [null, 'scale(0.95)'] },
+                { duration: 200, fill: 'forwards', easing: 'cubic-bezier(0.4, 0, 1, 1)' }
+              );
+              overlay?.animate(
+                { opacity: [null, 0] },
+                { duration: 150, fill: 'forwards', easing: 'ease-in', delay: 50 }
+              );
+
+              return contentAnim?.finished.then(() => {
+                this.style.visibility = 'hidden';
+                this.style.opacity = '0';
+                this.classList.remove('show-close-cursor');
+              });
+            };
+          });
         }
 
         // Init hero gallery dot observer
