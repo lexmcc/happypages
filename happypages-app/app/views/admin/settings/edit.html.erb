@@ -200,10 +200,118 @@ const CREATE_CART_WITH_DISCOUNT = `#graphql
               <p>Uses Hydrogen's <code class="bg-gray-100 px-1 rounded">context.storefront</code> — no extra tokens needed. If your app uses a custom cart provider, you may need to adapt this to use your cart's <code class="bg-gray-100 px-1 rounded">addDiscount</code> method instead.</p>
             </div>
 
+            <div class="border-t border-black/5 pt-6">
+              <p class="text-sm font-medium text-gray-700 mb-3">Read the customer's referral code via Storefront API:</p>
+
+              <div class="relative">
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"><code>query CustomerReferral {
+  customer {
+    metafield(namespace: "app--happypages-friendly-referrals", key: "referral_code") {
+      value
+    }
+  }
+}</code></pre>
+                <button
+                  type="button"
+                  onclick="navigator.clipboard.writeText(this.closest('.relative').querySelector('code').textContent).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 2000); })"
+                  class="absolute top-2 right-2 px-2.5 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs rounded transition-colors"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <p class="mt-3 text-sm text-gray-700 mb-3">Build the referral URL in your Hydrogen app:</p>
+
+              <div class="relative">
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"><code>const referralUrl = `https://app.happypages.co/<%= @shop.slug %>/refer?code=${referralCode}`;</code></pre>
+                <button
+                  type="button"
+                  onclick="navigator.clipboard.writeText(this.closest('.relative').querySelector('code').textContent).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 2000); })"
+                  class="absolute top-2 right-2 px-2.5 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs rounded transition-colors"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <p class="mt-2 text-xs text-gray-500">Query the customer's <code class="bg-gray-100 px-1 rounded">referral_code</code> metafield in your account page loader, then render a "Refer a friend" link with the URL above.</p>
+            </div>
+
           </div>
         </div>
       </section>
     <% end %>
+
+    <% if @shop.shopify? %>
+      <section class="mt-6" id="customer-import" data-controller="customer-import" data-customer-import-url-value="<%= status_admin_customer_imports_path %>">
+        <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div class="px-6 py-4 border-b border-black/5">
+            <h3 class="text-lg font-semibold text-gray-900">Import Existing Customers</h3>
+            <p class="text-sm text-gray-500">Sync Shopify customers who have placed orders into your referral program</p>
+          </div>
+
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-gray-600">
+              Import all customers with at least one order. Each customer gets a unique referral code and their
+              <code class="bg-gray-100 px-1 rounded text-xs">referral_code</code> metafield is written to Shopify.
+              Customers who already have a referral are skipped. Safe to re-run.
+            </p>
+
+            <%# Status display — updated by JS polling %>
+            <div data-customer-import-target="status">
+              <% if @latest_import&.in_progress? %>
+                <div class="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <svg class="animate-spin size-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">Import in progress...</p>
+                    <p class="text-xs text-blue-600" data-customer-import-target="progress">
+                      <%= @latest_import.total_fetched %> customers fetched, <%= @latest_import.total_created %> created, <%= @latest_import.total_skipped %> skipped
+                    </p>
+                  </div>
+                </div>
+              <% elsif @latest_import&.status == "completed" %>
+                <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <p class="text-sm font-medium text-emerald-800">Last import completed</p>
+                  <p class="text-xs text-emerald-600">
+                    <%= @latest_import.total_created %> imported, <%= @latest_import.total_skipped %> skipped
+                    <% if @latest_import.completed_at %>
+                      — <%= time_ago_in_words(@latest_import.completed_at) %> ago
+                    <% end %>
+                  </p>
+                </div>
+              <% elsif @latest_import&.status == "failed" %>
+                <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p class="text-sm font-medium text-red-800">Last import failed</p>
+                  <p class="text-xs text-red-600">
+                    <%= @latest_import.error_message %>
+                    (<%= @latest_import.total_created %> created before failure)
+                  </p>
+                </div>
+              <% end %>
+            </div>
+
+            <%= form_with url: admin_customer_imports_path, method: :post, local: true do %>
+              <button
+                type="submit"
+                <% if @latest_import&.in_progress? %>disabled<% end %>
+                class="px-4 py-2 bg-[#ff584d] text-white rounded-lg hover:bg-[#e64d43] transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <% if @latest_import&.in_progress? %>
+                  Importing...
+                <% elsif @latest_import&.status == "completed" %>
+                  Re-sync Customers
+                <% else %>
+                  Import Existing Customers
+                <% end %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </section>
+    <% end %>
+
     <% end %>
   </div>
 </div>

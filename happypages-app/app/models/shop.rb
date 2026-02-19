@@ -12,6 +12,7 @@ class Shop < ApplicationRecord
   has_many :audit_logs, dependent: :destroy
   has_many :media_assets, dependent: :destroy
   has_many :generation_logs, dependent: :destroy
+  has_many :customer_imports, dependent: :destroy
 
   validates :name, presence: true
   validates :domain, presence: true, uniqueness: true

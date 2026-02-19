@@ -71,6 +71,13 @@ Rails.application.routes.draw do
       end
     end
 
+    # Customer import
+    resources :customer_imports, only: [:create] do
+      collection do
+        get :status
+      end
+    end
+
     # Settings (shop slug)
     resource :settings, only: [:edit, :update], controller: "settings"
 
