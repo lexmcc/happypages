@@ -2956,6 +2956,21 @@ i
           this.quantities[productId] = 0;
         }
 
+        // Restore state if returning via back-button
+        const saved = sessionStorage.getItem('spf_state');
+        if (saved) {
+          try {
+            const state = JSON.parse(saved);
+            for (const [id, qty] of Object.entries(state.quantities || {})) {
+              const n = parseInt(qty, 10);
+              if (this.quantities.hasOwnProperty(id) && Number.isFinite(n) && n > 0 && n <= 99) this.quantities[id] = n;
+            }
+            if (typeof state.subscribe === 'boolean') this.subscribe = state.subscribe;
+            if (typeof state.selectedFrequency === 'number') this.selectedFrequency = state.selectedFrequency;
+          } catch (e) { /* ignore corrupt data */ }
+          sessionStorage.removeItem('spf_state');
+        }
+
         // Get discount percent from first variant with a selling plan
         for (const product of Object.values(this.products)) {
           for (const variant of Object.values(product.variants)) {
@@ -2967,8 +2982,8 @@ i
           if (this.discountPercent !== 20) break;
         }
 
-        // Set default frequency (prefer 4 weeks, or first available)
-        if (this.sellingPlans.length > 0) {
+        // Set default frequency (prefer 4 weeks, or first available) — skip if restored
+        if (!this.selectedFrequency && this.sellingPlans.length > 0) {
           const fourWeekPlan = this.sellingPlans.find(p =>
             p.name.toLowerCase().includes('4 week') ||
             p.name.toLowerCase().includes('every 4')
@@ -3061,6 +3076,11 @@ i
         this.$watch('totalItems', () => this._notifyHeader());
         this.$nextTick(() => this._notifyHeader());
 
+        // Sync Shopify cart on any selection change (for abandoned cart flows)
+        this.$watch('totalItems', () => this.syncCart());
+        this.$watch('subscribe', () => { if (this.hasItems) this.syncCart(); });
+        this.$watch('selectedFrequency', () => { if (this.hasItems && this.subscribe) this.syncCart(); });
+
         window.addEventListener('spf:checkout-request', () => {
           if (this.hasItems) this.checkout();
         });
@@ -3084,6 +3104,7 @@ i
         const current = this.quantities[productId] || 0;
         this.quantities[productId] = current + 1;
         this._notifyHeader();
+        this.syncCart();
       },
 
       decrementQty(productId) {
@@ -3091,6 +3112,7 @@ i
         if (current > 0) {
           this.quantities[productId] = current - 1;
           this._notifyHeader();
+          this.syncCart();
         }
       },
 
@@ -3278,7 +3300,41 @@ i
 
       // ── Checkout ──────────────────────────────────────────────
 
+      _syncTimer: null,
+
+      syncCart() {
+        clearTimeout(this._syncTimer);
+        if (this._syncAborter) this._syncAborter.abort();
+        this._syncTimer = setTimeout(async () => {
+          const aborter = this._syncAborter = new AbortController();
+          const signal = aborter.signal;
+          const items = [];
+          const getSellingPlan = (variant) => {
+            if (!this.subscribe) return null;
+            if (this.selectedFrequency) return this.selectedFrequency;
+            return variant.sellingPlanId;
+          };
+          for (const [productId, qty] of Object.entries(this.quantities)) {
+            if (qty <= 0) continue;
+            for (const { variant } of this.getVariantBreakdown(productId, qty)) {
+              const item = { id: variant.id, quantity: 1 };
+              const sellingPlan = getSellingPlan(variant);
+              if (sellingPlan) item.selling_plan = sellingPlan;
+              items.push(item);
+            }
+          }
+          try {
+            await fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal });
+            if (items.length > 0) {
+              await fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }), signal });
+            }
+          } catch (e) { /* silent — cart sync is best-effort, aborts land here too */ }
+        }, 300);
+      },
+
       async checkout() {
+        clearTimeout(this._syncTimer);
+        if (this._syncAborter) this._syncAborter.abort();
         if (!this.hasItems) return;
 
         // Build items array from quantities
@@ -3303,6 +3359,13 @@ i
         }
 
         if (items.length === 0) return;
+
+        // Persist UI state for back-button restoration
+        sessionStorage.setItem('spf_state', JSON.stringify({
+          quantities: this.quantities,
+          subscribe: this.subscribe,
+          selectedFrequency: this.selectedFrequency
+        }));
 
         try {
           // Clear cart
