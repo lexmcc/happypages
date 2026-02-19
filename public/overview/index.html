@@ -414,6 +414,11 @@
     .arch__detail-label--cyan { background: rgba(0,198,247,0.15); color: var(--color-cyan); }
 
     /* ============================================================
+       ROADMAP
+       ============================================================ */
+    .roadmap__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-top: var(--space-7); }
+
+    /* ============================================================
        HYDROGEN INTEGRATION
        ============================================================ */
     .hydrogen__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-9); align-items: start; }
@@ -637,6 +642,7 @@
       .features__grid { grid-template-columns: repeat(2, 1fr); }
       .hero__grid { grid-template-columns: 1fr; gap: var(--space-7); }
       .hydrogen__grid { grid-template-columns: 1fr; }
+      .roadmap__grid { grid-template-columns: repeat(2, 1fr); }
       .journey__flow { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
       .journey__node:nth-child(3)::after { display: none; }
     }
@@ -647,6 +653,7 @@
       .container { padding: 0 var(--space-4); }
       .section { padding: var(--space-8) 0; }
       .features__grid { grid-template-columns: 1fr; }
+      .roadmap__grid { grid-template-columns: 1fr; }
       .journey__flow { grid-template-columns: repeat(2, 1fr); }
       .journey__node:nth-child(2n)::after { display: none; }
       .prereq-list { grid-template-columns: 1fr; }
@@ -687,6 +694,7 @@
         <a href="#features" class="sticky-nav__link">features</a>
         <a href="#architecture" class="sticky-nav__link">architecture</a>
         <a href="#hydrogen" class="sticky-nav__link">hydrogen</a>
+        <a href="#roadmap" class="sticky-nav__link">roadmap</a>
         <a href="#testing" class="sticky-nav__link">testing</a>
         <button class="btn btn--dark btn--sm" onclick="window.print()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1568,6 +1576,46 @@ POST https://a.klaviyo.com/api/events
   <span class="str">`https://your-store.com/discount/${referralCode}`</span>;</pre>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       UPCOMING FEATURES
+       ======================================== -->
+  <section id="roadmap" class="section section--dark">
+    <div class="container">
+      <span class="section-label" style="color: rgba(255,255,255,0.4);">what's next.</span>
+      <h2 class="section-heading">upcoming features.</h2>
+      <div class="roadmap__grid">
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(21,79,251,0.12); border: 1px solid rgba(21,79,251,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">📊</div>
+            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(21,79,251,0.12); color: #6b8fff;">in development</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">advanced analytics.</h3>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">full-funnel analytics dashboard — track extension impressions, share clicks, code usage, conversion rates, and revenue attribution. filterable by date range, campaign, and referrer. exportable reports.</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(255,88,77,0.12); border: 1px solid rgba(255,88,77,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">🔗</div>
+            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(255,88,77,0.12); color: var(--color-coral);">planned</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">white-label urls.</h3>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">serve referral pages from your own domain via reverse proxy — e.g. fielddoctor.co.uk/refer instead of app.happypages.co. full customiser and branding still works, just the url changes. zero code changes on your side.</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(0,198,247,0.12); border: 1px solid rgba(0,198,247,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">🎨</div>
+            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(0,198,247,0.12); color: var(--color-cyan);">planned</span>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">custom landing pages.</h3>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">build dedicated referral campaign landing pages with a drag-and-drop editor. custom sections, testimonials, reward tiers, and social proof — all managed from the admin dashboard without developer involvement.</p>
+        </div>
+
       </div>
     </div>
   </section>
