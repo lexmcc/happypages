@@ -417,6 +417,28 @@
        ROADMAP
        ============================================================ */
     .roadmap__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-top: var(--space-7); }
+    .roadmap__card {
+      background: var(--color-card); border: 1px solid rgba(0,0,0,0.05);
+      border-radius: var(--radius-lg); padding: var(--space-6);
+      box-shadow: var(--shadow-neumorphic); transition: all var(--transition-medium);
+    }
+    .roadmap__card:hover { transform: translateY(-2px); box-shadow: var(--shadow-neumorphic), 0 8px 20px rgba(0,0,0,0.06); }
+    .roadmap__icon {
+      width: 36px; height: 36px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .roadmap__icon--blue { background: rgba(21,79,251,0.08); border: 1px solid rgba(21,79,251,0.15); }
+    .roadmap__icon--coral { background: rgba(255,88,77,0.08); border: 1px solid rgba(255,88,77,0.15); }
+    .roadmap__icon--cyan { background: rgba(0,198,247,0.08); border: 1px solid rgba(0,198,247,0.15); }
+    .roadmap__badge {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px;
+    }
+    .roadmap__badge--blue { background: rgba(21,79,251,0.08); color: var(--color-blue); }
+    .roadmap__badge--coral { background: rgba(255,88,77,0.08); color: var(--color-coral); }
+    .roadmap__badge--cyan { background: rgba(0,198,247,0.08); color: var(--color-cyan); }
+    .roadmap__title { font-size: 18px; font-weight: 600; margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading); }
+    .roadmap__desc { font-size: 13px; color: var(--color-text-muted); line-height: 1.6; }
 
     /* ============================================================
        HYDROGEN INTEGRATION
@@ -954,6 +976,46 @@
             <li>rack-attack rate limiting on api endpoints</li>
             <li>super admin audit controls with session timeout</li>
           </ul></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       UPCOMING FEATURES
+       ======================================== -->
+  <section id="roadmap" class="section">
+    <div class="container">
+      <span class="section-label">what's next.</span>
+      <h2 class="section-heading">upcoming features.</h2>
+      <div class="roadmap__grid">
+
+        <div class="roadmap__card">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="roadmap__icon roadmap__icon--blue">📊</div>
+            <span class="roadmap__badge roadmap__badge--blue">in development</span>
+          </div>
+          <h3 class="roadmap__title">advanced analytics.</h3>
+          <p class="roadmap__desc">full-funnel analytics dashboard — track extension impressions, share clicks, code usage, conversion rates, and revenue attribution. filterable by date range, campaign, and referrer. exportable reports.</p>
+        </div>
+
+        <div class="roadmap__card">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="roadmap__icon roadmap__icon--coral">🔗</div>
+            <span class="roadmap__badge roadmap__badge--coral">planned</span>
+          </div>
+          <h3 class="roadmap__title">white-label urls.</h3>
+          <p class="roadmap__desc">serve referral pages from your own domain via reverse proxy — e.g. fielddoctor.co.uk/refer instead of app.happypages.co. full customiser and branding still works, just the url changes. zero code changes on your side.</p>
+        </div>
+
+        <div class="roadmap__card">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="roadmap__icon roadmap__icon--cyan">🎨</div>
+            <span class="roadmap__badge roadmap__badge--cyan">planned</span>
+          </div>
+          <h3 class="roadmap__title">custom landing pages.</h3>
+          <p class="roadmap__desc">build dedicated referral campaign landing pages with a drag-and-drop editor. custom sections, testimonials, reward tiers, and social proof — all managed from the admin dashboard without developer involvement.</p>
         </div>
 
       </div>
@@ -1576,46 +1638,6 @@ POST https://a.klaviyo.com/api/events
   <span class="str">`https://your-store.com/discount/${referralCode}`</span>;</pre>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================
-       UPCOMING FEATURES
-       ======================================== -->
-  <section id="roadmap" class="section section--dark">
-    <div class="container">
-      <span class="section-label" style="color: rgba(255,255,255,0.4);">what's next.</span>
-      <h2 class="section-heading">upcoming features.</h2>
-      <div class="roadmap__grid">
-
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
-          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(21,79,251,0.12); border: 1px solid rgba(21,79,251,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">📊</div>
-            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(21,79,251,0.12); color: #6b8fff;">in development</span>
-          </div>
-          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">advanced analytics.</h3>
-          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">full-funnel analytics dashboard — track extension impressions, share clicks, code usage, conversion rates, and revenue attribution. filterable by date range, campaign, and referrer. exportable reports.</p>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
-          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(255,88,77,0.12); border: 1px solid rgba(255,88,77,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">🔗</div>
-            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(255,88,77,0.12); color: var(--color-coral);">planned</span>
-          </div>
-          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">white-label urls.</h3>
-          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">serve referral pages from your own domain via reverse proxy — e.g. fielddoctor.co.uk/refer instead of app.happypages.co. full customiser and branding still works, just the url changes. zero code changes on your side.</p>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-6); transition: all var(--transition-medium);">
-          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-            <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(0,198,247,0.12); border: 1px solid rgba(0,198,247,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">🎨</div>
-            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 3px; background: rgba(0,198,247,0.12); color: var(--color-cyan);">planned</span>
-          </div>
-          <h3 style="font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: var(--space-2); letter-spacing: var(--letter-spacing-heading);">custom landing pages.</h3>
-          <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">build dedicated referral campaign landing pages with a drag-and-drop editor. custom sections, testimonials, reward tiers, and social proof — all managed from the admin dashboard without developer involvement.</p>
-        </div>
-
       </div>
     </div>
   </section>
