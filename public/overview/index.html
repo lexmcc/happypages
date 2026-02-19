@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>happypages — referral rewards platform overview.</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" as="image" href="/assets/happypages-hero-small-3.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
+    :root {
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 24px; --space-6: 32px; --space-7: 40px; --space-8: 48px;
+      --space-9: 60px; --space-10: 80px; --space-11: 100px;
+      --color-coral: #ff584d; --color-coral-hover: #e64d43;
+      --color-blue: #154ffb; --color-cyan: #00C6F7;
+      --color-bg: #F4F4F0; --color-card: #f9f9f9; --color-dark: #2A2A28;
+      --color-dark-deep: #1a1a18; --color-text: #1a1a1a;
+      --color-text-muted: #666; --color-text-faint: #999;
+      --color-border: #e0e0e0; --color-white: #fff;
+      --font-family: 'Hanken Grotesk', sans-serif;
+      --letter-spacing-body: -0.03em; --letter-spacing-heading: -0.07em;
+      --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px;
+      --radius-xl: 20px; --radius-full: 999px;
+      --shadow-neumorphic: inset 1px 1px 0 rgba(255,255,255,1), inset -1px -1px 0 rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.05);
+      --shadow-neumorphic-dark: inset 1px 1px 0 rgba(255,255,255,0.1), inset -1px -1px 0 rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.2);
+      --shadow-colored: inset 1px 1px 0 rgba(255,255,255,0.3), inset -1px -1px 0 rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.1);
+      --max-width: 1200px;
+      --card-offset: 12px;
+      --card-padding: 24px;
+      --transition-fast: 0.2s ease; --transition-medium: 0.3s ease;
+    }
+
+    /* ============================================================
+       RESET + BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: var(--font-family); background: var(--color-bg);
+      color: var(--color-text); letter-spacing: var(--letter-spacing-body);
+      line-height: 1.6; text-transform: lowercase; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-7); }
+    .section { padding: var(--space-10) 0; }
+    .section--dark { background: var(--color-dark); color: var(--color-white); }
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    h1, h2, h3, h4 { letter-spacing: var(--letter-spacing-heading); font-weight: 700; line-height: 1.1; }
+    h1 { font-size: 52px; font-weight: 500; }
+    h2 { font-size: 40px; font-weight: 500; }
+    h3 { font-size: 24px; }
+    h4 { font-size: 18px; }
+    .section-label {
+      font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+      margin-bottom: var(--space-3); text-transform: lowercase;
+      display: flex; align-items: center; gap: var(--space-3);
+    }
+    .section-label::before {
+      content: ''; width: 24px; height: 2px; background: var(--color-coral);
+      border-radius: 1px;
+    }
+    .section-heading { margin-bottom: var(--space-8); }
+    .text-muted { color: var(--color-text-muted); }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 12px 28px; border-radius: var(--radius-full); border: none;
+      font-family: var(--font-family); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all var(--transition-fast);
+      text-transform: lowercase; letter-spacing: var(--letter-spacing-body);
+    }
+    .btn--coral {
+      background: var(--color-coral); color: var(--color-white);
+      box-shadow: var(--shadow-colored), 0 4px 12px rgba(255,88,77,0.25);
+    }
+    .btn--coral:hover { background: var(--color-coral-hover); transform: translateY(-1px); box-shadow: var(--shadow-colored), 0 8px 20px rgba(255,88,77,0.3); }
+    .btn--outline {
+      background: transparent; color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .btn--outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+    .btn--sm { padding: 8px 18px; font-size: 13px; }
+    .btn--dark {
+      background: var(--color-dark); color: var(--color-white);
+      box-shadow: var(--shadow-neumorphic-dark);
+    }
+    .btn--dark:hover { background: var(--color-dark-deep); }
+
+    /* ============================================================
+       CARD SYSTEM (matching landing page)
+       ============================================================ */
+    .card-stack { position: relative; z-index: 20; }
+    .card-back {
+      position: absolute;
+      top: var(--card-offset); left: calc(var(--card-offset) * -1);
+      right: var(--card-offset); bottom: calc(var(--card-offset) * -1);
+      background: var(--color-card);
+      border-radius: var(--radius-md) var(--radius-md) var(--radius-md) var(--radius-xl);
+      border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow-neumorphic);
+      overflow: hidden;
+    }
+    .card-back--blue { background: var(--color-blue); border: none; }
+
+    .neu-card {
+      background: var(--color-card); border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: var(--shadow-neumorphic); border-radius: var(--radius-xl) var(--radius-md) var(--radius-md) var(--radius-md);
+      padding: var(--card-padding);
+    }
+
+    /* ============================================================
+       STICKY NAV
+       ============================================================ */
+    .sticky-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(244,244,240,0.88); backdrop-filter: blur(16px) saturate(1.2);
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s ease;
+    }
+    .sticky-nav.is-scrolled { box-shadow: 0 1px 12px rgba(0,0,0,0.06); }
+    .sticky-nav__inner {
+      max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-7);
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .sticky-nav__logo {
+      font-weight: 700; font-size: 15px; letter-spacing: var(--letter-spacing-heading);
+      color: var(--color-text);
+    }
+    .sticky-nav__links { display: flex; gap: var(--space-5); align-items: center; }
+    .sticky-nav__link {
+      font-size: 13px; font-weight: 500; color: var(--color-text-faint);
+      transition: color var(--transition-fast); padding: 4px 0;
+      position: relative;
+    }
+    .sticky-nav__link::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 2px; background: var(--color-coral); border-radius: 1px;
+      transform: scaleX(0); transition: transform var(--transition-fast);
+      transform-origin: left;
+    }
+    .sticky-nav__link:hover { color: var(--color-text); }
+    .sticky-nav__link.is-active { color: var(--color-text); font-weight: 600; }
+    .sticky-nav__link.is-active::after { transform: scaleX(1); }
+
+    /* ============================================================
+       HERO SECTION
+       ============================================================ */
+    .hero { padding-top: 120px; padding-bottom: var(--space-11); }
+    .hero--dark { background: var(--color-dark); color: var(--color-white); }
+    .hero__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-10); align-items: center; }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font-size: 12px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--color-coral); margin-bottom: var(--space-5);
+    }
+    .hero__eyebrow::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--color-coral);
+    }
+    .hero h1 { margin-bottom: var(--space-4); }
+    .hero__subtitle {
+      font-size: 18px; color: rgba(255,255,255,0.6); font-weight: 400;
+      margin-bottom: var(--space-6); line-height: 1.6; max-width: 500px;
+    }
+    .hero__buttons { display: flex; gap: var(--space-4); margin-top: var(--space-7); flex-wrap: wrap; }
+
+    /* Stat pills */
+    .stat-pills { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+    .stat-pill {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 6px 14px; border-radius: var(--radius-full);
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7);
+      transition: all var(--transition-fast);
+    }
+    .stat-pill:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+    .stat-pill__dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--color-coral);
+    }
+
+    /* Hero card — matches landing page card--blue hero-card */
+    .hero-card-wrap { position: relative; }
+    .hero-card {
+      position: relative;
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 50%),
+        url('/assets/happypages-hero-small-3.webp');
+      background-size: cover; background-position: center;
+      background-color: var(--color-blue);
+      border-radius: var(--radius-xl) var(--radius-md) var(--radius-md) var(--radius-md);
+      border: 2px solid var(--color-blue);
+      padding: var(--card-padding); padding-top: calc(var(--card-padding) + var(--space-3));
+      padding-bottom: calc(var(--card-padding) + 140px);
+      color: var(--color-white);
+      box-shadow: var(--shadow-colored), 0 4px 12px rgba(21,79,251,0.3);
+    }
+    .hero-card__heading {
+      font-size: 48px; font-weight: 600; line-height: 1.1;
+      margin-bottom: var(--space-3);
+    }
+    .hero-card__tagline {
+      font-size: 16px; color: var(--color-white); margin-bottom: var(--space-5);
+      line-height: 1.5; opacity: 0.9;
+    }
+    .hero-card__cta {
+      display: flex; justify-content: center; width: 100%;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-coral); color: var(--color-white);
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-family); font-size: 16px; font-weight: 600;
+      cursor: pointer; box-shadow: var(--shadow-colored);
+      text-transform: lowercase; letter-spacing: var(--letter-spacing-body);
+      transition: background var(--transition-fast);
+    }
+    .hero-card__cta:hover { background: var(--color-coral-hover); }
+
+    /* ============================================================
+       JOURNEY FLOW
+       ============================================================ */
+    .journey { background: var(--color-bg); }
+    .journey__flow {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-5);
+      position: relative;
+    }
+    .journey__node {
+      position: relative; text-align: center;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .journey__node.is-visible { opacity: 1; transform: translateY(0); }
+    .journey__icon {
+      width: 52px; height: 52px; border-radius: var(--radius-lg); margin: 0 auto var(--space-3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; transition: transform var(--transition-fast);
+    }
+    .journey__node:hover .journey__icon { transform: translateY(-2px); }
+    .journey__icon--coral { background: rgba(255,88,77,0.1); color: var(--color-coral); }
+    .journey__icon--blue { background: rgba(21,79,251,0.1); color: var(--color-blue); }
+    .journey__icon--cyan { background: rgba(0,198,247,0.1); color: var(--color-cyan); }
+    .journey__title { font-size: 14px; font-weight: 700; margin-bottom: var(--space-1); }
+    .journey__desc { font-size: 12px; color: var(--color-text-muted); line-height: 1.5; }
+    .journey__step {
+      font-size: 10px; font-weight: 700; color: var(--color-coral);
+      margin-bottom: var(--space-2); letter-spacing: 0.05em;
+    }
+
+    /* Connector line between journey nodes */
+    .journey__node:not(:last-child)::after {
+      content: ''; position: absolute; top: 26px; right: -14px;
+      width: 24px; height: 1px;
+      background: repeating-linear-gradient(90deg, var(--color-coral) 0, var(--color-coral) 3px, transparent 3px, transparent 7px);
+      opacity: 0.35;
+    }
+
+    /* ============================================================
+       FEATURE MAP
+       ============================================================ */
+    .features__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+    .feature-card {
+      background: var(--color-card); border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: var(--shadow-neumorphic);
+      border-radius: var(--radius-lg);
+      overflow: hidden; cursor: pointer; transition: all var(--transition-fast);
+      position: relative;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-neumorphic), 0 8px 24px rgba(0,0,0,0.06); }
+    .feature-card__bar { height: 3px; }
+    .feature-card__bar--coral { background: var(--color-coral); }
+    .feature-card__bar--blue { background: var(--color-blue); }
+    .feature-card__bar--cyan { background: var(--color-cyan); }
+    .feature-card__bar--dark { background: var(--color-dark); }
+    .feature-card__header {
+      padding: var(--space-5); display: flex; align-items: flex-start;
+      justify-content: space-between; gap: var(--space-3);
+    }
+    .feature-card__icon { font-size: 22px; flex-shrink: 0; margin-bottom: var(--space-2); }
+    .feature-card__title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .feature-card__subtitle { font-size: 13px; color: var(--color-text-muted); line-height: 1.4; }
+    .feature-card__chevron {
+      width: 18px; height: 18px; flex-shrink: 0; transition: transform var(--transition-medium);
+      color: var(--color-text-faint); margin-top: 2px;
+    }
+    .feature-card.is-open .feature-card__chevron { transform: rotate(180deg); color: var(--color-coral); }
+    .feature-card__body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .feature-card.is-open .feature-card__body { max-height: 500px; }
+    .feature-card__list {
+      padding: 0 var(--space-5) var(--space-5); list-style: none;
+      border-top: 1px solid rgba(0,0,0,0.04); margin: 0 var(--space-4);
+      padding-top: var(--space-4);
+    }
+    .feature-card__list li {
+      font-size: 13px; color: var(--color-text-muted); padding: 5px 0;
+      padding-left: 16px; position: relative; line-height: 1.5;
+    }
+    .feature-card__list li::before {
+      content: ''; position: absolute; left: 0; top: 12px;
+      width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.25;
+    }
+
+    /* ============================================================
+       ARCHITECTURE DIAGRAM
+       ============================================================ */
+    .arch__diagram {
+      position: relative; padding: var(--space-7) 0;
+    }
+    .arch__lanes { display: flex; flex-direction: column; gap: var(--space-7); }
+    .arch__lane {
+      display: flex; align-items: center; gap: var(--space-5);
+      padding: var(--space-5) var(--space-6);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all var(--transition-medium);
+    }
+    .arch__lane:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+    .arch__lane-label {
+      width: 120px; flex-shrink: 0; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .arch__lane-label--coral { color: var(--color-coral); }
+    .arch__lane-label--blue { color: #6b8fff; }
+    .arch__lane-label--cyan { color: var(--color-cyan); }
+    .arch__nodes { display: flex; gap: var(--space-3); flex: 1; align-items: center; flex-wrap: wrap; }
+    .arch__node {
+      padding: 8px 16px; border-radius: var(--radius-md);
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all var(--transition-fast);
+    }
+    .arch__node:hover { transform: translateY(-1px); }
+    .arch__node--coral { background: rgba(255,88,77,0.12); color: var(--color-coral); border-color: rgba(255,88,77,0.2); }
+    .arch__node--blue { background: rgba(21,79,251,0.12); color: #6b8fff; border-color: rgba(21,79,251,0.2); }
+    .arch__node--cyan { background: rgba(0,198,247,0.12); color: var(--color-cyan); border-color: rgba(0,198,247,0.2); }
+    .arch__arrow { color: rgba(255,255,255,0.2); font-size: 14px; flex-shrink: 0; }
+    .arch__lanes.has-hover .arch__lane { opacity: 0.25; }
+    .arch__lanes.has-hover .arch__lane.is-highlighted { opacity: 1; }
+    .arch__node { cursor: pointer; position: relative; }
+    .arch__node.is-active { z-index: 10; }
+    .arch__node--coral.is-active { background: rgba(255,88,77,0.25); border-color: var(--color-coral); box-shadow: 0 0 12px rgba(255,88,77,0.2); }
+    .arch__node--blue.is-active { background: rgba(21,79,251,0.25); border-color: #6b8fff; box-shadow: 0 0 12px rgba(21,79,251,0.2); }
+    .arch__node--cyan.is-active { background: rgba(0,198,247,0.25); border-color: var(--color-cyan); box-shadow: 0 0 12px rgba(0,198,247,0.2); }
+
+    /* Node detail panel */
+    .arch__detail {
+      display: none; margin-top: var(--space-4);
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg); padding: var(--space-5);
+      animation: detailFadeIn 0.25s ease;
+    }
+    .arch__detail.is-visible { display: block; }
+    @keyframes detailFadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .arch__detail-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--space-3); padding-bottom: var(--space-3);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .arch__detail-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .arch__detail-file { font-size: 11px; color: rgba(255,255,255,0.35); font-family: 'SF Mono', 'Fira Code', monospace; }
+    .arch__detail-close {
+      width: 24px; height: 24px; border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition-fast); flex-shrink: 0; margin-left: var(--space-3);
+    }
+    .arch__detail-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+    .arch__detail-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: var(--space-3); line-height: 1.5; }
+    .arch__detail pre {
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-md); padding: var(--space-4);
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px;
+      line-height: 1.7; color: rgba(255,255,255,0.7);
+      overflow-x: auto; white-space: pre; text-transform: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .arch__detail pre .cm { color: rgba(255,255,255,0.3); }
+    .arch__detail pre .kw { color: #c792ea; }
+    .arch__detail pre .str { color: #c3e88d; }
+    .arch__detail pre .fn { color: #82aaff; }
+    .arch__detail pre .num { color: #f78c6c; }
+    .arch__detail pre .key { color: #89ddff; }
+    .arch__detail-label {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 2px 6px; border-radius: 3px; margin-bottom: var(--space-2);
+    }
+    .arch__detail-label--coral { background: rgba(255,88,77,0.15); color: var(--color-coral); }
+    .arch__detail-label--blue { background: rgba(21,79,251,0.15); color: #6b8fff; }
+    .arch__detail-label--cyan { background: rgba(0,198,247,0.15); color: var(--color-cyan); }
+
+    /* ============================================================
+       HYDROGEN INTEGRATION
+       ============================================================ */
+    .hydrogen__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-9); align-items: start; }
+    .hydrogen__steps { display: flex; flex-direction: column; gap: var(--space-6); }
+    .hydrogen__step { display: flex; gap: var(--space-4); align-items: flex-start; }
+    .hydrogen__step-num {
+      width: 32px; height: 32px; border-radius: var(--radius-md); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(21,79,251,0.08); color: var(--color-blue);
+      font-size: 13px; font-weight: 700; border: 1px solid rgba(21,79,251,0.15);
+    }
+    .hydrogen__step-title { font-size: 16px; font-weight: 700; margin-bottom: var(--space-1); }
+    .hydrogen__step-desc { font-size: 14px; color: var(--color-text-muted); line-height: 1.6; }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--color-dark-deep); border-radius: var(--radius-lg);
+      overflow: hidden; margin-bottom: var(--space-4);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-block__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px var(--space-4); background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .code-block__filename { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 0.02em; }
+    .code-block__copy {
+      background: none; border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5); font-size: 11px; padding: 3px 10px;
+      border-radius: var(--radius-md); cursor: pointer; font-family: var(--font-family);
+      transition: all var(--transition-fast); text-transform: lowercase;
+    }
+    .code-block__copy:hover { border-color: rgba(255,255,255,0.25); color: var(--color-white); }
+    .code-block__copy.is-copied { border-color: #4ade80; color: #4ade80; }
+    .code-block pre {
+      padding: var(--space-4); overflow-x: auto; font-size: 12.5px;
+      line-height: 1.8; color: rgba(255,255,255,0.8);
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; text-transform: none;
+    }
+    .code-block .kw { color: #c792ea; }
+    .code-block .fn { color: #82aaff; }
+    .code-block .str { color: #c3e88d; }
+    .code-block .cm { color: rgba(255,255,255,0.3); }
+    .code-block .type { color: #ffcb6b; }
+
+    /* ============================================================
+       TESTING PLAN
+       ============================================================ */
+    .testing__tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); }
+    .testing__tab {
+      padding: 10px 24px; border-radius: var(--radius-full); border: none;
+      font-family: var(--font-family); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all var(--transition-fast);
+      background: var(--color-card); color: var(--color-text-muted);
+      border: 1px solid rgba(0,0,0,0.05); text-transform: lowercase;
+    }
+    .testing__tab:hover { color: var(--color-text); }
+    .testing__tab.is-active {
+      background: var(--color-dark); color: var(--color-white);
+      border-color: var(--color-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .testing__panel { display: none; }
+    .testing__panel.is-active { display: block; }
+
+    /* Prerequisites */
+    .prereq-card {
+      background: var(--color-dark); color: var(--color-white);
+      border-radius: var(--radius-lg); padding: var(--space-6);
+      margin-bottom: var(--space-7); border: 1px solid rgba(255,255,255,0.05);
+    }
+    .prereq-card h4 { margin-bottom: var(--space-5); font-size: 16px; }
+    .prereq-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-6); }
+    .prereq-list li {
+      font-size: 14px; color: rgba(255,255,255,0.65); padding-left: 28px; position: relative;
+      line-height: 1.5;
+    }
+    .prereq-list li::before {
+      content: ''; position: absolute; left: 0; top: 4px;
+      width: 16px; height: 16px; border-radius: var(--radius-sm);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    /* Test table */
+    .test-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .test-table th {
+      text-align: left; font-size: 11px; font-weight: 700;
+      color: var(--color-text-muted); padding: var(--space-3) var(--space-4);
+      border-bottom: 2px solid var(--color-border); text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .test-table td {
+      padding: var(--space-3) var(--space-4); font-size: 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.04); vertical-align: top;
+      line-height: 1.5;
+    }
+    .test-table tr:hover td { background: rgba(255,88,77,0.02); }
+    .test-table .step-num {
+      font-weight: 700; color: var(--color-coral); width: 40px; text-align: center;
+      font-size: 13px;
+    }
+    .test-table .verify { font-size: 12px; color: var(--color-text-faint); font-style: italic; }
+
+    /* Post-test checklist */
+    .posttest-card {
+      background: var(--color-dark); color: var(--color-white);
+      border-radius: var(--radius-lg); padding: var(--space-6);
+      margin-top: var(--space-7); border: 1px solid rgba(255,255,255,0.05);
+    }
+    .posttest-card h4 { margin-bottom: var(--space-5); font-size: 16px; }
+    .posttest-list { list-style: none; columns: 2; column-gap: var(--space-6); }
+    .posttest-list li {
+      font-size: 14px; color: rgba(255,255,255,0.65); padding: 5px 0 5px 28px;
+      position: relative; break-inside: avoid; line-height: 1.5;
+    }
+    .posttest-list li::before {
+      content: ''; position: absolute; left: 0; top: 9px;
+      width: 16px; height: 16px; border-radius: var(--radius-sm);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    /* ============================================================
+       ANIMATED BARS (hero card header — from landing page)
+       ============================================================ */
+    .animated-bars {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: var(--space-1); padding: var(--space-4) var(--space-4) 0 var(--space-4);
+      pointer-events: none;
+    }
+    .bar {
+      flex: 1; height: 90px; background: var(--color-coral);
+      border-radius: var(--radius-sm); transform-origin: center;
+      animation: bar-wave 4s ease-in-out infinite; max-width: 4px;
+    }
+    .bar:nth-child(even) { animation: none; transform: scaleY(1); max-width: 8px; }
+    .bar:nth-child(4n+2) { max-width: 4px; }
+    @keyframes bar-wave {
+      0% { transform: scaleY(0.3) translateY(0); }
+      25% { transform: scaleY(0.8) translateY(-10px); }
+      50% { transform: scaleY(1) translateY(0); }
+      75% { transform: scaleY(0.8) translateY(10px); }
+      100% { transform: scaleY(0.3) translateY(0); }
+    }
+    .bar:nth-child(1){animation-delay:0s}.bar:nth-child(2){animation-delay:.1s}
+    .bar:nth-child(3){animation-delay:.2s}.bar:nth-child(4){animation-delay:.15s}
+    .bar:nth-child(5){animation-delay:.3s}.bar:nth-child(6){animation-delay:.25s}
+    .bar:nth-child(7){animation-delay:.4s}.bar:nth-child(8){animation-delay:.35s}
+    .bar:nth-child(9){animation-delay:.5s}.bar:nth-child(10){animation-delay:.45s}
+    .bar:nth-child(11){animation-delay:.6s}.bar:nth-child(12){animation-delay:.55s}
+    .bar:nth-child(13){animation-delay:.7s}.bar:nth-child(14){animation-delay:.65s}
+    .bar:nth-child(15){animation-delay:.75s}.bar:nth-child(16){animation-delay:.8s}
+    .bar:nth-child(17){animation-delay:.85s}.bar:nth-child(18){animation-delay:.9s}
+    .bar:nth-child(19){animation-delay:.95s}.bar:nth-child(20){animation-delay:1s}
+    .bar:nth-child(21){animation-delay:1.05s}.bar:nth-child(22){animation-delay:1.1s}
+    .bar:nth-child(23){animation-delay:1.15s}.bar:nth-child(24){animation-delay:1.2s}
+    .bar:nth-child(25){animation-delay:1.25s}.bar:nth-child(26){animation-delay:1.3s}
+    .bar:nth-child(27){animation-delay:1.35s}.bar:nth-child(28){animation-delay:1.4s}
+    .bar:nth-child(29){animation-delay:1.45s}.bar:nth-child(30){animation-delay:1.5s}
+
+    @media (prefers-reduced-motion: reduce) {
+      .bar { animation: none !important; transform: scaleY(0.6); }
+      .journey__node { opacity: 1; transform: none; }
+    }
+
+    /* ============================================================
+       PRINT / PDF
+       ============================================================ */
+    #pdf-content { display: none; }
+
+    @media print {
+      body > *:not(#pdf-content) { display: none !important; }
+      #pdf-content {
+        display: block !important; padding: 40px;
+        color: #1a1a1a; background: white; font-size: 11px;
+      }
+      #pdf-content * { text-transform: lowercase; }
+      .pdf-header {
+        display: flex; align-items: center; justify-content: space-between;
+        border-bottom: 3px solid var(--color-coral); padding-bottom: 16px;
+        margin-bottom: 24px;
+      }
+      .pdf-header h1 { font-size: 28px; letter-spacing: -0.05em; }
+      .pdf-header .pdf-logo { font-size: 14px; color: var(--color-text-muted); }
+      .pdf-what { margin-bottom: 20px; }
+      .pdf-what h2 { font-size: 16px; margin-bottom: 8px; color: var(--color-coral); }
+      .pdf-what p { font-size: 12px; line-height: 1.6; color: #444; }
+      .pdf-steps {
+        display: flex; gap: 16px; margin-bottom: 20px;
+        padding: 16px; background: #f8f8f6; border-radius: 8px;
+      }
+      .pdf-step { flex: 1; text-align: center; }
+      .pdf-step-num {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: var(--color-coral); color: white;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 13px; margin-bottom: 6px;
+      }
+      .pdf-step h4 { font-size: 12px; margin-bottom: 4px; }
+      .pdf-step p { font-size: 10px; color: #666; }
+      .pdf-features { margin-bottom: 20px; }
+      .pdf-features h2 { font-size: 16px; margin-bottom: 12px; color: var(--color-coral); }
+      .pdf-features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+      .pdf-feature { display: flex; gap: 8px; align-items: flex-start; font-size: 11px; }
+      .pdf-feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-coral); flex-shrink: 0; margin-top: 5px; }
+      .pdf-feature strong { font-weight: 600; }
+      .pdf-hydrogen { margin-bottom: 20px; }
+      .pdf-hydrogen h2 { font-size: 16px; margin-bottom: 8px; color: var(--color-blue); }
+      .pdf-hydrogen ul { list-style: disc; padding-left: 16px; font-size: 11px; color: #444; }
+      .pdf-hydrogen li { margin-bottom: 4px; }
+      .pdf-next { padding: 16px; background: #2A2A28; border-radius: 8px; color: white; }
+      .pdf-next h2 { font-size: 14px; margin-bottom: 8px; }
+      .pdf-next ol { padding-left: 16px; font-size: 11px; }
+      .pdf-next li { margin-bottom: 4px; color: rgba(255,255,255,0.8); }
+      @page { size: A4; margin: 12mm; }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .features__grid { grid-template-columns: repeat(2, 1fr); }
+      .hero__grid { grid-template-columns: 1fr; gap: var(--space-7); }
+      .hydrogen__grid { grid-template-columns: 1fr; }
+      .journey__flow { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+      .journey__node:nth-child(3)::after { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; }
+      h2 { font-size: 30px; }
+      .container { padding: 0 var(--space-4); }
+      .section { padding: var(--space-8) 0; }
+      .features__grid { grid-template-columns: 1fr; }
+      .journey__flow { grid-template-columns: repeat(2, 1fr); }
+      .journey__node:nth-child(2n)::after { display: none; }
+      .prereq-list { grid-template-columns: 1fr; }
+      .posttest-list { columns: 1; }
+      .sticky-nav__links { gap: var(--space-3); }
+      .sticky-nav__link { font-size: 12px; }
+      .sticky-nav__inner { padding: 0 var(--space-4); }
+      .stat-pills { gap: var(--space-2); }
+      .arch__lane { flex-direction: column; align-items: flex-start; padding: var(--space-4); }
+      .arch__lane-label { width: auto; margin-bottom: var(--space-2); }
+      .arch__node { padding: 6px 12px; font-size: 11px; }
+      .arch__detail { padding: var(--space-4); }
+      .arch__detail pre { font-size: 10px; padding: var(--space-3); }
+      .arch__detail-header { flex-wrap: wrap; gap: var(--space-2); }
+      .hero { padding-top: 90px; padding-bottom: var(--space-9); }
+      .test-table { font-size: 13px; }
+      .test-table th, .test-table td { padding: var(--space-2) var(--space-3); }
+    }
+
+    @media (max-width: 480px) {
+      .journey__flow { grid-template-columns: 1fr; }
+      .journey__node::after { display: none !important; }
+      .sticky-nav__links .sticky-nav__link:nth-child(n+4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================
+       STICKY NAV
+       ======================================== -->
+  <nav class="sticky-nav" id="stickyNav">
+    <div class="sticky-nav__inner">
+      <a href="/" class="sticky-nav__logo">happypages</a>
+      <div class="sticky-nav__links">
+        <a href="#overview" class="sticky-nav__link is-active">overview</a>
+        <a href="#journey" class="sticky-nav__link">journey</a>
+        <a href="#features" class="sticky-nav__link">features</a>
+        <a href="#architecture" class="sticky-nav__link">architecture</a>
+        <a href="#hydrogen" class="sticky-nav__link">hydrogen</a>
+        <a href="#testing" class="sticky-nav__link">testing</a>
+        <button class="btn btn--dark btn--sm" onclick="window.print()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          1-pager pdf
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       HERO
+       ======================================== -->
+  <section id="overview" class="section hero hero--dark section--dark">
+    <div class="container">
+      <div class="hero__grid">
+        <div>
+          <div class="hero__eyebrow">platform overview</div>
+          <h1>the complete referral rewards platform for shopify.</h1>
+          <p class="hero__subtitle">automated referral program management — from install to reward. built for standard and hydrogen stores.</p>
+          <div class="stat-pills">
+            <span class="stat-pill"><span class="stat-pill__dot"></span>25+ features shipped</span>
+            <span class="stat-pill"><span class="stat-pill__dot"></span>hydrogen ready</span>
+            <span class="stat-pill"><span class="stat-pill__dot"></span>awtomic integrated</span>
+          </div>
+          <div class="hero__buttons">
+            <button class="btn btn--coral" onclick="window.print()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              download 1-pager
+            </button>
+            <a href="#testing" class="btn btn--outline">view testing plan</a>
+          </div>
+        </div>
+        <div>
+          <div class="card-stack">
+            <div class="card-back card-back--blue"></div>
+            <div class="hero-card">
+              <h2 class="hero-card__heading">friendly<br>referrals.</h2>
+              <p class="hero-card__tagline">automated discounts, reward tracking, and subscription integration — all white-labeled to your brand.</p>
+              <button class="hero-card__cta" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">see all features</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       USER JOURNEY FLOW
+       ======================================== -->
+  <section id="journey" class="section journey">
+    <div class="container">
+      <span class="section-label">the referral journey.</span>
+      <h2 class="section-heading">from install to reward, fully automated.</h2>
+      <div class="journey__flow">
+        <div class="journey__node" data-delay="0">
+          <div class="journey__step">01</div>
+          <div class="journey__icon journey__icon--coral">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h4 class="journey__title">install.</h4>
+          <p class="journey__desc">oauth + brand scraping + ai imagery kicks off automatically.</p>
+        </div>
+
+        <div class="journey__node" data-delay="1">
+          <div class="journey__step">02</div>
+          <div class="journey__icon journey__icon--coral">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h4 class="journey__title">configure.</h4>
+          <p class="journey__desc">set discounts, customize cards, import existing customers.</p>
+        </div>
+
+        <div class="journey__node" data-delay="2">
+          <div class="journey__step">03</div>
+          <div class="journey__icon journey__icon--blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <h4 class="journey__title">customer purchases.</h4>
+          <p class="journey__desc">checkout completes, thank-you page shows referral widget.</p>
+        </div>
+
+        <div class="journey__node" data-delay="3">
+          <div class="journey__step">04</div>
+          <div class="journey__icon journey__icon--blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </div>
+          <h4 class="journey__title">share referral.</h4>
+          <p class="journey__desc">customer visits referral page, copies unique discount link.</p>
+        </div>
+
+        <div class="journey__node" data-delay="4">
+          <div class="journey__step">05</div>
+          <div class="journey__icon journey__icon--cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </div>
+          <h4 class="journey__title">friend uses code.</h4>
+          <p class="journey__desc">discount auto-applies to cart, order webhook fires.</p>
+        </div>
+
+        <div class="journey__node" data-delay="5">
+          <div class="journey__step">06</div>
+          <div class="journey__icon journey__icon--cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <h4 class="journey__title">reward created.</h4>
+          <p class="journey__desc">webhook triggers reward, auto-applied to subscription via awtomic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FEATURE MAP
+       ======================================== -->
+  <section id="features" class="section">
+    <div class="container">
+      <span class="section-label">feature map.</span>
+      <h2 class="section-heading">everything that's been built.</h2>
+      <div class="features__grid">
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--coral"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">🔐</div>
+              <div class="feature-card__title">shopify oauth & onboarding.</div>
+              <div class="feature-card__subtitle">automated setup from first install.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>full shopify oauth 2.0 flow with automatic shop provisioning</li>
+            <li>brand scraping via gemini ai — extracts colors, logo, tone from store</li>
+            <li>ai-generated referral imagery (banners, og images) using brand palette</li>
+            <li>automatic scope upgrades on re-auth</li>
+            <li>uninstall webhook cleans up shop data</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--blue"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">🛒</div>
+              <div class="feature-card__title">checkout extension.</div>
+              <div class="feature-card__subtitle">thank-you page referral widget.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>preact-powered checkout ui extension on thank-you + order status pages</li>
+            <li>auto-creates referral record for first-time customers</li>
+            <li>shows personalized banner with customer name and discount values</li>
+            <li>configurable heading, body text, and cta from admin dashboard</li>
+            <li>"share now" button links directly to white-labeled referral page</li>
+            <li>idempotent — repeat checkouts don't create duplicate referrals</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--cyan"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">🔗</div>
+              <div class="feature-card__title">referral system.</div>
+              <div class="feature-card__subtitle">codes, pages, rewards, and tracking.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>unique referral codes per customer (e.g. FRIEND-Alex123)</li>
+            <li>shopify discount code auto-creation via admin api</li>
+            <li>customer metafield storage for storefront api access</li>
+            <li>shared discount generations — group codes under one price rule</li>
+            <li>override scheduling — swap discount values on a date</li>
+            <li>reward lifecycle: created → applied_to_subscription → consumed</li>
+            <li>white-labeled referral page at /{shop}/refer with brand customization</li>
+            <li>usage tracking with 30-day reward expiry</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--dark"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">📊</div>
+              <div class="feature-card__title">admin dashboard.</div>
+              <div class="feature-card__subtitle">full campaign and customer management.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>real-time metrics dashboard (referrals, conversions, rewards)</li>
+            <li>campaign management with active/paused states</li>
+            <li>referral page editor — heading, body, button text, colors</li>
+            <li>checkout extension editor — configure widget content</li>
+            <li>media library with ai-generated and custom uploaded images</li>
+            <li>settings — store url, discount values, hydrogen config</li>
+            <li>bulk customer import from shopify for existing customer base</li>
+            <li>embedded app experience via shopify app bridge</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--coral"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">🔌</div>
+              <div class="feature-card__title">integrations.</div>
+              <div class="feature-card__subtitle">awtomic, klaviyo, and webhooks.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>awtomic connect/disconnect flow with api key management</li>
+            <li>auto-applies reward discounts to active subscriptions</li>
+            <li>klaviyo event tracking for referral milestones</li>
+            <li>webhook verification with hmac signature validation</li>
+            <li>solidqueue background job processing for async tasks</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--blue"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">⚡</div>
+              <div class="feature-card__title">hydrogen / headless support.</div>
+              <div class="feature-card__subtitle">built for custom storefronts.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>configurable storefront url for all customer-facing links</li>
+            <li>discount route snippet — drop-in remix route for /discount/CODE</li>
+            <li>storefront api query for customer referral metafield</li>
+            <li>customer_facing_url helper returns hydrogen url when configured</li>
+            <li>"back to store" links point to hydrogen url, not myshopify.com</li>
+          </ul></div>
+        </div>
+
+        <div class="feature-card" onclick="toggleFeature(this)">
+          <div class="feature-card__bar feature-card__bar--dark"></div>
+          <div class="feature-card__header">
+            <div>
+              <div class="feature-card__icon">🛡️</div>
+              <div class="feature-card__title">security & compliance.</div>
+              <div class="feature-card__subtitle">shopify-ready from day one.</div>
+            </div>
+            <svg class="feature-card__chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+          </div>
+          <div class="feature-card__body"><ul class="feature-card__list">
+            <li>encrypted api credentials with rails encrypted attributes</li>
+            <li>gdpr compliance webhooks (data request, erasure, shop redact)</li>
+            <li>hmac webhook verification on all shopify callbacks</li>
+            <li>app bridge jwt authentication for embedded admin</li>
+            <li>rack-attack rate limiting on api endpoints</li>
+            <li>super admin audit controls with session timeout</li>
+          </ul></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       ARCHITECTURE DIAGRAM
+       ======================================== -->
+  <section id="architecture" class="section section--dark">
+    <div class="container">
+      <span class="section-label" style="color: rgba(255,255,255,0.4);">system architecture.</span>
+      <h2 class="section-heading">how it all connects.</h2>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: var(--space-5);">click any node to see what happens under the hood.</p>
+      <div class="arch__diagram">
+        <div class="arch__lanes" id="archLanes">
+
+          <!-- CUSTOMER FLOW -->
+          <div class="arch__lane" data-flow="customer">
+            <div class="arch__lane-label arch__lane-label--coral">customer flow</div>
+            <div class="arch__nodes">
+              <div class="arch__node arch__node--coral" data-detail="detail-store">shopify store</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--coral" data-detail="detail-extension">checkout extension</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--coral" data-detail="detail-api">happypages api</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--coral" data-detail="detail-referral-page">referral page</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--coral" data-detail="detail-discount-link">discount link</div>
+            </div>
+          </div>
+          <div class="arch__detail" id="detail-store">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--coral">oauth install</span>
+                <div class="arch__detail-title">shopify store → oauth handshake.</div>
+                <div class="arch__detail-file">shopify_auth_controller.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">merchant clicks "install" → redirected to shopify oauth → authorization code exchanged for permanent access token → shop + credentials saved.</div>
+            <pre><span class="cm">// 1. redirect merchant to shopify</span>
+GET https://{shop}.myshopify.com/admin/oauth/authorize?
+  <span class="key">client_id</span>=<span class="str">98f21e1016de2f503ac53f40072eb71b</span>
+  <span class="key">scope</span>=<span class="str">read_customers,write_customers,write_discounts,read_orders</span>
+  <span class="key">redirect_uri</span>=<span class="str">https://app.happypages.co/auth/shopify/callback</span>
+
+<span class="cm">// 2. callback exchanges code for token</span>
+POST https://{shop}.myshopify.com/admin/oauth/access_token
+{ <span class="key">client_id</span>: <span class="str">"..."</span>, <span class="key">client_secret</span>: <span class="str">"..."</span>, <span class="key">code</span>: <span class="str">"shpat_xxx"</span> }
+
+<span class="cm">// 3. response</span>
+→ { <span class="key">access_token</span>: <span class="str">"shpat_abc123..."</span>, <span class="key">scope</span>: <span class="str">"read_customers,write_customers,..."</span> }
+
+<span class="cm">// 4. save to database</span>
+Shop.<span class="fn">create!</span>(<span class="key">domain</span>: <span class="str">"acme.myshopify.com"</span>, <span class="key">status</span>: <span class="str">"active"</span>)
+ShopCredential.<span class="fn">create!</span>(<span class="key">shopify_access_token</span>: access_token)
+BrandScrapeJob.<span class="fn">perform_later</span>(shop.id)  <span class="cm">// kick off ai pipeline</span></pre>
+          </div>
+
+          <div class="arch__detail" id="detail-extension">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--coral">checkout ui</span>
+                <div class="arch__detail-title">preact widget on thank-you page.</div>
+                <div class="arch__detail-file">extensions/happypages-referrals/src/Checkout.jsx</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">checkout extension loads on thank-you page → fetches shop config → auto-creates referral for the customer → shows share widget with their unique code.</div>
+            <pre><span class="cm">// 1. fetch shop config on mount</span>
+<span class="kw">fetch</span>(<span class="str">`${REFERRAL_APP_URL}/api/config`</span>, {
+  <span class="key">headers</span>: { <span class="str">'X-Shop-Domain'</span>: shopDomain }
+})
+→ { <span class="key">extension</span>: { banner_url, heading, ... }, <span class="key">discounts</span>: { value: <span class="num">50</span>, type: <span class="str">"percentage"</span> } }
+
+<span class="cm">// 2. auto-create referral for checkout customer</span>
+POST /api/referrals
+{ <span class="key">first_name</span>: <span class="str">"John"</span>, <span class="key">email</span>: <span class="str">"john@example.com"</span> }
+→ { <span class="key">success</span>: <span class="kw">true</span>, <span class="key">referral_code</span>: <span class="str">"John342"</span>, <span class="key">already_existed</span>: <span class="kw">false</span> }
+
+<span class="cm">// 3. widget renders: "share now" button → opens referral page</span>
+<span class="key">share_url</span> = <span class="str">`https://app.happypages.co/${shopSlug}/refer?code=John342`</span></pre>
+          </div>
+
+          <div class="arch__detail" id="detail-api">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--coral">api</span>
+                <div class="arch__detail-title">idempotent referral creation + discount setup.</div>
+                <div class="arch__detail-file">api/referrals_controller.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">api receives referral request → checks for existing referral (idempotent) → generates unique code → creates shopify discount via graphql → returns code to extension.</div>
+            <pre><span class="cm">// request</span>
+POST /api/referrals
+<span class="key">Headers</span>: { <span class="str">'X-Shop-Domain'</span>: <span class="str">'acme.myshopify.com'</span> }
+<span class="key">Body</span>:    { <span class="key">first_name</span>: <span class="str">"John"</span>, <span class="key">email</span>: <span class="str">"john@example.com"</span> }
+
+<span class="cm">// controller logic</span>
+referral = Referral.<span class="fn">find_by</span>(<span class="key">email</span>: email, <span class="key">shop</span>: Current.shop)
+<span class="kw">if</span> referral  <span class="cm">// idempotent — same customer returns existing code</span>
+  → { <span class="key">success</span>: <span class="kw">true</span>, <span class="key">referral_code</span>: <span class="str">"John342"</span>, <span class="key">already_existed</span>: <span class="kw">true</span> }
+<span class="kw">else</span>
+  code = <span class="fn">generate_code</span>(<span class="str">"John"</span>)  <span class="cm">// → "John342"</span>
+  Referral.<span class="fn">create!</span>(<span class="key">referral_code</span>: code, <span class="key">email</span>: email, <span class="key">shop</span>: Current.shop)
+  discount_provider.<span class="fn">create_generation_discount</span>(<span class="key">code</span>: code)
+  → { <span class="key">success</span>: <span class="kw">true</span>, <span class="key">referral_code</span>: <span class="str">"John342"</span>, <span class="key">already_existed</span>: <span class="kw">false</span> }</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-referral-page">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--coral">referral page</span>
+                <div class="arch__detail-title">white-labeled sharing page.</div>
+                <div class="arch__detail-file">referrals_controller.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">customer lands on branded referral page → sees their code, share link, usage count, and any earned rewards. page is white-labeled with shop's branding and ai-generated imagery.</div>
+            <pre><span class="cm">// route</span>
+GET /<span class="str">acme-foods</span>/refer?code=<span class="str">John342</span>
+
+<span class="cm">// controller loads</span>
+@referral = Referral.<span class="fn">find_by</span>(<span class="key">referral_code</span>: <span class="str">"John342"</span>)
+@shop     = Shop.<span class="fn">find_by</span>(<span class="key">slug</span>: <span class="str">"acme-foods"</span>)
+
+<span class="cm">// data available to the page</span>
+{
+  <span class="key">referral_code</span>:  <span class="str">"John342"</span>,
+  <span class="key">share_url</span>:      <span class="str">"https://acme.com/discount/John342"</span>,
+  <span class="key">usage_count</span>:    <span class="num">3</span>,
+  <span class="key">discount_value</span>: <span class="str">"50%"</span>,
+  <span class="key">reward_value</span>:   <span class="str">"50%"</span>,
+  <span class="key">rewards</span>: [
+    { <span class="key">code</span>: <span class="str">"REWARD-John342-1"</span>, <span class="key">status</span>: <span class="str">"consumed"</span> },
+    { <span class="key">code</span>: <span class="str">"REWARD-John342-2"</span>, <span class="key">status</span>: <span class="str">"created"</span>, <span class="key">expires_at</span>: <span class="str">"2025-03-21"</span> }
+  ]
+}</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-discount-link">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--coral">discount link</span>
+                <div class="arch__detail-title">code-to-cart via hydrogen route.</div>
+                <div class="arch__detail-file">discount.$code.tsx (hydrogen)</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">friend clicks shared link → hydrogen discount route creates cart with code pre-applied → redirects to store. code never visible to the friend, just auto-applied.</div>
+            <pre><span class="cm">// shared url</span>
+https://acme.com/discount/<span class="str">John342</span>
+
+<span class="cm">// hydrogen route: app/routes/discount.$code.tsx</span>
+<span class="kw">export async function</span> <span class="fn">loader</span>({ params, context }) {
+  <span class="kw">const</span> { storefront } = context;
+  <span class="kw">const</span> code = params.code;  <span class="cm">// "John342"</span>
+
+  <span class="cm">// create cart with discount pre-applied</span>
+  <span class="kw">const</span> { cart } = <span class="kw">await</span> storefront.<span class="fn">mutate</span>(CREATE_CART, {
+    <span class="key">variables</span>: { <span class="key">discountCodes</span>: [code] }
+  });
+
+  <span class="cm">// redirect to store — discount is silently in the cart</span>
+  <span class="kw">return</span> <span class="fn">redirect</span>(<span class="str">"/"</span>, { <span class="key">headers</span>: { <span class="str">"Set-Cookie"</span>: cartCookie } });
+}</pre>
+          </div>
+
+          <!-- WEBHOOK FLOW -->
+          <div class="arch__lane" data-flow="webhook">
+            <div class="arch__lane-label arch__lane-label--blue">webhook flow</div>
+            <div class="arch__nodes">
+              <div class="arch__node arch__node--blue" data-detail="detail-webhooks">shopify webhooks</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--blue" data-detail="detail-hmac">hmac verification</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--blue" data-detail="detail-order">order processing</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--blue" data-detail="detail-db">database</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--blue" data-detail="detail-reward">reward generation</div>
+            </div>
+          </div>
+
+          <div class="arch__detail" id="detail-webhooks">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--blue">webhook</span>
+                <div class="arch__detail-title">orders/create webhook payload.</div>
+                <div class="arch__detail-file">webhooks_controller.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">shopify fires orders/create webhook on every new order → includes customer info + any discount codes used → allows us to detect referral usage.</div>
+            <pre><span class="cm">// shopify sends</span>
+POST https://app.happypages.co/webhooks/orders
+<span class="key">Headers</span>:
+  <span class="str">X-Shopify-Hmac-Sha256</span>: <span class="str">kBCbKP0lMyV5F4NYaa...</span>
+  <span class="str">X-Shopify-Shop-Domain</span>: <span class="str">acme.myshopify.com</span>
+  <span class="str">X-Shopify-Topic</span>:       <span class="str">orders/create</span>
+
+<span class="cm">// payload (relevant fields)</span>
+{
+  <span class="key">"id"</span>: <span class="num">5678901234</span>,
+  <span class="key">"total_price"</span>: <span class="str">"49.99"</span>,
+  <span class="key">"customer"</span>: {
+    <span class="key">"id"</span>: <span class="num">7890123456</span>,
+    <span class="key">"email"</span>: <span class="str">"buyer@example.com"</span>,
+    <span class="key">"first_name"</span>: <span class="str">"Jane"</span>
+  },
+  <span class="key">"discount_codes"</span>: [
+    { <span class="key">"code"</span>: <span class="str">"John342"</span>, <span class="key">"amount"</span>: <span class="str">"24.99"</span>, <span class="key">"type"</span>: <span class="str">"percentage"</span> }
+  ]
+}</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-hmac">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--blue">security</span>
+                <div class="arch__detail-title">hmac-sha256 signature verification.</div>
+                <div class="arch__detail-file">providers/shopify/order_handler.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">every webhook is signed by shopify using the app's client secret. we recompute the hmac and use constant-time comparison to prevent timing attacks. rejects forged payloads.</div>
+            <pre><span class="kw">def</span> <span class="fn">verify_signature</span>(request, secret)
+  hmac_header = request.headers[<span class="str">"X-Shopify-Hmac-Sha256"</span>]
+  <span class="kw">return false if</span> hmac_header.blank?
+
+  request.body.rewind
+  data = request.body.read
+
+  <span class="cm">// recompute hmac from raw body + app client secret</span>
+  calculated = Base64.<span class="fn">strict_encode64</span>(
+    OpenSSL::HMAC.<span class="fn">digest</span>(<span class="str">"sha256"</span>, secret, data)
+  )
+
+  <span class="cm">// constant-time comparison (prevents timing attacks)</span>
+  ActiveSupport::SecurityUtils.<span class="fn">secure_compare</span>(calculated, hmac_header)
+<span class="kw">end</span>
+
+<span class="cm">// secret used: ENV["SHOPIFY_CLIENT_SECRET"] (app-level, not per-shop)</span></pre>
+          </div>
+
+          <div class="arch__detail" id="detail-order">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--blue">processing</span>
+                <div class="arch__detail-title">match discount code → increment usage → create reward.</div>
+                <div class="arch__detail-file">webhooks_controller.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">order comes in with discount code "John342" → we look up the referral → increment usage count → create a reward for the referrer → notify via klaviyo if connected.</div>
+            <pre><span class="cm">// 1. extract discount codes from order</span>
+codes = payload[<span class="str">"discount_codes"</span>].map { |d| d[<span class="str">"code"</span>] }
+<span class="cm">// → ["John342"]</span>
+
+<span class="cm">// 2. find matching referral</span>
+referral = Referral.<span class="fn">find_by</span>(<span class="key">referral_code</span>: <span class="str">"John342"</span>, <span class="key">shop</span>: shop)
+
+<span class="cm">// 3. increment usage</span>
+referral.<span class="fn">increment!</span>(<span class="key">:usage_count</span>)  <span class="cm">// 2 → 3</span>
+
+<span class="cm">// 4. create reward for referrer</span>
+reward = <span class="fn">create_referrer_reward</span>(referral, <span class="key">order_id</span>: <span class="str">"5678901234"</span>)
+<span class="cm">// → ReferralReward { code: "REWARD-John342-3", status: "created" }</span>
+
+<span class="cm">// 5. track in klaviyo</span>
+<span class="fn">track_klaviyo</span>(<span class="key">:referral_used</span>, referral,
+  <span class="key">buyer_email</span>: <span class="str">"buyer@example.com"</span>,
+  <span class="key">discount_value</span>: <span class="str">"50"</span>
+)</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-db">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--blue">storage</span>
+                <div class="arch__detail-title">encrypted, multi-tenant data model.</div>
+                <div class="arch__detail-file">app/models/</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">all data is scoped to shop (multi-tenant). emails are encrypted at rest with deterministic encryption for querying. reward lifecycle tracked via status column.</div>
+            <pre><span class="cm">// core models & key columns</span>
+
+<span class="kw">Shop</span>
+  id, domain, slug, status, brand_profile (json),
+  storefront_url, generation_credits_remaining
+
+<span class="kw">Referral</span>                          <span class="cm">// belongs_to :shop</span>
+  id, shop_id, referral_code, usage_count,
+  email (<span class="str">encrypted</span>), first_name (<span class="str">encrypted</span>),
+  shopify_customer_id, discount_generation_id
+
+<span class="kw">ReferralReward</span>                    <span class="cm">// belongs_to :referral, :shop</span>
+  id, referral_id, shop_id,
+  code (<span class="str">"REWARD-John342-1"</span>),
+  status: <span class="str">created → applied_to_subscription → consumed</span>
+          <span class="str">created → consumed</span>  <span class="cm">(one-off purchaser)</span>
+          <span class="str">created → expired</span>   <span class="cm">(after 30 days)</span>
+  usage_number, expires_at,
+  awtomic_subscription_id, applied_at, consumed_at</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-reward">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--blue">rewards</span>
+                <div class="arch__detail-title">shopify discount creation via graphql.</div>
+                <div class="arch__detail-file">providers/shopify/discount_provider.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">reward code generated from referral code + usage number → creates a single-use shopify discount via graphql → 30 day expiry → auto-application job queued for subscribers.</div>
+            <pre><span class="cm">// 1. generate reward code</span>
+code = <span class="str">"REWARD-John342-3"</span>  <span class="cm">// {referral_code}-{usage_number}</span>
+
+<span class="cm">// 2. create shopify discount via graphql</span>
+<span class="kw">mutation</span> discountCodeBasicCreate {
+  basicCodeDiscount: {
+    <span class="key">title</span>: <span class="str">"Referrer Reward: REWARD-John342-3"</span>,
+    <span class="key">code</span>:  <span class="str">"REWARD-John342-3"</span>,
+    <span class="key">endsAt</span>: <span class="str">"2025-03-21T00:00:00Z"</span>,  <span class="cm">// 30 days</span>
+    <span class="key">usageLimit</span>: <span class="num">1</span>,
+    customerGets: {
+      <span class="key">value</span>: { <span class="key">percentage</span>: <span class="num">0.50</span> },  <span class="cm">// 50% off</span>
+      <span class="key">items</span>: { <span class="key">all</span>: <span class="kw">true</span> }
+    }
+  }
+}
+
+<span class="cm">// 3. save + queue auto-application</span>
+reward = ReferralReward.<span class="fn">create!</span>(<span class="key">code</span>: code, <span class="key">status</span>: <span class="str">"created"</span>)
+RewardSubscriptionApplicationJob.<span class="fn">set</span>(<span class="key">wait</span>: <span class="num">10</span>.seconds).<span class="fn">perform_later</span>(reward.id)</pre>
+          </div>
+
+          <!-- INTEGRATION FLOW -->
+          <div class="arch__lane" data-flow="integration">
+            <div class="arch__lane-label arch__lane-label--cyan">integration flow</div>
+            <div class="arch__nodes">
+              <div class="arch__node arch__node--cyan" data-detail="detail-queue">solidqueue jobs</div>
+              <div class="arch__arrow">→</div>
+              <div class="arch__node arch__node--cyan" data-detail="detail-awtomic">awtomic api</div>
+              <div class="arch__arrow">/</div>
+              <div class="arch__node arch__node--cyan" data-detail="detail-klaviyo">klaviyo events</div>
+              <div class="arch__arrow">/</div>
+              <div class="arch__node arch__node--cyan" data-detail="detail-gemini">gemini ai</div>
+              <div class="arch__arrow">/</div>
+              <div class="arch__node arch__node--cyan" data-detail="detail-shopify-api">shopify admin api</div>
+            </div>
+          </div>
+
+          <div class="arch__detail" id="detail-queue">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--cyan">job queue</span>
+                <div class="arch__detail-title">solidqueue — postgresql-backed async jobs.</div>
+                <div class="arch__detail-file">config/queue.yml + app/jobs/</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">all heavy/async work runs through solidqueue — brand scraping, image generation, reward application, klaviyo syncing. postgresql-backed, no redis needed.</div>
+            <pre><span class="cm">// queue config (production)</span>
+dispatchers:
+  polling_interval: <span class="num">1</span>
+  batch_size: <span class="num">500</span>
+workers:
+  threads: <span class="num">3</span>
+  polling_interval: <span class="num">0.1</span>
+
+<span class="cm">// job classes in the system</span>
+<span class="kw">BrandScrapeJob</span>          <span class="cm">// scrape store → extract brand profile</span>
+  → <span class="kw">ImageGenerationJob</span>  <span class="cm">// chain: generate ai imagery from brand</span>
+<span class="kw">RewardSubscriptionApplicationJob</span>  <span class="cm">// apply reward to awtomic sub</span>
+  wait: <span class="num">10</span>.seconds     <span class="cm">// delayed — lets shopify sync discount first</span>
+<span class="kw">KlaviyoSyncJob</span>          <span class="cm">// sync referral data to klaviyo profiles</span></pre>
+          </div>
+
+          <div class="arch__detail" id="detail-awtomic">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--cyan">subscriptions</span>
+                <div class="arch__detail-title">auto-apply reward to awtomic subscription.</div>
+                <div class="arch__detail-file">awtomic_service.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">when a subscriber earns a reward, we auto-apply it to their next subscription billing cycle via awtomic's api. no manual code entry needed — discount just appears.</div>
+            <pre><span class="cm">// 1. look up customer's active subscriptions</span>
+GET https://api.awtomic.com/customers/<span class="num">456</span>/subscriptions
+<span class="key">Headers</span>: { <span class="str">"x-api-key"</span>: <span class="str">"key_..."</span> }
+→ { Items: [{ SubscriptionId: <span class="str">"sub_123"</span>, Status: <span class="str">"ACTIVE"</span> }] }
+
+<span class="cm">// 2. add discount code to their subscription</span>
+POST https://api.awtomic.com/customers/<span class="num">456</span>/subscriptions/<span class="str">sub_123</span>/discount-codes/<span class="str">REWARD-John342-3</span>
+<span class="key">Headers</span>: { <span class="str">"x-api-key"</span>: <span class="str">"key_..."</span> }
+→ { <span class="key">success</span>: <span class="kw">true</span> }
+
+<span class="cm">// 3. update reward status</span>
+reward.<span class="fn">update!</span>(<span class="key">status</span>: <span class="str">"applied_to_subscription"</span>,
+  <span class="key">awtomic_subscription_id</span>: <span class="str">"sub_123"</span>,
+  <span class="key">applied_at</span>: Time.current
+)</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-klaviyo">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--cyan">email</span>
+                <div class="arch__detail-title">event tracking + profile sync.</div>
+                <div class="arch__detail-file">klaviyo_service.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">key lifecycle events pushed to klaviyo for email automation — referral created, referral used, reward earned. profiles enriched with referral metadata for segmentation.</div>
+            <pre><span class="cm">// event: reward earned</span>
+POST https://a.klaviyo.com/api/events
+<span class="key">Headers</span>: { <span class="str">"Authorization"</span>: <span class="str">"Klaviyo-API-Key pk_..."</span> }
+{
+  <span class="key">data</span>: {
+    <span class="key">type</span>: <span class="str">"event"</span>,
+    <span class="key">attributes</span>: {
+      <span class="key">profile</span>: { email: <span class="str">"john@example.com"</span> },
+      <span class="key">metric</span>:  { name: <span class="str">"Reward Earned"</span> },
+      <span class="key">properties</span>: {
+        <span class="key">reward_code</span>: <span class="str">"REWARD-John342-3"</span>,
+        <span class="key">reward_value</span>: <span class="str">"50%"</span>,
+        <span class="key">expires_at</span>: <span class="str">"2025-03-21"</span>
+      }
+    }
+  }
+}
+
+<span class="cm">// profile sync (enriches customer record)</span>
+<span class="fn">upsert_profile</span>(<span class="key">email</span>: <span class="str">"john@example.com"</span>,
+  <span class="key">referral_code</span>: <span class="str">"John342"</span>,
+  <span class="key">usage_count</span>: <span class="num">3</span>,
+  <span class="key">has_referral_code</span>: <span class="kw">true</span>
+)</pre>
+          </div>
+
+          <div class="arch__detail" id="detail-gemini">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--cyan">ai</span>
+                <div class="arch__detail-title">brand analysis + image generation pipeline.</div>
+                <div class="arch__detail-file">gemini_client.rb + brand_scraper.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">on install, we scrape the store's theme and products → gemini analyzes the brand identity → generates custom referral page imagery that matches the shop's aesthetic.</div>
+            <pre><span class="cm">// 1. brand scrape prompt → gemini</span>
+<span class="str">"analyze this shopify store and return JSON:
+ store: Acme Foods (acme.myshopify.com)
+ theme colors: #ff584d, #154ffb, #00C6F7
+ products: Organic Cashew Mix, Raw Almond Butter"</span>
+
+<span class="cm">// gemini response</span>
+→ {
+    <span class="key">"category"</span>:  <span class="str">"food"</span>,
+    <span class="key">"style"</span>:     <span class="str">"organic"</span>,
+    <span class="key">"vibe"</span>:      <span class="str">"natural, fresh, wholesome"</span>,
+    <span class="key">"palette"</span>:   [<span class="str">"#ff584d"</span>, <span class="str">"#154ffb"</span>, <span class="str">"#00C6F7"</span>],
+    <span class="key">"scene"</span>:     <span class="str">"lifestyle imagery with products in nature"</span>
+  }
+
+<span class="cm">// 2. chained: ImageGenerationJob creates referral banners</span>
+<span class="cm">//    using brand profile as creative direction</span>
+<span class="cm">// → stored in Active Storage (Tigris/S3)</span></pre>
+          </div>
+
+          <div class="arch__detail" id="detail-shopify-api">
+            <div class="arch__detail-header">
+              <div>
+                <span class="arch__detail-label arch__detail-label--cyan">shopify api</span>
+                <div class="arch__detail-title">graphql mutations for discounts + metafields.</div>
+                <div class="arch__detail-file">providers/shopify/discount_provider.rb</div>
+              </div>
+              <button class="arch__detail-close" onclick="closeDetail(this)">×</button>
+            </div>
+            <div class="arch__detail-desc">all shopify writes go through the admin graphql api — creating discount codes, bulk-adding codes to shared discount groups, writing customer metafields for storefront api access.</div>
+            <pre><span class="cm">// create shared discount (one per campaign)</span>
+<span class="kw">mutation</span> discountCodeBasicCreate($input: DiscountCodeBasicInput!) {
+  discountCodeBasicCreate(basicCodeDiscount: $input) {
+    codeDiscountNode { <span class="key">id</span> }  <span class="cm">// "gid://shopify/DiscountNode/123"</span>
+  }
+}
+
+<span class="cm">// bulk-add new referral codes to the group</span>
+<span class="kw">mutation</span> discountRedeemCodeBulkAdd(
+  $discountId: <span class="str">ID!</span>, $codes: <span class="str">[DiscountRedeemCodeInput!]!</span>
+) {
+  discountRedeemCodeBulkAdd(
+    <span class="key">discountId</span>: <span class="str">"gid://shopify/DiscountNode/123"</span>,
+    <span class="key">codes</span>: [{ <span class="key">code</span>: <span class="str">"Jane456"</span> }, { <span class="key">code</span>: <span class="str">"Bob789"</span> }]
+  )
+}
+
+<span class="cm">// write referral code to customer metafield (for storefront api)</span>
+<span class="kw">mutation</span> customerUpdate($input: CustomerInput!) {
+  customerUpdate(input: $input) {
+    customer { <span class="key">id</span>, <span class="key">metafields</span>(first: <span class="num">5</span>) { edges { node { <span class="key">value</span> } } } }
+  }
+}
+<span class="cm">// input: { id: "gid://shopify/Customer/456",</span>
+<span class="cm">//   metafields: [{ namespace: "happypages", key: "referral_code", value: "John342" }] }</span></pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       HYDROGEN INTEGRATION
+       ======================================== -->
+  <section id="hydrogen" class="section">
+    <div class="container">
+      <span class="section-label">hydrogen integration.</span>
+      <h2 class="section-heading">3 steps to integrate with your hydrogen store.</h2>
+      <div class="hydrogen__grid">
+        <div class="hydrogen__steps">
+          <div class="hydrogen__step">
+            <div class="hydrogen__step-num">1</div>
+            <div>
+              <div class="hydrogen__step-title">set storefront url.</div>
+              <p class="hydrogen__step-desc">in the app admin, go to settings → hydrogen tab. enter your hydrogen store url (e.g. https://fielddoctor.com). all customer-facing links will point here instead of your .myshopify.com domain.</p>
+            </div>
+          </div>
+          <div class="hydrogen__step">
+            <div class="hydrogen__step-num">2</div>
+            <div>
+              <div class="hydrogen__step-title">add discount route.</div>
+              <p class="hydrogen__step-desc">drop the discount.$code.tsx file into your hydrogen app's routes folder. this creates a /discount/CODE route that auto-creates a cart with the discount applied and redirects to your homepage.</p>
+            </div>
+          </div>
+          <div class="hydrogen__step">
+            <div class="hydrogen__step-num">3</div>
+            <div>
+              <div class="hydrogen__step-title">query referral metafield.</div>
+              <p class="hydrogen__step-desc">use the storefront api query to fetch a customer's referral code from their metafield. build a "share your referral" link in your account page or post-purchase flow.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__filename">app/routes/discount.$code.tsx</span>
+              <button class="code-block__copy" data-code="discount-route">copy</button>
+            </div>
+            <pre id="discount-route"><span class="kw">import</span> { redirect, <span class="kw">type</span> <span class="type">LoaderFunctionArgs</span> } <span class="kw">from</span> <span class="str">'@shopify/remix-oxygen'</span>;
+
+<span class="kw">export async function</span> <span class="fn">loader</span>({ params, context }: <span class="type">LoaderFunctionArgs</span>) {
+  <span class="kw">const</span> code = params.code;
+  <span class="kw">if</span> (!code) <span class="kw">throw new</span> <span class="type">Response</span>(<span class="str">'Discount code required'</span>, { status: <span class="str">400</span> });
+
+  <span class="kw">const</span> { storefront } = context;
+
+  <span class="kw">const</span> { cart } = <span class="kw">await</span> storefront.<span class="fn">mutate</span>(CREATE_CART_WITH_DISCOUNT, {
+    variables: { discountCodes: [code] },
+  });
+
+  <span class="kw">const</span> headers = cart?.id
+    ? <span class="kw">new</span> <span class="type">Headers</span>({ <span class="str">'Set-Cookie'</span>: <span class="str">`cart=${cart.id}; Path=/; HttpOnly; SameSite=Lax`</span> })
+    : <span class="kw">new</span> <span class="type">Headers</span>();
+
+  <span class="kw">return</span> <span class="fn">redirect</span>(<span class="str">'/'</span>, { headers });
+}
+
+<span class="kw">const</span> CREATE_CART_WITH_DISCOUNT = <span class="str">`#graphql
+  mutation CreateCartWithDiscount($discountCodes: [String!]) {
+    cartCreate(input: { discountCodes: $discountCodes }) {
+      cart {
+        id
+        discountCodes {
+          code
+          applicable
+        }
+      }
+    }
+  }
+`</span>;</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__filename">storefront api query</span>
+              <button class="code-block__copy" data-code="storefront-query">copy</button>
+            </div>
+            <pre id="storefront-query"><span class="kw">query</span> <span class="fn">CustomerReferral</span> {
+  customer {
+    metafield(
+      namespace: <span class="str">"app--happypages-friendly-referrals"</span>,
+      key: <span class="str">"referral_code"</span>
+    ) {
+      value
+    }
+  }
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__filename">url construction</span>
+              <button class="code-block__copy" data-code="url-snippet">copy</button>
+            </div>
+            <pre id="url-snippet"><span class="cm">// Build the referral share URL</span>
+<span class="kw">const</span> referralCode = customer.metafield?.value;
+
+<span class="cm">// Referral page (hosted by happypages)</span>
+<span class="kw">const</span> referralPageUrl =
+  <span class="str">`https://app.happypages.co/{shop-slug}/refer?code=${referralCode}`</span>;
+
+<span class="cm">// Discount link (your hydrogen store)</span>
+<span class="kw">const</span> discountUrl =
+  <span class="str">`https://your-store.com/discount/${referralCode}`</span>;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       TESTING PLAN
+       ======================================== -->
+  <section id="testing" class="section">
+    <div class="container">
+      <span class="section-label">testing plan.</span>
+      <h2 class="section-heading">step-by-step verification for field doctor.</h2>
+
+      <div class="prereq-card">
+        <h4>prerequisites.</h4>
+        <ul class="prereq-list">
+          <li>app installed on field doctor shopify store</li>
+          <li>storefront url configured (admin > settings > hydrogen tab)</li>
+          <li>discount route deployed to hydrogen app</li>
+          <li>campaign active with discount values set</li>
+          <li>existing customers imported (optional)</li>
+          <li>checkout extension enabled in shopify admin</li>
+          <li>awtomic connected (subscription test only)</li>
+        </ul>
+      </div>
+
+      <div class="testing__tabs">
+        <button class="testing__tab is-active" data-tab="0">one-off purchaser</button>
+        <button class="testing__tab" data-tab="1">subscription customer</button>
+      </div>
+
+      <div class="testing__panel is-active" data-panel="0">
+        <div class="neu-card" style="overflow-x: auto;">
+          <table class="test-table">
+            <thead><tr><th>#</th><th>action</th><th>expected result</th><th>verify in</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num">1</td><td>place test order as customer a</td><td>order processed, thank-you page shown</td><td class="verify">shopify admin > orders</td></tr>
+              <tr><td class="step-num">2</td><td>observe thank-you page</td><td>widget shows with customer a's name, banner, discount values, "share now" button</td><td class="verify">thank-you page</td></tr>
+              <tr><td class="step-num">3</td><td>click "share now"</td><td>redirected to referral page with auto-generated code</td><td class="verify">browser url</td></tr>
+              <tr><td class="step-num">4</td><td>verify referral record</td><td>customer a appears in app admin with unique code</td><td class="verify">app admin</td></tr>
+              <tr><td class="step-num">5</td><td>verify customer metafield</td><td>referral_code metafield set on customer a</td><td class="verify">shopify admin > customer > metafields</td></tr>
+              <tr><td class="step-num">6</td><td>copy discount link</td><td>url copied: {hydrogen-store}/discount/{code}</td><td class="verify">clipboard</td></tr>
+              <tr><td class="step-num">7</td><td>as friend b, visit discount link</td><td>discount route creates cart with code applied, redirects home</td><td class="verify">hydrogen store cart</td></tr>
+              <tr><td class="step-num">8</td><td>as friend b, complete checkout</td><td>order created with referral discount</td><td class="verify">shopify admin > orders</td></tr>
+              <tr><td class="step-num">9</td><td>verify usage count incremented</td><td>referral page shows usage +1</td><td class="verify">referral page / app admin</td></tr>
+              <tr><td class="step-num">10</td><td>verify referrer reward created</td><td>customer a has reward code (e.g. REWARD-Alex123-1), 30-day expiry. code visible on their referral page (or via klaviyo email if connected)</td><td class="verify">app admin + referral page</td></tr>
+              <tr><td class="step-num">11</td><td>customer a visits referral page, copies reward code, and applies it manually at checkout</td><td>reward applies at checkout, status → consumed. (no auto-application — one-off customers must enter the code themselves)</td><td class="verify">shopify admin + app admin</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="testing__panel" data-panel="1">
+        <div class="neu-card" style="overflow-x: auto;">
+          <table class="test-table">
+            <thead><tr><th>#</th><th>action</th><th>expected result</th><th>verify in</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num">1</td><td>verify awtomic connected</td><td>green "connected" status</td><td class="verify">app admin > integrations</td></tr>
+              <tr><td class="step-num">2</td><td>place subscription order as customer c</td><td>subscription created, thank-you page shown</td><td class="verify">shopify + awtomic</td></tr>
+              <tr><td class="step-num">3</td><td>observe widget, click "share now"</td><td>referral page with customer c's code</td><td class="verify">thank-you page + referral page</td></tr>
+              <tr><td class="step-num">4</td><td>copy discount link, share with friend d</td><td>link copied</td><td class="verify">clipboard</td></tr>
+              <tr><td class="step-num">5</td><td>friend d subscribes using discount link</td><td>subscription order with discount applied</td><td class="verify">shopify + awtomic</td></tr>
+              <tr><td class="step-num">6</td><td>verify referral used + reward created</td><td>usage count +1, reward code generated</td><td class="verify">app admin</td></tr>
+              <tr><td class="step-num">7</td><td>wait 10s, verify reward auto-application</td><td>reward discount auto-applied to customer c's awtomic subscription</td><td class="verify">awtomic dashboard</td></tr>
+              <tr><td class="step-num">8</td><td>trigger billing cycle</td><td>awtomic webhook fires, reward marked consumed</td><td class="verify">app admin</td></tr>
+              <tr><td class="step-num">9</td><td>verify reward lifecycle complete</td><td>status: created → applied_to_subscription → consumed (all timestamped)</td><td class="verify">app admin</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="posttest-card">
+        <h4>post-test verification.</h4>
+        <ul class="posttest-list">
+          <li>dashboard shows today's metrics</li>
+          <li>customer metafields present in shopify admin</li>
+          <li>discount codes attached to shared generation</li>
+          <li>/discount/CODE route works on hydrogen</li>
+          <li>referral page "back to store" points to hydrogen url</li>
+          <li>idempotent: same customer checking out again doesn't create duplicate</li>
+          <li>expired reward shows correctly</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       PDF CONTENT (print only)
+       ======================================== -->
+  <div id="pdf-content">
+    <div class="pdf-header">
+      <h1>happypages — friendly referrals.</h1>
+      <div class="pdf-logo">happypages.co</div>
+    </div>
+    <div class="pdf-what">
+      <h2>what it does.</h2>
+      <p>friendly referrals is a shopify referral app that turns your best customers into brand ambassadors. when a customer completes a purchase, they see a personalized referral widget on the thank-you page. they can share a unique discount link with friends — when a friend buys using that link, the original customer earns a reward. for subscription stores using awtomic, rewards are automatically applied to the next billing cycle. the entire system is white-labeled to your brand with ai-generated imagery.</p>
+    </div>
+    <div class="pdf-steps">
+      <div class="pdf-step"><div class="pdf-step-num">1</div><h4>customer buys.</h4><p>checkout triggers referral creation. thank-you page shows personalized widget with "share now" button.</p></div>
+      <div class="pdf-step"><div class="pdf-step-num">2</div><h4>friend uses link.</h4><p>discount auto-applies to cart via /discount/CODE route. order webhook tracks the conversion.</p></div>
+      <div class="pdf-step"><div class="pdf-step-num">3</div><h4>reward generated.</h4><p>referrer gets a unique reward code. for subscribers, it's auto-applied to their next awtomic billing cycle.</p></div>
+    </div>
+    <div class="pdf-features">
+      <h2>key features.</h2>
+      <div class="pdf-features-grid">
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>shopify oauth</strong> — one-click install with automatic setup</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>ai branding</strong> — auto-generates imagery from your store's palette</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>checkout extension</strong> — referral widget on thank-you page</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>unique codes</strong> — per-customer discount codes + metafields</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>white-labeled pages</strong> — branded referral page at your url</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>admin dashboard</strong> — metrics, campaigns, page editors</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>awtomic integration</strong> — auto-applies rewards to subscriptions</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>hydrogen ready</strong> — storefront api + discount route snippet</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>bulk import</strong> — migrate existing customers in one click</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>webhook verification</strong> — hmac-signed shopify callbacks</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>gdpr compliance</strong> — data request + erasure webhooks</div></div>
+        <div class="pdf-feature"><div class="pdf-feature-dot"></div><div><strong>media library</strong> — upload + ai-generated assets per surface</div></div>
+      </div>
+    </div>
+    <div class="pdf-hydrogen">
+      <h2>hydrogen integration.</h2>
+      <ul>
+        <li>set your storefront url in admin settings — all links redirect to your hydrogen store</li>
+        <li>drop in the discount.$code.tsx route to handle /discount/CODE cart creation</li>
+        <li>query the customer referral_code metafield via storefront api to build share links</li>
+      </ul>
+    </div>
+    <div class="pdf-next">
+      <h2>next steps for field doctor.</h2>
+      <ol>
+        <li>install app on your shopify store via the install link</li>
+        <li>set storefront url to your hydrogen domain in settings</li>
+        <li>deploy discount.$code.tsx route to your hydrogen app</li>
+        <li>connect awtomic in the integrations tab</li>
+        <li>run through the one-off and subscription testing plans</li>
+        <li>import existing customers to seed the referral program</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ========================================
+       JAVASCRIPT
+       ======================================== -->
+  <script>
+    // Nav scroll shadow
+    const nav = document.getElementById('stickyNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('is-scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Active section tracking
+    const navLinks = document.querySelectorAll('.sticky-nav__link');
+    const sections = document.querySelectorAll('section[id]');
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.remove('is-active'));
+          const active = document.querySelector(`.sticky-nav__link[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('is-active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(section => navObserver.observe(section));
+
+    // Journey cards staggered slide-in
+    const journeyNodes = document.querySelectorAll('.journey__node');
+    const journeyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay) * 120;
+          setTimeout(() => entry.target.classList.add('is-visible'), delay);
+          journeyObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    journeyNodes.forEach(node => journeyObserver.observe(node));
+
+    // Feature accordion
+    function toggleFeature(card) {
+      const isOpen = card.classList.contains('is-open');
+      document.querySelectorAll('.feature-card.is-open').forEach(other => {
+        if (other !== card) other.classList.remove('is-open');
+      });
+      card.classList.toggle('is-open', !isOpen);
+    }
+
+    // Architecture hover
+    const archLanes = document.getElementById('archLanes');
+    archLanes.querySelectorAll('.arch__lane').forEach(lane => {
+      lane.addEventListener('mouseenter', () => { archLanes.classList.add('has-hover'); lane.classList.add('is-highlighted'); });
+      lane.addEventListener('mouseleave', () => { archLanes.classList.remove('has-hover'); lane.classList.remove('is-highlighted'); });
+    });
+
+    // Architecture node click → show detail panel
+    function closeDetail(btn) {
+      const detail = btn.closest('.arch__detail');
+      detail.classList.remove('is-visible');
+      archLanes.querySelectorAll('.arch__node.is-active').forEach(n => n.classList.remove('is-active'));
+    }
+    archLanes.querySelectorAll('.arch__node[data-detail]').forEach(node => {
+      node.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const detailId = node.dataset.detail;
+        const detail = document.getElementById(detailId);
+        const wasVisible = detail.classList.contains('is-visible');
+
+        // close all open details + remove active states
+        archLanes.querySelectorAll('.arch__detail.is-visible').forEach(d => d.classList.remove('is-visible'));
+        archLanes.querySelectorAll('.arch__node.is-active').forEach(n => n.classList.remove('is-active'));
+
+        // toggle (if clicking the same node, just close)
+        if (!wasVisible) {
+          detail.classList.add('is-visible');
+          node.classList.add('is-active');
+          // scroll detail into view if needed
+          setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+        }
+      });
+    });
+
+    // Code copy
+    document.querySelectorAll('.code-block__copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = document.getElementById(btn.dataset.code).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = 'copied!'; btn.classList.add('is-copied');
+          setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('is-copied'); }, 2000);
+        });
+      });
+    });
+
+    // Testing tabs
+    const tabs = document.querySelectorAll('.testing__tab');
+    const panels = document.querySelectorAll('.testing__panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('is-active'));
+        panels.forEach(p => p.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        document.querySelector(`.testing__panel[data-panel="${idx}"]`).classList.add('is-active');
+      });
+    });
+  </script>
+</body>
+</html>
