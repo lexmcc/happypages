@@ -49,10 +49,6 @@ Two Railway services from the same GitHub repo:
 
 **Railway project:** https://railway.com/project/66f72304-7d9e-4860-9b50-aef51f26c5d2
 
-## Shopify Theme Development
-
-See `client-shopify-themes/SHOPIFY-THEME-PLAYBOOK.md` for the complete architecture playbook — component patterns, decision framework, CSS architecture, animation approach, and file structure for building new client themes.
-
 ## Rules
 
 <!-- Global rules (git push, commit messages) live in ~/.claude/CLAUDE.md -->
