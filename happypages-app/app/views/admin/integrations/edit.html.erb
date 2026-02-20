@@ -18,7 +18,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <%# Awtomic %>
-      <% awtomic_connected = Current.shop.shop_credential&.awtomic_api_key.present? %>
+      <% awtomic_connected = Current.shop.awtomic_credentials[:api_key].present? %>
       <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
         <div class="px-6 py-5 bg-[#1a1a2e] flex items-center justify-between">
           <span class="text-white font-semibold text-lg tracking-tight">Awtomic</span>

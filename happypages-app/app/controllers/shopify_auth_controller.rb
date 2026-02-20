@@ -70,11 +70,29 @@ class ShopifyAuthController < ApplicationController
 
       if existing_shop
         # RETURNING SHOP - preserve all data, only refresh token + scopes
-        old_scopes = existing_shop.shop_credential.granted_scopes
-        existing_shop.shop_credential.update!(
+        old_scopes = existing_shop.shop_credential&.granted_scopes
+        existing_shop.shop_credential&.update!(
           shopify_access_token: access_token,
           granted_scopes: granted_scopes
         )
+
+        # Also update ShopIntegration (dual-write during transition)
+        integration = existing_shop.integration_for("shopify")
+        if integration
+          integration.update!(
+            shopify_access_token: access_token,
+            granted_scopes: granted_scopes
+          )
+        else
+          existing_shop.shop_integrations.create!(
+            provider: "shopify",
+            status: "active",
+            shopify_domain: shop_domain,
+            shopify_access_token: access_token,
+            granted_scopes: granted_scopes
+          )
+        end
+
         scopes_upgraded = old_scopes&.split(",")&.map(&:strip)&.sort != granted_scopes.split(",").map(&:strip).sort
         # NOTE: Does NOT touch awtomic_api_key, klaviyo_api_key, webhook_secret
 
@@ -103,6 +121,19 @@ class ShopifyAuthController < ApplicationController
           shopify_access_token: access_token,
           granted_scopes: granted_scopes
         )
+
+        # Also create ShopIntegration (dual-write during transition)
+        @shop.shop_integrations.create!(
+          provider: "shopify",
+          status: "active",
+          shopify_domain: shop_domain,
+          shopify_access_token: access_token,
+          granted_scopes: granted_scopes
+        )
+
+        # Create default features
+        @shop.shop_features.create!(feature: "referrals", status: "active", activated_at: Time.current)
+        @shop.shop_features.create!(feature: "analytics", status: "active", activated_at: Time.current)
 
         user = User.create!(
           shop: @shop,

@@ -30,7 +30,7 @@ class Superadmin::ShopsController < Superadmin::BaseController
       .count
       .transform_keys { |(type, date)| [ type, date.to_date ] }
 
-    @credential = @shop.shop_credential
+    @credential = @shop.integration_for(@shop.platform_type) || @shop.shop_credential
     @generation_logs = @shop.generation_logs.recent.limit(50)
   end
 

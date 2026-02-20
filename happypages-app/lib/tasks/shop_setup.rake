@@ -30,7 +30,7 @@ namespace :shop do
         puts "✓ Found existing Shop: #{shop.name} (ID: #{shop.id})"
       end
 
-      # Create or update credentials
+      # Create or update credentials (legacy)
       credential = shop.shop_credential || shop.build_shop_credential
       credential.assign_attributes(
         shopify_access_token: ENV["SHOPIFY_ACCESS_TOKEN"],
@@ -41,6 +41,28 @@ namespace :shop do
       )
       credential.save!
       puts "✓ Configured ShopCredential"
+
+      # Create or update ShopIntegration
+      integration = shop.shop_integrations.find_or_initialize_by(provider: "shopify")
+      integration.assign_attributes(
+        status: "active",
+        shopify_domain: shop_url,
+        shopify_access_token: ENV["SHOPIFY_ACCESS_TOKEN"],
+        awtomic_api_key: ENV["AWTOMIC_API_KEY"],
+        awtomic_webhook_secret: ENV["AWTOMIC_WEBHOOK_SECRET"],
+        klaviyo_api_key: ENV["KLAVIYO_API_KEY"]
+      )
+      integration.save!
+      puts "✓ Configured ShopIntegration"
+
+      # Ensure default features exist
+      %w[referrals analytics].each do |feature|
+        shop.shop_features.find_or_create_by!(feature: feature) do |sf|
+          sf.status = "active"
+          sf.activated_at = shop.created_at
+        end
+      end
+      puts "✓ Configured ShopFeatures"
 
       # Backfill existing records
       puts "\nBackfilling existing records..."
@@ -66,7 +88,7 @@ namespace :shop do
 
   desc "Show current shop configuration"
   task info: :environment do
-    shops = Shop.includes(:shop_credential).all
+    shops = Shop.includes(:shop_credential, :shop_integrations, :shop_features).all
 
     if shops.empty?
       puts "No shops configured. Run `rails shop:setup` to create one."
@@ -82,15 +104,36 @@ namespace :shop do
       puts "  Status: #{shop.status}"
       puts "  Created: #{shop.created_at}"
       puts ""
-      puts "  Credentials:"
+      puts "  Integrations:"
+      if shop.shop_integrations.any?
+        shop.shop_integrations.each do |integration|
+          puts "    #{integration.provider} (#{integration.status}):"
+          puts "      Shopify Domain: #{integration.shopify_domain || 'N/A'}"
+          puts "      Shopify Token: #{integration.shopify_access_token.present? ? '✓ Set' : '✗ Not set'}"
+          puts "      Awtomic Key: #{integration.awtomic_api_key.present? ? '✓ Set' : '✗ Not set'}"
+          puts "      Klaviyo Key: #{integration.klaviyo_api_key.present? ? '✓ Set' : '✗ Not set'}"
+        end
+      else
+        puts "    No integrations configured"
+      end
+      puts ""
+      puts "  Legacy Credentials:"
       cred = shop.shop_credential
       if cred
         puts "    Shopify Token: #{cred.shopify_access_token.present? ? '✓ Set' : '✗ Not set'}"
-        puts "    Shopify Webhook: #{cred.shopify_webhook_secret.present? ? '✓ Set' : '✗ Not set'}"
         puts "    Awtomic Key: #{cred.awtomic_api_key.present? ? '✓ Set' : '✗ Not set'}"
         puts "    Klaviyo Key: #{cred.klaviyo_api_key.present? ? '✓ Set' : '✗ Not set'}"
       else
-        puts "    No credentials configured"
+        puts "    No legacy credentials"
+      end
+      puts ""
+      puts "  Features:"
+      if shop.shop_features.any?
+        shop.shop_features.each do |feature|
+          puts "    #{feature.feature}: #{feature.status}"
+        end
+      else
+        puts "    No features configured"
       end
       puts ""
       puts "  Record counts:"
@@ -101,18 +144,20 @@ namespace :shop do
     end
   end
 
-  desc "Clean up orphan shops without credentials"
+  desc "Clean up orphan shops without credentials or integrations"
   task cleanup: :environment do
-    # Find shops with credentials
+    # Find shops with credentials OR integrations
     shops_with_creds = Shop.joins(:shop_credential).pluck(:id)
-    orphans = Shop.where.not(id: shops_with_creds)
+    shops_with_integrations = Shop.joins(:shop_integrations).pluck(:id)
+    shops_with_either = (shops_with_creds + shops_with_integrations).uniq
+    orphans = Shop.where.not(id: shops_with_either)
 
     if orphans.empty?
-      puts "No orphan shops found. All shops have credentials."
+      puts "No orphan shops found. All shops have credentials or integrations."
       exit
     end
 
-    puts "Found #{orphans.count} orphan shops (no credentials):"
+    puts "Found #{orphans.count} orphan shops (no credentials or integrations):"
     orphans.each do |shop|
       puts "  - ID #{shop.id}: #{shop.domain}"
     end
@@ -122,8 +167,8 @@ namespace :shop do
 
     puts "✓ Cleanup complete!"
     puts "\nRemaining shops:"
-    Shop.includes(:shop_credential).each do |shop|
-      puts "  - ID #{shop.id}: #{shop.domain} (has_credential: #{shop.shop_credential.present?})"
+    Shop.includes(:shop_credential, :shop_integrations).each do |shop|
+      puts "  - ID #{shop.id}: #{shop.domain} (integration: #{shop.shop_integrations.any?}, legacy_credential: #{shop.shop_credential.present?})"
     end
   end
 end

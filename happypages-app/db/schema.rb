@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_160001) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_20_173253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -313,6 +313,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_160001) do
     t.index ["shop_id"], name: "index_shop_credentials_on_shop_id"
   end
 
+  create_table "shop_features", force: :cascade do |t|
+    t.datetime "activated_at"
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.string "feature", null: false
+    t.bigint "shop_id", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "feature"], name: "index_shop_features_on_shop_id_and_feature", unique: true
+    t.index ["shop_id"], name: "index_shop_features_on_shop_id"
+  end
+
+  create_table "shop_integrations", force: :cascade do |t|
+    t.string "api_endpoint"
+    t.string "api_key"
+    t.string "awtomic_api_key"
+    t.string "awtomic_webhook_secret"
+    t.datetime "created_at", null: false
+    t.string "granted_scopes"
+    t.string "klaviyo_api_key"
+    t.string "provider", null: false
+    t.bigint "shop_id", null: false
+    t.string "shopify_access_token"
+    t.string "shopify_domain"
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.string "webhook_secret"
+    t.index ["shop_id", "provider"], name: "index_shop_integrations_on_shop_id_and_provider", unique: true
+    t.index ["shop_id"], name: "index_shop_integrations_on_shop_id"
+    t.index ["shopify_domain"], name: "index_shop_integrations_on_shopify_domain", where: "(shopify_domain IS NOT NULL)"
+  end
+
   create_table "shops", force: :cascade do |t|
     t.jsonb "brand_profile", default: {}
     t.datetime "created_at", null: false
@@ -456,10 +488,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_160001) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
+    t.datetime "invite_accepted_at"
+    t.datetime "invite_sent_at"
+    t.string "invite_token"
+    t.datetime "last_sign_in_at"
     t.string "password_digest"
+    t.string "role", default: "owner"
     t.bigint "shop_id", null: false
     t.string "shopify_user_id"
     t.datetime "updated_at", null: false
+    t.index ["invite_token"], name: "index_users_on_invite_token", unique: true, where: "(invite_token IS NOT NULL)"
     t.index ["shop_id", "email"], name: "index_users_on_shop_id_and_email", unique: true
     t.index ["shop_id", "shopify_user_id"], name: "index_users_on_shop_id_and_shopify_user_id", unique: true
     t.index ["shop_id"], name: "index_users_on_shop_id"
@@ -483,6 +521,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_160001) do
   add_foreign_key "referrals", "shops"
   add_foreign_key "shared_discounts", "shops"
   add_foreign_key "shop_credentials", "shops"
+  add_foreign_key "shop_features", "shops"
+  add_foreign_key "shop_integrations", "shops"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

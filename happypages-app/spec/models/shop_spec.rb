@@ -18,6 +18,8 @@ RSpec.describe Shop, type: :model do
 
   describe "associations" do
     it { is_expected.to have_one(:shop_credential).dependent(:destroy) }
+    it { is_expected.to have_many(:shop_features).dependent(:destroy) }
+    it { is_expected.to have_many(:shop_integrations).dependent(:destroy) }
     it { is_expected.to have_many(:users).dependent(:destroy) }
   end
 
@@ -34,7 +36,15 @@ RSpec.describe Shop, type: :model do
   end
 
   describe "#shopify_credentials" do
-    it "returns credentials hash for shopify shop with credential" do
+    it "returns credentials from ShopIntegration when present" do
+      shop = create(:shop)
+      integration = create(:shop_integration, :with_token, shop: shop)
+      creds = shop.shopify_credentials
+      expect(creds[:url]).to eq(integration.shopify_domain)
+      expect(creds[:token]).to eq(integration.shopify_access_token)
+    end
+
+    it "falls back to ShopCredential when no integration" do
       shop = create(:shop, :with_credential)
       creds = shop.shopify_credentials
       expect(creds[:url]).to eq(shop.domain)
@@ -44,6 +54,56 @@ RSpec.describe Shop, type: :model do
     it "returns nil for non-shopify shops" do
       shop = build(:shop, :custom)
       expect(shop.shopify_credentials).to be_nil
+    end
+  end
+
+  describe "#feature_enabled?" do
+    it "returns true for active features" do
+      shop = create(:shop)
+      create(:shop_feature, shop: shop, feature: "referrals", status: "active")
+      expect(shop.feature_enabled?("referrals")).to be true
+    end
+
+    it "returns false for locked features" do
+      shop = create(:shop)
+      create(:shop_feature, shop: shop, feature: "referrals", status: "locked")
+      expect(shop.feature_enabled?("referrals")).to be false
+    end
+
+    it "returns false for missing features" do
+      shop = create(:shop)
+      expect(shop.feature_enabled?("referrals")).to be false
+    end
+  end
+
+  describe "#integration_for" do
+    it "returns active integration for provider" do
+      shop = create(:shop)
+      integration = create(:shop_integration, shop: shop, provider: "shopify")
+      expect(shop.integration_for("shopify")).to eq(integration)
+    end
+
+    it "returns nil for revoked integration" do
+      shop = create(:shop)
+      create(:shop_integration, shop: shop, provider: "shopify", status: "revoked")
+      expect(shop.integration_for("shopify")).to be_nil
+    end
+
+    it "returns nil when no integration exists" do
+      shop = create(:shop)
+      expect(shop.integration_for("shopify")).to be_nil
+    end
+  end
+
+  describe ".find_by_shopify_domain" do
+    it "finds shop by shopify domain on integration" do
+      shop = create(:shop)
+      create(:shop_integration, shop: shop, provider: "shopify", shopify_domain: "test.myshopify.com")
+      expect(Shop.find_by_shopify_domain("test.myshopify.com")).to eq(shop)
+    end
+
+    it "returns nil when no match" do
+      expect(Shop.find_by_shopify_domain("nonexistent.myshopify.com")).to be_nil
     end
   end
 

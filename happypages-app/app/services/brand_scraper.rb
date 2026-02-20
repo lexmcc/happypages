@@ -6,7 +6,8 @@ class BrandScraper
 
   def initialize(shop)
     @shop = shop
-    @token = shop.shop_credential&.shopify_access_token
+    integration = shop.integration_for("shopify")
+    @token = integration&.shopify_access_token || shop.shop_credential&.shopify_access_token
     @gemini = GeminiClient.new
   end
 

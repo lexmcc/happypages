@@ -22,4 +22,38 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_shopify_user
     end
   end
+
+  describe "role" do
+    it "defaults to owner" do
+      user = create(:user)
+      expect(user.role).to eq("owner")
+    end
+
+    it "validates role inclusion" do
+      user = build(:user, role: "supervillain")
+      expect(user).not_to be_valid
+      expect(user.errors[:role]).to include("is not included in the list")
+    end
+
+    it "allows valid roles" do
+      %w[owner admin member].each do |role|
+        user = build(:user, role: role)
+        expect(user).to be_valid
+      end
+    end
+
+    it "allows nil role" do
+      user = build(:user, role: nil)
+      expect(user).to be_valid
+    end
+  end
+
+  describe "invite_token" do
+    it "can be set and cleared" do
+      user = create(:user, invite_token: "abc123")
+      expect(user.invite_token).to eq("abc123")
+      user.update!(invite_token: nil)
+      expect(user.reload.invite_token).to be_nil
+    end
+  end
 end

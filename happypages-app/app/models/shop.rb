@@ -3,6 +3,8 @@ class Shop < ApplicationRecord
   PLATFORM_TYPES = %w[shopify custom woocommerce].freeze
 
   has_one :shop_credential, dependent: :destroy
+  has_many :shop_features, dependent: :destroy
+  has_many :shop_integrations, dependent: :destroy
   has_many :users, dependent: :destroy
   has_many :shared_discounts, dependent: :destroy
   has_many :discount_configs, dependent: :destroy
@@ -29,13 +31,30 @@ class Shop < ApplicationRecord
   scope :shopify, -> { where(platform_type: "shopify") }
   scope :custom, -> { where(platform_type: "custom") }
 
-  # Credential accessors - used by services
+  # Feature & integration helpers
+  def feature_enabled?(feature_name)
+    shop_features.active.exists?(feature: feature_name)
+  end
+
+  def integration_for(provider)
+    shop_integrations.active.find_by(provider: provider)
+  end
+
+  def self.find_by_shopify_domain(domain)
+    joins(:shop_integrations)
+      .where(shop_integrations: { shopify_domain: domain, provider: "shopify" })
+      .first
+  end
+
+  # Credential accessors - read from ShopIntegration first, fall back to ShopCredential
   def shopify_credentials
     return nil unless shopify?
-    {
-      url: domain,
-      token: shop_credential&.shopify_access_token
-    }
+    integration = integration_for("shopify")
+    if integration
+      { url: integration.shopify_domain, token: integration.shopify_access_token }
+    else
+      { url: domain, token: shop_credential&.shopify_access_token }
+    end
   end
 
   def platform_credentials
@@ -43,25 +62,42 @@ class Shop < ApplicationRecord
     when "shopify"
       shopify_credentials
     when "custom"
-      {
-        endpoint: shop_credential&.api_endpoint,
-        api_key: shop_credential&.api_key
-      }
+      integration = integration_for("custom")
+      if integration
+        { endpoint: integration.api_endpoint, api_key: integration.api_key }
+      else
+        { endpoint: shop_credential&.api_endpoint, api_key: shop_credential&.api_key }
+      end
     end
   end
 
   def awtomic_credentials
-    { api_key: shop_credential&.awtomic_api_key }
+    integration = integration_for(platform_type)
+    if integration&.awtomic_api_key.present?
+      { api_key: integration.awtomic_api_key }
+    else
+      { api_key: shop_credential&.awtomic_api_key }
+    end
   end
 
   def klaviyo_credentials
-    { api_key: shop_credential&.klaviyo_api_key }
+    integration = integration_for(platform_type)
+    if integration&.klaviyo_api_key.present?
+      { api_key: integration.klaviyo_api_key }
+    else
+      { api_key: shop_credential&.klaviyo_api_key }
+    end
   end
 
   def webhook_secret
-    case platform_type
-    when "shopify" then shop_credential&.shopify_webhook_secret
-    else shop_credential&.webhook_secret
+    integration = integration_for(platform_type)
+    if integration
+      integration.webhook_secret
+    else
+      case platform_type
+      when "shopify" then shop_credential&.shopify_webhook_secret
+      else shop_credential&.webhook_secret
+      end
     end
   end
 
