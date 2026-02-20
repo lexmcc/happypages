@@ -1,0 +1,40 @@
+<div class="min-h-screen bg-[#f9f9f9] flex items-center justify-center">
+  <div class="max-w-lg text-center px-6">
+    <div class="mx-auto w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
+      <svg class="size-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+      </svg>
+    </div>
+
+    <h2 class="text-xl font-bold text-gray-900 mb-2">Set up website analytics</h2>
+    <p class="text-sm text-gray-500 mb-6">
+      Add this snippet to your website to start tracking visitors.
+    </p>
+
+    <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6 text-left">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Tracking snippet</span>
+        <button
+          id="copy-snippet"
+          onclick="navigator.clipboard.writeText(document.getElementById('snippet-code').textContent).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 2000); })"
+          class="text-xs font-medium text-blue-600 hover:text-blue-700 cursor-pointer"
+        >Copy</button>
+      </div>
+      <pre class="bg-gray-50 rounded p-3 overflow-x-auto"><code id="snippet-code" class="text-sm text-gray-800">&lt;script defer src="https://app.happypages.co/s.js" data-hp-token="<%= @site.site_token %>"&gt;&lt;/script&gt;</code></pre>
+    </div>
+
+    <div class="text-left mb-8">
+      <h3 class="text-sm font-semibold text-gray-900 mb-3">How to install</h3>
+      <ol class="text-sm text-gray-600 space-y-2 list-decimal list-inside">
+        <li>Copy the snippet above</li>
+        <li>Paste it before <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">&lt;/head&gt;</code> on every page (or in your theme's <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">&lt;head&gt;</code> section)</li>
+        <li>Visit your website to trigger the first pageview</li>
+        <li>Come back here — your dashboard will appear once data arrives</li>
+      </ol>
+    </div>
+
+    <a href="<%= admin_analytics_path %>" class="text-sm font-medium text-blue-600 hover:text-blue-700">
+      Go to dashboard &rarr;
+    </a>
+  </div>
+</div>

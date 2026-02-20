@@ -1,7 +1,14 @@
 class Admin::AnalyticsController < Admin::BaseController
   def index
     @site = Current.shop&.analytics_sites&.active&.first
-    return render :no_site unless @site
+
+    unless @site
+      domain = Current.shop.customer_facing_url
+                 .sub(%r{\Ahttps?://}, "")
+                 .sub(%r{/\z}, "")
+      @site = Current.shop.analytics_sites.create!(domain: domain, name: Current.shop.name)
+      return render :setup
+    end
 
     @period = params[:period] || "30d"
     @metric = params[:metric] || "visitors"
