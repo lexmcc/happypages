@@ -1,0 +1,10 @@
+<div class="bg-white rounded-xl shadow-sm p-4">
+  <div
+    class="h-[200px] sm:h-[280px]"
+    data-controller="analytics-chart"
+    data-analytics-chart-metrics-value="<%= @data[:time_series].to_json %>"
+    data-analytics-chart-active-metric-value="<%= @metric %>"
+  >
+    <canvas data-analytics-chart-target="canvas"></canvas>
+  </div>
+</div>

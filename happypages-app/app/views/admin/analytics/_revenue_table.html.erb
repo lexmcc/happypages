@@ -1,0 +1,56 @@
+<% return unless @data[:revenue_attribution].present? %>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="px-4 py-3 border-b border-gray-100">
+    <h3 class="text-sm font-semibold text-gray-900">Revenue Attribution</h3>
+    <p class="text-xs text-gray-400 mt-0.5">First-touch source for visitors who converted</p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" style="font-family: Inter, system-ui, sans-serif">
+      <thead>
+        <tr class="border-b border-gray-50">
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-left">Source</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Visitors</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Orders</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Revenue</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Conv.</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">RPV</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data[:revenue_attribution].each do |row| %>
+          <tr class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
+            <td class="px-4 py-2 font-medium text-gray-900"><%= row[:source] %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= number_with_delimiter(row[:visitors]) %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= number_with_delimiter(row[:orders]) %></td>
+            <td class="px-4 py-2 text-gray-900 text-right tabular-nums font-medium"><%= format_analytics_currency(row[:revenue]) %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums">
+              <%= row[:visitors] > 0 ? "#{(row[:orders].to_f / row[:visitors] * 100).round(1)}%" : "0%" %>
+            </td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= format_analytics_currency(row[:rpv]) %></td>
+          </tr>
+        <% end %>
+
+        <%# Total row %>
+        <% totals = @data[:revenue_attribution].each_with_object({ visitors: 0, orders: 0, revenue: 0.0 }) do |r, t|
+          t[:visitors] += r[:visitors]
+          t[:orders] += r[:orders]
+          t[:revenue] += r[:revenue]
+        end %>
+        <tr class="bg-gray-50 font-semibold">
+          <td class="px-4 py-2 text-gray-900">Total</td>
+          <td class="px-4 py-2 text-gray-900 text-right tabular-nums"><%= number_with_delimiter(totals[:visitors]) %></td>
+          <td class="px-4 py-2 text-gray-900 text-right tabular-nums"><%= number_with_delimiter(totals[:orders]) %></td>
+          <td class="px-4 py-2 text-gray-900 text-right tabular-nums"><%= format_analytics_currency(totals[:revenue]) %></td>
+          <td class="px-4 py-2 text-gray-900 text-right tabular-nums">
+            <%= totals[:visitors] > 0 ? "#{(totals[:orders].to_f / totals[:visitors] * 100).round(1)}%" : "0%" %>
+          </td>
+          <td class="px-4 py-2 text-gray-900 text-right tabular-nums">
+            <%= totals[:visitors] > 0 ? format_analytics_currency((totals[:revenue] / totals[:visitors]).round(2)) : format_analytics_currency(0) %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<% return unless @data[:referral_performance].present? %>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="px-4 py-3 border-b border-gray-100">
+    <h3 class="text-sm font-semibold text-gray-900">Referral Performance</h3>
+    <p class="text-xs text-gray-400 mt-0.5">Traffic and revenue by referral code</p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" style="font-family: Inter, system-ui, sans-serif">
+      <thead>
+        <tr class="border-b border-gray-50">
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-left">Referral Code</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Visitors</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Pageviews</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Orders</th>
+          <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide text-right">Revenue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data[:referral_performance].each do |row| %>
+          <tr
+            class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
+            data-action="click->analytics-filter#addFilter"
+            data-filter-key="referral_code"
+            data-filter-value="<%= row[:referral_code] %>"
+          >
+            <td class="px-4 py-2 font-medium text-gray-900 font-mono text-xs"><%= row[:referral_code] %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= number_with_delimiter(row[:visitors]) %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= number_with_delimiter(row[:pageviews]) %></td>
+            <td class="px-4 py-2 text-gray-600 text-right tabular-nums"><%= number_with_delimiter(row[:orders]) %></td>
+            <td class="px-4 py-2 text-gray-900 text-right tabular-nums font-medium"><%= format_analytics_currency(row[:revenue]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

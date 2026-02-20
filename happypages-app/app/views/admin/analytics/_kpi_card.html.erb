@@ -1,0 +1,41 @@
+<%# Locals: label, value, format, change_pct, metric_key, sparkline_data, color, active %>
+<% color ||= "#0072B2" %>
+<% active ||= false %>
+<button
+  data-action="click->analytics-chart#switchMetric"
+  data-analytics-chart-metric-param="<%= metric_key %>"
+  class="relative bg-white rounded-xl p-4 text-left transition-all hover:shadow-md group <%= active ? 'ring-2 shadow-md' : 'shadow-sm' %>"
+  style="<%= active ? "ring-color: #{color}; --tw-ring-color: #{color}" : "" %>"
+>
+  <div class="flex items-center justify-between mb-1">
+    <span class="text-xs font-medium text-gray-500 uppercase tracking-wide"><%= label %></span>
+    <%= change_indicator(change_pct) if defined?(change_pct) && change_pct %>
+  </div>
+
+  <div class="text-2xl font-bold text-gray-900 tabular-nums" style="font-family: Inter, system-ui, sans-serif">
+    <% case format.to_s %>
+    <% when "currency" %>
+      <%= format_analytics_currency(value) %>
+    <% when "duration" %>
+      <%= format_analytics_duration(value) %>
+    <% when "percent" %>
+      <%= value %>%
+    <% else %>
+      <%= format_analytics_number(value) %>
+    <% end %>
+  </div>
+
+  <% if sparkline_data.present? %>
+    <div
+      class="mt-2 h-12"
+      data-controller="analytics-sparkline"
+      data-analytics-sparkline-data-value="<%= sparkline_data.to_json %>"
+      data-analytics-sparkline-color-value="<%= color %>"
+    ></div>
+  <% end %>
+
+  <%# Active indicator bar %>
+  <% if active %>
+    <div class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full" style="background: <%= color %>"></div>
+  <% end %>
+</button>

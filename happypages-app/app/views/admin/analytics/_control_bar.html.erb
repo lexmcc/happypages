@@ -1,0 +1,53 @@
+<div class="sticky top-0 z-30 bg-[#f4f4f0]/95 backdrop-blur-sm border-b border-black/5" data-controller="analytics-filter">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+    <div class="flex flex-wrap items-center gap-3">
+      <%# Site picker (superadmin only) %>
+      <% if local_assigns[:show_site_picker] && local_assigns[:sites] %>
+        <select
+          data-action="change->analytics-filter#changeSite"
+          class="text-sm font-medium bg-white border border-gray-200 rounded-lg px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0072B2]/20"
+        >
+          <% sites.each do |s| %>
+            <option value="<%= s.id %>" <%= "selected" if s.id == @site.id %>><%= s.domain %></option>
+          <% end %>
+        </select>
+      <% else %>
+        <span class="text-sm font-semibold text-gray-900"><%= @site.domain %></span>
+      <% end %>
+
+      <div class="h-5 w-px bg-gray-200 hidden sm:block"></div>
+
+      <%# Period buttons %>
+      <div class="flex gap-1">
+        <% [["today", "Today"], ["7d", "7d"], ["30d", "30d"], ["90d", "90d"]].each do |value, label| %>
+          <button
+            data-action="click->analytics-filter#setPeriod"
+            data-period="<%= value %>"
+            class="px-3 py-1 rounded-md text-xs font-medium transition-colors <%= @period == value ? 'bg-[#ff584d] text-white' : 'text-gray-600 hover:bg-white hover:shadow-sm' %>"
+          >
+            <%= label %>
+          </button>
+        <% end %>
+      </div>
+
+      <%# Comparison toggle %>
+      <label class="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          data-action="change->analytics-filter#toggleCompare"
+          <%= "checked" if @compare %>
+          class="rounded border-gray-300 text-[#ff584d] focus:ring-[#ff584d]/20 h-3.5 w-3.5"
+        >
+        vs previous
+      </label>
+
+      <%# Spacer %>
+      <div class="flex-1"></div>
+
+      <%# Active filters %>
+      <% @filters.each do |key, value| %>
+        <%= render "admin/analytics/filter_pill", key: key, value: value %>
+      <% end %>
+    </div>
+  </div>
+</div>

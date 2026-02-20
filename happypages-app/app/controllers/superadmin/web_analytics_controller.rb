@@ -1,6 +1,12 @@
-class Admin::AnalyticsController < Admin::BaseController
+class Superadmin::WebAnalyticsController < Superadmin::BaseController
   def index
-    @site = Current.shop&.analytics_sites&.active&.first
+    @sites = Analytics::Site.active.includes(:shop).order(:domain)
+    @site = if params[:site_id].present?
+      @sites.find_by(id: params[:site_id])
+    else
+      @sites.first
+    end
+
     return render :no_site unless @site
 
     @period = params[:period] || "30d"

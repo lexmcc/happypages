@@ -109,6 +109,7 @@ Rails.application.routes.draw do
         post :rescrape_brand
       end
     end
+    resources :web_analytics, only: [:index]
     resources :scene_assets, except: [:show]
     resources :prompt_templates, except: [:show] do
       member do

@@ -1,0 +1,11 @@
+<%# Locals: key, value %>
+<button
+  data-action="click->analytics-filter#removeFilter"
+  data-filter-key="<%= key %>"
+  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0072B2]/10 text-[#0072B2] text-xs font-medium hover:bg-[#0072B2]/20 transition-colors"
+>
+  <span class="capitalize"><%= key.to_s.humanize %></span>: <%= value %>
+  <svg class="size-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+</button>
