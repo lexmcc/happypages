@@ -213,7 +213,9 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **SolidQueue**: PostgreSQL-backed job queue, config in `config/queue.yml`. Production adapter set in `config/environments/production.rb`.
 - **Web analytics**: `Analytics::Site/Event/Payment` models in `app/models/analytics/`. Ingestion via `POST /collect` (no auth, site_token in payload). Tracking script at `/s.js`. `ReferralEvent` (formerly `AnalyticsEvent`) is the referral app's event model — don't confuse with `Analytics::Event`.
 - **Analytics ingestion**: `Analytics::CollectController` inherits `ActionController::API` directly (not `Api::BaseController`). No `Current.shop`, no `X-Shop-Domain`. Always returns 204.
+- **Analytics dashboard**: `Analytics::DashboardQueryService` computes all metrics. Admin controller auto-provisions `Analytics::Site` on first visit → shows setup page → dashboard once data arrives. Superadmin gets site picker. 3 Stimulus controllers: `analytics_chart`, `analytics_sparkline`, `analytics_filter`.
 - **GeoIP**: MaxMind GeoLite2-City downloaded on boot via `MAXMIND_LICENSE_KEY` env var. `GEOIP_READER` constant (nil if unavailable). `vendor/maxmind/*.mmdb` gitignored.
+- **Bulk customer import**: `CustomerImportJob` fetches Shopify customers via GraphQL, creates Referrals + metafields in batches. `CustomerImport` model tracks progress. Stimulus controller polls status. Idempotent, cursor-based resume.
 
 ### Shopify App Identity
 - **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)

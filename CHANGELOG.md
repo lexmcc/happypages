@@ -2,6 +2,12 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-20
+
+- **Analytics dashboard UI (Chunk 3)** — full web analytics dashboard replacing the old referral event page. KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Available in both admin and superadmin (with site picker). 3 Stimulus controllers + 8 shared partials + DashboardQueryService.
+- **Auto-create analytics site** — first visit to `/admin/analytics` auto-provisions an `Analytics::Site` from the shop's domain and shows a setup page with personalised tracking snippet and install instructions
+- **Analytics setup page cleanup** — removed dead-end "Go to dashboard" link that stranded users away from the snippet/instructions
+
 ## 2026-02-19
 
 - **Web analytics system (Chunks 1+2)** — self-hosted analytics engine inside the Rails app. `Analytics::Site`, `Analytics::Event`, `Analytics::Payment` models with full visitor/session tracking, GeoIP, bot filtering, UTM capture, and revenue attribution.
@@ -9,6 +15,9 @@ Dated record of shipped features across both products.
 - **Ingestion endpoint** (`POST /collect`) — 204-always ingestion with 64KB body limit, hostname validation, bot filtering (crawler_detect), UA parsing (device_detector), GeoIP (MaxMind). Rate limited at 1000 req/min/IP.
 - **Table rename** — `analytics_events` → `referral_events` (model `AnalyticsEvent` → `ReferralEvent`) to free the `analytics_` namespace for web analytics.
 - **Audit + hardening** — 5-agent audit found 27 issues. Fixed: removed table partitioning (premature), added ON DELETE CASCADE on FKs, body size limit, hostname validation, secure cookies, SPA UTM refresh, session-guarded cart sync.
+- **Bulk customer import** — background job fetches existing Shopify customers with orders via GraphQL, creates Referral records with generated codes, writes referral_code metafields back in batches. Idempotent, cursor-based resume. Admin UI in Settings with live progress polling via Stimulus.
+- **Oatcult cart sync** — background cart syncing with 300ms debounce for abandoned cart recovery. AbortController cancels in-flight syncs before checkout redirect. Session storage for back-button state restoration.
+- **Interactive overview page** — self-contained `/overview` page for client meeting prep. System architecture diagram, clickable nodes with code examples, user journey flow, feature map, Hydrogen integration guide, testing plans. Print-to-PDF layout.
 
 ## 2026-02-18
 

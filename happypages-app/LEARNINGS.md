@@ -233,5 +233,18 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - The `:style` binding already triggers re-render when the getter's value changes
 - **Lesson**: Prefer computed getters over `$watch` when a value is derivable from other state
 
+### Cart Sync Race Condition with AbortController (Feb 19, 2026)
+- Background cart syncing (for abandoned cart recovery) can race with checkout — a slow sync response arriving after `window.location` redirect can overwrite the cart
+- `AbortController` pattern: store a controller instance, `abort()` it before checkout redirect, pass its `signal` to all sync `fetch()` calls
+- Alpine `$watch` is unreliable for object property mutations (e.g., `quantities[id]++`) — call `syncCart()` explicitly in `incrementQty`/`decrementQty`
+- **Lesson**: For any fetch-before-navigate pattern, use AbortController to cancel in-flight requests
+
+### ERB Partial Naming: Leading Underscore vs Template (Feb 20, 2026)
+- Rails partials must have leading underscore in filename (`_no_site.html.erb`) but are referenced without it (`render "no_site"`)
+- Full templates (rendered via `render "setup"` from controller) must NOT have leading underscore
+- A 500 error from `render "no_site"` was caused by the file being named `_no_site.html.erb` (partial) when the controller was rendering it as a template
+- **Fix**: Renamed to `no_site.html.erb` (no underscore) for template rendering, or use `render partial: "no_site"` for partials
+- **Lesson**: If a controller action calls `render "name"`, the file is a template (no underscore). If called via `render partial:`, it needs an underscore.
+
 ---
-*Updated: Feb 19, 2026 (analytics namespace shadowing, partitioning prematurity, capture-now-or-lose-forever, sendBeacon CORS, hostname validation)*
+*Updated: Feb 20, 2026 (cart sync race condition, ERB partial naming)*

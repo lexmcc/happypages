@@ -38,12 +38,12 @@ Automated brand analysis and marketing image generation pipeline powered by Gemi
 
 ### Admin UI
 
-- **Dashboard** — analytics overview with event tracking
+- **Analytics Dashboard** — web analytics dashboard with KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Powered by `Analytics::DashboardQueryService`. URL-based period/filter/comparison state via Stimulus filter controller. Also available in superadmin with site picker.
 - **Referral Page** — configurable customer-facing referral page editor with inline media picker
 - **Thank You Card** — checkout extension configuration with inline media picker
 - **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback. Surface-filtered: each picker shows only images relevant to its context (referral banner or extension card) plus untagged uploads. AI-generated images are auto-tagged by surface; user uploads are tagged based on which picker they're uploaded from.
 - **Integrations** — Awtomic connect/disconnect, Klaviyo (coming soon)
-- **Settings** — shop slug management + tabbed theme integration (Shopify Theme snippet / Hydrogen discount route). Storefront URL field lives in the Hydrogen tab, separate form per section to prevent cross-field interference.
+- **Settings** — shop slug management + tabbed theme integration (Shopify Theme snippet / Hydrogen discount route / Hydrogen referral code snippet). Storefront URL field lives in the Hydrogen tab, separate form per section to prevent cross-field interference. Bulk customer import button with live progress polling — background job fetches Shopify customers via GraphQL, creates Referral records with generated codes, writes referral_code metafields back in batches. Idempotent, cursor-based resume.
 - **Suspended shop guard** — admin base controller checks `shop.suspended?` and forces logout if the shop has been suspended via super admin
 
 ### Super Admin (`/superadmin`)
@@ -63,6 +63,7 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 
 Lightweight, self-hosted web analytics for tracking page views, custom events, and revenue attribution across client Shopify themes and the referral app itself.
 
+- **Auto-provisioning** — first visit to `/admin/analytics` auto-creates an `Analytics::Site` from the shop's domain and renders a setup page with the personalised tracking snippet and install instructions. Dashboard appears once data arrives.
 - **Analytics::Site** — per-shop analytics site with unique `site_token` (32-char hex). Scoped to shop, one site per domain. `dependent: :delete_all` on events and payments for fast teardown.
 - **Analytics::Event** — immutable event log (no `updated_at`). Stores visitor/session IDs, event name, pathname, hostname, referrer, UTMs, browser/OS/device, GeoIP (country, region, city), referral code, and custom properties (JSONB, max 50 keys). `occurred_at` is the sole timestamp.
 - **Analytics::Payment** — revenue attribution record linking visitor/session to order. Amount in cents, currency, referral code for attribution. Unique constraint on `[site_id, order_id]`.
@@ -71,6 +72,7 @@ Lightweight, self-hosted web analytics for tracking page views, custom events, a
 - **GeoIP** — MaxMind GeoLite2-City database downloaded on boot via `start.sh` using `MAXMIND_LICENSE_KEY` env var. Graceful nil if file/key missing.
 - **Rate limiting** — 1000 req/min per IP on `/collect`
 - **CORS** — wildcard origin on `/collect` (POST + OPTIONS)
+- **Dashboard query service** — `Analytics::DashboardQueryService` computes all dashboard metrics from raw events: unique visitors, pageviews, bounce rate, avg visit duration, revenue totals, sparkline data, time series, top pages/referrers/UTMs, geography, device/browser/OS breakdowns, goal conversions, first-touch revenue attribution, and referral performance. Supports period filtering (today, 7d, 30d, custom) and comparison periods.
 
 ### API Layer
 

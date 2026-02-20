@@ -64,15 +64,17 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 17** - Shopify theme architecture playbook: 5-framework evaluation → vanilla CE + Preact islands decision
 - **Feb 18** - Header checkout button: disabled until items added on shop-v3, `spf:has-items` event bridge
 
-### Week 9: Web Analytics System (Feb 19, 2026)
+### Week 9: Web Analytics + Customer Import + Overview Page (Feb 19-20, 2026)
 
+- **Feb 19** - Bulk customer import: background job fetches Shopify customers via GraphQL, creates Referral records + metafields. Admin UI with live progress polling.
+- **Feb 19** - Oatcult cart sync: background syncing with debounce + AbortController for abandoned cart recovery, session storage for back-button restoration
+- **Feb 19** - Interactive overview page (`/overview`) for Field Doctor meeting prep: architecture diagram, feature map, Hydrogen guide, testing plans
 - **Feb 19** - Renamed `analytics_events` → `referral_events` (table + model + 11 file find-replace) to free namespace for web analytics
-- **Feb 19** - Built analytics schema: `analytics_sites` (per-shop site tokens), `analytics_events` (immutable event log with visitor/session/UTM/GeoIP/device), `analytics_payments` (revenue attribution)
-- **Feb 19** - Tracking script (`hp-analytics.js`): cookie-based visitor/session, sendBeacon ingestion, SPA history monkey-patching, declarative goals, Shopify cart attribute injection
-- **Feb 19** - Ingestion endpoint (`POST /collect`): EventIngester service with bot filtering (crawler_detect), UA parsing (device_detector), GeoIP (MaxMind), hostname validation
-- **Feb 19** - Added gems: `crawler_detect`, `device_detector`, `maxmind-geoip2`
-- **Feb 19** - GeoIP database download in `start.sh` via `MAXMIND_LICENSE_KEY`
-- **Feb 19** - 5-agent audit: found 27 issues across schema, security, script, and architecture. De-scoped table partitioning as premature. Applied fixes: removed composite PK, added CASCADE FKs, 64KB body limit, hostname validation, secure cookies, SPA UTM refresh, session-guarded cart sync, Rails `stale?` ETag
+- **Feb 20** - Built analytics schema: `analytics_sites` (per-shop site tokens), `analytics_events` (immutable event log with visitor/session/UTM/GeoIP/device), `analytics_payments` (revenue attribution)
+- **Feb 20** - Tracking script (`hp-analytics.js`): cookie-based visitor/session, sendBeacon ingestion, SPA history monkey-patching, declarative goals, Shopify cart attribute injection
+- **Feb 20** - Ingestion endpoint (`POST /collect`): EventIngester service with bot filtering, UA parsing, GeoIP, hostname validation
+- **Feb 20** - Analytics dashboard UI (Chunk 3): KPIs with sparklines, time series chart, top pages/referrers/UTMs, geography, devices, goals, revenue attribution. Admin + superadmin.
+- **Feb 20** - Auto-create analytics site on first visit with setup page showing personalised tracking snippet
 
 ## Key Milestones
 

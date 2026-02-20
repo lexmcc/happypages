@@ -22,6 +22,10 @@ Single-page responsive site served by a zero-dependency Node.js server on Railwa
 
 Variant with step card videos (desktop) / GIFs (mobile/iOS), animated coral grid on works card, cleaner look without floating icons.
 
+### Overview Page (/overview)
+
+Self-contained interactive page for client meeting prep. System architecture diagram with clickable nodes showing real code examples, user journey flow, feature map with roadmap section, Hydrogen integration guide, and testing plans for one-off and subscription flows. Print-to-PDF layout.
+
 ### Technical
 
 Zero-dependency Node.js server, clean URL routing, responsive breakpoints at 1024px/768px. PNG icons for animation performance, CSS containment, prefers-reduced-motion support.
