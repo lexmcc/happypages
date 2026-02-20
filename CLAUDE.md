@@ -213,6 +213,15 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **GeoIP**: MaxMind GeoLite2-City downloaded on boot via `MAXMIND_LICENSE_KEY` env var. `GEOIP_READER` constant (nil if unavailable). `vendor/maxmind/*.mmdb` gitignored.
 - **Bulk customer import**: `CustomerImportJob` fetches Shopify customers via GraphQL, creates Referrals + metafields in batches. `CustomerImport` model tracks progress. Stimulus controller polls status. Idempotent, cursor-based resume.
 
+### Testing
+- **Framework**: RSpec + factory_bot + shoulda-matchers + webmock
+- **Run tests**: `cd happypages-app && bundle exec rspec`
+- **Run single file**: `bundle exec rspec spec/models/shop_spec.rb`
+- **Run single test**: `bundle exec rspec spec/models/shop_spec.rb:15`
+- **Factories**: `spec/factories/` — use `build` (in-memory) over `create` (DB) when possible
+- **External HTTP**: All blocked by webmock. Use `stub_request` for Shopify/Gemini API calls.
+- **TDD rule**: New platform architecture code gets tests first. Existing code gets tested when modified.
+
 ### Shopify App Identity
 - **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
 - **Distribution**: Public (unlisted) — installable via link on any store
