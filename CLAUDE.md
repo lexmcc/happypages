@@ -211,6 +211,9 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
 - **Brand & AI pipeline**: `BrandScrapeJob` → `ImageGenerationJob` chain. Gemini client in `app/services/gemini_client.rb`. Prompt templates interpolate `{variable}` syntax.
 - **SolidQueue**: PostgreSQL-backed job queue, config in `config/queue.yml`. Production adapter set in `config/environments/production.rb`.
+- **Web analytics**: `Analytics::Site/Event/Payment` models in `app/models/analytics/`. Ingestion via `POST /collect` (no auth, site_token in payload). Tracking script at `/s.js`. `ReferralEvent` (formerly `AnalyticsEvent`) is the referral app's event model — don't confuse with `Analytics::Event`.
+- **Analytics ingestion**: `Analytics::CollectController` inherits `ActionController::API` directly (not `Api::BaseController`). No `Current.shop`, no `X-Shop-Domain`. Always returns 204.
+- **GeoIP**: MaxMind GeoLite2-City downloaded on boot via `MAXMIND_LICENSE_KEY` env var. `GEOIP_READER` constant (nil if unavailable). `vendor/maxmind/*.mmdb` gitignored.
 
 ### Shopify App Identity
 - **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
@@ -235,3 +238,5 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - Shopify OAuth redirect URLs: check the **linked** TOML file (`shopify.app.*.toml`), not just `shopify.app.toml`
 - Re-installing the app via OAuth is the cleanest way to recreate shop records
 - **Gemini API key**: `GEMINI_API_KEY` env var required for brand scraping and image generation
+- **Analytics namespace**: Use `::CrawlerDetect` and `::DeviceDetector` (leading `::`) inside `module Analytics` to avoid Ruby resolving them as `Analytics::CrawlerDetect`
+- **`ReferralEvent` not `AnalyticsEvent`**: The referral app's event model was renamed — grep for `AnalyticsEvent` should return zero results

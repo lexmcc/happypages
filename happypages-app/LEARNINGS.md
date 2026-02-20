@@ -87,6 +87,37 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Acceptable since only the app owner uses both, but worth knowing
 - **Lesson**: If multi-user super admin is ever needed, consider separate session stores or token-based auth
 
+### Analytics Namespace Shadowing (Feb 19, 2026)
+- Models under `module Analytics` cause `CrawlerDetect` and `DeviceDetector` to resolve as `Analytics::CrawlerDetect` / `Analytics::DeviceDetector`
+- Ruby namespace resolution looks inside the current module first, then walks up to top-level
+- **Fix**: Use `::CrawlerDetect` and `::DeviceDetector` (leading `::`) to force top-level constant resolution
+- **Lesson**: When calling third-party gem constants from inside a custom namespace, always use `::` prefix
+
+### Partitioning is Premature at Low Scale (Feb 19, 2026)
+- Initially built `analytics_events` as a PostgreSQL partitioned table (`PARTITION BY RANGE (occurred_at)`) with composite PK `(id, occurred_at)`
+- Composite PK breaks Rails conventions: `find(id)` fails, `dependent: :destroy` fails, `destroy!` fails — Rails always uses `WHERE id = ?` which doesn't work on partitioned tables without the partition key
+- At current scale (< 1M rows), partitioning adds operational complexity (rake task to create future partitions, `structure.sql` requirement) with zero performance benefit
+- **Fix**: Replaced with a regular table, standard integer PK, same columns and indexes
+- **Lesson**: Don't partition until you have 100M+ rows and actual query performance issues. Standard indexes + good query patterns handle millions of rows fine.
+
+### "Capture Now or Lose Forever" Pattern (Feb 19, 2026)
+- GeoIP (IP→country/city) and UA parsing (user-agent→browser/device) must happen at ingestion time
+- IP addresses and raw user-agent strings are not stored (privacy), so you can't backfill geo/device data later
+- Similarly, `Analytics::Payment` captures visitor_id/session_id at purchase time — this context is ephemeral (cookies expire, sessions end)
+- **Lesson**: If a data point is derivable from ephemeral context, capture it inline at the earliest opportunity. Deferring to a background job risks losing the context.
+
+### sendBeacon Content-Type and CORS (Feb 19, 2026)
+- `navigator.sendBeacon` with a `Blob({type: 'text/plain'})` avoids CORS preflight entirely — simple requests don't trigger OPTIONS
+- Using `application/json` content type would require a preflight on every page view — significant overhead at scale
+- The server parses the body as JSON regardless of Content-Type header
+- **Lesson**: For high-volume beacon endpoints, use `text/plain` content type to avoid CORS preflight. Parse body as JSON server-side.
+
+### Hostname Validation Prevents Data Poisoning (Feb 19, 2026)
+- Without hostname validation, anyone with a site token (which is public, embedded in the tracking script) can send fake events from any domain
+- The ingester now compares the beacon's `hostname` against the registered `site.domain`, stripping `www.` and allowing subdomains
+- Empty hostname is allowed (some environments don't set it)
+- **Lesson**: Public-token analytics systems need hostname validation — it's the only defense against data pollution
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -203,4 +234,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: Prefer computed getters over `$watch` when a value is derivable from other state
 
 ---
-*Updated: Feb 17, 2026 (scroll-snap-stop jiggle fix, CSS translateX viewport fix, Alpine computed getters)*
+*Updated: Feb 19, 2026 (analytics namespace shadowing, partitioning prematurity, capture-now-or-lose-forever, sendBeacon CORS, hostname validation)*

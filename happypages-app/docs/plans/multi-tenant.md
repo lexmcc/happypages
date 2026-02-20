@@ -49,7 +49,7 @@ class Shop < ApplicationRecord
   has_many :referral_rewards, dependent: :destroy
   has_many :shared_discounts, dependent: :destroy
   has_many :discount_configs, dependent: :destroy
-  has_many :analytics_events, dependent: :destroy
+  has_many :referral_events, dependent: :destroy
 
   validates :shopify_domain, presence: true, uniqueness: true
 
@@ -90,7 +90,7 @@ def change
   add_reference :shared_discounts, :shop, foreign_key: true
   add_reference :discount_generations, :shop, foreign_key: true
   add_reference :discount_configs, :shop, foreign_key: true
-  add_reference :analytics_events, :shop, foreign_key: true
+  add_reference :referral_events, :shop, foreign_key: true
 
   # Update uniqueness constraints (shop-scoped)
   remove_index :referrals, :referral_code

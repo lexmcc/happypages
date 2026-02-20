@@ -17,13 +17,13 @@ class Superadmin::ShopsController < Superadmin::BaseController
     @campaigns = @shop.shared_discounts.includes(:discount_generations).order(created_at: :desc).limit(50)
 
     @analytics_totals = {
-      extension_loads: @shop.analytics_events.where(event_type: AnalyticsEvent::EXTENSION_LOAD).count,
-      share_clicks: @shop.analytics_events.where(event_type: AnalyticsEvent::SHARE_CLICK).count,
-      page_views: @shop.analytics_events.where(event_type: AnalyticsEvent::PAGE_LOAD).count,
-      code_copies: @shop.analytics_events.where(event_type: AnalyticsEvent::COPY_CLICK).count
+      extension_loads: @shop.referral_events.where(event_type: ReferralEvent::EXTENSION_LOAD).count,
+      share_clicks: @shop.referral_events.where(event_type: ReferralEvent::SHARE_CLICK).count,
+      page_views: @shop.referral_events.where(event_type: ReferralEvent::PAGE_LOAD).count,
+      code_copies: @shop.referral_events.where(event_type: ReferralEvent::COPY_CLICK).count
     }
 
-    @daily_events = @shop.analytics_events
+    @daily_events = @shop.referral_events
       .where(created_at: 30.days.ago..)
       .group(:event_type)
       .group("DATE(created_at)")

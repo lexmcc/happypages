@@ -18,7 +18,7 @@ This plan covers everything needed to pass Shopify's Level 2 protected customer 
 | **Privacy policy** | ✅ Done | Hosted at `/privacy` via PagesController |
 | **Incident response plan** | ✅ Done | `SECURITY.md` with P1-P4 severity levels |
 | **Audit logging** | ✅ Done | `audit_logs` table with `AuditLog.log()` convenience method |
-| **PII encryption at rest** | ✅ Done | `encrypts` on Referral (email, first_name) and AnalyticsEvent (email) |
+| **PII encryption at rest** | ✅ Done | `encrypts` on Referral (email, first_name) and ReferralEvent (email) |
 | **Compliance webhooks** | ✅ Done | Dispatcher at `/webhooks/compliance` handles all 3 topics |
 | **Webhook registration** | ✅ Done | `compliance_topics` added to both TOML files |
 
@@ -100,7 +100,7 @@ Single dispatcher endpoint reads `X-Shopify-Topic` header and routes to private 
 **b) customers/redact** → `handle_customers_redact`
 - Finds shop by Current.shop or domain fallback
 - Anonymises referrals: `email → "deleted-{id}@redacted"`, `first_name → "Deleted"`
-- Deletes analytics_events by email within shop
+- Deletes referral_events by email within shop
 - Logs counts to audit_logs
 
 **c) shop/redact** → `handle_shop_redact`
@@ -129,7 +129,7 @@ uri = "https://app.happypages.co/webhooks/compliance"
 encrypts :email, deterministic: true  # deterministic allows lookups
 encrypts :first_name
 
-# app/models/analytics_event.rb
+# app/models/referral_event.rb
 encrypts :email, deterministic: true
 ```
 
@@ -139,7 +139,7 @@ encrypts :email, deterministic: true
 ```ruby
 # Run in production console:
 Referral.find_each { |r| r.update_columns(email: r.email, first_name: r.first_name) }
-AnalyticsEvent.where.not(email: nil).find_each { |e| e.update_columns(email: e.email) }
+ReferralEvent.where.not(email: nil).find_each { |e| e.update_columns(email: e.email) }
 ```
 
 ### 2.3 Audit Logging ✅
@@ -184,7 +184,7 @@ end
 | `config/routes.rb` | Added `/webhooks/compliance` route + `/privacy` route |
 | `app/controllers/webhooks_controller.rb` | Added `compliance` dispatcher + 3 private handlers |
 | `app/models/referral.rb` | Added `encrypts` for email (deterministic), first_name |
-| `app/models/analytics_event.rb` | Added `encrypts` for email (deterministic) |
+| `app/models/referral_event.rb` | Added `encrypts` for email (deterministic) |
 | `app/models/shop.rb` | Added `has_many :audit_logs` |
 | `happypages-referrals/shopify.app.toml` | Added webhook subscriptions + compliance_topics |
 | `happypages-referrals/shopify.app.happypages-friendly-referrals.toml` | Added webhook subscriptions + compliance_topics |
@@ -200,7 +200,7 @@ end
 
 ### Phase 2: Database & Encryption ✅
 4. ~~Create audit_logs migration~~ → `20260206100000_create_audit_logs.rb`
-5. ~~Add `encrypts` to Referral and AnalyticsEvent models~~
+5. ~~Add `encrypts` to Referral and ReferralEvent models~~
 6. Run migrations — happens on deploy via `db:prepare` in `start.sh`
 7. Re-encrypt existing data — **run in production console after deploy**
 
@@ -285,7 +285,7 @@ happypages-app/
 │   │   └── webhooks_controller.rb      # MODIFIED - compliance dispatcher + handlers
 │   ├── models/
 │   │   ├── referral.rb                 # MODIFIED - encrypts email, first_name
-│   │   ├── analytics_event.rb          # MODIFIED - encrypts email
+│   │   ├── referral_event.rb          # MODIFIED - encrypts email
 │   │   ├── shop.rb                     # MODIFIED - has_many :audit_logs
 │   │   └── audit_log.rb               # NEW
 │   └── views/

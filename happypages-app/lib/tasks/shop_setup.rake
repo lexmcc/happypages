@@ -54,8 +54,8 @@ namespace :shop do
       updated = Referral.where(shop_id: nil).update_all(shop_id: shop.id)
       puts "  - Referral: #{updated} records"
 
-      updated = AnalyticsEvent.where(shop_id: nil).update_all(shop_id: shop.id)
-      puts "  - AnalyticsEvent: #{updated} records"
+      updated = ReferralEvent.where(shop_id: nil).update_all(shop_id: shop.id)
+      puts "  - ReferralEvent: #{updated} records"
 
       puts "\n✓ Shop setup complete!"
       puts "\nShop ID: #{shop.id}"
@@ -96,7 +96,7 @@ namespace :shop do
       puts "  Record counts:"
       puts "    SharedDiscounts: #{shop.shared_discounts.count}"
       puts "    Referrals: #{shop.referrals.count}"
-      puts "    AnalyticsEvents: #{shop.analytics_events.count}"
+      puts "    ReferralEvents: #{shop.referral_events.count}"
       puts "    DiscountConfigs: #{shop.discount_configs.count}"
     end
   end

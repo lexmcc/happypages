@@ -5,20 +5,20 @@ class Admin::AnalyticsController < Admin::BaseController
     @period_duration = period_to_duration(@period)
 
     # Base scope for analytics - scoped to current shop
-    base_scope = AnalyticsEvent.all
+    base_scope = ReferralEvent.all
     base_scope = base_scope.where(shop: Current.shop) if Current.shop
 
     # Checkout extension metrics
     @extension_loads = base_scope
       .extension_events
-      .where(event_type: AnalyticsEvent::EXTENSION_LOAD)
+      .where(event_type: ReferralEvent::EXTENSION_LOAD)
       .in_period(@period_duration)
       .group_by_day(:created_at)
       .count
 
     @share_clicks = base_scope
       .extension_events
-      .where(event_type: AnalyticsEvent::SHARE_CLICK)
+      .where(event_type: ReferralEvent::SHARE_CLICK)
       .in_period(@period_duration)
       .group_by_day(:created_at)
       .count
@@ -30,14 +30,14 @@ class Admin::AnalyticsController < Admin::BaseController
     # Referral page metrics
     @page_loads = base_scope
       .referral_page_events
-      .where(event_type: AnalyticsEvent::PAGE_LOAD)
+      .where(event_type: ReferralEvent::PAGE_LOAD)
       .in_period(@period_duration)
       .group_by_day(:created_at)
       .count
 
     @copy_clicks = base_scope
       .referral_page_events
-      .where(event_type: AnalyticsEvent::COPY_CLICK)
+      .where(event_type: ReferralEvent::COPY_CLICK)
       .in_period(@period_duration)
       .group_by_day(:created_at)
       .count

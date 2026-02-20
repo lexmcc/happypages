@@ -80,9 +80,9 @@ class ReferralsController < ApplicationController
   end
 
   def track_page_load(referral)
-    AnalyticsEvent.create(
-      event_type: AnalyticsEvent::PAGE_LOAD,
-      source: AnalyticsEvent::REFERRAL_PAGE,
+    ReferralEvent.create(
+      event_type: ReferralEvent::PAGE_LOAD,
+      source: ReferralEvent::REFERRAL_PAGE,
       email: referral.email,
       referral_code: referral.referral_code,
       shop: Current.shop

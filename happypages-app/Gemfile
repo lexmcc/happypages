@@ -25,6 +25,11 @@ gem "rack-cors"
 # Rate limiting for API endpoints
 gem "rack-attack"
 
+# Web analytics: bot detection, UA parsing, GeoIP
+gem "crawler_detect"
+gem "device_detector"
+gem "maxmind-geoip2"
+
 # Analytics charts
 gem "chartkick"
 gem "groupdate"

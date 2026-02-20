@@ -9,3 +9,7 @@ end
 Rack::Attack.throttle("admin/image_generations", limit: 5, period: 300) do |req|
   req.ip if req.path == "/admin/image_generations" && req.post?
 end
+
+Rack::Attack.throttle("analytics/collect", limit: 1000, period: 60) do |req|
+  req.ip if req.path == "/collect" && req.post?
+end

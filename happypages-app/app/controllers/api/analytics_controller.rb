@@ -5,7 +5,7 @@ class Api::AnalyticsController < Api::BaseController
     # sendBeacon() sends as text/plain, so parse JSON from raw body
     data = JSON.parse(request.raw_post)
 
-    event = AnalyticsEvent.new(
+    event = ReferralEvent.new(
       event_type: data["event_type"],
       source: data["source"],
       referral_code: data["referral_code"],
@@ -15,7 +15,7 @@ class Api::AnalyticsController < Api::BaseController
     )
 
     if event.save
-      if data["event_type"] == AnalyticsEvent::SHARE_CLICK && data["email"].present?
+      if data["event_type"] == ReferralEvent::SHARE_CLICK && data["email"].present?
         # Scope referral lookup to current shop
         scope = Referral.all
         scope = scope.where(shop: Current.shop) if Current.shop

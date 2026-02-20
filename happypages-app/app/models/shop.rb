@@ -6,7 +6,8 @@ class Shop < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :shared_discounts, dependent: :destroy
   has_many :discount_configs, dependent: :destroy
-  has_many :analytics_events, dependent: :destroy
+  has_many :referral_events, dependent: :destroy
+  has_many :analytics_sites, class_name: "Analytics::Site", dependent: :destroy
   has_many :referrals, dependent: :destroy
   has_many :referral_rewards, dependent: :destroy
   has_many :audit_logs, dependent: :destroy

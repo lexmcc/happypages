@@ -117,10 +117,10 @@ class KlaviyoService
         referral_usage_count: referral.usage_count,
         referral_reward_codes: reward_codes,
         has_referral_code: true,
-        last_referral_share_at: AnalyticsEvent.where(
+        last_referral_share_at: ReferralEvent.where(
           shop: referral.shop,
           email: referral.email,
-          event_type: AnalyticsEvent::SHARE_CLICK
+          event_type: ReferralEvent::SHARE_CLICK
         ).maximum(:created_at)&.iso8601
       }
     )

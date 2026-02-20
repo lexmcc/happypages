@@ -1,4 +1,4 @@
-class AnalyticsEvent < ApplicationRecord
+class ReferralEvent < ApplicationRecord
   belongs_to :shop
 
   encrypts :email, deterministic: true

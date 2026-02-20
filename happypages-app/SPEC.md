@@ -14,7 +14,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **Shopify OAuth** — self-service install flow, creates Shop + ShopCredential + User in one transaction. Detects scope upgrades on re-auth and triggers brand re-scrape + imagery generation for returning shops.
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
-- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom)
+- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Referral events tracked via `ReferralEvent` model (renamed from `AnalyticsEvent` to free the `analytics_` namespace for web analytics).
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII)
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin.
 - **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
@@ -59,15 +59,28 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 - **Prompt Templates** (`/superadmin/prompt_templates`) — CRUD for AI prompt templates with test-generate against any shop's brand profile.
 - **Scene Assets** (`/superadmin/scene_assets`) — upload and manage reference images for image generation, organized by category/mood/tags.
 
+### Web Analytics System
+
+Lightweight, self-hosted web analytics for tracking page views, custom events, and revenue attribution across client Shopify themes and the referral app itself.
+
+- **Analytics::Site** — per-shop analytics site with unique `site_token` (32-char hex). Scoped to shop, one site per domain. `dependent: :delete_all` on events and payments for fast teardown.
+- **Analytics::Event** — immutable event log (no `updated_at`). Stores visitor/session IDs, event name, pathname, hostname, referrer, UTMs, browser/OS/device, GeoIP (country, region, city), referral code, and custom properties (JSONB, max 50 keys). `occurred_at` is the sole timestamp.
+- **Analytics::Payment** — revenue attribution record linking visitor/session to order. Amount in cents, currency, referral code for attribution. Unique constraint on `[site_id, order_id]`.
+- **Tracking script** (`/s.js`) — <3KB vanilla JS IIFE. Cookie-based visitor (1-year `hp_vid`) and session (30-min sliding `hp_sid`). `sendBeacon` with `text/plain` to avoid CORS preflight, `fetch+keepalive` fallback. SPA support via `history.pushState/replaceState` monkey-patching. Declarative goals via `data-hp-goal` attributes. Shopify cart attribute injection (`hp_vid/hp_sid/hp_ref`) for referral→order attribution. Session-guarded to sync once per session.
+- **Ingestion endpoint** (`POST /collect`) — `Analytics::CollectController` inherits `ActionController::API` directly (no `Current.shop`, no `X-Shop-Domain`). 64KB body size limit. Delegates to `Analytics::EventIngester` service: parse → validate → bot filter (`crawler_detect`) → site lookup by token → hostname validation (reject mismatched domains, allow subdomains) → UA parsing (`device_detector`) → GeoIP (`maxmind-geoip2`) → truncate/sanitize → insert. Always returns 204.
+- **GeoIP** — MaxMind GeoLite2-City database downloaded on boot via `start.sh` using `MAXMIND_LICENSE_KEY` env var. Graceful nil if file/key missing.
+- **Rate limiting** — 1000 req/min per IP on `/collect`
+- **CORS** — wildcard origin on `/collect` (POST + OPTIONS)
+
 ### API Layer
 
 - **`Api::BaseController`** — shared base class inheriting `ActionController::API` with `ShopIdentifiable` concern and `X-Shop-Domain` header auth. All API controllers inherit from this.
 - **`POST /api/referrals`** — create referral (idempotent by email)
 - **`GET /api/referrals/:id`** — lookup referral by code, returns `referral_code`, `usage_count`, `share_url` (no PII)
 - **`GET /api/config`** — extension configuration including `storefront_url` for Hydrogen stores
-- **`POST /api/analytics`** — event tracking from checkout extension
-- **Rate limiting** — `rack-attack` throttles POST /api/referrals at 500 req/min per IP, POST /superadmin/login at 5 req/min per IP
-- **CORS** — Shopify + custom origins for referrals (GET + POST), open for config and analytics endpoints
+- **`POST /api/analytics`** — event tracking from checkout extension (referral events, not web analytics)
+- **Rate limiting** — `rack-attack` throttles POST /api/referrals at 500 req/min per IP, POST /superadmin/login at 5 req/min per IP, POST /collect at 1000 req/min per IP
+- **CORS** — Shopify + custom origins for referrals (GET + POST), open for config and analytics endpoints, wildcard for /collect
 
 ### Hydrogen / Headless Storefront Support
 
@@ -123,7 +136,7 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 | High | No API auth on `/api/*` endpoints | Header-only shop identification, no HMAC/token |
 | High | Zero automated tests | No test suite at all — model + webhook tests at minimum |
 | Medium | Broad `rescue => e` in webhooks | Swallows errors silently — rescue specific exceptions |
-| Medium | Missing DB indices | `analytics_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` |
+| Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
 | Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
 | Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
 

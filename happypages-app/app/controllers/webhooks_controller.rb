@@ -157,8 +157,8 @@ class WebhooksController < ApplicationController
       )
     end
 
-    events_count = shop.analytics_events.where(email: customer_email).count
-    shop.analytics_events.where(email: customer_email).delete_all
+    events_count = shop.referral_events.where(email: customer_email).count
+    shop.referral_events.where(email: customer_email).delete_all
 
     AuditLog.log(
       action: "customer_redact",
@@ -191,7 +191,7 @@ class WebhooksController < ApplicationController
         shop_domain: shop_domain,
         shop_id: shop.id,
         referral_count: shop.referrals.count,
-        event_count: shop.analytics_events.count
+        event_count: shop.referral_events.count
       }
     )
 

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # Web analytics collection
+  post "collect", to: "analytics/collect#create"
+  get "s.js", to: "analytics/script#show"
+
   # API endpoints for checkout extension
   namespace :api do
     resources :referrals, only: [:create, :show]

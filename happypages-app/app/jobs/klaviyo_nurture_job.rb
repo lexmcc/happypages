@@ -10,7 +10,7 @@ class KlaviyoNurtureJob < ApplicationJob
 
       delay_days = shop.discount_configs.find_by(config_key: "klaviyo_reminder_delay_days")&.config_value&.to_i || 3
 
-      shared_emails = shop.analytics_events.where(event_type: AnalyticsEvent::SHARE_CLICK).select(:email)
+      shared_emails = shop.referral_events.where(event_type: ReferralEvent::SHARE_CLICK).select(:email)
 
       eligible = shop.referrals
         .where(reminder_sent_at: nil)

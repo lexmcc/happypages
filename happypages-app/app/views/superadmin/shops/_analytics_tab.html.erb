@@ -20,10 +20,10 @@
     <%
       chart_data = {}
       {
-        "Extension Loads" => AnalyticsEvent::EXTENSION_LOAD,
-        "Share Clicks" => AnalyticsEvent::SHARE_CLICK,
-        "Page Views" => AnalyticsEvent::PAGE_LOAD,
-        "Code Copies" => AnalyticsEvent::COPY_CLICK
+        "Extension Loads" => ReferralEvent::EXTENSION_LOAD,
+        "Share Clicks" => ReferralEvent::SHARE_CLICK,
+        "Page Views" => ReferralEvent::PAGE_LOAD,
+        "Code Copies" => ReferralEvent::COPY_CLICK
       }.each do |label, event_type|
         series = {}
         @daily_events.each do |(type, date), count|

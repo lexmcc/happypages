@@ -2,6 +2,14 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-19
+
+- **Web analytics system (Chunks 1+2)** — self-hosted analytics engine inside the Rails app. `Analytics::Site`, `Analytics::Event`, `Analytics::Payment` models with full visitor/session tracking, GeoIP, bot filtering, UTM capture, and revenue attribution.
+- **Tracking script** (`/s.js`) — <3KB vanilla JS beacon with cookie-based visitor/session IDs, SPA support, declarative `data-hp-goal` events, Shopify cart attribute injection for referral→order attribution.
+- **Ingestion endpoint** (`POST /collect`) — 204-always ingestion with 64KB body limit, hostname validation, bot filtering (crawler_detect), UA parsing (device_detector), GeoIP (MaxMind). Rate limited at 1000 req/min/IP.
+- **Table rename** — `analytics_events` → `referral_events` (model `AnalyticsEvent` → `ReferralEvent`) to free the `analytics_` namespace for web analytics.
+- **Audit + hardening** — 5-agent audit found 27 issues. Fixed: removed table partitioning (premature), added ON DELETE CASCADE on FKs, body size limit, hostname validation, secure cookies, SPA UTM refresh, session-guarded cart sync.
+
 ## 2026-02-18
 
 - **Oatcult header checkout button disabled state** — "Checkout" button starts disabled (grey) on shop-v3 page when no items in box. Enables (yellow) when items are added via `spf:has-items` custom event bridge between purchase flow and header. "Buy now" on non-shop pages unaffected.
@@ -12,6 +20,8 @@ Dated record of shipped features across both products.
 - **Oatcult hero gallery jiggle fix** — clicking non-adjacent thumbnails no longer jiggles through intermediates. CSS `scroll-snap-stop: normal` overrides theme's `always` + JS guard suppresses IntersectionObserver during programmatic scrolls.
 - **Oatcult flavor card styling overhaul** — solid colors replace gradients (white unselected, #ED6B93 selected), warm brown (#3C1B01) borders with opacity states, "Choose" button text, "9 pack" subtitle
 - **Oatcult size card viewport sliding** — fixed 12-tier sliding viewport that was stuck (CSS `width: 100%` fix + replaced `$watch` with computed getter)
+- **Shopify theme architecture playbook** — 12-section `SHOPIFY-THEME-PLAYBOOK.md` covering component patterns, decision framework, CSS architecture, animation tiers, Shopify integration, and themes-vs-Hydrogen guidance. Arrived at via 5-agent framework evaluation (Alpine, Svelte, Lit, Preact, Vanilla JS).
+- **Architecture decision**: vanilla custom elements (80%) + Preact islands (complex reactivity) + nanostores (shared state) + Motion (animation) + CSS @layer
 
 ## 2026-02-16
 

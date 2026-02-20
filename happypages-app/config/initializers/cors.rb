@@ -38,4 +38,13 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       headers: :any,
       methods: [:post, :options]
   end
+
+  # Web analytics collection endpoint (any site can send beacons)
+  allow do
+    origins "*"
+
+    resource "/collect",
+      headers: :any,
+      methods: [:post, :options]
+  end
 end
