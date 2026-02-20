@@ -220,7 +220,7 @@ class ImageryGenerator
   # ── Step 7: Post-Process ───────────────────────────────────
 
   def post_process(image_data, spec)
-    tempfile = Tempfile.new(["gen", extension_for(image_data[:mime_type])])
+    tempfile = Tempfile.new([ "gen", extension_for(image_data[:mime_type]) ])
     begin
       tempfile.binmode
       tempfile.write(image_data[:bytes])

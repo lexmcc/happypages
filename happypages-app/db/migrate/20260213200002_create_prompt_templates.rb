@@ -10,6 +10,6 @@ class CreatePromptTemplates < ActiveRecord::Migration[8.1]
     end
 
     add_index :prompt_templates, :key, unique: true
-    add_index :prompt_templates, [:surface, :category]
+    add_index :prompt_templates, [ :surface, :category ]
   end
 end

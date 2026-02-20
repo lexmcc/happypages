@@ -13,7 +13,7 @@ class CreateGenerationLogs < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :generation_logs, [:shop_id, :surface]
+    add_index :generation_logs, [ :shop_id, :surface ]
     add_index :generation_logs, :created_at
   end
 end

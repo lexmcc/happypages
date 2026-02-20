@@ -1,7 +1,7 @@
 class EmbeddedController < ApplicationController
   include ShopifySessionTokenVerifiable
 
-  skip_forgery_protection only: [:authenticate]
+  skip_forgery_protection only: [ :authenticate ]
   skip_before_action :set_current_shop
 
   layout "embedded"

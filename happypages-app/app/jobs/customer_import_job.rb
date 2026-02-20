@@ -172,6 +172,6 @@ class CustomerImportJob < ApplicationJob
     JSON.parse(response.body)
   rescue => e
     Rails.logger.error "CustomerImportJob Shopify API error: #{e.message}"
-    { "errors" => [{ "message" => e.message }] }
+    { "errors" => [ { "message" => e.message } ] }
   end
 end

@@ -29,10 +29,10 @@ class ReplacePartitionedAnalyticsEventsWithRegularTable < ActiveRecord::Migratio
       t.timestamptz :occurred_at, null: false, default: -> { "now()" }
     end
 
-    add_index :analytics_events, [:analytics_site_id, :occurred_at], name: "idx_analytics_events_site_time"
-    add_index :analytics_events, [:analytics_site_id, :pathname], name: "idx_analytics_events_site_path"
-    add_index :analytics_events, [:analytics_site_id, :visitor_id], name: "idx_analytics_events_site_visitor"
-    add_index :analytics_events, [:analytics_site_id, :event_name, :occurred_at], name: "idx_analytics_events_site_event_time"
+    add_index :analytics_events, [ :analytics_site_id, :occurred_at ], name: "idx_analytics_events_site_time"
+    add_index :analytics_events, [ :analytics_site_id, :pathname ], name: "idx_analytics_events_site_path"
+    add_index :analytics_events, [ :analytics_site_id, :visitor_id ], name: "idx_analytics_events_site_visitor"
+    add_index :analytics_events, [ :analytics_site_id, :event_name, :occurred_at ], name: "idx_analytics_events_site_event_time"
     add_index :analytics_events, :session_id, name: "idx_analytics_events_session"
     add_index :analytics_events, :referral_code, where: "referral_code IS NOT NULL", name: "idx_analytics_events_referral"
   end

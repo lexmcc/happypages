@@ -17,7 +17,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource "/api/referrals*",
       headers: :any,
-      methods: [:get, :post, :options]
+      methods: [ :get, :post, :options ]
   end
 
   # Config endpoint needs to allow all origins for checkout extensions
@@ -27,7 +27,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource "/api/config",
       headers: :any,
-      methods: [:get, :options]
+      methods: [ :get, :options ]
   end
 
   # Analytics endpoint for tracking events from checkout extension
@@ -36,7 +36,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource "/api/analytics",
       headers: :any,
-      methods: [:post, :options]
+      methods: [ :post, :options ]
   end
 
   # Web analytics collection endpoint (any site can send beacons)
@@ -45,6 +45,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource "/collect",
       headers: :any,
-      methods: [:post, :options]
+      methods: [ :post, :options ]
   end
 end

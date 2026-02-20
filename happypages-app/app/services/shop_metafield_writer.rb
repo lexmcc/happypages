@@ -50,13 +50,13 @@ class ShopMetafieldWriter
     GRAPHQL
 
     variables = {
-      metafields: [{
+      metafields: [ {
         namespace: namespace,
         key: key,
         value: value,
         type: "single_line_text_field",
         ownerId: owner_id
-      }]
+      } ]
     }
 
     result = execute_graphql(credentials, mutation, variables)
@@ -84,6 +84,6 @@ class ShopMetafieldWriter
     JSON.parse(response.body)
   rescue => e
     Rails.logger.error "Shop metafield API error: #{e.message}"
-    { "errors" => [{ "message" => e.message }] }
+    { "errors" => [ { "message" => e.message } ] }
   end
 end

@@ -220,7 +220,7 @@ module Analytics
 
     def referrers
       events_scope.pageviews
-        .where.not(referrer: [nil, ""])
+        .where.not(referrer: [ nil, "" ])
         .select(
           "regexp_replace(referrer, '^https?://([^/]+).*', '\\1') as domain",
           "COUNT(DISTINCT visitor_id) as visitors"
@@ -235,7 +235,7 @@ module Analytics
 
     def utm_campaigns
       events_scope
-        .where.not(utm_campaign: [nil, ""])
+        .where.not(utm_campaign: [ nil, "" ])
         .select(
           "utm_campaign",
           "utm_source",
@@ -260,7 +260,7 @@ module Analytics
     def geography
       total = events_scope.distinct.count(:visitor_id)
       events_scope
-        .where.not(country_code: [nil, ""])
+        .where.not(country_code: [ nil, "" ])
         .select("country_code", "COUNT(DISTINCT visitor_id) as visitors")
         .group(:country_code)
         .order("visitors DESC")
@@ -286,7 +286,7 @@ module Analytics
 
     def top_dimension(column)
       events_scope
-        .where.not(column => [nil, ""])
+        .where.not(column => [ nil, "" ])
         .select("#{column} as name", "COUNT(DISTINCT visitor_id) as visitors")
         .group(column)
         .order("visitors DESC")
@@ -373,7 +373,7 @@ module Analytics
 
     def referral_performance
       events_scope
-        .where.not(referral_code: [nil, ""])
+        .where.not(referral_code: [ nil, "" ])
         .select(
           "referral_code",
           "COUNT(*) as pageviews",

@@ -98,7 +98,7 @@ class WebhooksController < ApplicationController
     unless handler.verify_signature(request, secret)
       Rails.logger.warn "Invalid webhook signature#{Current.shop ? " for shop #{Current.shop.domain}" : ""}"
       head :unauthorized
-      return false
+      false
     end
   end
 

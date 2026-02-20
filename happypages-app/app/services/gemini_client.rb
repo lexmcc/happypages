@@ -17,7 +17,7 @@ class GeminiClient
   # Text-only prompt → text response
   def generate_text(prompt, model: DEFAULT_MODEL)
     body = {
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [ { parts: [ { text: prompt } ] } ],
       generationConfig: { temperature: 0.7 }
     }
 
@@ -31,7 +31,7 @@ class GeminiClient
     parts << { text: prompt }
 
     body = {
-      contents: [{ parts: parts }],
+      contents: [ { parts: parts } ],
       generationConfig: { temperature: 0.4 }
     }
 
@@ -42,9 +42,9 @@ class GeminiClient
   # Image generation — returns raw image bytes
   def generate_image(prompt, aspect_ratio: "3:2", model: IMAGE_MODEL)
     body = {
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [ { parts: [ { text: prompt } ] } ],
       generationConfig: {
-        responseModalities: ["TEXT", "IMAGE"],
+        responseModalities: [ "TEXT", "IMAGE" ],
         temperature: 1.0
       }
     }
@@ -59,9 +59,9 @@ class GeminiClient
     parts << { text: prompt }
 
     body = {
-      contents: [{ parts: parts }],
+      contents: [ { parts: parts } ],
       generationConfig: {
-        responseModalities: ["TEXT", "IMAGE"],
+        responseModalities: [ "TEXT", "IMAGE" ],
         temperature: 1.0
       }
     }
@@ -80,7 +80,7 @@ class GeminiClient
     }
 
     body = {
-      contents: [{ parts: [image_part, { text: prompt }] }],
+      contents: [ { parts: [ image_part, { text: prompt } ] } ],
       generationConfig: {
         temperature: 0.3,
         responseMimeType: "application/json"
@@ -98,7 +98,7 @@ class GeminiClient
   # Parse JSON from a text response (for structured analysis results)
   def generate_json(prompt, model: DEFAULT_MODEL)
     body = {
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [ { parts: [ { text: prompt } ] } ],
       generationConfig: {
         temperature: 0.3,
         responseMimeType: "application/json"

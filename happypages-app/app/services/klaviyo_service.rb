@@ -1,5 +1,5 @@
-require 'net/http'
-require 'json'
+require "net/http"
+require "json"
 
 class KlaviyoService
   BASE_URL = "https://a.klaviyo.com/api"
@@ -135,9 +135,9 @@ class KlaviyoService
     http.use_ssl = true
 
     req = case method
-          when :post then Net::HTTP::Post.new(uri)
-          when :get then Net::HTTP::Get.new(uri)
-          end
+    when :post then Net::HTTP::Post.new(uri)
+    when :get then Net::HTTP::Get.new(uri)
+    end
 
     req["Authorization"] = "Klaviyo-API-Key #{@api_key}"
     req["Accept"] = "application/json"

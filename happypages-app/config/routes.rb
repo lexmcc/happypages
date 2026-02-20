@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
   # API endpoints for checkout extension
   namespace :api do
-    resources :referrals, only: [:create, :show]
-    resource :config, only: [:show]
-    resources :analytics, only: [:create]
+    resources :referrals, only: [ :create, :show ]
+    resource :config, only: [ :show ]
+    resources :analytics, only: [ :create ]
   end
 
   # Main referral page - takes firstName and email from URL params
@@ -42,10 +42,10 @@ Rails.application.routes.draw do
     get "/", to: "dashboard#index", as: :dashboard
 
     # Campaigns page (list discount groups)
-    resources :campaigns, only: [:index], controller: "discount_groups"
+    resources :campaigns, only: [ :index ], controller: "discount_groups"
 
     # Discount group CRUD
-    resources :discount_groups, only: [:new, :create, :edit, :update] do
+    resources :discount_groups, only: [ :new, :create, :edit, :update ] do
       member do
         post :activate
         post :schedule_override
@@ -54,39 +54,39 @@ Rails.application.routes.draw do
     end
 
     # Analytics
-    resources :analytics, only: [:index]
+    resources :analytics, only: [ :index ]
 
     # Thank-You Card editor
-    resource :thank_you_card, only: [:edit, :update], controller: "thank_you_card"
+    resource :thank_you_card, only: [ :edit, :update ], controller: "thank_you_card"
 
     # Referral Page editor
-    resource :referral_page, only: [:edit, :update], controller: "referral_page"
+    resource :referral_page, only: [ :edit, :update ], controller: "referral_page"
 
     # Media library
-    resources :media_assets, only: [:index, :create, :destroy]
+    resources :media_assets, only: [ :index, :create, :destroy ]
 
     # Integrations
-    resource :integrations, only: [:edit, :update, :destroy], controller: "integrations"
+    resource :integrations, only: [ :edit, :update, :destroy ], controller: "integrations"
 
     # AI image generation
-    resources :image_generations, only: [:create] do
+    resources :image_generations, only: [ :create ] do
       collection do
         get :status
       end
     end
 
     # Customer import
-    resources :customer_imports, only: [:create] do
+    resources :customer_imports, only: [ :create ] do
       collection do
         get :status
       end
     end
 
     # Settings (shop slug)
-    resource :settings, only: [:edit, :update], controller: "settings"
+    resource :settings, only: [ :edit, :update ], controller: "settings"
 
     # Legacy config route — redirect to dashboard
-    resource :config, only: [:edit, :update]
+    resource :config, only: [ :edit, :update ]
   end
 
   # Embedded app landing page (loaded in Shopify admin iframe)
@@ -102,16 +102,16 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy", as: :logout
     root to: "shops#index"
-    resources :shops, only: [:index, :show] do
+    resources :shops, only: [ :index, :show ] do
       member do
         post :suspend
         post :reactivate
         post :rescrape_brand
       end
     end
-    resources :web_analytics, only: [:index]
-    resources :scene_assets, except: [:show]
-    resources :prompt_templates, except: [:show] do
+    resources :web_analytics, only: [ :index ]
+    resources :scene_assets, except: [ :show ]
+    resources :prompt_templates, except: [ :show ] do
       member do
         post :test_generate
       end

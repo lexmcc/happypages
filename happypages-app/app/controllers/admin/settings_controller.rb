@@ -1,5 +1,4 @@
 class Admin::SettingsController < Admin::BaseController
-
   def edit
     @shop = Current.shop
     @latest_import = @shop&.customer_imports&.recent&.first

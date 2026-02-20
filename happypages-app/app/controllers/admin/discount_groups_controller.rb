@@ -1,5 +1,4 @@
 class Admin::DiscountGroupsController < Admin::BaseController
-
   def index
     @discount_groups = discount_groups_scope.includes(:discount_generations).order(is_active: :desc, created_at: :asc)
     @active_group = SharedDiscount.current(Current.shop)

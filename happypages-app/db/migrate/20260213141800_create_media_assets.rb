@@ -7,6 +7,6 @@ class CreateMediaAssets < ActiveRecord::Migration[8.1]
       t.integer :byte_size, null: false
       t.timestamps
     end
-    add_index :media_assets, [:shop_id, :created_at]
+    add_index :media_assets, [ :shop_id, :created_at ]
   end
 end

@@ -17,11 +17,11 @@ class AddShopIdToReferralRewards < ActiveRecord::Migration[8.1]
 
     # Replace global unique with shop-scoped unique
     remove_index :referral_rewards, :code, name: "index_referral_rewards_on_code"
-    add_index :referral_rewards, [:shop_id, :code], unique: true
+    add_index :referral_rewards, [ :shop_id, :code ], unique: true
   end
 
   def down
-    remove_index :referral_rewards, [:shop_id, :code]
+    remove_index :referral_rewards, [ :shop_id, :code ]
     add_index :referral_rewards, :code, unique: true, name: "index_referral_rewards_on_code"
     remove_reference :referral_rewards, :shop
   end

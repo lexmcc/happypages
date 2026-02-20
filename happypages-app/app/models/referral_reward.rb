@@ -15,7 +15,7 @@ class ReferralReward < ApplicationRecord
   scope :not_expired, -> { where("expires_at IS NULL OR expires_at > ?", Time.current) }
   scope :expired_but_not_marked, -> { where(status: %w[created applied_to_subscription]).where("expires_at <= ?", Time.current) }
   scope :for_subscription, ->(subscription_id) {
-    where(awtomic_subscription_id: [subscription_id, "gid://shopify/SubscriptionContract/#{subscription_id}"])
+    where(awtomic_subscription_id: [ subscription_id, "gid://shopify/SubscriptionContract/#{subscription_id}" ])
   }
 
   def mark_applied!(subscription_id:, customer_id:)

@@ -1,5 +1,4 @@
 class Api::ConfigsController < Api::BaseController
-
   def show
     # Scope configs to current shop
     scope = DiscountConfig.all

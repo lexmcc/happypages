@@ -1,5 +1,5 @@
 class Superadmin::ShopsController < Superadmin::BaseController
-  before_action :set_shop, only: [:show, :suspend, :reactivate, :rescrape_brand]
+  before_action :set_shop, only: [ :show, :suspend, :reactivate, :rescrape_brand ]
 
   def index
     @shops = Shop.all.order(created_at: :desc)
@@ -28,7 +28,7 @@ class Superadmin::ShopsController < Superadmin::BaseController
       .group(:event_type)
       .group("DATE(created_at)")
       .count
-      .transform_keys { |(type, date)| [type, date.to_date] }
+      .transform_keys { |(type, date)| [ type, date.to_date ] }
 
     @credential = @shop.shop_credential
     @generation_logs = @shop.generation_logs.recent.limit(50)

@@ -18,6 +18,6 @@ class CreateReferralRewards < ActiveRecord::Migration[8.1]
     add_index :referral_rewards, :code, unique: true
     add_index :referral_rewards, :status
     add_index :referral_rewards, :awtomic_subscription_id
-    add_index :referral_rewards, [:status, :expires_at]
+    add_index :referral_rewards, [ :status, :expires_at ]
   end
 end

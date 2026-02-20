@@ -148,7 +148,7 @@ class ShopifyDiscountService
 
     # If customer_id provided, restrict to that customer only
     customer_selection = if customer_id.present?
-      { customers: { add: [customer_id] } }
+      { customers: { add: [ customer_id ] } }
     else
       { all: true }
     end
@@ -285,7 +285,7 @@ class ShopifyDiscountService
 
     result = execute_graphql(mutation, {
       discountId: shared.shopify_discount_id,
-      codes: [{ code: code }]
+      codes: [ { code: code } ]
     })
 
     errors = result.dig("data", "discountRedeemCodeBulkAdd", "userErrors")
@@ -420,7 +420,7 @@ class ShopifyDiscountService
 
     result = execute_graphql(mutation, {
       discountId: generation.shopify_discount_id,
-      codes: [{ code: code }]
+      codes: [ { code: code } ]
     })
 
     errors = result.dig("data", "discountRedeemCodeBulkAdd", "userErrors")

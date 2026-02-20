@@ -19,7 +19,7 @@ module Analytics
       visitor_id = data["v"]
       session_id = data["s"]
 
-      return RESULT_INVALID if [token, event_name, visitor_id, session_id].any?(&:blank?)
+      return RESULT_INVALID if [ token, event_name, visitor_id, session_id ].any?(&:blank?)
 
       # Bot filtering
       return RESULT_BOT if ::CrawlerDetect.is_crawler?(user_agent)
@@ -117,7 +117,7 @@ module Analytics
       return {} unless props.is_a?(Hash)
       # Limit to 50 keys, truncate values
       props.first(50).to_h do |k, v|
-        [k.to_s[0, 64], v.to_s[0, 256]]
+        [ k.to_s[0, 64], v.to_s[0, 256] ]
       end
     end
   end

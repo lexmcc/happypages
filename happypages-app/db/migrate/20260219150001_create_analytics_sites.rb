@@ -13,6 +13,6 @@ class CreateAnalyticsSites < ActiveRecord::Migration[8.1]
 
     add_index :analytics_sites, :site_token, unique: true
     add_index :analytics_sites, :domain
-    add_index :analytics_sites, [:shop_id, :domain], unique: true
+    add_index :analytics_sites, [ :shop_id, :domain ], unique: true
   end
 end

@@ -1,5 +1,5 @@
 class Superadmin::PromptTemplatesController < Superadmin::BaseController
-  before_action :set_prompt_template, only: [:edit, :update, :destroy, :test_generate]
+  before_action :set_prompt_template, only: [ :edit, :update, :destroy, :test_generate ]
 
   def index
     @prompt_templates = PromptTemplate.order(:surface, :category, :key)

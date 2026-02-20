@@ -1,6 +1,6 @@
 class ShopifyAuthController < ApplicationController
   skip_before_action :set_current_shop
-  skip_before_action :verify_authenticity_token, only: [:callback]
+  skip_before_action :verify_authenticity_token, only: [ :callback ]
 
   SCOPES = "read_customers,write_customers,write_discounts,read_orders,read_products,read_themes"
 

@@ -1,8 +1,8 @@
-require 'net/http'
-require 'json'
+require "net/http"
+require "json"
 
 class AwtomicService
-  BASE_URL = 'https://api.awtomic.com'
+  BASE_URL = "https://api.awtomic.com"
 
   def initialize(api_key)
     @api_key = api_key
@@ -76,15 +76,15 @@ class AwtomicService
     http.use_ssl = true
 
     req = case method
-          when :get then Net::HTTP::Get.new(uri)
-          when :post then Net::HTTP::Post.new(uri)
-          when :put then Net::HTTP::Put.new(uri)
-          when :delete then Net::HTTP::Delete.new(uri)
-          end
+    when :get then Net::HTTP::Get.new(uri)
+    when :post then Net::HTTP::Post.new(uri)
+    when :put then Net::HTTP::Put.new(uri)
+    when :delete then Net::HTTP::Delete.new(uri)
+    end
 
-    req['x-api-key'] = @api_key
-    req['Accept'] = 'application/json'
-    req['Content-Type'] = 'application/json'
+    req["x-api-key"] = @api_key
+    req["Accept"] = "application/json"
+    req["Content-Type"] = "application/json"
 
     # Add JSON body for POST/PUT requests with params
     if %i[post put].include?(method) && params.any?

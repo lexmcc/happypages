@@ -1,5 +1,5 @@
 class Superadmin::SceneAssetsController < Superadmin::BaseController
-  before_action :set_scene_asset, only: [:edit, :update, :destroy]
+  before_action :set_scene_asset, only: [ :edit, :update, :destroy ]
 
   def index
     @scene_assets = SceneAsset.order(created_at: :desc)

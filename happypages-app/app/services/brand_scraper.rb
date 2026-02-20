@@ -208,7 +208,7 @@ class BrandScraper
       .reject { |c| %w[#000000 #ffffff #FFFFFF].include?(c) }
       .first(3)
 
-    brand_colors.any? ? brand_colors : ["#ff584d", "#154ffb", "#00C6F7"]
+    brand_colors.any? ? brand_colors : [ "#ff584d", "#154ffb", "#00C6F7" ]
   end
 
   # ── Build Final Profile ────────────────────────────────────
@@ -264,7 +264,7 @@ class BrandScraper
     r = ((r * 0.4) + (255 * 0.6)).round.clamp(0, 255)
     g = ((g * 0.4) + (255 * 0.6)).round.clamp(0, 255)
     b = ((b * 0.4) + (255 * 0.6)).round.clamp(0, 255)
-    "#%02x%02x%02x" % [r, g, b]
+    "#%02x%02x%02x" % [ r, g, b ]
   end
 
   # ── Shopify API Helper ─────────────────────────────────────

@@ -91,7 +91,7 @@ module Providers
         variables = {
           input: {
             id: customer_id,
-            metafields: [{ namespace: namespace, key: key, value: value, type: type }]
+            metafields: [ { namespace: namespace, key: key, value: value, type: type } ]
           }
         }
 
@@ -125,7 +125,7 @@ module Providers
         JSON.parse(response.body)
       rescue => e
         Rails.logger.error "Shopify API error: #{e.message}"
-        { "errors" => [{ "message" => e.message }] }
+        { "errors" => [ { "message" => e.message } ] }
       end
     end
   end

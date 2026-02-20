@@ -21,8 +21,8 @@ class ReferralEvent < ApplicationRecord
   scope :extension_events, -> { where(source: CHECKOUT_EXTENSION) }
   scope :referral_page_events, -> { where(source: REFERRAL_PAGE) }
 
-  scope :loads, -> { where(event_type: [EXTENSION_LOAD, PAGE_LOAD]) }
-  scope :clicks, -> { where(event_type: [SHARE_CLICK, COPY_CLICK]) }
+  scope :loads, -> { where(event_type: [ EXTENSION_LOAD, PAGE_LOAD ]) }
+  scope :clicks, -> { where(event_type: [ SHARE_CLICK, COPY_CLICK ]) }
 
   scope :in_period, ->(period) { where(created_at: period.ago..) }
 

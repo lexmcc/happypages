@@ -54,7 +54,7 @@ namespace :awtomic do
   end
 
   desc "Test webhook endpoint locally"
-  task :test_webhook, [:event_type] => :environment do |_t, args|
+  task :test_webhook, [ :event_type ] => :environment do |_t, args|
     event_type = args[:event_type] || "baSuccess"
 
     test_payloads = {

@@ -13,8 +13,8 @@ class CreateAnalyticsPayments < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :analytics_payments, [:analytics_site_id, :created_at]
-    add_index :analytics_payments, [:analytics_site_id, :referral_code], where: "referral_code IS NOT NULL", name: "idx_analytics_payments_site_referral"
-    add_index :analytics_payments, [:analytics_site_id, :order_id], unique: true, name: "idx_analytics_payments_site_order"
+    add_index :analytics_payments, [ :analytics_site_id, :created_at ]
+    add_index :analytics_payments, [ :analytics_site_id, :referral_code ], where: "referral_code IS NOT NULL", name: "idx_analytics_payments_site_referral"
+    add_index :analytics_payments, [ :analytics_site_id, :order_id ], unique: true, name: "idx_analytics_payments_site_order"
   end
 end

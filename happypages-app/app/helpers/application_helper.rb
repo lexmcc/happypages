@@ -86,13 +86,13 @@ module ApplicationHelper
             class: "hidden absolute z-20 mt-1 w-full bg-[#f4f4f0] border border-black/5 rounded-lg shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.1)] overflow-hidden"
           )
 
-          safe_join([hidden, button, menu])
+          safe_join([ hidden, button, menu ])
         end
       end
 
       hint = field[:hint] ? content_tag(:p, field[:hint], class: "mt-1 text-sm text-gray-500") : nil
 
-      safe_join([label, input, hint].compact)
+      safe_join([ label, input, hint ].compact)
     end
   end
 end

@@ -63,7 +63,7 @@ class RewardSubscriptionApplicationJob < ApplicationJob
 
     # Try numeric ID first, then full GID
     applied = false
-    [subscription_numeric_id, subscription_gid].each do |sub_id|
+    [ subscription_numeric_id, subscription_gid ].each do |sub_id|
       begin
         awtomic.add_discount(customer_id, sub_id, reward.code)
         applied = true

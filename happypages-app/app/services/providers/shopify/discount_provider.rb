@@ -54,7 +54,7 @@ module Providers
 
         result = execute_graphql(mutation, {
           discountId: generation.shopify_discount_id,
-          codes: [{ code: code }]
+          codes: [ { code: code } ]
         })
 
         errors = result.dig("data", "discountRedeemCodeBulkAdd", "userErrors")
@@ -128,7 +128,7 @@ module Providers
         value_input = build_value_input(discount_type, discount_value)
 
         customer_selection = if customer_id.present?
-          { customers: { add: [customer_id] } }
+          { customers: { add: [ customer_id ] } }
         else
           { all: true }
         end
@@ -286,7 +286,7 @@ module Providers
         JSON.parse(response.body)
       rescue => e
         Rails.logger.error "Shopify API error: #{e.message}"
-        { "errors" => [{ "message" => e.message }] }
+        { "errors" => [ { "message" => e.message } ] }
       end
     end
   end
