@@ -5,6 +5,21 @@
       <p class="text-gray-500 mt-1"><%= @shops.count %> total</p>
     </header>
 
+    <%# Search %>
+    <div class="mb-6">
+      <%= form_with url: superadmin_shops_path, method: :get, class: "flex gap-2" do |f| %>
+        <%= f.search_field :q, value: params[:q], placeholder: "Search by name or domain...",
+            class: "flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:ring-slate-500 focus:border-slate-500" %>
+        <% if params[:status].present? %>
+          <%= f.hidden_field :status, value: params[:status] %>
+        <% end %>
+        <%= f.submit "Search", class: "px-4 py-2 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+        <% if params[:q].present? %>
+          <%= link_to "Clear", superadmin_shops_path(status: params[:status]), class: "px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 flex items-center" %>
+        <% end %>
+      <% end %>
+    </div>
+
     <%# Status filter tabs %>
     <div class="flex gap-2 mb-6">
       <% [["All", nil], ["Active", "active"], ["Suspended", "suspended"], ["Uninstalled", "uninstalled"]].each do |label, status| %>
@@ -26,6 +41,7 @@
             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Installed</th>
             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Referrals</th>
             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Slug</th>
+            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider"></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
@@ -51,12 +67,15 @@
               <td class="px-6 py-4 text-sm text-gray-600"><%= shop.created_at.strftime("%b %d, %Y") %></td>
               <td class="px-6 py-4 text-sm text-gray-900 font-medium tabular-nums"><%= @referral_counts[shop.id] || 0 %></td>
               <td class="px-6 py-4 text-sm text-gray-500 font-mono"><%= shop.slug %></td>
+              <td class="px-6 py-4 text-right">
+                <%= link_to "Manage →", manage_superadmin_shop_path(shop), class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+              </td>
             </tr>
           <% end %>
 
           <% if @shops.empty? %>
             <tr>
-              <td colspan="6" class="px-6 py-12 text-center text-gray-400">No shops found</td>
+              <td colspan="7" class="px-6 py-12 text-center text-gray-400">No shops found</td>
             </tr>
           <% end %>
         </tbody>

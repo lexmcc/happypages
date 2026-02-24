@@ -1,0 +1,208 @@
+<div class="py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <%# Header %>
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-3xl font-bold text-gray-900"><%= @shop.name %></h1>
+          <% badge_class = case @shop.status
+             when "active" then "bg-green-100 text-green-700"
+             when "suspended" then "bg-red-100 text-red-700"
+             when "uninstalled" then "bg-gray-100 text-gray-500"
+             end %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+            <%= @shop.status %>
+          </span>
+        </div>
+        <p class="text-gray-500 mt-1"><%= @shop.domain %> &middot; <%= @shop.platform_type %><%= " &middot; since #{@shop.created_at.strftime("%b %d, %Y")}".html_safe if @shop.created_at %></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <%= button_to "View as shop owner →", impersonate_superadmin_shop_path(@shop),
+            method: :post,
+            class: "px-4 py-2 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+        <%= link_to "← Back", superadmin_shops_path, class: "text-sm text-gray-500 hover:text-gray-700" %>
+      </div>
+    </header>
+
+    <% if flash[:notice] %>
+      <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-sm"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"><%= flash[:alert] %></div>
+    <% end %>
+
+    <div class="space-y-8">
+      <%# Features Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900">Features</h2>
+        </div>
+        <div class="px-6 py-4">
+          <% if @features.any? %>
+            <div class="space-y-3">
+              <% @features.each do |feature| %>
+                <div class="flex items-center justify-between py-2">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900"><%= feature.feature %></span>
+                    <% status_class = case feature.status
+                       when "active" then "bg-green-100 text-green-700"
+                       when "locked" then "bg-gray-100 text-gray-500"
+                       when "trial" then "bg-amber-100 text-amber-700"
+                       when "expired" then "bg-red-100 text-red-500"
+                       end %>
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= status_class %>"><%= feature.status %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <% ShopFeature::STATUSES.each do |status| %>
+                      <% next if status == feature.status %>
+                      <%= button_to status, superadmin_shop_shop_feature_path(@shop, feature),
+                          params: { shop_feature: { status: status } },
+                          method: :patch,
+                          class: "px-2 py-1 text-xs rounded border border-gray-200 hover:bg-gray-50 text-gray-600 cursor-pointer" %>
+                    <% end %>
+                    <%= button_to "Remove", superadmin_shop_shop_feature_path(@shop, feature),
+                        method: :delete,
+                        class: "px-2 py-1 text-xs rounded border border-red-200 hover:bg-red-50 text-red-600 cursor-pointer",
+                        data: { turbo_confirm: "Remove #{feature.feature}?" } %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No features configured</p>
+          <% end %>
+
+          <%# Add feature %>
+          <% available = ShopFeature::FEATURES - @features.map(&:feature) %>
+          <% if available.any? %>
+            <%= form_with url: superadmin_shop_shop_features_path(@shop), method: :post, class: "mt-4 flex gap-2" do |f| %>
+              <%= f.select :feature, available, {}, class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+              <%= f.select :status, ShopFeature::STATUSES, {}, class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+              <%= f.submit "Add Feature", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+
+      <%# Users Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">Users</h2>
+        </div>
+        <div class="px-6 py-4">
+          <% if @users.any? %>
+            <div class="space-y-3">
+              <% @users.each do |user| %>
+                <div class="flex items-center justify-between py-2">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900"><%= user.email %></span>
+                    <span class="ml-2 text-xs text-gray-400"><%= user.role || "owner" %></span>
+                    <% if user.shopify_user? %>
+                      <span class="ml-1 text-xs text-blue-500">(Shopify)</span>
+                    <% end %>
+                    <% if user.invite_accepted_at.present? %>
+                      <span class="ml-1 text-xs text-green-500">(accepted)</span>
+                    <% elsif user.invite_sent_at.present? %>
+                      <span class="ml-1 text-xs text-amber-500">(invite pending)</span>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= button_to "Send Invite", send_invite_superadmin_shop_shop_user_path(@shop, user),
+                        method: :post,
+                        class: "px-3 py-1.5 text-xs rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 cursor-pointer" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No users</p>
+          <% end %>
+
+          <%# Add user %>
+          <%= form_with url: superadmin_shop_shop_users_path(@shop), method: :post, class: "mt-4 flex gap-2" do |f| %>
+            <%= f.email_field :email, placeholder: "user@example.com", class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5 flex-1" %>
+            <%= f.select :role, User::ROLES, {}, class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+          <% end %>
+        </div>
+      </section>
+
+      <%# Integrations Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">Integrations</h2>
+        </div>
+        <div class="px-6 py-4">
+          <% if @integrations.any? %>
+            <div class="space-y-3">
+              <% @integrations.each do |integration| %>
+                <div class="flex items-center justify-between py-2">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900"><%= integration.provider %></span>
+                    <span class="ml-2 text-xs text-gray-400">(<%= integration.status %>)</span>
+                    <% if integration.shopify_domain.present? %>
+                      <span class="ml-2 text-xs text-gray-500"><%= integration.shopify_domain %></span>
+                    <% end %>
+                  </div>
+                  <div>
+                    <% if integration.shopify_access_token.present? %>
+                      <span class="text-xs text-green-500">Token: present</span>
+                    <% else %>
+                      <span class="text-xs text-gray-400">Token: missing</span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No integrations connected</p>
+          <% end %>
+        </div>
+      </section>
+
+      <%# Usage Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">Usage</h2>
+        </div>
+        <div class="px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= @shop.referrals.count %></p>
+            <p class="text-xs text-gray-500">Referrals</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= @shop.referral_events.count %></p>
+            <p class="text-xs text-gray-500">Events</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= @shop.shared_discounts.count %></p>
+            <p class="text-xs text-gray-500">Campaigns</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= @shop.media_assets.count %></p>
+            <p class="text-xs text-gray-500">Media Assets</p>
+          </div>
+        </div>
+      </section>
+
+      <%# Shopify-specific actions %>
+      <% if @shop.shopify? %>
+        <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-900">Shopify Actions</h2>
+          </div>
+          <div class="px-6 py-4 flex gap-3">
+            <%= button_to "Re-scrape Brand", rescrape_brand_superadmin_shop_path(@shop),
+                method: :post,
+                class: "px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 cursor-pointer" %>
+          </div>
+        </section>
+      <% end %>
+
+      <%# Quick links %>
+      <div class="flex gap-3 text-sm">
+        <%= link_to "View detail page →", superadmin_shop_path(@shop), class: "text-slate-600 hover:text-slate-900" %>
+      </div>
+    </div>
+  </div>
+</div>
