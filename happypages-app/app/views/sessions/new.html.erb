@@ -8,58 +8,74 @@
         happypages.
       </h2>
       <p class="mt-2 text-center text-sm text-gray-500">
-        sign in to manage your referral program.
+        sign in to manage your account.
       </p>
     </div>
 
     <% if flash[:alert] %>
       <div class="rounded-md bg-red-50 p-4">
-        <div class="flex">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-red-800"><%= flash[:alert] %></p>
-          </div>
-        </div>
+        <p class="text-sm font-medium text-red-800"><%= flash[:alert] %></p>
       </div>
     <% end %>
 
     <% if flash[:notice] %>
       <div class="rounded-md bg-green-50 p-4">
-        <div class="flex">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-green-800"><%= flash[:notice] %></p>
-          </div>
-        </div>
+        <p class="text-sm font-medium text-green-800"><%= flash[:notice] %></p>
       </div>
     <% end %>
 
-    <div class="mt-8 space-y-6">
+    <%# Email + password login (primary) %>
+    <%= form_with url: login_path, method: :post, class: "mt-8 space-y-5" do |f| %>
       <div>
-        <label for="shop" class="block text-sm font-medium text-gray-700 text-center">
-          your shopify store domain
-        </label>
-        <div class="mt-1 flex justify-center rounded-lg shadow-sm">
-          <input type="text"
-                 name="shop"
-                 id="shop"
-                 class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-lg border border-black/10 bg-white focus:ring-[#ff584d] focus:border-[#ff584d] sm:text-sm"
-                 placeholder="your-store">
-          <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-black/10 bg-white text-gray-500 sm:text-sm">
-            .myshopify.com
-          </span>
-        </div>
+        <label for="email" class="block text-sm font-medium text-gray-700">email</label>
+        <input type="email" name="email" id="email" autocomplete="email" required
+               value="<%= params[:email] %>"
+               class="mt-1 block w-full px-3 py-2 rounded-lg border border-black/10 bg-white focus:ring-[#ff584d] focus:border-[#ff584d] sm:text-sm"
+               placeholder="you@example.com">
       </div>
 
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">password</label>
+        <input type="password" name="password" id="password" autocomplete="current-password" required
+               class="mt-1 block w-full px-3 py-2 rounded-lg border border-black/10 bg-white focus:ring-[#ff584d] focus:border-[#ff584d] sm:text-sm">
+      </div>
+
+      <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#ff584d] hover:bg-[#e64d43] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff584d] cursor-pointer">
+        sign in
+      </button>
+    <% end %>
+
+    <%# Divider %>
+    <div class="relative">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-300"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="px-2 bg-[#f4f4f0] text-gray-500">or</span>
+      </div>
+    </div>
+
+    <%# Shopify OAuth (secondary) %>
+    <div>
+      <label for="shop" class="block text-sm font-medium text-gray-700 text-center">
+        install via shopify
+      </label>
+      <div class="mt-1 flex justify-center rounded-lg shadow-sm">
+        <input type="text"
+               name="shop"
+               id="shop"
+               class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-lg border border-black/10 bg-white focus:ring-[#ff584d] focus:border-[#ff584d] sm:text-sm"
+               placeholder="your-store">
+        <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-black/10 bg-white text-gray-500 sm:text-sm">
+          .myshopify.com
+        </span>
+      </div>
       <button type="button"
               onclick="redirectToShopify()"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#ff584d] hover:bg-[#e64d43] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff584d]">
+              class="mt-2 w-full flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff584d] cursor-pointer">
         connect with shopify
       </button>
-
-      <p class="text-center text-xs text-gray-500">
-        new merchants will be guided through the shopify app installation process.
-        <br>
-        existing users will be logged in automatically.
-      </p>
     </div>
   </div>
 </div>
@@ -72,10 +88,8 @@
       return;
     }
 
-    // Clean up the input - remove .myshopify.com if they added it
     let shop = shopInput.replace(/\.myshopify\.com$/, '');
 
-    // Validate shop name format
     if (!/^[\w-]+$/.test(shop)) {
       alert('Invalid store name. Use only letters, numbers, and hyphens.');
       return;
@@ -84,7 +98,6 @@
     window.location.href = '/auth/shopify?shop=' + encodeURIComponent(shop + '.myshopify.com');
   }
 
-  // Allow Enter key to submit
   document.getElementById('shop').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       redirectToShopify();
