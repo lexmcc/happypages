@@ -65,7 +65,7 @@ class WebhooksController < ApplicationController
              Providers::Custom::OrderHandler.extract_shop_domain(request)
 
     if domain
-      Current.shop = Shop.find_by(domain: domain)
+      Current.shop = Shop.find_by_shopify_domain(domain) || Shop.find_by(domain: domain)
     end
 
     unless Current.shop

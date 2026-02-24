@@ -28,7 +28,12 @@ Rails.application.routes.draw do
 
   # Session management
   get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
+
+  # Invite flow
+  get "invite/:token", to: "invites#show", as: :invite
+  patch "invite/:token", to: "invites#update"
 
   # Shopify OAuth
   get "auth/shopify", to: "shopify_auth#initiate"
@@ -82,6 +87,9 @@ Rails.application.routes.draw do
       end
     end
 
+    # Feature preview pages (locked features)
+    resources :features, only: [ :show ], param: :feature_name
+
     # Settings (shop slug)
     resource :settings, only: [ :edit, :update ], controller: "settings"
 
@@ -102,14 +110,22 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy", as: :logout
     root to: "shops#index"
-    resources :shops, only: [ :index, :show ] do
+    resources :shops, only: [ :index, :show, :create ] do
       member do
+        get :manage
         post :suspend
         post :reactivate
         post :rescrape_brand
       end
+      resources :shop_features, only: [ :create, :update, :destroy ]
+      resources :shop_users, only: [ :create ] do
+        member do
+          post :send_invite
+        end
+      end
+      post :impersonate, on: :member
     end
-    resources :web_analytics, only: [ :index ]
+    resource :impersonation, only: [ :destroy ], controller: "impersonations"
     resources :scene_assets, except: [ :show ]
     resources :prompt_templates, except: [ :show ] do
       member do

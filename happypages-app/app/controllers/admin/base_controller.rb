@@ -1,4 +1,6 @@
 class Admin::BaseController < ApplicationController
+  include Admin::Impersonatable
+
   layout "admin"
 
   skip_before_action :set_current_shop
@@ -19,6 +21,16 @@ class Admin::BaseController < ApplicationController
   end
 
   def require_login
+    # Superadmin impersonation bypasses normal user login
+    if impersonating?
+      unless session[:super_admin]
+        session.delete(:impersonating_shop_id)
+        session.delete(:impersonation_started_at)
+        redirect_to login_path, alert: "Please log in"
+      end
+      return
+    end
+
     unless current_user
       session[:return_to] = request.fullpath
       redirect_to login_path, alert: "Please log in"
@@ -37,6 +49,10 @@ class Admin::BaseController < ApplicationController
   helper_method :current_user
 
   def set_current_shop_from_user
-    Current.shop = current_user&.shop
+    if impersonating?
+      Current.shop = impersonated_shop
+    else
+      Current.shop = current_user&.shop
+    end
   end
 end
