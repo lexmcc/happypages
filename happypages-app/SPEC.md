@@ -11,12 +11,13 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 
 ### Key Components
 
-- **Shopify OAuth** — self-service install flow, creates Shop + ShopCredential + User in one transaction. Detects scope upgrades on re-auth and triggers brand re-scrape + imagery generation for returning shops.
+- **Dual auth** — Shopify OAuth (self-service install, creates Shop + ShopCredential + ShopIntegration + User) and email/password login (invite-only, BCrypt). Users have roles (`owner`, `admin`, `member`) and invite tokens. Rate-limited login (20 req/min/IP).
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
-- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Referral events tracked via `ReferralEvent` model (renamed from `AnalyticsEvent` to free the `analytics_` namespace for web analytics).
-- **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII)
-- **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin.
+- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Referral events tracked via `ReferralEvent` model.
+- **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback.
+- **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
+- **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin, super_admin_impersonating.
 - **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
 
 ### Brand Scraping & AI Imagery
@@ -38,6 +39,7 @@ Automated brand analysis and marketing image generation pipeline powered by Gemi
 
 ### Admin UI
 
+- **Collapsible sidebar** — persistent left nav with feature-gated sections. Collapsible on desktop (icon-only mode persisted to localStorage via Stimulus). Mobile: slide-out drawer with backdrop. Shows active features with icons; locked features show lock icon and link to feature preview pages. Section headers group related features (Main, Marketing, Insights).
 - **Analytics Dashboard** — web analytics dashboard with KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Powered by `Analytics::DashboardQueryService`. URL-based period/filter/comparison state via Stimulus filter controller. Also available in superadmin with site picker.
 - **Referral Page** — configurable customer-facing referral page editor with inline media picker
 - **Thank You Card** — checkout extension configuration with inline media picker
@@ -52,9 +54,9 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 
 - **Login** — email + BCrypt password verified against `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_PASSWORD_DIGEST` env vars. Rate-limited to 5 attempts/min/IP. Failed attempts logged.
 - **Shop list** — all shops ordered by install date, filterable by status (active/suspended/uninstalled). Shows referral counts per shop.
-- **Shop detail** — four-tab view (Referrals, Campaigns, Analytics, Credentials) with audit logging on each view. Referral search by code only (encrypted fields can't be queried). No emails displayed.
+- **Shop management** — per-shop page with feature toggles (activate/lock per feature), user management (create users, send invites), integration status, and audit log. Audit logging on all management actions.
 - **Suspend / Reactivate** — status management with confirmation dialogs and audit trail. Reactivate guarded to suspended-only (can't reactivate uninstalled shops).
-- **Credentials tab** — shows integration connection status (Present/Missing/Connected) without exposing actual tokens.
+- **Impersonation** — "View as shop owner" button on shop management page sets `session[:impersonating_shop_id]` and redirects to admin dashboard. Fixed 40px banner shows impersonated shop name with "Back to Superadmin" and "Exit" buttons. 4-hour timeout via `Admin::Impersonatable` concern. Audit logged as `super_admin_impersonating` actor.
 - **Brand & AI tab** — view shop's brand profile, trigger re-scrape, see generation logs and quality scores.
 - **Prompt Templates** (`/superadmin/prompt_templates`) — CRUD for AI prompt templates with test-generate against any shop's brand profile.
 - **Scene Assets** (`/superadmin/scene_assets`) — upload and manage reference images for image generation, organized by category/mood/tags.
@@ -136,11 +138,11 @@ Lightweight, self-hosted web analytics for tracking page views, custom events, a
 | Priority | Issue | Notes |
 |----------|-------|-------|
 | High | No API auth on `/api/*` endpoints | Header-only shop identification, no HMAC/token |
-| High | Zero automated tests | No test suite at all — model + webhook tests at minimum |
 | Medium | Broad `rescue => e` in webhooks | Swallows errors silently — rescue specific exceptions |
 | Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
 | Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
 | Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
+| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 118+ specs (model, request, concern) |
 
 ### Housekeeping
 - [ ] Delete old custom distribution app from Partner Dashboard

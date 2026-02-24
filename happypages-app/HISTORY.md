@@ -76,6 +76,12 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 20** - Analytics dashboard UI (Chunk 3): KPIs with sparklines, time series chart, top pages/referrers/UTMs, geography, devices, goals, revenue attribution. Admin + superadmin.
 - **Feb 20** - Auto-create analytics site on first visit with setup page showing personalised tracking snippet
 
+### Week 10: Platform Architecture Refactor (Feb 20, 2026)
+
+- **Feb 20** - Platform architecture: 5-chunk refactor building ShopFeature/ShopIntegration models, email auth, collapsible sidebar, superadmin shop management, and impersonation — all TDD with 118 passing specs
+- **Feb 20** - Superadmin impersonation: "View as shop owner" with 4-hour timeout, fixed banner, audit trail
+- **Feb 20** - Collapsible sidebar with feature gating: locked features show lock icon + preview link, desktop collapse to icon-only mode
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

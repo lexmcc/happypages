@@ -118,6 +118,30 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Empty hostname is allowed (some environments don't set it)
 - **Lesson**: Public-token analytics systems need hostname validation — it's the only defense against data pollution
 
+### AuditLog Action Names Must Match ACTIONS Constant (Feb 20, 2026)
+- `AuditLog` validates `action` against `ACTIONS` constant (`create`, `update`, `delete`, `view`, `login`, `logout`, `suspend`, `reactivate`, `webhook_receive`, `data_request`, `customer_redact`, `shop_redact`)
+- Using Rails-style names like `"destroy"` or custom names like `"create_user"` or `"send_invite"` causes `ActiveRecord::RecordInvalid` — the `audit!` call raises, not the main action
+- **Lesson**: Always check the model's validation constant before calling `audit!`. Use generic actions (`create`, `update`, `delete`) with specific details in the JSONB `details` column.
+
+### Ruby Module Inclusion: Class Methods Take Precedence (Feb 20, 2026)
+- `include Admin::Impersonatable` in `Admin::BaseController` places concern methods BELOW class methods in the MRO
+- If the class defines `require_login` and the concern also defines `require_login`, the class method wins — the concern's version is never called
+- **Fix**: Keep the concern for helpers (`impersonating?`, `impersonated_shop`) and `before_action` callbacks only. Integrate impersonation logic directly into the class's existing methods.
+- **Lesson**: Concerns can't override methods already defined in the including class. Use `before_action` callbacks or `prepend` instead of `include` if you need to override.
+
+### `perform_enqueued_jobs` Required for `deliver_later` in Request Specs (Feb 20, 2026)
+- `deliver_later` enqueues a job but doesn't execute it synchronously — `ActionMailer::Base.deliveries` stays empty
+- `include ActiveJob::TestHelper` and wrap assertions in `perform_enqueued_jobs { ... }` to actually run the mailer job
+- Alternatively, use `assert_enqueued_emails` to test that the job was enqueued without executing it
+- **Lesson**: In request specs testing email delivery, always use `perform_enqueued_jobs` or `assert_enqueued_emails`
+
+### Rendering Manage Template for Unsaved Records Crashes (Feb 20, 2026)
+- `render :manage, status: :unprocessable_entity` for a shop that failed validation crashes because:
+  - `@shop.created_at` is nil → `strftime` raises NoMethodError
+  - Route helpers like `superadmin_shop_path(@shop)` need a persisted record with an id
+- **Fix**: Use `redirect_to` with flash alert instead of re-rendering the manage template for failed creates
+- **Lesson**: Complex show/manage templates with route helpers and timestamp displays can't render for unpersisted records — redirect on create failure instead
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -247,4 +271,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: If a controller action calls `render "name"`, the file is a template (no underscore). If called via `render partial:`, it needs an underscore.
 
 ---
-*Updated: Feb 20, 2026 (cart sync race condition, ERB partial naming)*
+*Updated: Feb 20, 2026 (platform architecture: audit actions, module MRO, perform_enqueued_jobs, unsaved record rendering)*

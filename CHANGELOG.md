@@ -7,6 +7,13 @@ Dated record of shipped features across both products.
 - **Analytics dashboard UI (Chunk 3)** — full web analytics dashboard replacing the old referral event page. KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Available in both admin and superadmin (with site picker). 3 Stimulus controllers + 8 shared partials + DashboardQueryService.
 - **Auto-create analytics site** — first visit to `/admin/analytics` auto-provisions an `Analytics::Site` from the shop's domain and shows a setup page with personalised tracking snippet and install instructions
 - **Analytics setup page cleanup** — removed dead-end "Go to dashboard" link that stranded users away from the snippet/instructions
+- **Platform architecture (5 chunks):**
+  - **Chunk 1: Data models** — `ShopFeature` (per-shop feature gating with active/locked/trial/expired statuses) and `ShopIntegration` (per-provider encrypted credentials replacing ShopCredential). User roles (owner/admin/member) and invite columns. Data migration from ShopCredential → ShopIntegration. Shop gets `feature_enabled?`, `integration_for`, `find_by_shopify_domain` helpers.
+  - **Chunk 2: Email auth** — email/password login with BCrypt, invite-only user creation flow with tokenized invite links, `UserMailer` for invite emails, rate-limited login (20 req/min/IP). Session timeout (24h).
+  - **Chunk 3: Collapsible sidebar** — persistent left nav replacing top nav bar. Feature-gated sections (active features show normally, locked features show lock icon + preview link). Collapsible on desktop with icon-only mode persisted to localStorage. Mobile slide-out drawer with backdrop. Stimulus `sidebar_controller`.
+  - **Chunk 4: Superadmin shop management** — per-shop management page with feature toggles, user management (create + invite), integration status display. Shop creation from superadmin. Audit logging on all management actions.
+  - **Chunk 5: Superadmin impersonation** — "View as shop owner" from superadmin. Fixed banner in admin showing impersonated shop with exit controls. 4-hour timeout. `Admin::Impersonatable` concern. Webhook domain lookup via `Shop.find_by_shopify_domain`. Removed superadmin web analytics (now accessed via impersonation).
+- **RSpec test suite** — 118 specs across models, requests, and concerns. Full TDD for all platform architecture chunks.
 
 ## 2026-02-19
 

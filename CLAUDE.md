@@ -204,6 +204,9 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Tabs controller**: `tabs_controller.js` is shared between admin settings and superadmin views — index-based (`data-index`), slate colors
 - **Rate limiting**: `rack-attack` gem, config in `config/initializers/rack_attack.rb`
 - **Super admin**: `/superadmin` namespace, env-var BCrypt auth (`SUPER_ADMIN_EMAIL` + `SUPER_ADMIN_PASSWORD_DIGEST`), 2-hour session timeout, dark slate theme. Controllers inherit `Superadmin::BaseController`.
+- **Impersonation**: `Admin::Impersonatable` concern on `Admin::BaseController`. Session keys: `impersonating_shop_id`, `impersonation_started_at`. 4-hour timeout. Banner partial in admin layout. Audit actor: `super_admin_impersonating`.
+- **Feature gating**: `ShopFeature` model (FEATURES constant, active/locked/trial/expired). `shop.feature_enabled?("referrals")` check. Sidebar renders features dynamically.
+- **Credential model**: `ShopIntegration` holds per-provider encrypted creds (shopify, woocommerce, custom). `shop.integration_for("shopify")`. `ShopCredential` is legacy read-only fallback.
 - **Startup script**: `start.sh` runs `db:prepare` (handles empty + existing DBs) then backfills missing slugs
 - **Brand & AI pipeline**: `BrandScrapeJob` → `ImageGenerationJob` chain. Gemini client in `app/services/gemini_client.rb`. Prompt templates interpolate `{variable}` syntax.
 - **SolidQueue**: PostgreSQL-backed job queue, config in `config/queue.yml`. Production adapter set in `config/environments/production.rb`.
@@ -247,3 +250,6 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Gemini API key**: `GEMINI_API_KEY` env var required for brand scraping and image generation
 - **Analytics namespace**: Use `::CrawlerDetect` and `::DeviceDetector` (leading `::`) inside `module Analytics` to avoid Ruby resolving them as `Analytics::CrawlerDetect`
 - **`ReferralEvent` not `AnalyticsEvent`**: The referral app's event model was renamed — grep for `AnalyticsEvent` should return zero results
+- **AuditLog action names**: Must match `AuditLog::ACTIONS` constant exactly — use `"delete"` not `"destroy"`, use generic actions with details in JSONB `details` column
+- **Concerns can't override class methods**: `include` places module methods below class methods in MRO. Use `before_action` callbacks or `prepend` if override is needed.
+- **`deliver_later` in request specs**: Needs `include ActiveJob::TestHelper` + `perform_enqueued_jobs { ... }` block to actually execute mailer jobs
