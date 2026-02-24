@@ -67,6 +67,8 @@
     .section { margin-bottom: 56px; }
 
     /* Accent bar */
+    .brand-header { background: var(--brown); padding: 24px 0; text-align: center; margin-bottom: 32px; border-radius: 8px; }
+    .brand-header-logo { height: 64px; }
     .accent-bar { width: 48px; height: 4px; background: var(--pink); margin-bottom: 32px; border-radius: 2px; }
 
     /* Swatch grid */
@@ -175,6 +177,8 @@
     @media (max-width: 600px) {
       .page { padding: 48px 20px; }
 
+      .brand-header-logo { height: 48px; }
+
       .swatch-card { flex: 1 1 0; width: auto; min-width: 0; }
       .swatch-block { height: 72px; font-size: 11px; padding: 6px 8px; }
       .swatch-card.primary .swatch-block { height: 88px; }
@@ -230,8 +234,10 @@
   <div class="page">
 
     <!-- Header -->
+    <div class="brand-header">
+      <img src="images/oat-cult-logo-pinkpng.png" alt="Oat Cult" class="brand-header-logo">
+    </div>
     <div class="section">
-      <h1>oat cult.</h1>
       <p class="subtitle">web brand system — overnight oats with live cultures, done properly. for health-conscious buyers who want bold flavour without the boring wellness aesthetic.</p>
       <div class="accent-bar"></div>
     </div>
