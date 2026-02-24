@@ -27,3 +27,7 @@ Rack::Attack.throttle("specs/message", limit: 1, period: 3) do |req|
     req.path
   end
 end
+
+Rack::Attack.throttle("specs/guest/message", limit: 1, period: 3) do |req|
+  req.path[%r{^/specs/session/(.+)/message$}, 1] if req.post?
+end

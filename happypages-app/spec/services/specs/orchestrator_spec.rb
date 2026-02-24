@@ -331,6 +331,110 @@ RSpec.describe Specs::Orchestrator do
     end
   end
 
+  describe "request_handoff tool handling" do
+    let(:handoff_response) do
+      {
+        "content" => [
+          { "type" => "text", "text" => "I think we need the client's input here." },
+          {
+            "type" => "tool_use",
+            "id" => "toolu_handoff1",
+            "name" => "request_handoff",
+            "input" => {
+              "reason" => "Need brand direction from client",
+              "summary" => "Covered technical architecture. Need brand input.",
+              "suggested_questions" => ["What are your brand colors?", "What tone?"],
+              "suggested_role" => "designer"
+            }
+          }
+        ],
+        "stop_reason" => "tool_use",
+        "usage" => { "input_tokens" => 600, "output_tokens" => 300 }
+      }
+    end
+
+    before do
+      allow_any_instance_of(AnthropicClient).to receive(:messages).and_return(handoff_response)
+    end
+
+    it "creates a Handoff record with correct attributes" do
+      user = create(:user, shop: session.shop, email: "admin@test.com")
+      session.update!(user: user)
+
+      expect {
+        orchestrator.process_turn("I don't know the brand colors", user: user)
+      }.to change(Specs::Handoff, :count).by(1)
+
+      handoff = Specs::Handoff.last
+      expect(handoff.reason).to eq("Need brand direction from client")
+      expect(handoff.summary).to eq("Covered technical architecture. Need brand input.")
+      expect(handoff.suggested_questions).to eq(["What are your brand colors?", "What tone?"])
+      expect(handoff.suggested_role).to eq("designer")
+      expect(handoff.from_user).to eq(user)
+      expect(handoff.from_name).to eq("admin@test.com")
+    end
+
+    it "does NOT auto-generate invite_token" do
+      orchestrator.process_turn("I don't know")
+      handoff = Specs::Handoff.last
+      expect(handoff.invite_token).to be_nil
+    end
+
+    it "returns request_handoff as tool_name in result" do
+      result = orchestrator.process_turn("I don't know")
+      expect(result[:tool_name]).to eq("request_handoff")
+    end
+
+    it "returns handoff_requested: true in result" do
+      result = orchestrator.process_turn("I don't know")
+      expect(result[:handoff_requested]).to be true
+    end
+  end
+
+  describe "message attribution" do
+    it "sets user_id on user messages when user: passed" do
+      user = create(:user, shop: session.shop)
+      orchestrator.process_turn("test", user: user)
+      user_msg = session.messages.where(role: "user").last
+      expect(user_msg.user).to eq(user)
+    end
+
+    it "leaves user_id nil when no user passed" do
+      orchestrator.process_turn("test")
+      user_msg = session.messages.where(role: "user").last
+      expect(user_msg.user).to be_nil
+    end
+  end
+
+  describe "active_user context" do
+    it "passes active_user hash to PromptBuilder when provided" do
+      active_user = { name: "Bob", role: "client" }
+      expect(Specs::PromptBuilder).to receive(:new).with(session, active_user: active_user).and_call_original
+
+      orchestrator.process_turn("test", active_user: active_user)
+    end
+
+    it "builds context from User when active_user not provided" do
+      user = create(:user, shop: session.shop, email: "dev@example.com", role: "admin")
+      expect(Specs::PromptBuilder).to receive(:new).with(session, active_user: { name: "dev@example.com", role: "admin" }).and_call_original
+
+      orchestrator.process_turn("test", user: user)
+    end
+
+    it "builds context from active_handoff when one exists" do
+      user = create(:user, shop: session.shop)
+      handoff = create(:specs_handoff, :accepted, session: session, to_name: "Client Bob", to_role: "client", from_name: "admin@test.com", summary: "Covered architecture", suggested_questions: ["What colors?"], turn_number: 1)
+
+      expect(Specs::PromptBuilder).to receive(:new) do |sess, active_user:|
+        expect(active_user[:name]).to eq("Client Bob")
+        expect(active_user[:role]).to eq("client")
+        expect(active_user[:handoff_context]).to include("Covered architecture")
+      end.and_call_original
+
+      orchestrator.process_turn("test", user: user)
+    end
+  end
+
   describe "error handling" do
     it "returns error hash for MaxTokensError" do
       allow_any_instance_of(AnthropicClient).to receive(:messages)

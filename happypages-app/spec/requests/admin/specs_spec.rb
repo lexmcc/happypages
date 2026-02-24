@@ -196,6 +196,64 @@ RSpec.describe "Admin::Specs", type: :request do
     end
   end
 
+  describe "POST /admin/specs/:id/message sets user_id" do
+    let(:project) { Specs::Project.create!(shop: shop, name: "Test") }
+    let!(:session) { Specs::Session.create!(project: project, shop: shop, user: user) }
+
+    let(:api_response) do
+      {
+        "content" => [
+          { "type" => "text", "text" => "Good question." },
+          { "type" => "tool_use", "id" => "toolu_123", "name" => "ask_question", "input" => { "question" => "What type?", "options" => [{ "label" => "Web", "description" => "Web app" }] } }
+        ],
+        "stop_reason" => "tool_use",
+        "usage" => { "input_tokens" => 100, "output_tokens" => 50 }
+      }
+    end
+
+    before do
+      allow_any_instance_of(AnthropicClient).to receive(:messages).and_return(api_response)
+    end
+
+    it "sets user_id on created user message" do
+      post message_admin_spec_path(project), params: { message: "test" }
+      user_msg = session.messages.where(role: "user").last
+      expect(user_msg.user).to eq(user)
+    end
+  end
+
+  describe "POST /admin/specs/:id/create_handoff" do
+    let(:project) { Specs::Project.create!(shop: shop, name: "Test") }
+    let!(:session) { Specs::Session.create!(project: project, shop: shop, user: user) }
+    let!(:handoff) { create(:specs_handoff, session: session, from_name: user.email, turn_number: 1) }
+
+    it "creates an external invite with token" do
+      post create_handoff_admin_spec_path(project), params: { to_name: "Bob Client" }
+      handoff.reload
+      expect(handoff.to_name).to eq("Bob Client")
+      expect(handoff.to_role).to eq("client")
+      expect(handoff.invite_token).to be_present
+      expect(response).to redirect_to(admin_spec_path(project))
+    end
+
+    it "creates an internal handoff to shop user" do
+      teammate = create(:user, shop: shop, email: "teammate@example.com")
+      post create_handoff_admin_spec_path(project), params: { to_user_id: teammate.id }
+      handoff.reload
+      expect(handoff.to_user).to eq(teammate)
+      expect(handoff.invite_accepted_at).to be_present
+      expect(session.reload.user).to eq(teammate)
+      expect(response).to redirect_to(admin_spec_path(project))
+    end
+
+    it "rejects when no pending handoff" do
+      handoff.update!(invite_accepted_at: Time.current, invite_token: SecureRandom.urlsafe_base64(32))
+      post create_handoff_admin_spec_path(project), params: { to_name: "Bob" }
+      expect(response).to redirect_to(admin_spec_path(project))
+      expect(flash[:alert]).to include("No pending handoff")
+    end
+  end
+
   describe "feature gating" do
     it "redirects to feature page when specs feature not active" do
       ShopFeature.where(shop: shop, feature: "specs").destroy_all

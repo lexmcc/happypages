@@ -161,6 +161,14 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - For `ask_question`/`ask_freeform` tools, the user's NEXT message is the tool_result (their answer)
 - **Lesson**: Anthropic's tool_use protocol is strict about message ordering — build a proper state machine, don't try to simplify the transcript format
 
+### Scope vs Method: Deferred-Token Handoff (Feb 24, 2026)
+- `Specs::Handoff` has a `.pending` scope: `where(invite_accepted_at: nil).where.not(invite_token: nil)` — requires a token to exist
+- But AI-created handoffs via `request_handoff` tool intentionally have NO invite_token yet (token is deferred until admin acts on it)
+- `Session#pending_handoff` initially used the `.pending` scope, which returned nil for AI-suggested handoffs because they had no token
+- The controller's `create_handoff` action then saw "no pending handoff" and redirected with an error
+- **Fix**: Changed `pending_handoff` to query `where(invite_accepted_at: nil, to_user_id: nil)` directly — matches handoffs that haven't been actioned yet, regardless of token presence
+- **Lesson**: When a model has a "pending" scope with a strict definition, a controller helper for "awaiting action" may need a different, broader query. Name them differently to avoid confusion.
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -290,4 +298,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: If a controller action calls `render "name"`, the file is a template (no underscore). If called via `render partial:`, it needs an underscore.
 
 ---
-*Updated: Feb 24, 2026 (specs engine: Active Storage validators, ENV.fetch in tests, Anthropic parallel tool_use)*
+*Updated: Feb 24, 2026 (specs engine chunk 3: deferred-token handoff scope gotcha)*

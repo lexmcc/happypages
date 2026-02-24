@@ -260,6 +260,27 @@ module Specs
               }
             }
           }
+        },
+        {
+          name: "request_handoff",
+          description: "Request that the session be handed off to another user. Call when the current user can't answer key questions and someone else on the project could.",
+          input_schema: {
+            type: "object",
+            required: %w[reason summary suggested_questions],
+            properties: {
+              reason: { type: "string", description: "Why a handoff is needed." },
+              summary: { type: "string", description: "Complete summary of everything covered so far." },
+              suggested_questions: {
+                type: "array",
+                items: { type: "string" },
+                description: "Specific questions the next person should answer."
+              },
+              suggested_role: {
+                type: "string",
+                description: "What kind of person should take over. e.g., 'designer', 'developer', 'business owner'."
+              }
+            }
+          }
         }
       ]
     end

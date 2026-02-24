@@ -6,6 +6,7 @@ RSpec.describe Specs::Session, type: :model do
     it { is_expected.to belong_to(:shop) }
     it { is_expected.to belong_to(:user).optional }
     it { is_expected.to have_many(:messages).class_name("Specs::Message").with_foreign_key(:specs_session_id).dependent(:delete_all) }
+    it { is_expected.to have_many(:handoffs).class_name("Specs::Handoff").with_foreign_key(:specs_session_id).dependent(:destroy) }
   end
 
   describe "validations" do
@@ -65,6 +66,34 @@ RSpec.describe Specs::Session, type: :model do
       create(:specs_session)
       completed = create(:specs_session, :completed)
       expect(Specs::Session.completed).to eq([completed])
+    end
+  end
+
+  describe "#active_handoff" do
+    let(:session) { create(:specs_session) }
+
+    it "returns the most recent accepted handoff" do
+      old = create(:specs_handoff, :accepted, session: session, turn_number: 1)
+      recent = create(:specs_handoff, :accepted, session: session, turn_number: 5, created_at: 1.hour.from_now)
+      expect(session.active_handoff).to eq(recent)
+    end
+
+    it "returns nil when no accepted handoffs" do
+      create(:specs_handoff, session: session, turn_number: 1)
+      expect(session.active_handoff).to be_nil
+    end
+  end
+
+  describe "#pending_handoff" do
+    let(:session) { create(:specs_session) }
+
+    it "returns the pending handoff with invite token" do
+      pending = create(:specs_handoff, :with_invite, session: session, invite_accepted_at: nil)
+      expect(session.pending_handoff).to eq(pending)
+    end
+
+    it "returns nil when no pending handoffs" do
+      expect(session.pending_handoff).to be_nil
     end
   end
 end

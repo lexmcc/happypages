@@ -38,6 +38,9 @@
       </div>
       <div class="flex items-center gap-3">
         <% if @session.status == "active" %>
+          <% if @session.pending_handoff %>
+            <span class="text-xs text-amber-600">handoff pending</span>
+          <% end %>
           <%= link_to "end session", complete_admin_spec_path(@project), method: :post, data: { turbo_method: :post, turbo_confirm: "End this session early?" }, class: "text-xs text-gray-400 hover:text-gray-600 transition-colors" %>
         <% else %>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">completed</span>
@@ -99,6 +102,11 @@
       <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
         <% @messages.each do |message| %>
           <%= render "admin/specs/message", message: message %>
+          <% if message.role == "assistant" && message.tool_name == "request_handoff" %>
+            <% if (handoff = @handoffs.find { |h| h.turn_number == message.turn_number }) %>
+              <%= render "admin/specs/handoff_card", handoff: handoff %>
+            <% end %>
+          <% end %>
         <% end %>
       </div>
     </div>
@@ -224,6 +232,11 @@
 
         <% @messages.each do |message| %>
           <%= render "admin/specs/message", message: message %>
+          <% if message.role == "assistant" && message.tool_name == "request_handoff" %>
+            <% if (handoff = @handoffs.find { |h| h.turn_number == message.turn_number }) %>
+              <%= render "admin/specs/handoff_card", handoff: handoff %>
+            <% end %>
+          <% end %>
         <% end %>
       </div>
     </div>

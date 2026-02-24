@@ -155,6 +155,15 @@ module Specs
       - States (if visible — hover, focus, disabled)
 
       Include the analysis summary in your response. The full analysis will be available when you generate the team spec — reference it in the design_tokens field.
+
+      ### Requesting Handoff
+
+      When a question is better answered by someone else on the project (a designer, the client, a developer), call `request_handoff` with:
+      - A clear reason for the handoff
+      - A summary of everything covered so far
+      - Suggested questions for the next person
+
+      Only suggest handoff when the current user genuinely can't answer. Don't hand off just because a question is hard.
     PROMPT
 
     PHASE_PROMPTS = {
@@ -248,9 +257,10 @@ module Specs
       %{turns_to_compress}
     PROMPT
 
-    def initialize(session)
+    def initialize(session, active_user: nil)
       @session = session
       @project = session.project
+      @active_user = active_user
     end
 
     def build
@@ -312,9 +322,28 @@ module Specs
     end
 
     def active_user
-      user = @session.user
-      return nil unless user
-      "## Active User\n\nYou're talking to #{user.email}."
+      parts = ["## Active User"]
+
+      if @active_user
+        parts << "You're talking to #{@active_user[:name]} (#{@active_user[:role] || 'participant'})."
+        if @active_user[:handoff_context].present?
+          parts << @active_user[:handoff_context]
+        end
+      elsif @session.user
+        parts << "You're talking to #{@session.user.email}."
+      else
+        return nil
+      end
+
+      if @session.handoffs.any?
+        parts << "\n### Handoff History"
+        @session.handoffs.order(:created_at).each do |h|
+          status = h.accepted? ? "accepted by #{h.to_name}" : (h.pending? ? "pending" : "internal to #{h.to_name}")
+          parts << "- Turn #{h.turn_number}: #{h.from_name} → #{status}. Reason: #{h.reason}"
+        end
+      end
+
+      parts.join("\n\n")
     end
 
     def format_accumulated_context

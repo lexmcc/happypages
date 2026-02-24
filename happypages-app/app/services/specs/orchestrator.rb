@@ -8,13 +8,14 @@ module Specs
       @client = AnthropicClient.new
     end
 
-    def process_turn(user_text, image: nil)
+    def process_turn(user_text, image: nil, user: nil, active_user: nil)
       ActiveRecord::Base.transaction do
         @session.lock!
 
         compress_if_needed
         update_phase
-        system_prompt = Specs::PromptBuilder.new(@session).build
+        prompt_context = active_user || build_active_user_context(user)
+        system_prompt = Specs::PromptBuilder.new(@session, active_user: prompt_context).build
         model = select_model(user_text)
         tools = Specs::ToolDefinitions.v1
         api_messages = build_api_messages(user_text, image: image)
@@ -44,7 +45,8 @@ module Specs
         user_message = @session.messages.create!(
           role: "user",
           content: user_text,
-          turn_number: next_turn
+          turn_number: next_turn,
+          user: user
         )
         user_message.image.attach(image) if image
 
@@ -152,6 +154,22 @@ module Specs
         when "generate_team_spec"
           @session.team_spec = block["input"]
           tool_results << { "type" => "tool_result", "tool_use_id" => block["id"], "content" => "Team spec generated successfully." }
+        when "request_handoff"
+          input = block["input"]
+          @session.handoffs.create!(
+            from_user: @session.user,
+            from_name: @session.user&.email || "System",
+            reason: input["reason"],
+            summary: input["summary"],
+            suggested_questions: input["suggested_questions"] || [],
+            suggested_role: input["suggested_role"],
+            turn_number: @session.turns_used + 1
+          )
+          tool_results << {
+            "type" => "tool_result",
+            "tool_use_id" => block["id"],
+            "content" => "Handoff request registered. The session owner will be notified to invite the next participant."
+          }
         when "ask_question", "ask_freeform"
           # These wait for user input — no auto tool_result needed now.
           # The NEXT process_turn call handles the tool_result.
@@ -219,6 +237,20 @@ module Specs
       @session.phase = phases[[current_idx, new_idx].max]
     end
 
+    def build_active_user_context(user)
+      return nil unless user || @session.active_handoff
+
+      if (handoff = @session.active_handoff)
+        {
+          name: handoff.to_name || user&.email,
+          role: handoff.to_role || user&.role,
+          handoff_context: "This session was handed off from #{handoff.from_name} at turn #{handoff.turn_number}. Their summary:\n\"#{handoff.summary}\"\n\nSuggested questions for you:\n#{handoff.suggested_questions.map { |q| "- #{q}" }.join("\n")}"
+        }
+      elsif user
+        { name: user.email, role: user.role }
+      end
+    end
+
     def select_model(user_text)
       return AnthropicClient::OPUS if @session.phase == "generate"
       return AnthropicClient::OPUS if user_text.length > 500 && user_text.count("?") >= 2
@@ -243,7 +275,8 @@ module Specs
         turn_budget: @session.turn_budget,
         status: @session.status,
         client_brief: @session.client_brief,
-        team_spec: @session.team_spec
+        team_spec: @session.team_spec,
+        handoff_requested: @session.handoffs.where(turn_number: assistant_message.turn_number).exists?
       }
     end
   end

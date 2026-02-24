@@ -40,15 +40,15 @@ RSpec.describe Specs::PromptBuilder do
       expect(dynamic).to include("checkout redesign")
     end
 
-    it "v1 references all 5 tools" do
+    it "v1 references all 6 tools" do
       static = result[0][:text]
       expect(static).to include("ask_question")
       expect(static).to include("ask_freeform")
       expect(static).to include("analyze_image")
       expect(static).to include("generate_client_brief")
       expect(static).to include("generate_team_spec")
+      expect(static).to include("request_handoff")
       expect(static).not_to include("estimate_effort")
-      expect(static).not_to include("request_handoff")
     end
   end
 
@@ -109,6 +109,39 @@ RSpec.describe Specs::PromptBuilder do
     it "omits user section when no user" do
       result = builder.build
       expect(result[1][:text]).not_to include("Active User")
+    end
+  end
+
+  describe "active user with handoff context" do
+    it "includes handoff summary when active_user has handoff_context" do
+      active_user = {
+        name: "Bob Client",
+        role: "client",
+        handoff_context: "This session was handed off from admin@test.com. Summary: covered architecture."
+      }
+      result = described_class.new(session, active_user: active_user).build
+      dynamic = result[1][:text]
+      expect(dynamic).to include("Bob Client")
+      expect(dynamic).to include("client")
+      expect(dynamic).to include("covered architecture")
+    end
+
+    it "shows handoff history when session has handoffs" do
+      create(:specs_handoff, :accepted, session: session, from_name: "admin@test.com", to_name: "Bob Client", reason: "Need brand input", turn_number: 3)
+      active_user = { name: "Bob Client", role: "client" }
+      result = described_class.new(session.reload, active_user: active_user).build
+      dynamic = result[1][:text]
+      expect(dynamic).to include("Handoff History")
+      expect(dynamic).to include("admin@test.com")
+      expect(dynamic).to include("Need brand input")
+    end
+
+    it "adapts to guest context" do
+      active_user = { name: "External Client", role: "client" }
+      result = described_class.new(session, active_user: active_user).build
+      dynamic = result[1][:text]
+      expect(dynamic).to include("External Client")
+      expect(dynamic).to include("client")
     end
   end
 end

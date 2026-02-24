@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_100002) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -485,6 +485,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_100002) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "specs_handoffs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "from_name", null: false
+    t.bigint "from_user_id"
+    t.datetime "invite_accepted_at"
+    t.datetime "invite_expires_at"
+    t.string "invite_token"
+    t.text "reason", null: false
+    t.bigint "specs_session_id", null: false
+    t.jsonb "suggested_questions", default: []
+    t.string "suggested_role"
+    t.text "summary", null: false
+    t.string "to_name"
+    t.string "to_role"
+    t.bigint "to_user_id"
+    t.integer "turn_number", null: false
+    t.index ["from_user_id"], name: "index_specs_handoffs_on_from_user_id"
+    t.index ["invite_token"], name: "index_specs_handoffs_on_invite_token", unique: true, where: "(invite_token IS NOT NULL)"
+    t.index ["specs_session_id"], name: "index_specs_handoffs_on_specs_session_id"
+    t.index ["to_user_id"], name: "index_specs_handoffs_on_to_user_id"
+  end
+
   create_table "specs_messages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -497,8 +519,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_100002) do
     t.jsonb "tool_calls"
     t.string "tool_name"
     t.integer "turn_number", null: false
+    t.bigint "user_id"
     t.index ["specs_session_id", "turn_number"], name: "index_specs_messages_on_specs_session_id_and_turn_number"
     t.index ["specs_session_id"], name: "index_specs_messages_on_specs_session_id"
+    t.index ["user_id"], name: "index_specs_messages_on_user_id"
   end
 
   create_table "specs_projects", force: :cascade do |t|
@@ -581,7 +605,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_100002) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "specs_handoffs", "specs_sessions"
+  add_foreign_key "specs_handoffs", "users", column: "from_user_id"
+  add_foreign_key "specs_handoffs", "users", column: "to_user_id"
   add_foreign_key "specs_messages", "specs_sessions"
+  add_foreign_key "specs_messages", "users"
   add_foreign_key "specs_projects", "shops"
   add_foreign_key "specs_sessions", "shops"
   add_foreign_key "specs_sessions", "specs_projects"

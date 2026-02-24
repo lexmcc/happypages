@@ -9,6 +9,7 @@ module Specs
     belongs_to :shop
     belongs_to :user, optional: true
     has_many :messages, class_name: "Specs::Message", foreign_key: :specs_session_id, dependent: :delete_all
+    has_many :handoffs, class_name: "Specs::Handoff", foreign_key: :specs_session_id, dependent: :destroy
 
     validates :status, presence: true, inclusion: { in: STATUSES }
     validates :phase, presence: true, inclusion: { in: PHASES }
@@ -23,6 +24,15 @@ module Specs
     def budget_percentage
       return 0.0 if turn_budget.zero?
       turns_used.to_f / turn_budget
+    end
+
+    def active_handoff
+      handoffs.accepted.order(created_at: :desc).first
+    end
+
+    def pending_handoff
+      # A handoff that hasn't been actioned yet: no acceptance and no to_user (internal handoff)
+      handoffs.where(invite_accepted_at: nil, to_user_id: nil).order(created_at: :desc).first
     end
 
     private

@@ -1,0 +1,94 @@
+<div class="my-3">
+  <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+    <%# Header %>
+    <div class="flex items-center gap-2 text-amber-700 mb-2">
+      <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+      </svg>
+      <span class="text-xs font-medium">handoff requested</span>
+      <span class="text-[10px] text-amber-500 ml-auto">turn <%= handoff.turn_number %></span>
+    </div>
+
+    <%# Reason %>
+    <p class="text-sm text-amber-800 mb-2"><%= handoff.reason %></p>
+
+    <%# Summary (collapsible) %>
+    <details class="mb-2">
+      <summary class="text-xs text-amber-600 cursor-pointer hover:text-amber-700">show summary</summary>
+      <p class="text-xs text-amber-700 mt-1 pl-2 border-l-2 border-amber-200"><%= handoff.summary %></p>
+    </details>
+
+    <%# Suggested questions %>
+    <% if handoff.suggested_questions.present? %>
+      <div class="mb-3">
+        <p class="text-[10px] font-medium text-amber-600 mb-1">suggested questions:</p>
+        <ul class="space-y-0.5">
+          <% handoff.suggested_questions.each do |q| %>
+            <li class="text-xs text-amber-700 flex items-start gap-1.5">
+              <span class="text-amber-400 mt-0.5">&bull;</span>
+              <span><%= q %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if handoff.suggested_role.present? %>
+      <p class="text-[10px] text-amber-500 mb-3">suggested: <span class="font-medium"><%= handoff.suggested_role %></span></p>
+    <% end %>
+
+    <%# Status / actions %>
+    <% if handoff.accepted? %>
+      <div class="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 rounded-lg px-3 py-2">
+        <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span>
+          <% if handoff.internal? %>
+            handed to <%= handoff.to_name %>
+          <% else %>
+            joined by <%= handoff.to_name %> (<%= handoff.to_role %>)
+          <% end %>
+        </span>
+      </div>
+    <% elsif handoff.pending? %>
+      <div class="flex items-center gap-2 text-xs bg-white rounded-lg px-3 py-2 border border-amber-200">
+        <span class="text-amber-600">invite pending</span>
+        <span class="text-gray-300">|</span>
+        <button type="button" onclick="navigator.clipboard.writeText('<%= specs_guest_join_url(handoff.invite_token) %>')" class="text-[#ff584d] hover:text-[#e64d43]">
+          copy invite link
+        </button>
+      </div>
+    <% elsif @session&.status == "active" %>
+      <%# No token yet — show action forms %>
+      <div class="space-y-2 pt-1 border-t border-amber-200">
+        <%# External client invite %>
+        <%= form_tag create_handoff_admin_spec_path(@project), method: :post, class: "flex items-end gap-2" do %>
+          <div class="flex-1">
+            <label class="text-[10px] font-medium text-amber-600">invite external client:</label>
+            <input type="text" name="to_name" required placeholder="Client name"
+                   class="w-full mt-0.5 px-2 py-1.5 border border-amber-200 rounded text-xs focus:ring-1 focus:ring-[#ff584d]/20 focus:border-[#ff584d] outline-none">
+          </div>
+          <button type="submit" class="px-3 py-1.5 bg-[#ff584d] text-white text-xs font-medium rounded hover:bg-[#e64d43] transition-colors">
+            create invite
+          </button>
+        <% end %>
+
+        <%# Internal handoff to team member %>
+        <% if @shop_users&.any? %>
+          <%= form_tag create_handoff_admin_spec_path(@project), method: :post, class: "flex items-end gap-2" do %>
+            <div class="flex-1">
+              <label class="text-[10px] font-medium text-amber-600">hand off to team member:</label>
+              <select name="to_user_id" class="w-full mt-0.5 px-2 py-1.5 border border-amber-200 rounded text-xs bg-white focus:ring-1 focus:ring-[#ff584d]/20 focus:border-[#ff584d] outline-none">
+                <% @shop_users.each do |u| %>
+                  <option value="<%= u.id %>"><%= u.email %></option>
+                <% end %>
+              </select>
+            </div>
+            <button type="submit" class="px-3 py-1.5 bg-gray-700 text-white text-xs font-medium rounded hover:bg-gray-800 transition-colors">
+              assign
+            </button>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

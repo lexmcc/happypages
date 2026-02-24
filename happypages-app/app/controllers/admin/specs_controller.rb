@@ -1,6 +1,6 @@
 class Admin::SpecsController < Admin::BaseController
   before_action :require_specs_feature
-  before_action :set_project, only: [:show, :message, :complete, :export, :new_version]
+  before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff]
 
   def index
     @projects = Current.shop.specs_projects.order(created_at: :desc)
@@ -29,6 +29,8 @@ class Admin::SpecsController < Admin::BaseController
       @sessions.first
     end
     @messages = @session.messages.order(:turn_number, :created_at)
+    @handoffs = @session.handoffs.order(:created_at)
+    @shop_users = Current.shop.users.where.not(id: current_user&.id).order(:email) if @session.status == "active"
   end
 
   def message
@@ -45,7 +47,7 @@ class Admin::SpecsController < Admin::BaseController
 
     image = params[:image]
     orchestrator = Specs::Orchestrator.new(session)
-    result = orchestrator.process_turn(user_text, image: image)
+    result = orchestrator.process_turn(user_text, image: image, user: current_user)
 
     if result[:error]
       status = result[:type] == :max_tokens ? :unprocessable_entity : :internal_server_error
@@ -89,6 +91,35 @@ class Admin::SpecsController < Admin::BaseController
       compressed_context: seed_context_from(latest)
     )
     redirect_to admin_spec_path(@project)
+  end
+
+  def create_handoff
+    session = find_session_for_version
+    pending = session.pending_handoff
+
+    unless pending
+      redirect_to admin_spec_path(@project), alert: "No pending handoff request."
+      return
+    end
+
+    if params[:to_user_id].present?
+      to_user = Current.shop.users.find(params[:to_user_id])
+      pending.update!(
+        to_user: to_user,
+        to_name: to_user.email,
+        to_role: to_user.role,
+        invite_accepted_at: Time.current
+      )
+      session.update!(user: to_user)
+      redirect_to admin_spec_path(@project), notice: "Handed off to #{to_user.email}."
+    else
+      pending.update!(
+        to_name: params[:to_name],
+        to_role: "client"
+      )
+      pending.generate_invite_token!
+      redirect_to admin_spec_path(@project), notice: "Invite link created."
+    end
   end
 
   private

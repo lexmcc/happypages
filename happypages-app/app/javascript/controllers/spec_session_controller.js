@@ -85,6 +85,8 @@ export default class extends Controller {
       this.renderImageAnalysis(data.tool_input, data.content)
     } else if (data.tool_name === "generate_client_brief" || data.tool_name === "generate_team_spec") {
       this.renderGenerated(data.tool_name, data.content)
+    } else if (data.tool_name === "request_handoff") {
+      this.renderHandoffRequest(data.tool_input, data.content)
     } else {
       this.renderPlainText(data.content)
     }
@@ -201,6 +203,39 @@ export default class extends Controller {
     }
 
     html += '</div></div>'
+    el.innerHTML = html
+    this.threadTarget.querySelector(".space-y-4").appendChild(el)
+    this.scrollToBottom()
+  }
+
+  renderHandoffRequest(input, text) {
+    if (text) this.appendAssistantBubble(text)
+
+    const el = document.createElement("div")
+    el.className = "flex justify-start"
+
+    let html = '<div class="max-w-[80%]">'
+    html += '<div class="bg-amber-50 border border-amber-200 rounded-2xl rounded-bl-md px-4 py-3">'
+    html += '<div class="flex items-center gap-2 text-amber-700 mb-2">'
+    html += '<svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>'
+    html += '<span class="text-sm font-medium">handoff requested</span>'
+    html += '</div>'
+
+    if (input && input.reason) {
+      html += `<p class="text-sm text-amber-800 mb-2">${this.escapeHtml(input.reason)}</p>`
+    }
+
+    if (input && input.suggested_questions && input.suggested_questions.length > 0) {
+      html += '<p class="text-xs font-medium text-amber-600 mb-1">suggested questions:</p><ul class="space-y-0.5">'
+      for (const q of input.suggested_questions) {
+        html += `<li class="text-xs text-amber-700">&bull; ${this.escapeHtml(q)}</li>`
+      }
+      html += '</ul>'
+    }
+
+    html += '<p class="text-xs text-amber-500 mt-2">reload the page to create an invite or assign to a team member.</p>'
+    html += '</div></div>'
+
     el.innerHTML = html
     this.threadTarget.querySelector(".space-y-4").appendChild(el)
     this.scrollToBottom()
