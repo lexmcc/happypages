@@ -19,6 +19,14 @@ module SidebarHelper
         { label: "Dashboard", path: :admin_analytics_path }
       ]
     },
+    "specs" => {
+      label: "Specs",
+      icon: "clipboard_document_list",
+      description: "AI-powered specification interviews that turn vague ideas into actionable project specs.",
+      items: [
+        { label: "Projects", path: :admin_specs_path }
+      ]
+    },
     "cro" => {
       label: "CRO",
       icon: "arrow_trending_up",

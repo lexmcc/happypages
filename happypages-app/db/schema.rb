@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_20_173253) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_100002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -485,6 +485,58 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_20_173253) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "specs_messages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.jsonb "image_data"
+    t.integer "input_tokens"
+    t.string "model_used"
+    t.integer "output_tokens"
+    t.string "role", null: false
+    t.bigint "specs_session_id", null: false
+    t.jsonb "tool_calls"
+    t.string "tool_name"
+    t.integer "turn_number", null: false
+    t.index ["specs_session_id", "turn_number"], name: "index_specs_messages_on_specs_session_id_and_turn_number"
+    t.index ["specs_session_id"], name: "index_specs_messages_on_specs_session_id"
+  end
+
+  create_table "specs_projects", force: :cascade do |t|
+    t.jsonb "accumulated_context", default: {}
+    t.text "context_briefing"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "shop_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "created_at"], name: "index_specs_projects_on_shop_id_and_created_at"
+    t.index ["shop_id"], name: "index_specs_projects_on_shop_id"
+  end
+
+  create_table "specs_sessions", force: :cascade do |t|
+    t.jsonb "client_brief"
+    t.text "compressed_context"
+    t.datetime "created_at", null: false
+    t.string "phase", default: "explore", null: false
+    t.string "prompt_version", default: "v1", null: false
+    t.bigint "shop_id", null: false
+    t.bigint "specs_project_id", null: false
+    t.string "status", default: "active", null: false
+    t.jsonb "team_spec"
+    t.integer "total_input_tokens", default: 0, null: false
+    t.integer "total_output_tokens", default: 0, null: false
+    t.jsonb "transcript", default: [], null: false
+    t.integer "turn_budget", default: 20, null: false
+    t.integer "turns_used", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.integer "version", default: 1, null: false
+    t.index ["shop_id", "status"], name: "index_specs_sessions_on_shop_id_and_status"
+    t.index ["shop_id"], name: "index_specs_sessions_on_shop_id"
+    t.index ["specs_project_id", "version"], name: "index_specs_sessions_on_specs_project_id_and_version", unique: true
+    t.index ["specs_project_id"], name: "index_specs_sessions_on_specs_project_id"
+    t.index ["user_id"], name: "index_specs_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -529,5 +581,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_20_173253) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "specs_messages", "specs_sessions"
+  add_foreign_key "specs_projects", "shops"
+  add_foreign_key "specs_sessions", "shops"
+  add_foreign_key "specs_sessions", "specs_projects"
+  add_foreign_key "specs_sessions", "users"
   add_foreign_key "users", "shops"
 end

@@ -1,0 +1,55 @@
+<% if message.role == "user" %>
+  <div class="flex justify-end">
+    <div class="max-w-[80%]">
+      <% if message.image.attached? %>
+        <div class="mb-2">
+          <%= image_tag message.image.variant(resize_to_limit: [400, 400]), class: "rounded-lg max-h-48" %>
+        </div>
+      <% end %>
+      <div class="bg-[#ff584d] text-white rounded-2xl rounded-br-md px-4 py-2.5">
+        <p class="text-sm"><%= message.content %></p>
+      </div>
+      <p class="text-[10px] text-gray-400 text-right mt-1">turn <%= message.turn_number %></p>
+    </div>
+  </div>
+<% else %>
+  <div class="flex justify-start">
+    <div class="max-w-[80%]">
+      <div class="bg-[#f4f4f0] border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_2px_4px_rgba(0,0,0,0.05)] rounded-2xl rounded-bl-md px-4 py-2.5">
+        <% if message.content.present? %>
+          <p class="text-sm text-gray-800"><%= message.content %></p>
+        <% end %>
+
+        <% if message.tool_name == "ask_question" && message.tool_calls.present? %>
+          <% input = message.tool_calls %>
+          <% if input["context"].present? %>
+            <p class="text-xs text-gray-500 mb-2"><%= input["context"] %></p>
+          <% end %>
+          <p class="text-sm font-medium text-gray-900 mb-2"><%= input["question"] %></p>
+          <div class="space-y-1.5">
+            <% Array(input["options"]).each do |option| %>
+              <div class="px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm">
+                <span class="font-medium text-gray-900"><%= option["label"] %></span>
+                <% if option["description"].present? %>
+                  <span class="text-gray-500"> — <%= option["description"] %></span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% elsif message.tool_name == "ask_freeform" && message.tool_calls.present? %>
+          <% input = message.tool_calls %>
+          <% if input["context"].present? %>
+            <p class="text-xs text-gray-500 mb-2"><%= input["context"] %></p>
+          <% end %>
+          <p class="text-sm font-medium text-gray-900"><%= input["question"] %></p>
+        <% elsif message.tool_name&.start_with?("generate_") %>
+          <div class="flex items-center gap-2 text-emerald-700">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="text-sm font-medium"><%= message.tool_name.humanize %> generated</span>
+          </div>
+        <% end %>
+      </div>
+      <p class="text-[10px] text-gray-400 mt-1"><%= message.model_used %> · turn <%= message.turn_number %></p>
+    </div>
+  </div>
+<% end %>

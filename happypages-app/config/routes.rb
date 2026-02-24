@@ -87,6 +87,14 @@ Rails.application.routes.draw do
       end
     end
 
+    # Specs (AI-powered specification interviews)
+    resources :specs, only: [:index, :new, :create, :show] do
+      member do
+        post :message
+        post :complete
+      end
+    end
+
     # Feature preview pages (locked features)
     resources :features, only: [ :show ], param: :feature_name
 

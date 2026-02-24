@@ -21,3 +21,9 @@ end
 Rack::Attack.throttle("analytics/collect", limit: 1000, period: 60) do |req|
   req.ip if req.path == "/collect" && req.post?
 end
+
+Rack::Attack.throttle("specs/message", limit: 1, period: 3) do |req|
+  if req.path.match?(%r{\A/admin/specs/\d+/message\z}) && req.post?
+    req.path
+  end
+end

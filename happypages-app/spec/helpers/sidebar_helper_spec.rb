@@ -31,8 +31,8 @@ RSpec.describe SidebarHelper, type: :helper do
       create(:shop_feature, shop: shop, feature: "cro", status: "locked")
       groups = helper.sidebar_feature_groups
       expect(groups[:active].length).to eq(2)
-      # 6 locked: cro (explicit), insights, landing_pages, funnels, ads, ambassadors (implicit)
-      expect(groups[:locked].length).to eq(6)
+      # 7 locked: specs, cro (explicit), insights, landing_pages, funnels, ads, ambassadors (implicit)
+      expect(groups[:locked].length).to eq(7)
     end
 
     it "includes locked features that have no ShopFeature record" do

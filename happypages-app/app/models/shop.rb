@@ -16,6 +16,8 @@ class Shop < ApplicationRecord
   has_many :media_assets, dependent: :destroy
   has_many :generation_logs, dependent: :destroy
   has_many :customer_imports, dependent: :destroy
+  has_many :specs_projects, class_name: "Specs::Project", dependent: :destroy
+  has_many :specs_sessions, class_name: "Specs::Session", dependent: :destroy
 
   validates :name, presence: true
   validates :domain, presence: true, uniqueness: true

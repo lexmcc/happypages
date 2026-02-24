@@ -1,5 +1,5 @@
 class ShopFeature < ApplicationRecord
-  FEATURES = %w[referrals analytics cro insights landing_pages funnels ads ambassadors].freeze
+  FEATURES = %w[referrals analytics specs cro insights landing_pages funnels ads ambassadors].freeze
   STATUSES = %w[active locked trial expired].freeze
 
   belongs_to :shop
