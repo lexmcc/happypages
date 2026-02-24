@@ -18,19 +18,51 @@
         <div>
           <h1 class="text-base font-semibold text-gray-900"><%= @project.name %></h1>
           <div class="flex items-center gap-2 text-xs text-gray-500">
-            <span>v<%= @session.version %></span>
-            <span class="text-gray-300">·</span>
+            <% if @sessions.count > 1 %>
+              <select onchange="window.location=this.value" class="text-xs text-gray-500 bg-transparent border-none p-0 cursor-pointer focus:ring-0">
+                <% @sessions.each do |s| %>
+                  <option value="<%= admin_spec_path(@project, version: s.version) %>" <%= "selected" if s.id == @session.id %>>
+                    v<%= s.version %><%= " (#{s.status})" unless s.status == "active" %>
+                  </option>
+                <% end %>
+              </select>
+            <% else %>
+              <span>v<%= @session.version %></span>
+            <% end %>
+            <span class="text-gray-300">&middot;</span>
             <span data-spec-session-target="phaseLabel"><%= @session.phase %></span>
-            <span class="text-gray-300">·</span>
+            <span class="text-gray-300">&middot;</span>
             <span data-spec-session-target="turnCounter"><%= @session.turns_used %>/<%= @session.turn_budget %></span>
           </div>
         </div>
       </div>
-      <% if @session.status == "active" %>
-        <%= link_to "end session", complete_admin_spec_path(@project), method: :post, data: { turbo_method: :post, turbo_confirm: "End this session early?" }, class: "text-xs text-gray-400 hover:text-gray-600 transition-colors" %>
-      <% else %>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">completed</span>
-      <% end %>
+      <div class="flex items-center gap-3">
+        <% if @session.status == "active" %>
+          <%= link_to "end session", complete_admin_spec_path(@project), method: :post, data: { turbo_method: :post, turbo_confirm: "End this session early?" }, class: "text-xs text-gray-400 hover:text-gray-600 transition-colors" %>
+        <% else %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">completed</span>
+          <% if @session.client_brief.present? || @session.team_spec.present? %>
+            <div class="relative" data-controller="dropdown">
+              <button type="button" data-action="click->dropdown#toggle" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                export
+              </button>
+              <div class="hidden absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20" data-dropdown-target="menu">
+                <% if @session.client_brief.present? %>
+                  <%= link_to "client brief (.md)", export_admin_spec_path(@project, type: "brief", version: @session.version), class: "block px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50" %>
+                <% end %>
+                <% if @session.team_spec.present? %>
+                  <%= link_to "team spec (.md)", export_admin_spec_path(@project, type: "spec", version: @session.version), class: "block px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          <%= link_to new_version_admin_spec_path(@project), method: :post, data: { turbo_method: :post }, class: "inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-[#ff584d] text-white hover:bg-[#e64d43] transition-colors" do %>
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            new version
+          <% end %>
+        <% end %>
+      </div>
     </div>
     <%# Turn progress bar %>
     <div class="max-w-3xl mx-auto mt-2">
@@ -40,96 +72,226 @@
     </div>
   </div>
 
-  <%# Message thread %>
-  <div class="flex-1 overflow-y-auto" data-spec-session-target="thread">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
-      <% if @messages.empty? && @session.status == "active" %>
-        <div class="text-center py-12">
-          <p class="text-sm text-gray-400">send your first message to start the interview.</p>
-        </div>
-      <% end %>
-
-      <% @messages.each do |message| %>
-        <%= render "admin/specs/message", message: message %>
-      <% end %>
-    </div>
-  </div>
-
-  <%# Loading indicator %>
-  <div class="hidden max-w-3xl mx-auto px-4 sm:px-6" data-spec-session-target="loading">
-    <div class="flex items-center gap-2 py-3">
-      <svg class="animate-spin size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-sm text-gray-400">thinking...</span>
-    </div>
-  </div>
-
-  <%# Options area (rendered dynamically by Stimulus) %>
-  <div class="hidden max-w-3xl mx-auto px-4 sm:px-6" data-spec-session-target="options"></div>
-
-  <%# Input bar %>
-  <% if @session.status == "active" %>
-    <div class="flex-none border-t border-gray-200 bg-white px-4 sm:px-6 py-3">
-      <div class="max-w-3xl mx-auto">
-        <%# Image preview %>
-        <div class="hidden mb-2" data-spec-session-target="imagePreview"></div>
-
-        <div class="flex items-end gap-2">
-          <%# Image upload button %>
+  <% if @session.status == "completed" && (@session.client_brief.present? || @session.team_spec.present?) %>
+    <%# Tabs bar (only when completed with outputs) %>
+    <div class="flex-none border-b border-gray-200 bg-white" data-controller="tabs">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 flex gap-6">
+        <% tabs = [] %>
+        <% tabs << "Chat" %>
+        <% tabs << "Client Brief" if @session.client_brief.present? %>
+        <% tabs << "Team Spec" if @session.team_spec.present? %>
+        <% tabs.each_with_index do |label, i| %>
           <button type="button"
-                  data-action="click->spec-session#clickFileInput"
-                  class="flex-none p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/>
-            </svg>
+                  data-tabs-target="tab"
+                  data-action="click->tabs#switch"
+                  data-index="<%= i %>"
+                  class="py-2.5 text-xs font-medium border-b-2 transition-colors <%= i == 1 && tabs.length > 1 ? 'border-slate-900 text-slate-900' : (i == 0 && tabs.length == 1 ? 'border-slate-900 text-slate-900' : 'border-transparent text-gray-500') %>">
+            <%= label.downcase %>
           </button>
-          <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" class="hidden" data-spec-session-target="fileInput" data-action="change->spec-session#attachImage">
-
-          <%# Text input %>
-          <div class="flex-1">
-            <textarea data-spec-session-target="input"
-                      data-action="keydown->spec-session#handleKeydown"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#ff584d]/20 focus:border-[#ff584d] outline-none transition-colors resize-none"
-                      rows="1"
-                      placeholder="type your answer..."></textarea>
-          </div>
-
-          <%# Send button %>
-          <button type="button"
-                  data-spec-session-target="sendButton"
-                  data-action="click->spec-session#sendMessage"
-                  class="flex-none p-2 text-white bg-[#ff584d] hover:bg-[#e64d43] transition-colors rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  <% else %>
-    <%# Completed state %>
-    <div class="flex-none border-t border-gray-200 bg-white px-4 sm:px-6 py-4">
-      <div class="max-w-3xl mx-auto text-center">
-        <p class="text-sm text-gray-500 mb-2">session completed.</p>
-        <% if @session.client_brief.present? || @session.team_spec.present? %>
-          <div class="flex items-center justify-center gap-3">
-            <% if @session.client_brief.present? %>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-700">
-                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                client brief
-              </span>
-            <% end %>
-            <% if @session.team_spec.present? %>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-700">
-                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                team spec
-              </span>
-            <% end %>
-          </div>
         <% end %>
       </div>
     </div>
+  <% end %>
+
+  <% if @session.status == "completed" && (@session.client_brief.present? || @session.team_spec.present?) %>
+    <%# Chat panel %>
+    <div class="flex-1 overflow-y-auto <%= @session.client_brief.present? || @session.team_spec.present? ? 'hidden' : '' %>" data-tabs-target="panel">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+        <% @messages.each do |message| %>
+          <%= render "admin/specs/message", message: message %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @session.client_brief.present? %>
+      <%# Client Brief panel %>
+      <div class="flex-1 overflow-y-auto" data-tabs-target="panel">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+          <% brief = @session.client_brief %>
+          <h2 class="text-lg font-semibold text-gray-900 mb-1"><%= brief["title"] %></h2>
+          <p class="text-sm text-gray-600 mb-6"><%= brief["goal"] %></p>
+
+          <% Array(brief["sections"]).each do |section| %>
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-2"><%= section["heading"] %></h3>
+              <div class="text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none">
+                <%= simple_format(sanitize(section["content"])) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @session.team_spec.present? %>
+      <%# Team Spec panel %>
+      <div class="flex-1 overflow-y-auto hidden" data-tabs-target="panel">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+          <% spec = @session.team_spec %>
+          <h2 class="text-lg font-semibold text-gray-900 mb-1"><%= spec["title"] %></h2>
+          <p class="text-sm text-gray-600 mb-2"><%= spec["goal"] %></p>
+          <p class="text-sm text-gray-500 mb-6"><strong>Approach:</strong> <%= spec["approach"] %></p>
+
+          <%# Chunks %>
+          <% Array(spec["chunks"]).each_with_index do |chunk, i| %>
+            <div class="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="inline-flex items-center justify-center size-5 rounded-full bg-gray-100 text-[10px] font-bold text-gray-600"><%= i + 1 %></span>
+                <h4 class="text-sm font-semibold text-gray-900"><%= chunk["title"] %></h4>
+                <% if chunk["has_ui"] %>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700">UI</span>
+                <% end %>
+              </div>
+              <p class="text-sm text-gray-700 mb-3"><%= chunk["description"] %></p>
+
+              <% if chunk["acceptance_criteria"].present? %>
+                <div class="space-y-1 mb-3">
+                  <% Array(chunk["acceptance_criteria"]).each do |ac| %>
+                    <div class="flex items-start gap-2 text-xs text-gray-600">
+                      <svg class="size-3.5 mt-0.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                      <span><%= ac %></span>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% if chunk["dependencies"].present? %>
+                <div class="flex flex-wrap gap-1">
+                  <% Array(chunk["dependencies"]).each do |dep| %>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600">depends: <%= dep %></span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%# Tech notes %>
+          <% if spec["tech_notes"].present? %>
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-2">tech notes</h3>
+              <ul class="space-y-1">
+                <% Array(spec["tech_notes"]).each do |note| %>
+                  <li class="text-sm text-gray-700 flex items-start gap-2">
+                    <span class="text-gray-400 mt-1">&bull;</span>
+                    <span><%= note %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%# Design tokens %>
+          <% if spec["design_tokens"].present? %>
+            <%= render "admin/specs/design_tokens", tokens: spec["design_tokens"] %>
+          <% end %>
+
+          <%# Open questions %>
+          <% if spec["open_questions"].present? %>
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-2">open questions</h3>
+              <ul class="space-y-1">
+                <% Array(spec["open_questions"]).each do |q| %>
+                  <li class="text-sm text-amber-700 flex items-start gap-2">
+                    <span class="mt-0.5">?</span>
+                    <span><%= q %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Completed footer %>
+    <div class="flex-none border-t border-gray-200 bg-white px-4 sm:px-6 py-3">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="text-xs text-gray-400">session completed &middot; v<%= @session.version %></p>
+      </div>
+    </div>
+
+  <% else %>
+    <%# Active session or completed without outputs — show chat interface %>
+
+    <%# Message thread %>
+    <div class="flex-1 overflow-y-auto" data-spec-session-target="thread">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+        <% if @messages.empty? && @session.status == "active" %>
+          <div class="text-center py-12">
+            <p class="text-sm text-gray-400">send your first message to start the interview.</p>
+          </div>
+        <% end %>
+
+        <% @messages.each do |message| %>
+          <%= render "admin/specs/message", message: message %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Loading indicator %>
+    <div class="hidden max-w-3xl mx-auto px-4 sm:px-6" data-spec-session-target="loading">
+      <div class="flex items-center gap-2 py-3">
+        <svg class="animate-spin size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-sm text-gray-400">thinking...</span>
+      </div>
+    </div>
+
+    <%# Options area (rendered dynamically by Stimulus) %>
+    <div class="hidden max-w-3xl mx-auto px-4 sm:px-6" data-spec-session-target="options"></div>
+
+    <%# Input bar %>
+    <% if @session.status == "active" %>
+      <div class="flex-none border-t border-gray-200 bg-white px-4 sm:px-6 py-3">
+        <div class="max-w-3xl mx-auto">
+          <%# Image preview %>
+          <div class="hidden mb-2" data-spec-session-target="imagePreview"></div>
+
+          <div class="flex items-end gap-2">
+            <%# Image upload button %>
+            <button type="button"
+                    data-action="click->spec-session#clickFileInput"
+                    class="flex-none p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
+              <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/>
+              </svg>
+            </button>
+            <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" class="hidden" data-spec-session-target="fileInput" data-action="change->spec-session#attachImage">
+
+            <%# Text input %>
+            <div class="flex-1">
+              <textarea data-spec-session-target="input"
+                        data-action="keydown->spec-session#handleKeydown"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#ff584d]/20 focus:border-[#ff584d] outline-none transition-colors resize-none"
+                        rows="1"
+                        placeholder="type your answer..."></textarea>
+            </div>
+
+            <%# Send button %>
+            <button type="button"
+                    data-spec-session-target="sendButton"
+                    data-action="click->spec-session#sendMessage"
+                    class="flex-none p-2 text-white bg-[#ff584d] hover:bg-[#e64d43] transition-colors rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%# Completed without outputs %>
+      <div class="flex-none border-t border-gray-200 bg-white px-4 sm:px-6 py-4">
+        <div class="max-w-3xl mx-auto text-center">
+          <p class="text-sm text-gray-500 mb-2">session completed.</p>
+          <%= link_to new_version_admin_spec_path(@project), method: :post, data: { turbo_method: :post }, class: "inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#ff584d] text-white hover:bg-[#e64d43] transition-colors" do %>
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            new version
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 </div>

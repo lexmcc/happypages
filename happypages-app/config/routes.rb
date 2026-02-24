@@ -92,6 +92,8 @@ Rails.application.routes.draw do
       member do
         post :message
         post :complete
+        get :export
+        post :new_version
       end
     end
 

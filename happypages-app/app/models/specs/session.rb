@@ -18,6 +18,7 @@ module Specs
     before_validation :set_version, on: :create
 
     scope :active, -> { where(status: "active") }
+    scope :completed, -> { where(status: "completed") }
 
     def budget_percentage
       return 0.0 if turn_budget.zero?

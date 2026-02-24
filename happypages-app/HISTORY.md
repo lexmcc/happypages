@@ -82,6 +82,12 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 20** - Superadmin impersonation: "View as shop owner" with 4-hour timeout, fixed banner, audit trail
 - **Feb 20** - Collapsible sidebar with feature gating: locked features show lock icon + preview link, desktop collapse to icon-only mode
 
+### Week 11: Specs Engine (Feb 24, 2026)
+
+- **Feb 24** - Specs engine chunk 1: AI-powered specification interviews with Anthropic API, web chat UI, and 95 new specs
+- **Feb 24** - AnthropicClient service, prompt builder with 8-section system prompt, orchestrator with atomic transactions and parallel tool_use handling
+- **Feb 24** - Specs engine chunk 2: tabbed output view (Chat/Brief/Spec), markdown export, session versioning with context seeding, `analyze_image` tool for screenshot design tokens, 224 total specs
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

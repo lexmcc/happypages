@@ -40,13 +40,13 @@ RSpec.describe Specs::PromptBuilder do
       expect(dynamic).to include("checkout redesign")
     end
 
-    it "v1 only references 4 tools" do
+    it "v1 references all 5 tools" do
       static = result[0][:text]
       expect(static).to include("ask_question")
       expect(static).to include("ask_freeform")
+      expect(static).to include("analyze_image")
       expect(static).to include("generate_client_brief")
       expect(static).to include("generate_team_spec")
-      expect(static).not_to include("analyze_image")
       expect(static).not_to include("estimate_effort")
       expect(static).not_to include("request_handoff")
     end

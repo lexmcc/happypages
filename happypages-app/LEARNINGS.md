@@ -142,6 +142,25 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Use `redirect_to` with flash alert instead of re-rendering the manage template for failed creates
 - **Lesson**: Complex show/manage templates with route helpers and timestamp displays can't render for unpersisted records — redirect on create failure instead
 
+### Active Storage Validators Don't Exist by Default (Feb 24, 2026)
+- `validates :image, content_type: {...}, size: {...}` requires the `activestorage-validator` gem — not built into Rails
+- Without the gem, Rails raises `Unknown validator: 'ContentTypeValidator'` at class load time
+- **Fix**: Use a custom `validate :acceptable_image` method that checks `image.content_type` and `image.byte_size` manually
+- **Lesson**: Don't assume Active Storage has built-in content_type/size validators — check the Gemfile before using declarative validation syntax
+
+### ENV.fetch in Service Initializers Breaks Test Stubs (Feb 24, 2026)
+- `AnthropicClient.new` uses `ENV.fetch("ANTHROPIC_API_KEY")` in `initialize` — raises `KeyError` before any test stub takes effect
+- `allow_any_instance_of(AnthropicClient).to receive(:messages)` stubs the method but the instance must be constructable first
+- **Fix**: Set `ENV["ANTHROPIC_API_KEY"] ||= "test-key"` in a `before` block, or use a factory/double instead of real initialization
+- **Lesson**: Services with `ENV.fetch` in the constructor need the env var set in specs even when you plan to stub all methods
+
+### Anthropic API Parallel Tool Use Ordering (Feb 24, 2026)
+- When Claude calls multiple tools in one response (e.g., `generate_client_brief` + `generate_team_spec`), ALL `tool_result` blocks must be in a SINGLE user message
+- `tool_result` blocks must come before any `text` blocks in the user content array
+- The full assistant `content` array (text + tool_use blocks) must be stored verbatim in the transcript — don't extract/simplify
+- For `ask_question`/`ask_freeform` tools, the user's NEXT message is the tool_result (their answer)
+- **Lesson**: Anthropic's tool_use protocol is strict about message ordering — build a proper state machine, don't try to simplify the transcript format
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -271,4 +290,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: If a controller action calls `render "name"`, the file is a template (no underscore). If called via `render partial:`, it needs an underscore.
 
 ---
-*Updated: Feb 20, 2026 (platform architecture: audit actions, module MRO, perform_enqueued_jobs, unsaved record rendering)*
+*Updated: Feb 24, 2026 (specs engine: Active Storage validators, ENV.fetch in tests, Anthropic parallel tool_use)*

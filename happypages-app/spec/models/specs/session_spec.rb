@@ -60,5 +60,11 @@ RSpec.describe Specs::Session, type: :model do
       create(:specs_session, :completed)
       expect(Specs::Session.active).to eq([active])
     end
+
+    it ".completed returns only completed sessions" do
+      create(:specs_session)
+      completed = create(:specs_session, :completed)
+      expect(Specs::Session.completed).to eq([completed])
+    end
   end
 end

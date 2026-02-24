@@ -81,6 +81,8 @@ export default class extends Controller {
       this.renderQuestion(data.tool_input, data.content)
     } else if (data.tool_name === "ask_freeform") {
       this.renderFreeform(data.tool_input, data.content)
+    } else if (data.tool_name === "analyze_image") {
+      this.renderImageAnalysis(data.tool_input, data.content)
     } else if (data.tool_name === "generate_client_brief" || data.tool_name === "generate_team_spec") {
       this.renderGenerated(data.tool_name, data.content)
     } else {
@@ -165,6 +167,40 @@ export default class extends Controller {
     }
     html += '</div></div>'
 
+    el.innerHTML = html
+    this.threadTarget.querySelector(".space-y-4").appendChild(el)
+    this.scrollToBottom()
+  }
+
+  renderImageAnalysis(input, text) {
+    if (text) this.appendAssistantBubble(text)
+
+    const el = document.createElement("div")
+    el.className = "flex justify-start"
+
+    let html = '<div class="max-w-[80%]">'
+    html += '<div class="bg-blue-50 border border-blue-200 rounded-2xl rounded-bl-md px-4 py-2.5">'
+    html += '<div class="flex items-center gap-2 text-blue-700 mb-1">'
+    html += '<svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>'
+    html += '<span class="text-sm font-medium">image analysed</span>'
+    html += '</div>'
+
+    if (input && input.summary) {
+      html += `<p class="text-xs text-blue-600">${this.escapeHtml(input.summary)}</p>`
+    }
+
+    // Color swatches
+    if (input && input.analysis && input.analysis.colors && input.analysis.colors.length > 0) {
+      html += '<div class="flex flex-wrap gap-1.5 mt-2">'
+      const colors = input.analysis.colors.slice(0, 8)
+      for (const color of colors) {
+        const hex = this.escapeAttr(color.hex || "")
+        html += `<span class="inline-flex items-center gap-1"><span class="size-3.5 rounded-full border border-blue-200" style="background-color: ${hex}"></span><span class="text-[10px] text-blue-500">${this.escapeHtml(hex)}</span></span>`
+      }
+      html += '</div>'
+    }
+
+    html += '</div></div>'
     el.innerHTML = html
     this.threadTarget.querySelector(".space-y-4").appendChild(el)
     this.scrollToBottom()

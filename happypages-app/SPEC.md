@@ -16,7 +16,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
 - **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Referral events tracked via `ReferralEvent` model.
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback.
-- **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
+- **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, specs, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin, super_admin_impersonating.
 - **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
 
@@ -75,6 +75,19 @@ Lightweight, self-hosted web analytics for tracking page views, custom events, a
 - **Rate limiting** — 1000 req/min per IP on `/collect`
 - **CORS** — wildcard origin on `/collect` (POST + OPTIONS)
 - **Dashboard query service** — `Analytics::DashboardQueryService` computes all dashboard metrics from raw events: unique visitors, pageviews, bounce rate, avg visit duration, revenue totals, sparkline data, time series, top pages/referrers/UTMs, geography, device/browser/OS breakdowns, goal conversions, first-touch revenue attribution, and referral performance. Supports period filtering (today, 7d, 30d, custom) and comparison periods.
+
+### Specs Engine (AI-Powered Specification Interviews)
+
+Interview-driven specification tool powered by the Anthropic API. Stakeholders answer structured questions; the AI produces client briefs and team specs.
+
+- **Models** — `Specs::Project` (per-shop, with optional context briefing and accumulated context JSONB), `Specs::Session` (versioned per project, tracks phase/turns/transcript/outputs), `Specs::Message` (immutable display records with optional image attachments and `image_data` JSONB for analysis results via Active Storage).
+- **AnthropicClient** — vanilla Net::HTTP wrapper for the Anthropic Messages API. Model constants for Sonnet, Opus, Haiku. Error hierarchy: RateLimitError (429), OverloadedError (529), MaxTokensError, RefusalError. Prompt caching via system prompt array format with `cache_control: {type: "ephemeral"}`.
+- **Orchestrator** — `Specs::Orchestrator#process_turn` handles the full API round-trip inside a pessimistic-locked transaction. Assembles system prompt (8 sections: persona, methodology, phase, turn budget, project context, session context, active user, output instructions), selects model (Sonnet default, Opus for generate phase + complexity heuristics), calls API, stores full assistant content array verbatim in transcript, processes tool_use blocks (including `analyze_image` → stores structured analysis on message `image_data` column), creates display Message records, and updates session state atomically. Compression via Haiku every 8 turns. Phase advancement is guided-fluid (budget-based defaults, AI can advance early).
+- **Tool definitions** — v1 ships 5 tools: `ask_question` (structured with 2-4 options), `ask_freeform` (open-ended), `analyze_image` (extracts colors/typography/layout/spacing/effects from uploaded screenshots), `generate_client_brief` (client-facing doc), `generate_team_spec` (team-facing spec with chunks, acceptance criteria, and design tokens). Parallel tool calls supported (both generate tools in one response).
+- **Dual output view** — completed sessions show tabbed interface (Chat / Client Brief / Team Spec) using shared `tabs_controller.js`. Client Brief renders structured JSONB with sections. Team Spec renders chunks with acceptance criteria, dependency tags, UI badges, tech notes, design token swatches, and open questions. Both exportable as markdown via `GET /admin/specs/:id/export?type=brief|spec`.
+- **Versioning** — `POST /admin/specs/:id/new_version` creates a new session seeded with context from the previous session's outputs. Version dropdown appears when multiple versions exist. Each version's chat and outputs are independently viewable via `?version=N` param.
+- **Web UI** — chat interface at `/admin/specs/:id` with Stimulus controller. Option buttons for structured questions, image upload with analysis card (blue info card with color swatches), turn counter, phase label, progress bar. Auto-reload on session completion.
+- **Rate limiting** — 1 req per 3s per project on message endpoint (Rack::Attack regex match).
 
 ### API Layer
 
@@ -142,7 +155,7 @@ Lightweight, self-hosted web analytics for tracking page views, custom events, a
 | Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
 | Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
 | Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
-| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 118+ specs (model, request, concern) |
+| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 224 specs (model, request, service, concern) |
 
 ### Housekeeping
 - [ ] Delete old custom distribution app from Partner Dashboard

@@ -215,6 +215,7 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Analytics dashboard**: `Analytics::DashboardQueryService` computes all metrics. Admin controller auto-provisions `Analytics::Site` on first visit → shows setup page → dashboard once data arrives. Superadmin gets site picker. 3 Stimulus controllers: `analytics_chart`, `analytics_sparkline`, `analytics_filter`.
 - **GeoIP**: MaxMind GeoLite2-City downloaded on boot via `MAXMIND_LICENSE_KEY` env var. `GEOIP_READER` constant (nil if unavailable). `vendor/maxmind/*.mmdb` gitignored.
 - **Bulk customer import**: `CustomerImportJob` fetches Shopify customers via GraphQL, creates Referrals + metafields in batches. `CustomerImport` model tracks progress. Stimulus controller polls status. Idempotent, cursor-based resume.
+- **Specs engine**: `Specs::Project/Session/Message` in `app/models/specs/`. `AnthropicClient` (Net::HTTP) in `app/services/`. `Specs::Orchestrator` handles atomic turns with pessimistic locking. 5 tools v1: ask_question, ask_freeform, analyze_image, generate_client_brief, generate_team_spec. Completed sessions show tabbed output view (Chat/Brief/Spec) with markdown export and versioning. Feature-gated behind "specs" ShopFeature. `ANTHROPIC_API_KEY` env var required.
 
 ### Testing
 - **Framework**: RSpec + factory_bot + shoulda-matchers + webmock
@@ -253,3 +254,5 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **AuditLog action names**: Must match `AuditLog::ACTIONS` constant exactly — use `"delete"` not `"destroy"`, use generic actions with details in JSONB `details` column
 - **Concerns can't override class methods**: `include` places module methods below class methods in MRO. Use `before_action` callbacks or `prepend` if override is needed.
 - **`deliver_later` in request specs**: Needs `include ActiveJob::TestHelper` + `perform_enqueued_jobs { ... }` block to actually execute mailer jobs
+- **Active Storage has no built-in content_type/size validators** — use custom `validate` method checking `content_type` and `byte_size`, not declarative syntax (unless `activestorage-validator` gem is added)
+- **`ENV.fetch` in service initializers breaks tests** — the fetch raises before test stubs run. Set `ENV["KEY"] ||= "test-value"` in spec `before` blocks, or use `ENV.fetch("KEY", nil)` with lazy validation.

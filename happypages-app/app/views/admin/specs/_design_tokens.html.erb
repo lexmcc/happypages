@@ -1,0 +1,87 @@
+<div class="mb-6">
+  <h3 class="text-sm font-semibold text-gray-900 mb-3">design tokens</h3>
+
+  <%# Colors %>
+  <% if tokens["colors"].present? %>
+    <div class="mb-4">
+      <p class="text-xs font-medium text-gray-500 mb-2">colors</p>
+      <div class="flex flex-wrap gap-3">
+        <% tokens["colors"].each do |key, value| %>
+          <% hex = value.is_a?(Hash) ? value["hex"] || value["value"] : value.to_s %>
+          <div class="flex items-center gap-1.5">
+            <span class="size-5 rounded-full border border-gray-200" style="background-color: <%= sanitize(hex) %>"></span>
+            <span class="text-xs text-gray-600"><%= key %></span>
+            <span class="text-[10px] text-gray-400"><%= hex %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Typography %>
+  <% if tokens["typography"].present? %>
+    <div class="mb-4">
+      <p class="text-xs font-medium text-gray-500 mb-2">typography</p>
+      <div class="overflow-x-auto">
+        <table class="text-xs w-full">
+          <thead>
+            <tr class="text-left text-gray-500">
+              <th class="pr-4 pb-1 font-medium">element</th>
+              <th class="pr-4 pb-1 font-medium">family</th>
+              <th class="pr-4 pb-1 font-medium">size</th>
+              <th class="pb-1 font-medium">weight</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+            <% tokens["typography"].each do |key, value| %>
+              <% if value.is_a?(Hash) %>
+                <tr>
+                  <td class="pr-4 py-0.5"><%= key %></td>
+                  <td class="pr-4 py-0.5"><%= value["family"] %></td>
+                  <td class="pr-4 py-0.5"><%= value["size"] %></td>
+                  <td class="py-0.5"><%= value["weight"] %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Spacing %>
+  <% if tokens["spacing"].present? %>
+    <div class="mb-4">
+      <p class="text-xs font-medium text-gray-500 mb-1">spacing</p>
+      <% if tokens["spacing"].is_a?(Hash) %>
+        <p class="text-xs text-gray-700">
+          <% tokens["spacing"].each do |key, value| %>
+            <span class="mr-3"><strong><%= key %>:</strong> <%= value %></span>
+          <% end %>
+        </p>
+      <% else %>
+        <p class="text-xs text-gray-700"><%= tokens["spacing"] %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Effects %>
+  <% if tokens["effects"].present? %>
+    <div class="mb-4">
+      <p class="text-xs font-medium text-gray-500 mb-1">effects</p>
+      <% if tokens["effects"].is_a?(Hash) %>
+        <% tokens["effects"].each do |key, value| %>
+          <p class="text-xs text-gray-700"><strong><%= key %>:</strong> <%= value %></p>
+        <% end %>
+      <% elsif tokens["effects"].is_a?(Array) %>
+        <% tokens["effects"].each do |effect| %>
+          <p class="text-xs text-gray-700">
+            <strong><%= effect["type"] %></strong>
+            <% if effect["where"].present? %> on <%= effect["where"] %><% end %>
+            — <code class="text-[10px] bg-gray-100 px-1 rounded"><%= effect["value"] %></code>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

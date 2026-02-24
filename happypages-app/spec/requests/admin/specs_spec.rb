@@ -120,6 +120,82 @@ RSpec.describe "Admin::Specs", type: :request do
     end
   end
 
+  describe "GET /admin/specs/:id with version param" do
+    let(:project) { Specs::Project.create!(shop: shop, name: "Test") }
+    let!(:session_v1) { Specs::Session.create!(project: project, shop: shop, user: user, status: "completed") }
+    let!(:session_v2) { Specs::Session.create!(project: project, shop: shop, user: user) }
+
+    it "shows specific version when version param given" do
+      get admin_spec_path(project, version: session_v1.version)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("v#{session_v1.version}")
+    end
+
+    it "defaults to latest version" do
+      get admin_spec_path(project)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("v#{session_v2.version}")
+    end
+  end
+
+  describe "GET /admin/specs/:id/export" do
+    let(:project) { Specs::Project.create!(shop: shop, name: "Test Export") }
+    let!(:session) { create(:specs_session, :with_outputs, project: project, shop: shop, user: user) }
+
+    it "exports brief as markdown" do
+      get export_admin_spec_path(project, type: "brief", version: session.version)
+      expect(response).to have_http_status(:ok)
+      expect(response.content_type).to include("text/markdown")
+      expect(response.body).to include("Test Project")
+      expect(response.body).to include("Background")
+    end
+
+    it "exports spec as markdown" do
+      get export_admin_spec_path(project, type: "spec", version: session.version)
+      expect(response).to have_http_status(:ok)
+      expect(response.content_type).to include("text/markdown")
+      expect(response.body).to include("Rails + Stimulus + Stripe Elements")
+      expect(response.body).to include("Cart summary component")
+    end
+
+    it "rejects invalid type" do
+      get export_admin_spec_path(project, type: "invalid")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "returns 404 when output is nil" do
+      session.update_column(:client_brief, nil)
+      get export_admin_spec_path(project, type: "brief", version: session.version)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "POST /admin/specs/:id/new_version" do
+    let(:project) { Specs::Project.create!(shop: shop, name: "Test Versioning") }
+    let!(:session) { create(:specs_session, :with_outputs, project: project, shop: shop, user: user) }
+
+    it "creates a new session with incremented version" do
+      expect {
+        post new_version_admin_spec_path(project)
+      }.to change(Specs::Session, :count).by(1)
+
+      new_session = project.sessions.order(version: :desc).first
+      expect(new_session.version).to eq(2)
+      expect(new_session.status).to eq("active")
+    end
+
+    it "seeds compressed_context from previous session outputs" do
+      post new_version_admin_spec_path(project)
+      new_session = project.sessions.order(version: :desc).first
+      expect(new_session.compressed_context).to include("Test Project")
+    end
+
+    it "redirects to project show page" do
+      post new_version_admin_spec_path(project)
+      expect(response).to redirect_to(admin_spec_path(project))
+    end
+  end
+
   describe "feature gating" do
     it "redirects to feature page when specs feature not active" do
       ShopFeature.where(shop: shop, feature: "specs").destroy_all

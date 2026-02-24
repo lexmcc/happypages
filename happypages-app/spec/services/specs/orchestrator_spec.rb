@@ -278,6 +278,59 @@ RSpec.describe Specs::Orchestrator do
     end
   end
 
+  describe "analyze_image tool handling" do
+    let(:analyze_image_response) do
+      {
+        "content" => [
+          { "type" => "text", "text" => "I've analysed your screenshot." },
+          {
+            "type" => "tool_use",
+            "id" => "toolu_img123",
+            "name" => "analyze_image",
+            "input" => {
+              "analysis" => {
+                "colors" => [{ "hex" => "#ff584d", "role" => "primary" }],
+                "typography" => [{ "element" => "h1", "family" => "Inter", "size" => "32px", "weight" => "700" }],
+                "layout" => { "type" => "flex", "direction" => "column" }
+              },
+              "summary" => "A coral-themed landing page with flex layout."
+            }
+          }
+        ],
+        "stop_reason" => "tool_use",
+        "usage" => { "input_tokens" => 800, "output_tokens" => 400 }
+      }
+    end
+
+    before do
+      allow_any_instance_of(AnthropicClient).to receive(:messages).and_return(analyze_image_response)
+    end
+
+    it "stores image analysis on assistant message image_data column" do
+      orchestrator.process_turn("Here's a screenshot")
+      assistant = session.messages.where(role: "assistant").last
+      expect(assistant.image_data).to be_present
+      expect(assistant.image_data["colors"]).to be_an(Array)
+      expect(assistant.image_data["colors"].first["hex"]).to eq("#ff584d")
+    end
+
+    it "auto-injects tool_result into transcript" do
+      orchestrator.process_turn("Here's a screenshot")
+      session.reload
+
+      tool_result_msg = session.transcript.select { |m| m["role"] == "user" }.last
+      tool_results = tool_result_msg["content"].select { |b| b["type"] == "tool_result" }
+      expect(tool_results.length).to eq(1)
+      expect(tool_results.first["tool_use_id"]).to eq("toolu_img123")
+      expect(tool_results.first["content"]).to include("Image analysis recorded")
+    end
+
+    it "returns analyze_image as tool_name in result" do
+      result = orchestrator.process_turn("Here's a screenshot")
+      expect(result[:tool_name]).to eq("analyze_image")
+    end
+  end
+
   describe "error handling" do
     it "returns error hash for MaxTokensError" do
       allow_any_instance_of(AnthropicClient).to receive(:messages)

@@ -143,6 +143,18 @@ module Specs
       - Include acceptance criteria per chunk
       - Reference design tokens if screenshots were analysed
       - Be detailed enough that a developer can start work without asking clarifying questions
+
+      ### Analysing Images
+
+      When the user uploads an image, call `analyze_image` to extract:
+      - Colors (hex values, roles — primary, secondary, background, accent)
+      - Typography (font family estimates, sizes, weights)
+      - Spacing (padding, margins, gaps — mapped to a 4px/8px scale)
+      - Layout (flex/grid patterns, alignment, responsive hints)
+      - Visual effects (shadows, borders, radius, gradients)
+      - States (if visible — hover, focus, disabled)
+
+      Include the analysis summary in your response. The full analysis will be available when you generate the team spec — reference it in the design_tokens field.
     PROMPT
 
     PHASE_PROMPTS = {

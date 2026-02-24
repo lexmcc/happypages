@@ -62,7 +62,7 @@ module Specs
         )
 
         # Process tool_use blocks and auto-inject tool_results
-        process_tool_results(tool_use_blocks)
+        process_tool_results(tool_use_blocks, assistant_message)
 
         # Update session state
         @session.turns_used = next_turn
@@ -130,13 +130,22 @@ module Specs
       messages
     end
 
-    def process_tool_results(tool_use_blocks)
+    def process_tool_results(tool_use_blocks, assistant_message = nil)
       return if tool_use_blocks.empty?
 
       tool_results = []
 
       tool_use_blocks.each do |block|
         case block["name"]
+        when "analyze_image"
+          if assistant_message
+            assistant_message.update_column(:image_data, block["input"]["analysis"])
+          end
+          tool_results << {
+            "type" => "tool_result",
+            "tool_use_id" => block["id"],
+            "content" => "Image analysis recorded. #{block.dig("input", "summary")}"
+          }
         when "generate_client_brief"
           @session.client_brief = block["input"]
           tool_results << { "type" => "tool_result", "tool_use_id" => block["id"], "content" => "Client brief generated successfully." }

@@ -42,6 +42,24 @@
             <p class="text-xs text-gray-500 mb-2"><%= input["context"] %></p>
           <% end %>
           <p class="text-sm font-medium text-gray-900"><%= input["question"] %></p>
+        <% elsif message.tool_name == "analyze_image" && message.image_data.present? %>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 mt-2">
+            <div class="flex items-center gap-2 text-blue-700 mb-1">
+              <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+              <span class="text-xs font-medium">image analysed</span>
+            </div>
+            <% if message.image_data["colors"].present? %>
+              <div class="flex flex-wrap gap-1.5 mt-1">
+                <% Array(message.image_data["colors"]).first(8).each do |color| %>
+                  <% hex = color.is_a?(Hash) ? (color["hex"] || color["value"]) : color.to_s %>
+                  <span class="inline-flex items-center gap-1">
+                    <span class="size-3 rounded-full border border-blue-200" style="background-color: <%= sanitize(hex) %>"></span>
+                    <span class="text-[10px] text-blue-500"><%= hex %></span>
+                  </span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         <% elsif message.tool_name&.start_with?("generate_") %>
           <div class="flex items-center gap-2 text-emerald-700">
             <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>

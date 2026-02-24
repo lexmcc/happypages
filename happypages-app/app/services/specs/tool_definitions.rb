@@ -67,6 +67,96 @@ module Specs
           }
         },
         {
+          name: "analyze_image",
+          description: "Analyse an uploaded image (screenshot, mockup, design reference). Extract colors, typography, layout patterns, spacing, and visual effects. Call this whenever the user uploads an image.",
+          input_schema: {
+            type: "object",
+            required: ["analysis"],
+            properties: {
+              analysis: {
+                type: "object",
+                required: ["colors", "typography", "layout"],
+                properties: {
+                  colors: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      required: ["hex", "role"],
+                      properties: {
+                        hex: { type: "string", description: "Hex color value (e.g. #ff584d)." },
+                        role: {
+                          type: "string",
+                          enum: %w[primary secondary background surface accent text text-muted border error success],
+                          description: "Semantic role of this color."
+                        },
+                        name: { type: "string", description: "Optional human-readable name (e.g. 'Coral')." }
+                      }
+                    },
+                    description: "Colors extracted from the image, each with a hex value and semantic role."
+                  },
+                  typography: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      required: ["element", "family"],
+                      properties: {
+                        element: { type: "string", description: "HTML element or role (e.g. h1, body, caption)." },
+                        family: { type: "string", description: "Best guess at the font family." },
+                        size: { type: "string", description: "Estimated font size (e.g. '32px')." },
+                        weight: { type: "string", description: "Font weight (e.g. '700', 'bold')." }
+                      }
+                    },
+                    description: "Typography styles observed in the image."
+                  },
+                  layout: {
+                    type: "object",
+                    properties: {
+                      type: { type: "string", description: "Primary layout model (e.g. flex, grid, stack)." },
+                      direction: { type: "string", description: "Flow direction (e.g. column, row)." },
+                      alignment: { type: "string", description: "Alignment pattern (e.g. center, start)." },
+                      responsive_hints: { type: "string", description: "Notes on likely responsive behaviour." }
+                    },
+                    description: "Layout patterns observed in the image."
+                  },
+                  spacing: {
+                    type: "object",
+                    properties: {
+                      base_unit: { type: "string", description: "Detected base spacing unit (e.g. '8px')." },
+                      notable: {
+                        type: "array",
+                        items: { type: "string" },
+                        description: "Notable spacing values observed."
+                      }
+                    },
+                    description: "Spacing patterns mapped to a 4px/8px scale."
+                  },
+                  effects: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        type: { type: "string", description: "Effect type (e.g. shadow, border, radius, gradient)." },
+                        where: { type: "string", description: "Where this effect appears." },
+                        value: { type: "string", description: "CSS-like value for the effect." }
+                      }
+                    },
+                    description: "Visual effects like shadows, borders, border-radius, gradients."
+                  },
+                  states_visible: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "UI states visible in the image (e.g. hover, focus, disabled, active)."
+                  }
+                }
+              },
+              summary: {
+                type: "string",
+                description: "One-sentence summary of what the image shows and key design observations."
+              }
+            }
+          }
+        },
+        {
           name: "generate_client_brief",
           description: "Generate the client-facing specification document. Plain language, focused on goals and outcomes. Called during the GENERATE phase.",
           input_schema: {

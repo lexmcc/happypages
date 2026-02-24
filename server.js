@@ -168,7 +168,16 @@ const server = http.createServer(async (req, res) => {
     return serveFile(res, filePath, 'text/html');
   }
 
-  // Static files
+  // Static files — redirect clean URLs to trailing slash so relative paths resolve correctly
+  if (!path.extname(urlPath) && !urlPath.endsWith('/')) {
+    const dirPath = path.join(__dirname, 'public', urlPath);
+    if (fs.existsSync(path.join(dirPath, 'index.html'))) {
+      res.writeHead(301, { 'Location': urlPath + '/' });
+      res.end();
+      return;
+    }
+  }
+
   let staticPath = urlPath;
   if (staticPath.endsWith('/')) {
     staticPath += 'index.html';

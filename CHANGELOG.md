@@ -2,6 +2,11 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-24
+
+- **Specs engine (Chunk 2)** — Dual output view with tabbed interface (Chat / Client Brief / Team Spec) on completed sessions, markdown export for both outputs, session versioning with context seeding, version dropdown navigation, `analyze_image` tool for extracting design tokens from uploaded screenshots (colors, typography, layout, spacing, effects), design tokens partial with color swatches and typography table. 224 specs total, all passing.
+- **Specs engine (Chunk 1)** — AI-powered specification interview tool. AnthropicClient (Net::HTTP wrapper with Sonnet/Opus/Haiku model routing), PromptBuilder (8-section system prompt with caching), Orchestrator (atomic transactions with pessimistic locking, parallel tool_use handling, Haiku compression every 8 turns), 4 tool definitions (ask_question, ask_freeform, generate_client_brief, generate_team_spec). Web chat UI with Stimulus controller. Feature-gated behind "specs" ShopFeature. Rate-limited at 1 req/3s per project. 95 new specs (205 total), all passing.
+
 ## 2026-02-20
 
 - **Analytics dashboard UI (Chunk 3)** — full web analytics dashboard replacing the old referral event page. KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Available in both admin and superadmin (with site picker). 3 Stimulus controllers + 8 shared partials + DashboardQueryService.
