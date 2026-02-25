@@ -77,5 +77,19 @@ RSpec.describe Specs::Card, type: :model do
         described_class.create_from_team_spec(project, session)
       }.not_to change(project.cards, :count)
     end
+
+    it "skips chunks with blank titles" do
+      session.update_column(:team_spec, {
+        "chunks" => [
+          { "title" => "Valid card", "description" => "desc" },
+          { "title" => "", "description" => "no title" },
+          { "title" => nil, "description" => "nil title" }
+        ]
+      })
+      expect {
+        described_class.create_from_team_spec(project, session)
+      }.to change(project.cards, :count).by(1)
+      expect(project.cards.first.title).to eq("Valid card")
+    end
   end
 end

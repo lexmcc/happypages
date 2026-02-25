@@ -259,3 +259,5 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Factory `build` won't set FK for nil associations** — `build(:specs_project)` leaves `shop_id` nil even with factory default. Use `create(:shop)` explicitly when testing FK-based validations.
 - **shoulda-matchers `belong_to` implies required** — making `belongs_to :shop, optional: true` requires updating test to `belong_to(:shop).optional`
 - **RecordNotFound → 404 in request specs** — Rails middleware catches the exception; use `have_http_status(:not_found)` not `raise_error`
+- **`specs_projects` has DB CHECK constraint** — `chk_specs_projects_owner_xor` enforces shop XOR org at DB level; model validation gives friendly errors, constraint is safety net
+- **Client invite tokens expire** — `invite_expires_at` column on `specs_clients`, set to 7 days on create/resend. `InvitesController#find_client_by_token` checks expiry.

@@ -5,6 +5,7 @@ class Superadmin::SpecsClientsController < Superadmin::BaseController
     client = @organisation.specs_clients.build(client_params)
     client.invite_token = SecureRandom.urlsafe_base64(32)
     client.invite_sent_at = Time.current
+    client.invite_expires_at = 7.days.from_now
 
     if client.save
       SpecsClientMailer.invite_email(client).deliver_later
@@ -18,7 +19,8 @@ class Superadmin::SpecsClientsController < Superadmin::BaseController
     client = @organisation.specs_clients.find(params[:id])
     client.update!(
       invite_token: SecureRandom.urlsafe_base64(32),
-      invite_sent_at: Time.current
+      invite_sent_at: Time.current,
+      invite_expires_at: 7.days.from_now
     )
     SpecsClientMailer.invite_email(client).deliver_later
     redirect_to manage_superadmin_organisation_path(@organisation), notice: "Invite sent to #{client.email}"

@@ -327,5 +327,23 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Use `have_http_status(:unprocessable_content)` in new specs
 - **Lesson**: Check Rack release notes for status code name changes when upgrading
 
+### DB CHECK Constraints for Model-Level XOR Validations (Feb 25, 2026)
+- Model-level XOR validation (`shop_id XOR organisation_id`) prevents bad data from Rails but not from direct SQL, migrations, or console use
+- Adding a PostgreSQL CHECK constraint (`chk_specs_projects_owner_xor`) enforces the invariant at the DB level as a safety net
+- The model validation gives friendly error messages; the DB constraint is the last line of defense
+- **Lesson**: For critical data invariants (tenant isolation, ownership), always add a DB-level CHECK constraint alongside the model validation
+
+### Organisation Slug `allow_nil` vs `presence` Mismatch (Feb 25, 2026)
+- `validates :slug, ..., allow_nil: true` combined with `before_validation :generate_slug` meant the slug was always generated, so `allow_nil` was dead code
+- But if the DB column is `null: false`, having `allow_nil: true` creates a mismatch — Rails lets nil through validation, PG rejects it
+- **Fix**: Changed to `validates :slug, presence: true` to match the DB constraint and the actual behavior
+- **Lesson**: When a `before_validation` callback auto-generates a field, the validation should match the DB constraint, not the "before" state
+
+### Invite Token Expiry Needs Both Model and Controller Checks (Feb 25, 2026)
+- Adding `invite_expires_at` column is only half the fix — the controller's `find_client_by_token` must check expiry
+- The superadmin controller must set `invite_expires_at` on both `create` and `send_invite` actions
+- Token lookup pattern: find by token → check expiry → nil out if expired → redirect if nil
+- **Lesson**: Token-based auth features need expiry enforced at the lookup site, not just stored in the DB
+
 ---
-*Updated: Feb 25, 2026 (specs engine chunk 5: route absence testing, Rack status deprecation)*
+*Updated: Feb 25, 2026 (audit fixes: DB CHECK constraints, slug validation mismatch, invite token expiry)*

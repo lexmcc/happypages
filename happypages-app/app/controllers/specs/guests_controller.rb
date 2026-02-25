@@ -71,7 +71,8 @@ module Specs
     end
 
     def set_current_shop_from_handoff
-      Current.shop = @handoff.session.shop
+      shop = @handoff.session.shop
+      Current.shop = shop if shop
     end
 
     def require_accepted

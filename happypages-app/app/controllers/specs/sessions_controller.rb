@@ -4,7 +4,7 @@ module Specs
     skip_before_action :set_current_shop
 
     def new
-      if session[:specs_client_id] && ::Specs::Client.exists?(id: session[:specs_client_id])
+      if session[:specs_client_id] && ::Specs::Client.find_by(id: session[:specs_client_id])
         redirect_to specs_dashboard_path
       end
     end

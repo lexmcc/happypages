@@ -46,6 +46,9 @@ module Specs
 
     def find_client_by_token
       @client = ::Specs::Client.find_by(invite_token: params[:token])
+      if @client && @client.invite_expires_at.present? && @client.invite_expires_at < Time.current
+        @client = nil
+      end
       unless @client
         redirect_to specs_login_path, alert: "invalid or expired invite link."
       end

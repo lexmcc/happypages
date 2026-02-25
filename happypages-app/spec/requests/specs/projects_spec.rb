@@ -73,4 +73,53 @@ RSpec.describe "Specs::Projects", type: :request do
       expect(response).to have_http_status(:bad_request)
     end
   end
+
+  describe "POST /specs/projects/:id/message" do
+    let(:project) { create(:specs_project, :org_scoped, organisation: organisation) }
+    let!(:session_record) do
+      create(:specs_session, :org_scoped, project: project, specs_client: client)
+    end
+
+    it "sends a message and returns response" do
+      fake_result = {
+        messages: [{ role: "assistant", content: "Hello!" }],
+        team_spec: { "chunks" => [] }
+      }
+      allow_any_instance_of(Specs::Orchestrator).to receive(:process_turn).and_return(fake_result)
+
+      post specs_project_message_path(project), params: { message: "Hi there" }
+      expect(response).to have_http_status(:ok)
+
+      body = JSON.parse(response.body)
+      expect(body["messages"]).to be_present
+      expect(body).not_to have_key("team_spec")
+    end
+
+    it "rejects blank message" do
+      post specs_project_message_path(project), params: { message: "" }
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "returns 422 when no active session" do
+      session_record.update_column(:status, "completed")
+      post specs_project_message_path(project), params: { message: "Hello" }
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "returns 429 on rate limit" do
+      allow_any_instance_of(Specs::Orchestrator).to receive(:process_turn)
+        .and_raise(AnthropicClient::RateLimitError)
+
+      post specs_project_message_path(project), params: { message: "Hello" }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
+    it "returns 500 on generic API error" do
+      allow_any_instance_of(Specs::Orchestrator).to receive(:process_turn)
+        .and_raise(AnthropicClient::ApiError, "server error")
+
+      post specs_project_message_path(project), params: { message: "Hello" }
+      expect(response).to have_http_status(:internal_server_error)
+    end
+  end
 end

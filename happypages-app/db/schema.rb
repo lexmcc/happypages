@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -515,6 +515,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_200000) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.datetime "invite_accepted_at"
+    t.datetime "invite_expires_at"
     t.datetime "invite_sent_at"
     t.string "invite_token"
     t.datetime "last_sign_in_at"
@@ -578,9 +579,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_200000) do
     t.bigint "organisation_id"
     t.bigint "shop_id"
     t.datetime "updated_at", null: false
+    t.index ["organisation_id", "created_at"], name: "index_specs_projects_on_organisation_id_and_created_at"
     t.index ["organisation_id"], name: "index_specs_projects_on_organisation_id"
     t.index ["shop_id", "created_at"], name: "index_specs_projects_on_shop_id_and_created_at"
     t.index ["shop_id"], name: "index_specs_projects_on_shop_id"
+    t.check_constraint "shop_id IS NOT NULL AND organisation_id IS NULL OR shop_id IS NULL AND organisation_id IS NOT NULL", name: "chk_specs_projects_owner_xor"
   end
 
   create_table "specs_sessions", force: :cascade do |t|

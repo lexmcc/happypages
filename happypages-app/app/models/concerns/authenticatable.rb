@@ -3,6 +3,8 @@ module Authenticatable
 
   included do
     has_secure_password validations: false
+
+    validates :password, length: { minimum: 8 }, if: -> { password.present? }
   end
 
   def invite_pending?

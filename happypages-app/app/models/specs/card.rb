@@ -22,6 +22,9 @@ module Specs
       chunks = session.team_spec&.dig("chunks")
       return if chunks.blank?
 
+      chunks = chunks.select { |c| c["title"].present? }
+      return if chunks.empty?
+
       chunks.each_with_index do |chunk, i|
         project.cards.create!(
           session: session,

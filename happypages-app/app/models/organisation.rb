@@ -3,9 +3,9 @@ class Organisation < ApplicationRecord
   has_many :specs_projects, class_name: "Specs::Project", dependent: :destroy
 
   validates :name, presence: true
-  validates :slug, uniqueness: true, allow_nil: true
-  validates :slug, length: { minimum: 3, maximum: 50 }, allow_nil: true
-  validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }, allow_nil: true
+  validates :slug, presence: true, uniqueness: true
+  validates :slug, length: { minimum: 3, maximum: 50 }
+  validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }
 
   before_validation :generate_slug
 

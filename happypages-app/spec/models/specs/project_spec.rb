@@ -5,6 +5,7 @@ RSpec.describe Specs::Project, type: :model do
     it { is_expected.to belong_to(:shop).optional }
     it { is_expected.to belong_to(:organisation).optional }
     it { is_expected.to have_many(:sessions).class_name("Specs::Session").with_foreign_key(:specs_project_id).dependent(:destroy) }
+    it { is_expected.to have_many(:cards).class_name("Specs::Card").with_foreign_key(:specs_project_id).dependent(:destroy) }
   end
 
   describe "validations" do

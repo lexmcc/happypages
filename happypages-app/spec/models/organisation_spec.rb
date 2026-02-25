@@ -9,9 +9,25 @@ RSpec.describe Organisation, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
 
+    it { is_expected.to validate_presence_of(:slug) }
+
     it "validates slug uniqueness" do
       create(:organisation, slug: "test-org")
       org = build(:organisation, slug: "test-org")
+      expect(org).not_to be_valid
+    end
+
+    it "validates slug format" do
+      org = build(:organisation, slug: "INVALID SLUG!")
+      expect(org).not_to be_valid
+      expect(org.errors[:slug]).to include("only allows lowercase letters, numbers, and hyphens")
+    end
+
+    it "validates slug length" do
+      org = build(:organisation, slug: "ab")
+      expect(org).not_to be_valid
+
+      org = build(:organisation, slug: "a" * 51)
       expect(org).not_to be_valid
     end
   end
