@@ -57,7 +57,7 @@
     }
 
     /* Typography */
-    h1, h2, h3 { font-family: 'Poppins', sans-serif; line-height: 1.2; text-transform: lowercase; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; line-height: 1.2; }
     h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
     h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--brown); }
     h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
@@ -73,7 +73,7 @@
 
     /* Swatch grid */
     .palette-group { margin-bottom: 32px; }
-    .palette-group-title { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brown-light); margin-bottom: 12px; }
+    .palette-group-title { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; color: var(--brown-light); margin-bottom: 12px; }
     .swatch-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
     .swatch-card { width: 140px; }
     .swatch-block { width: 100%; height: 88px; border-radius: 8px; display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; font-family: 'Inter', monospace; font-weight: 600; }
@@ -83,14 +83,14 @@
     .swatch-meta { padding: 8px 2px 0; }
     .swatch-role { display: block; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; line-height: 1.3; }
     .swatch-usage { display: block; font-size: 11px; color: var(--brown-light); line-height: 1.4; margin-top: 2px; }
-    .swatch-variant { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brown-light); display: block; margin-top: 2px; }
+    .swatch-variant { font-size: 10px; letter-spacing: 0.05em; color: var(--brown-light); display: block; margin-top: 2px; }
 
     /* Combo table */
     .combo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
     .combo-card { border-radius: 8px; padding: 20px; min-height: 100px; display: flex; flex-direction: column; justify-content: space-between; }
-    .combo-card h4 { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 8px; text-transform: lowercase; }
+    .combo-card h4 { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
     .combo-card p { font-size: 12px; margin-bottom: 8px; opacity: 0.85; }
-    .combo-card .mini-btn { display: inline-block; padding: 6px 16px; border-radius: 16px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .combo-card .mini-btn { display: inline-block; padding: 6px 16px; border-radius: 16px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
 
     /* Type samples */
     .type-sample { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--cream-dark); }
@@ -106,7 +106,7 @@
 
     /* Issues table */
     .issues-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px; }
-    .issues-table th { text-align: left; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; padding: 10px 12px; border-bottom: 2px solid var(--brown); color: var(--brown-light); }
+    .issues-table th { text-align: left; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.04em; padding: 10px 12px; border-bottom: 2px solid var(--brown); color: var(--brown-light); }
     .issues-table td { padding: 10px 12px; border-bottom: 1px solid var(--cream-dark); vertical-align: top; }
     .severity-high { color: var(--error); font-weight: 600; }
     .severity-medium { color: var(--tan-dark); font-weight: 600; }
@@ -120,7 +120,7 @@
 
     /* Discussion flag */
     .discussion-flag { border-left: 4px solid var(--tan); padding-left: 20px; margin-bottom: 24px; position: relative; }
-    .discussion-flag-label { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tan-dark); background: var(--tan-light); padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+    .discussion-flag-label { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--tan-dark); background: var(--tan-light); padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
 
     /* Principles */
     .principle { margin-bottom: 20px; }
@@ -142,8 +142,8 @@
     .img-audit-visual { flex: 0 0 220px; min-height: 180px; }
     .img-audit-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .img-audit-body { flex: 1; padding: 16px 20px 16px 0; }
-    .img-audit-title { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; margin-bottom: 6px; text-transform: lowercase; }
-    .img-audit-verdict { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+    .img-audit-title { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    .img-audit-verdict { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
     .verdict-replace { color: var(--cream-light); background: var(--error); }
     .verdict-keep { color: var(--cream-light); background: var(--success); }
     .verdict-strong { color: var(--brown); background: var(--cta); }
@@ -159,7 +159,7 @@
     /* TOC navigation */
     .toc { position: sticky; top: 0; z-index: 100; margin-bottom: 32px; transition: padding 0.2s, box-shadow 0.2s; background: var(--cream-light); padding: 16px 0; }
     .toc-inner { background: var(--cream); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-    .toc-label { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: var(--brown); text-transform: lowercase; white-space: nowrap; line-height: 28px; }
+    .toc-label { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: var(--brown); white-space: nowrap; line-height: 28px; }
     .toc-links { display: flex; flex-wrap: wrap; gap: 6px; }
     .toc-link { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500; color: var(--brown-light); background: var(--cream-light); padding: 4px 12px; border-radius: 14px; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; line-height: 20px; }
     .toc-link:hover { background: var(--cream-dark); color: var(--brown); }
@@ -238,38 +238,38 @@
       <img src="images/oat-cult-logo-pinkpng.png" alt="Oat Cult" class="brand-header-logo">
     </div>
     <div class="section">
-      <p class="subtitle">web brand system — overnight oats with live cultures, done properly. for health-conscious buyers who want bold flavour without the boring wellness aesthetic.</p>
+      <p class="subtitle">Web Brand System — Overnight Oats with Live Cultures, Done Properly. For Health-Conscious Buyers Who Want Bold Flavour without the Boring Wellness Aesthetic.</p>
       <div class="accent-bar"></div>
-    </div>
-
-    <div class="discussion-callout">
-      <span class="discussion-flag-label">heads up</span>
-      <span>some sections are flagged for discussion — <a href="#discussion-areas">see what needs input.</a></span>
     </div>
 
     <nav class="toc" id="toc">
       <div class="toc-inner">
-        <span class="toc-label">contents.</span>
+        <span class="toc-label">Contents.</span>
         <div class="toc-links">
-          <a href="#colour-system" class="toc-link">colours</a>
-          <a href="#colour-combos" class="toc-link">combos</a>
-          <a href="#typography" class="toc-link">type</a>
-          <a href="#spacing-layout" class="toc-link">spacing</a>
-          <a href="#mobile" class="toc-link">mobile</a>
-          <a href="#imagery" class="toc-link">imagery</a>
-          <a href="#conversion" class="toc-link">conversion</a>
-          <a href="#flagged-issues" class="toc-link">issues</a>
-          <a href="#discussion-areas" class="toc-link">discussion</a>
-          <a href="#provenance" class="toc-link">provenance</a>
+          <a href="#colour-system" class="toc-link">Colours</a>
+          <a href="#colour-combos" class="toc-link">Combos</a>
+          <a href="#typography" class="toc-link">Type</a>
+          <a href="#spacing-layout" class="toc-link">Spacing</a>
+          <a href="#mobile" class="toc-link">Mobile</a>
+          <a href="#imagery" class="toc-link">Imagery</a>
+          <a href="#conversion" class="toc-link">Conversion</a>
+          <a href="#flagged-issues" class="toc-link">Issues</a>
+          <a href="#discussion-areas" class="toc-link">Discussion</a>
+          <a href="#provenance" class="toc-link">Provenance</a>
         </div>
       </div>
     </nav>
+
+    <div class="discussion-callout">
+      <span class="discussion-flag-label">Heads Up</span>
+      <span>Some sections are flagged for discussion — <a href="#discussion-areas">see what needs input.</a></span>
+    </div>
 
     <div class="accent-bar-section"></div>
 
     <!-- Colour System -->
     <div class="section" id="colour-system">
-      <h2>colour system.</h2>
+      <h2>Colour System.</h2>
       <p class="section-intro">Your brand palette defines 5 core colours. For web, each colour needs variants — a lighter tint for backgrounds and hover states, and a darker shade for pressed states and emphasis. This gives the site visual depth while staying completely on-brand.</p>
 
       <div class="palette-group">
@@ -489,64 +489,64 @@
 
     <!-- Section Colour Combos -->
     <div class="section section-break" id="colour-combos">
-      <h2>section colour combinations.</h2>
+      <h2>Section Colour Combinations.</h2>
       <p class="section-intro">Valid background + text + CTA pairings for page sections.</p>
       <div class="combo-grid">
         <div class="combo-card" style="background: #3C1B01; color: #F4E7DB;">
           <div>
-            <h4 style="color: #F4E7DB;">dark section.</h4>
+            <h4 style="color: #F4E7DB;">Dark Section.</h4>
             <p>Header, footer, feature blocks</p>
           </div>
-          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">join the cult</span></div>
+          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">Join the Cult</span></div>
         </div>
         <div class="combo-card" style="background: #ED6B93; color: #3C1B01;">
           <div>
-            <h4>hero section.</h4>
+            <h4>Hero Section.</h4>
             <p>Hero, key feature areas</p>
           </div>
-          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">shop now</span></div>
+          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">Shop Now</span></div>
         </div>
         <div class="combo-card" style="background: #ACDBE7; color: #3C1B01;">
           <div>
-            <h4>callout section.</h4>
+            <h4>Callout Section.</h4>
             <p>Announcements, callout boxes</p>
           </div>
-          <div><span class="mini-btn" style="background: #3C1B01; color: #F4E7DB;">learn more</span></div>
+          <div><span class="mini-btn" style="background: #3C1B01; color: #F4E7DB;">Learn More</span></div>
         </div>
         <div class="combo-card" style="background: #F4E7DB; color: #3C1B01;">
           <div>
-            <h4>default section.</h4>
+            <h4>Default Section.</h4>
             <p>Product grid, info sections</p>
           </div>
-          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">add to cart</span></div>
+          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">Add to Cart</span></div>
         </div>
         <div class="combo-card" style="background: #FBF6F0; color: #3C1B01;">
           <div>
-            <h4>alternate section.</h4>
+            <h4>Alternate Section.</h4>
             <p>Subtle variation from cream</p>
           </div>
-          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">subscribe</span></div>
+          <div><span class="mini-btn" style="background: #F5C518; color: #3C1B01;">Subscribe</span></div>
         </div>
       </div>
     </div>
 
     <!-- Typography -->
     <div class="section section-break" id="typography">
-      <h2>typography.</h2>
+      <h2>Typography.</h2>
 
       <div class="type-sample">
-        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 56px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; text-transform: lowercase;">overnight oats.</div>
-        <div class="sample-meta">H1 Hero — Poppins 700, 56px desktop / 36px mobile, lowercase, -0.02em tracking</div>
+        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 56px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; ">Overnight Oats.</div>
+        <div class="sample-meta">H1 Hero — Poppins 700, 56px desktop / 36px mobile, title case, -0.02em tracking</div>
       </div>
 
       <div class="type-sample">
-        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 42px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; text-transform: lowercase;">how it works.</div>
-        <div class="sample-meta">H2 Section — Poppins 600, 42px desktop / 28px mobile, lowercase, -0.01em tracking</div>
+        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 42px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; ">How It Works.</div>
+        <div class="sample-meta">H2 Section — Poppins 600, 42px desktop / 28px mobile, title case, -0.01em tracking</div>
       </div>
 
       <div class="type-sample">
-        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600; line-height: 1.2; text-transform: lowercase;">cacao &amp; coconut.</div>
-        <div class="sample-meta">H3 Card / Product — Poppins 600, 24px desktop / 20px mobile, lowercase</div>
+        <div class="sample-text" style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600; line-height: 1.2; ">Cacao &amp; Coconut.</div>
+        <div class="sample-meta">H3 Card / Product — Poppins 600, 24px desktop / 20px mobile, title case</div>
       </div>
 
       <div class="type-sample">
@@ -560,8 +560,8 @@
       </div>
 
       <div class="type-sample">
-        <div class="sample-text" style="display: inline-block; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 600; line-height: 1; text-transform: uppercase; letter-spacing: 0.05em; background: var(--cta); color: var(--brown); padding: 14px 32px; border-radius: 24px;">JOIN THE CULT</div>
-        <div class="sample-meta" style="margin-top: 10px;">Button / CTA — Poppins 600, 16px desktop / 14px mobile, uppercase, 0.05em tracking, pill radius</div>
+        <div class="sample-text" style="display: inline-block; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 600; line-height: 1; letter-spacing: 0.05em; background: var(--cta); color: var(--brown); padding: 14px 32px; border-radius: 24px;">Join the Cult</div>
+        <div class="sample-meta" style="margin-top: 10px;">Button / CTA — Poppins 600, 16px desktop / 14px mobile, title case, 0.05em tracking, pill radius</div>
       </div>
 
       <div class="type-sample">
@@ -570,7 +570,7 @@
       </div>
 
       <div style="margin-top: 32px; padding: 20px; background: var(--cream); border-radius: 8px;">
-        <h3 style="font-size: 14px; margin-bottom: 12px;">font stack.</h3>
+        <h3 style="font-size: 14px; margin-bottom: 12px;">Font Stack.</h3>
         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Headings:</strong> Poppins (Google Fonts) — all h1-h3, product names, prices</p>
         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Body:</strong> Inter (Google Fonts) — paragraphs, meta, descriptions</p>
         <p style="font-size: 13px; margin-bottom: 0;"><strong>Logo:</strong> Blackletter — display only, never for web text</p>
@@ -579,7 +579,7 @@
 
     <!-- Spacing & Layout -->
     <div class="section section-break" id="spacing-layout">
-      <h2>spacing &amp; layout.</h2>
+      <h2>Spacing &amp; Layout.</h2>
 
       <div style="margin-bottom: 32px;">
         <div class="spacing-item">
@@ -611,38 +611,38 @@
 
     <!-- Mobile Experience -->
     <div class="section" id="mobile">
-      <h2>mobile experience.</h2>
+      <h2>Mobile Experience.</h2>
       <p class="section-intro">75% of traffic is mobile — mobile is the primary experience, desktop is the adaptation.</p>
 
       <div class="principle">
-        <div class="principle-name">touch targets.</div>
+        <div class="principle-name">Touch Targets.</div>
         <div class="principle-desc">Generous, never cramped. Minimum 44px tap targets on all interactive elements. Spacing between tappable items prevents mis-taps.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">thumb zone.</div>
+        <div class="principle-name">Thumb Zone.</div>
         <div class="principle-desc">Primary actions reachable without stretching. Key CTAs live in the bottom half of the viewport — the natural thumb arc.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">typography.</div>
+        <div class="principle-name">Typography.</div>
         <div class="principle-desc">Body text never shrinks below 16px. Headings scale per the type table — H1 drops from 56px to 36px, H2 from 42px to 28px. Readability is non-negotiable.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">spacing.</div>
+        <div class="principle-name">Spacing.</div>
         <div class="principle-desc">Tighter section padding on mobile (48px vs 80px desktop), but never cramped — content breathes. Card padding stays at 24px.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">imagery.</div>
+        <div class="principle-name">Imagery.</div>
         <div class="principle-desc">Full-width, immersive, no zooming required. Product images sized so detail is clear at phone width without pinch-to-zoom.</div>
       </div>
     </div>
 
     <!-- Imagery -->
     <div class="section discussion-flag" id="imagery">
-      <span class="discussion-flag-label">for discussion</span>
-      <h2>imagery assessment.</h2>
+      <span class="discussion-flag-label">For Discussion</span>
+      <h2>Imagery Assessment.</h2>
       <p class="section-intro">An audit of current imagery across the site, followed by a proposed direction for how the two layers — graphic illustration and real photography — could work together as a system.</p>
 
-      <h3>brand &amp; lifestyle imagery.</h3>
+      <h3>Brand &amp; Lifestyle Imagery.</h3>
       <p class="section-intro">Assessment of current brand and lifestyle imagery across the site.</p>
 
       <!-- B&W popup -->
@@ -651,8 +651,8 @@
           <img src="images/lifestyle-1-dark.png" alt="B&W popup showing man with bowl">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">b&amp;w popup (man with bowl)</div>
-          <span class="img-audit-verdict verdict-replace">replace</span>
+          <div class="img-audit-title">B&amp;W Popup (Man with Bowl)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
           <p class="img-audit-text">Tonal mismatch — reads as hardship, not "bold flavour overnight oats." Dark, grainy B&amp;W next to "Join the Cult" creates uncomfortable association. No graphic layer, no palette colours. Breaks the system entirely. Actively hurts popup conversion rate.</p>
         </div>
       </div>
@@ -663,8 +663,8 @@
           <img src="images/lifestyle-2-dark-graphic-mix.png" alt="Figure with oat head on blue geometric background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">figure (oat head, blue geometric bg)</div>
-          <span class="img-audit-verdict verdict-replace">replace</span>
+          <div class="img-audit-title">Figure (Oat Head, Blue Geometric Bg)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
           <p class="img-audit-text">Visually arresting but disconnected from product. Abstract editorial that says "art gallery" not "breakfast." The blue isn't the brand blue. First-time visitor learns nothing about the product in 2–3 seconds. Doesn't use the monk illustration system.</p>
         </div>
       </div>
@@ -675,13 +675,13 @@
           <img src="images/lifestyle-3-graphic.png" alt="Illustrated popup with graphic oaty udders">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">illustrated popup (graphic oaty udders)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Illustrated Popup (Graphic Oaty Udders)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Product present, brand palette present (pink/brown/cream), "cult" personality comes through. Ownable — no other oats brand looks like this. Works at popup scale. The benchmark for graphic-led brand imagery.</p>
         </div>
       </div>
 
-      <h3>product imagery.</h3>
+      <h3>Product Imagery.</h3>
       <p class="section-intro">Assessment of current product photography across the site.</p>
 
       <!-- Raw oats pour -->
@@ -690,8 +690,8 @@
           <img src="images/product-1-plain.png" alt="Raw oats being poured into blue-grey bowl">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">raw oats pour (blue-grey bowl)</div>
-          <span class="img-audit-verdict verdict-replace">replace</span>
+          <div class="img-audit-title">Raw Oats Pour (Blue-Grey Bowl)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
           <p class="img-audit-text">Off-brand colours (grey marble, blue-grey bowl, pink tea towel — none are palette colours). Shows dry oats being poured — the least appetising moment. No packaging, no brand presence, no graphic layer. Can't be rescued with a monk overlay; needs reshooting on-palette.</p>
         </div>
       </div>
@@ -702,8 +702,8 @@
           <img src="images/product-2-bold.png" alt="Sachet held in fist on pink graphic background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">sachet-in-hand (pink graphic background)</div>
-          <span class="img-audit-verdict verdict-keep">keep</span>
+          <div class="img-audit-title">Sachet-in-Hand (Pink Graphic Background)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
           <p class="img-audit-text">Product-in-hand, bold saturated brand-colour background, close crop, packaging clearly readable. The fist-grip has confident, rebellious energy. The hybrid approach (real photo composited on graphic bg) bridges illustration and product photography perfectly.</p>
         </div>
       </div>
@@ -714,13 +714,13 @@
           <img src="images/product-3-calm-bold.png" alt="Three sachet flavours lined up on pink background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">product lineup on pink (pdp gallery)</div>
-          <span class="img-audit-verdict verdict-keep">keep</span>
+          <div class="img-audit-title">Product Lineup on Pink (PDP Gallery)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
           <p class="img-audit-text">Shows full range clearly (Strawberry Goji/Cinnamon/Cacao), on-palette pink background, good for product grid. Pink sachets blend into pink bg slightly. Best as PDP image 2–3, not the lead image.</p>
         </div>
       </div>
 
-      <h3>proposed direction.</h3>
+      <h3>Proposed Direction.</h3>
       <p class="section-intro">A two-layer imagery system is already emerging in the strongest assets above. Below are examples — mostly from existing site content — that show how graphic-led brand imagery and photo-led product imagery could work together as a deliberate system. The illustrated popup assessed above is the benchmark for the graphic-led side; the examples here build on that foundation. This is a recommendation, not a locked decision.</p>
 
       <!-- How-to-prepare monks -->
@@ -729,8 +729,8 @@
           <img src="images/How-to-prep-monk.png" alt="Three-step how-to-prepare illustration with monk character">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">how-to-prepare monks (brown bg)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">How-to-Prepare Monks (Brown Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Pure illustration in the right context — step-by-step instructions benefit from it because you're teaching, not selling. Pink circles on brown is on-palette. The monk's hands interacting with real-looking product (sachet, jar, bowl) keeps it grounded. Works as homepage "how it works" strip or PDP section.</p>
         </div>
       </div>
@@ -741,8 +741,8 @@
           <img src="images/Sachet-fan-monk-probiotic.jpg" alt="Three sachets fanned out with small monk and faded probiotic graphic on pink background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">sachet fan with monk (pink bg, probiotic)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Sachet Fan with Monk (Pink Bg, Probiotic)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Real sachets are the hero — three flavours fanned, packaging readable, brand name prominent. Small arms-raised monk at bottom-right adds personality without competing. Faded probiotic graphic at top-right layers in the gut health messaging subtly. Benefit bullets scannable and well-spaced. Headline copy ("gut-worshipping live cultures") lands the product story with brand voice. Two levels of graphic — solid illustration and ghosted accent — working at different intensities on one card.</p>
         </div>
       </div>
@@ -753,8 +753,8 @@
           <img src="images/Review-bubbles.jpg" alt="Customer review speech bubbles in brand colours">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">review speech bubbles (cream/pink/blue)</div>
-          <span class="img-audit-verdict verdict-keep">keep</span>
+          <div class="img-audit-title">Review Speech Bubbles (Cream/Pink/Blue)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
           <p class="img-audit-text">Pure social proof in brand-colour speech bubbles — pink, blue, cream all on-palette. Real customer voice matches brand personality. Functional and effective. Could be elevated further with a small monk or product element alongside, but works well as-is for testimonial sections.</p>
         </div>
       </div>
@@ -765,8 +765,8 @@
           <img src="images/Review-bowl-oatyudder.png" alt="Cacao overnight oats bowl with oaty udder graphic and customer review on pink background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">review card (cacao bowl, pink bg, oaty udder)</div>
-          <span class="img-audit-verdict verdict-strong">strong — benchmark</span>
+          <div class="img-audit-title">Review Card (Cacao Bowl, Pink Bg, Oaty Udder)</div>
+          <span class="img-audit-verdict verdict-strong">Strong — Benchmark</span>
           <p class="img-audit-text">The finished cacao bowl is the hero — real food, appetising, topped generously. Oaty udder graphic in the corner adds brand personality without competing with the product. Real customer review underneath builds trust. Pink background on-palette. Photo carries appetite appeal, illustration carries identity, review carries social proof — three jobs, one card. This is the benchmark for photo-led product imagery.</p>
         </div>
       </div>
@@ -777,8 +777,8 @@
           <img src="images/Benefits-bowls-monk.jpg" alt="Three overhead bowls with benefit callouts above and below, small monk at bottom, on light blue background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">benefits section (three bowls, monk, light blue bg)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Benefits Section (Three Bowls, Monk, Light Blue Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Three real bowls with fresh toppings (strawberry, banana, blueberry) are the clear hero — overhead angle is appetising, each flavour distinct. Benefit callouts sit above and below the bowls in a clean grid — six claims scannable at a glance. Small arms-raised monk at the bottom adds personality without competing. Light blue background on-palette, calmer than bold blue which lets the food colours pop. The graphic-to-product ratio is well judged here — product dominates, illustration supports.</p>
         </div>
       </div>
@@ -789,8 +789,8 @@
           <img src="images/Back-of-pack-probiotic.jpg" alt="Back of sachet on light blue background with pink probiotic graphic and probiotic tagline">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">back-of-pack (brown sachet, light blue bg, probiotic)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Back-of-Pack (Brown Sachet, Light Blue Bg, Probiotic)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Full back-of-pack on a light blue background — nutritional info, prep steps, and credentials all readable. Pink probiotic graphic peeking from the top-right corner adds brand personality to what could be a dry information shot. Probiotic tagline banner across the top ties into the gut health messaging. Brown sachet on blue is on-palette. Shows the packaging illustration system (how-to icons, credential badges) carries through to the physical product. For web: PDP "what's inside" or ingredients sections.</p>
         </div>
       </div>
@@ -809,7 +809,7 @@
         <p style="font-size: 14px; margin-bottom: 0;"><strong>Reference brands:</strong> Innocent Drinks (real product + illustrated character system), Oatly, Liquid Death — all illustration-led, among the most shared DTC brands.</p>
       </div>
 
-      <h3>pushing the envelope.</h3>
+      <h3>Pushing the Envelope.</h3>
       <p class="section-intro">An alternative direction that takes the hybrid approach further — fusing real product photography directly with illustration rather than keeping them as separate layers.</p>
 
       <div class="img-audit img-audit--square">
@@ -817,8 +817,8 @@
           <img src="images/monk-bowl-pinkbg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on pink background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">photo-illustration composite (monk hand, real bowl — pink bg)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Pink Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Real food (textured oats, fresh blueberries) composited onto an illustrated monk hand. The food carries the trust and appetite job, the hand carries the identity job — instantly recognisable as Oat Cult even without a logo. Bold pink background makes this the hero variant — social, ads, homepage banners.</p>
         </div>
       </div>
@@ -828,8 +828,8 @@
           <img src="images/monk-bowl-creambg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on cream background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">photo-illustration composite (monk hand, real bowl — cream bg)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Cream Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Same composite technique on a calmer cream background. Less scroll-stopping than the pink variant but more versatile — works for PDP hero images, product grid, and contexts where the food needs to sell without competing with the background. The pair together gives flexibility across every touchpoint.</p>
         </div>
       </div>
@@ -840,8 +840,8 @@
           <img src="images/hero-pack-monk-hands.webp" alt="Illustrated monk fists holding real cacao sachet on bold pink and cream graphic background">
         </div>
         <div class="img-audit-body">
-          <div class="img-audit-title">hero pack (monk hands, cacao sachet — pink/cream bg)</div>
-          <span class="img-audit-verdict verdict-strong">strong</span>
+          <div class="img-audit-title">Hero Pack (Monk Hands, Cacao Sachet — Pink/Cream Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
           <p class="img-audit-text">Illustrated blue monk fists gripping a real cacao sachet — the composite approach applied to packaging rather than bowls. Packaging readable, brand name prominent, flavour clear. Bold pink and cream lightning shapes behind add energy. Proves the monk hand system scales beyond food to product-in-hand moments. The fist grip matches the rebellious energy of the sachet-in-hand photo from the audit, but now fully ownable. Hero, social, and ad use.</p>
         </div>
       </div>
@@ -856,38 +856,38 @@
 
     <!-- Conversion Principles -->
     <div class="section section-break" id="conversion">
-      <h2>conversion principles.</h2>
+      <h2>Conversion Principles.</h2>
       <p class="section-intro">Brand-level principles for how conversion tactics should feel within Oat Cult.</p>
 
       <div class="principle">
-        <div class="principle-name">cta presence.</div>
+        <div class="principle-name">CTA Presence.</div>
         <div class="principle-desc">Confident and visible — the yellow pops without shouting. Every scroll position on mobile should have a clear next action within thumb reach.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">urgency.</div>
+        <div class="principle-name">Urgency.</div>
         <div class="principle-desc">Earned, not manufactured — "cult favourite" and social proof over countdown timers or fake scarcity.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">trust signals.</div>
+        <div class="principle-name">Trust Signals.</div>
         <div class="principle-desc">Woven into the product story — "1 billion live cultures", certifications alongside ingredients, not in a bolted-on badge strip.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">subscription.</div>
-        <div class="principle-desc">Sub-first model. Present subscription as the default highlighted option. Frame the saving as community — "join the cult and save 20%" — not just a discount.</div>
+        <div class="principle-name">Subscription.</div>
+        <div class="principle-desc">Sub-first model. Present subscription as the default highlighted option. Frame the saving as community — "Join the Cult and save 20%" — not just a discount.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">cart &amp; checkout.</div>
+        <div class="principle-name">Cart &amp; Checkout.</div>
         <div class="principle-desc">Frictionless and warm. Brown and cream keep it calm, yellow CTA stays prominent. Brand personality carries through to payment.</div>
       </div>
       <div class="principle">
-        <div class="principle-name">mobile.</div>
+        <div class="principle-name">Mobile.</div>
         <div class="principle-desc">Thumb-first — key actions in bottom half of viewport, generous tap targets (min 44px), no pinch-to-zoom on product images.</div>
       </div>
     </div>
 
     <!-- Flagged Issues -->
     <div class="section section-break" id="flagged-issues">
-      <h2>flagged issues.</h2>
+      <h2>Flagged Issues.</h2>
       <table class="issues-table">
         <thead>
           <tr>
@@ -934,20 +934,20 @@
 
     <!-- Discussion Areas -->
     <div class="section" id="discussion-areas">
-      <h2>discussion areas.</h2>
+      <h2>Discussion Areas.</h2>
       <p class="section-intro">Sections marked "for discussion" where the direction is proposed but client input is needed before locking.</p>
 
       <div class="principle">
-        <div class="principle-name">imagery direction.</div>
+        <div class="principle-name">Imagery Direction.</div>
         <div class="principle-desc">The audit identifies 3 assets to replace (no graphic layer, off-palette) and a two-layer system already emerging in the strongest work. Key discussion: whether to commit to this graphic-led / photo-led split as the defining visual identity, and prioritising the shoot list for new product photography designed for graphic compositing.</div>
       </div>
     </div>
 
     <!-- Provenance -->
     <div class="section" id="provenance">
-      <h2>provenance.</h2>
+      <h2>Provenance.</h2>
 
-      <h3 style="color: var(--blue-dark);">from client.</h3>
+      <h3 style="color: var(--blue-dark);">From Client.</h3>
       <ul class="prov-list prov-client" style="margin-bottom: 24px;">
         <li>5-colour palette (brown, pink, tan, blue, cream) with hex values</li>
         <li>Blackletter logo — sacred, untouched</li>
@@ -960,7 +960,7 @@
         <li>Bold personality moments + clean product areas positioning</li>
       </ul>
 
-      <h3 style="color: var(--cta-dark);">proposed by happypages.</h3>
+      <h3 style="color: var(--cta-dark);">Proposed by Happypages.</h3>
       <ul class="prov-list prov-happypages">
         <li>CTA Yellow #F5C518 as 6th palette colour with light/dark variants</li>
         <li>All light/dark colour variants for the 5 core colours</li>
