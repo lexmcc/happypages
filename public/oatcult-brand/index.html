@@ -126,8 +126,16 @@
     .prov-happypages li::before { background: var(--cta); }
 
     /* Discussion flag */
-    .discussion-flag { border-left: 4px solid var(--tan); padding-left: 20px; margin-bottom: 24px; position: relative; }
-    .discussion-flag-label { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--tan-dark); background: var(--tan-light); padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+    .discussion-flag-label { display: inline-block; font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--tan-dark); background: var(--tan-light); padding: 2px 8px; border-radius: 4px; }
+    .discussion-flag-label.discussed { background: var(--success); color: #fff; }
+
+    /* Accordion */
+    .accordion { margin-bottom: 24px; }
+    .accordion-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; padding: 12px 0; }
+    .accordion-title::-webkit-details-marker { display: none; }
+    .accordion-title::after { content: '▸'; margin-left: auto; transition: transform 0.2s; font-size: 14px; color: var(--brown-light); }
+    details[open] > .accordion-title::after { transform: rotate(90deg); }
+    .accordion-body { padding-top: 16px; }
 
     /* Principles */
     .principle { margin-bottom: 20px; }
@@ -267,7 +275,7 @@
       <img src="images/oat-cult-logo-pinkpng.png" alt="Oat Cult" class="brand-header-logo">
     </div>
     <div class="section">
-      <p class="subtitle">Web Brand System — Colours, typography, imagery, and conversion principles for Oat Cult's Shopify store. Two items need your input before we start building.</p>
+      <p class="subtitle">Web Brand System — Colours, typography, imagery, and conversion principles for Oat Cult's Shopify store. One item needs your input before we start building.</p>
       <div class="accent-bar"></div>
     </div>
 
@@ -277,28 +285,32 @@
         <div class="toc-links">
           <a href="#decision-points" class="toc-link">Decisions</a>
           <a href="#colour-system" class="toc-link">Colours</a>
-          <a href="#imagery" class="toc-link">Imagery</a>
           <a href="#conversion" class="toc-link">Conversion</a>
           <a href="#flagged-issues" class="toc-link">Issues</a>
           <a href="#typography" class="toc-link">Type</a>
           <a href="#spacing-layout" class="toc-link">Spacing</a>
           <a href="#mobile" class="toc-link">Mobile</a>
-          <a href="#next-steps" class="toc-link">Next Steps</a>
           <a href="#provenance" class="toc-link">Provenance</a>
         </div>
       </div>
     </nav>
 
     <!-- Decision Points -->
-    <div class="section decision-section discussion-flag" id="decision-points">
-      <span class="discussion-flag-label">For Discussion</span>
-      <h2>Decision Points.</h2>
+    <div class="section decision-section" id="decision-points">
+      <h2>Decisions.</h2>
+
+      <details class="accordion" open>
+        <summary class="accordion-title">
+          <span class="discussion-flag-label">For Discussion</span>
+          CTA Colour.
+        </summary>
+        <div class="accordion-body">
       <p class="section-intro">The current yellow buttons are hard to read on cream and pink backgrounds — there isn't enough contrast between the button and the surface behind it. Below are two alternative systems, each pairing a CTA treatment with an offer/sale treatment. Both use Oat Cult Blue for offer badges.</p>
 
       <!-- Option A -->
       <div class="decision-option recommended">
         <div class="decision-option-title">Option A: Brown CTA + Blue Callout Offers.</div>
-        <div class="decision-option-sub">Uses existing brand colours for both CTAs and offers. No new colours.</div>
+        <div class="decision-option-sub">Uses existing brand colours for both CTAs and offers. Strengthens brand cohesion and passes contrast on every surface.</div>
 
         <div class="decision-swatches">
           <div class="decision-swatch">
@@ -389,7 +401,7 @@
       <!-- Option B -->
       <div class="decision-option">
         <div class="decision-option-title">Option B: Yellow CTA + Blue Callout Offers.</div>
-        <div class="decision-option-sub">Keeps the existing yellow CTA. Dark brown 3D shadow for depth and legibility.</div>
+        <div class="decision-option-sub">Keeps the existing yellow CTA with dark brown 3D shadow. Competes with pink for attention and sits outside the core palette.</div>
 
         <div class="decision-swatches">
           <div class="decision-swatch">
@@ -472,6 +484,232 @@
           </div>
         </div>
       </div>
+
+        </div><!-- .accordion-body -->
+      </details><!-- CTA accordion -->
+
+      <details class="accordion" id="imagery">
+        <summary class="accordion-title">
+          <span class="discussion-flag-label discussed">Discussed</span>
+          Imagery Direction.
+        </summary>
+        <div class="accordion-body">
+      <p class="section-intro">An audit of current imagery across the site, followed by a proposed direction for how the two layers — graphic illustration and real photography — could work together as a system.</p>
+      <p class="section-intro"><strong>Summary:</strong> 3 assets to replace, 3 to keep, 7 strong references. The proposed direction: a two-layer system — graphic illustration for brand moments, real photography for product moments.</p>
+
+      <h3>Brand &amp; Lifestyle Imagery.</h3>
+      <p class="section-intro">Assessment of current brand and lifestyle imagery across the site.</p>
+
+      <!-- B&W popup -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/lifestyle-1-dark.png" alt="B&W popup showing man with bowl">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">B&amp;W Popup (Man with Bowl)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
+          <p class="img-audit-text">Tonal mismatch — reads as hardship, not "bold flavour overnight oats." Dark, grainy B&amp;W next to "Join the Cult" creates uncomfortable association. No graphic layer, no palette colours. Breaks the system entirely. Actively hurts popup conversion rate.</p>
+        </div>
+      </div>
+
+      <!-- Oat head figure -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/lifestyle-2-dark-graphic-mix.png" alt="Figure with oat head on blue geometric background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Figure (Oat Head, Blue Geometric Bg)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
+          <p class="img-audit-text">Visually arresting but disconnected from product. Abstract editorial that says "art gallery" not "breakfast." The blue isn't the brand blue. First-time visitor learns nothing about the product in 2–3 seconds. Doesn't use the monk illustration system.</p>
+        </div>
+      </div>
+
+      <!-- Illustrated popup -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/lifestyle-3-graphic.png" alt="Illustrated popup with graphic oaty udders">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Illustrated Popup (Graphic Oaty Udders)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Product present, brand palette present (pink/brown/cream), "cult" personality comes through. Ownable — no other oats brand looks like this. Works at popup scale. The benchmark for graphic-led brand imagery.</p>
+        </div>
+      </div>
+
+      <h3>Product Imagery.</h3>
+      <p class="section-intro">Assessment of current product photography across the site.</p>
+
+      <!-- Raw oats pour -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/product-1-plain.png" alt="Raw oats being poured into blue-grey bowl">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Raw Oats Pour (Blue-Grey Bowl)</div>
+          <span class="img-audit-verdict verdict-replace">Replace</span>
+          <p class="img-audit-text">Off-brand colours (grey marble, blue-grey bowl, pink tea towel — none are palette colours). Shows dry oats being poured — the least appetising moment. No packaging, no brand presence, no graphic layer. Can't be rescued with a monk overlay; needs reshooting on-palette.</p>
+        </div>
+      </div>
+
+      <!-- Sachet-in-hand -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/product-2-bold.png" alt="Sachet held in fist on pink graphic background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Sachet-in-Hand (Pink Graphic Background)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
+          <p class="img-audit-text">Product-in-hand, bold saturated brand-colour background, close crop, packaging clearly readable. The fist-grip has confident, rebellious energy. The hybrid approach (real photo composited on graphic bg) bridges illustration and product photography perfectly.</p>
+        </div>
+      </div>
+
+      <!-- Product lineup on pink -->
+      <div class="img-audit">
+        <div class="img-audit-visual">
+          <img src="images/product-3-calm-bold.png" alt="Three sachet flavours lined up on pink background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Product Lineup on Pink (PDP Gallery)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
+          <p class="img-audit-text">Shows full range clearly (Strawberry Goji/Cinnamon/Cacao), on-palette pink background, good for product grid. Pink sachets blend into pink bg slightly. Best as PDP image 2–3, not the lead image.</p>
+        </div>
+      </div>
+
+      <h3>Proposed Direction.</h3>
+      <p class="section-intro">A two-layer imagery system is already emerging in the strongest assets above. Below are examples — mostly from existing site content — that show how graphic-led brand imagery and photo-led product imagery could work together as a deliberate system. The illustrated popup assessed above is the benchmark for the graphic-led side; the examples here build on that foundation. This is a recommendation, not a locked decision.</p>
+
+      <!-- How-to-prepare monks -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/How-to-prep-monk.png" alt="Three-step how-to-prepare illustration with monk character">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">How-to-Prepare Monks (Brown Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Pure illustration in the right context — step-by-step instructions benefit from it because you're teaching, not selling. Pink circles on brown is on-palette. The monk's hands interacting with real-looking product (sachet, jar, bowl) keeps it grounded. Works as homepage "how it works" strip or PDP section.</p>
+        </div>
+      </div>
+
+      <!-- Sachet fan with monk -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/Sachet-fan-monk-probiotic.jpg" alt="Three sachets fanned out with small monk and faded probiotic graphic on pink background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Sachet Fan with Monk (Pink Bg, Probiotic)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Real sachets are the hero — three flavours fanned, packaging readable, brand name prominent. Small arms-raised monk at bottom-right adds personality without competing. Faded probiotic graphic at top-right layers in the gut health messaging subtly. Benefit bullets scannable and well-spaced. Headline copy ("gut-worshipping live cultures") lands the product story with brand voice. Two levels of graphic — solid illustration and ghosted accent — working at different intensities on one card.</p>
+        </div>
+      </div>
+
+      <!-- Review speech bubbles -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/Review-bubbles.jpg" alt="Customer review speech bubbles in brand colours">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Review Speech Bubbles (Cream/Pink/Blue)</div>
+          <span class="img-audit-verdict verdict-keep">Keep</span>
+          <p class="img-audit-text">Pure social proof in brand-colour speech bubbles — pink, blue, cream all on-palette. Real customer voice matches brand personality. Functional and effective. Could be elevated further with a small monk or product element alongside, but works well as-is for testimonial sections.</p>
+        </div>
+      </div>
+
+      <!-- Review card with bowl -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/Review-bowl-oatyudder.png" alt="Cacao overnight oats bowl with oaty udder graphic and customer review on pink background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Review Card (Cacao Bowl, Pink Bg, Oaty Udder)</div>
+          <span class="img-audit-verdict verdict-strong">Strong — Benchmark</span>
+          <p class="img-audit-text">The finished cacao bowl is the hero — real food, appetising, topped generously. Oaty udder graphic in the corner adds brand personality without competing with the product. Real customer review underneath builds trust. Pink background on-palette. Photo carries appetite appeal, illustration carries identity, review carries social proof — three jobs, one card. This is the benchmark for photo-led product imagery.</p>
+        </div>
+      </div>
+
+      <!-- Benefits section with three bowls -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/Benefits-bowls-monk.jpg" alt="Three overhead bowls with benefit callouts above and below, small monk at bottom, on light blue background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Benefits Section (Three Bowls, Monk, Light Blue Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Three real bowls with fresh toppings (strawberry, banana, blueberry) are the clear hero — overhead angle is appetising, each flavour distinct. Benefit callouts sit above and below the bowls in a clean grid — six claims scannable at a glance. Small arms-raised monk at the bottom adds personality without competing. Light blue background on-palette, calmer than bold blue which lets the food colours pop. The graphic-to-product ratio is well judged here — product dominates, illustration supports.</p>
+        </div>
+      </div>
+
+      <!-- Back-of-pack -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/Back-of-pack-probiotic.jpg" alt="Back of sachet on light blue background with pink probiotic graphic and probiotic tagline">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Back-of-Pack (Brown Sachet, Light Blue Bg, Probiotic)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Full back-of-pack on a light blue background — nutritional info, prep steps, and credentials all readable. Pink probiotic graphic peeking from the top-right corner adds brand personality to what could be a dry information shot. Probiotic tagline banner across the top ties into the gut health messaging. Brown sachet on blue is on-palette. Shows the packaging illustration system (how-to icons, credential badges) carries through to the physical product. For web: PDP "what's inside" or ingredients sections.</p>
+        </div>
+      </div>
+
+      <div style="padding: 20px; background: var(--blue); border-radius: 8px; margin-bottom: 24px;">
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The opportunity:</strong> a two-layer imagery system is already emerging in the strongest assets. We'd recommend leaning into it as the defining visual identity — graphic illustration and real photography working together, with clear rules for when each layer leads.</p>
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The split:</strong> if the goal is "feel the brand" → graphic-led (hero banners, popups, storytelling, social). If the goal is "see/buy the product" → photo-led with graphic accent (PDP, product grid, reviews, benefits).</p>
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>Why it works:</strong> real photos alone look generic (any oat brand). Illustration alone doesn't sell the food. Together, the monk system gives Oat Cult something ownable — no competitor has this — while real product photography builds the trust and appetite appeal that illustrations can't.</p>
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What to retire:</strong> assets that have neither layer — the B&amp;W popup, raw oats pour, and abstract figure. These break the system because they have no illustration, no on-palette treatment, and can't be fixed with a monk overlay. They need replacing, not patching.</p>
+        <p style="font-size: 14px; margin-bottom: 8px;"><strong>The missing shoot list:</strong> new product photography should be shot for graphic compositing — clean edges, on-palette backgrounds, space for the monk or graphic elements to be layered in.</p>
+        <ol style="font-size: 14px; padding-left: 20px; margin-bottom: 12px;">
+          <li style="margin-bottom: 4px;">Finished bowls — overhead, on pink/brown/cream backgrounds, with toppings. One per flavour.</li>
+          <li style="margin-bottom: 4px;">Morning ritual — sachet torn open, milk poured, jar going into fridge. Real hands, brand-colour surfaces.</li>
+          <li style="margin-bottom: 4px;">Lifestyle context — someone eating at a table/desk/on a commute. Real person, warm light, on-brand colours.</li>
+        </ol>
+        <p style="font-size: 14px; margin-bottom: 0;"><strong>Reference brands:</strong> Innocent Drinks (real product + illustrated character system), Oatly, Liquid Death — all illustration-led, among the most shared DTC brands.</p>
+      </div>
+
+      <h3>Pushing the Envelope.</h3>
+      <p class="section-intro">An alternative direction that takes the hybrid approach further — fusing real product photography directly with illustration rather than keeping them as separate layers.</p>
+
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/monk-bowl-pinkbg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on pink background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Pink Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Real food (textured oats, fresh blueberries) composited onto an illustrated monk hand. The food carries the trust and appetite job, the hand carries the identity job — instantly recognisable as Oat Cult even without a logo. Bold pink background makes this the hero variant — social, ads, homepage banners.</p>
+        </div>
+      </div>
+
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/monk-bowl-creambg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on cream background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Cream Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Same composite technique on a calmer cream background. Less scroll-stopping than the pink variant but more versatile — works for PDP hero images, product grid, and contexts where the food needs to sell without competing with the background. The pair together gives flexibility across every touchpoint.</p>
+        </div>
+      </div>
+
+      <!-- Hero pack with monk hands -->
+      <div class="img-audit img-audit--square">
+        <div class="img-audit-visual">
+          <img src="images/hero-pack-monk-hands.webp" alt="Illustrated monk fists holding real cacao sachet on bold pink and cream graphic background">
+        </div>
+        <div class="img-audit-body">
+          <div class="img-audit-title">Hero Pack (Monk Hands, Cacao Sachet — Pink/Cream Bg)</div>
+          <span class="img-audit-verdict verdict-strong">Strong</span>
+          <p class="img-audit-text">Illustrated blue monk fists gripping a real cacao sachet — the composite approach applied to packaging rather than bowls. Packaging readable, brand name prominent, flavour clear. Bold pink and cream lightning shapes behind add energy. Proves the monk hand system scales beyond food to product-in-hand moments. The fist grip matches the rebellious energy of the sachet-in-hand photo from the audit, but now fully ownable. Hero, social, and ad use.</p>
+        </div>
+      </div>
+
+      <div style="padding: 20px; background: var(--cream); border: 1px solid var(--cream-dark); border-radius: 8px; margin-bottom: 24px;">
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What this changes:</strong> the proposed split above keeps graphic and photo as two distinct layers. This approach merges them into a single image — real product held by illustrated hands, on bold palette backgrounds. It's a tighter, more distinctive system where every product image is unmistakably Oat Cult.</p>
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The upside:</strong> product imagery becomes as ownable as the brand imagery. No competitor could use the same shots. Scroll-stopping on social. The monk hand becomes a visual signature across every touchpoint.</p>
+        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What to consider:</strong> compositing quality needs to be consistent — the join between real bowl and illustrated hand is where it lives or dies. This works well for "held bowl" shots but may be harder for pouring moments or sachet-in-hand where the interaction is more complex. Needs a clear production process to maintain quality at scale.</p>
+        <p style="font-size: 14px; margin-bottom: 0;"><strong>If you go this route:</strong> shoot product photography on neutral backgrounds with clean edges specifically for compositing. One illustrated hand template per pose, then swap in different bowls/sachets/products. Pink bg for hero and social, cream for PDP, brown for premium moments.</p>
+      </div>
+
+        </div><!-- .accordion-body -->
+      </details><!-- Imagery accordion -->
 
     </div>
 
@@ -695,225 +933,6 @@
       </div>
     </div>
 
-    <!-- Imagery -->
-    <div class="section discussion-flag" id="imagery">
-      <span class="discussion-flag-label">For Discussion</span>
-      <h2>Imagery Assessment.</h2>
-      <p class="section-intro">An audit of current imagery across the site, followed by a proposed direction for how the two layers — graphic illustration and real photography — could work together as a system.</p>
-      <p class="section-intro"><strong>Summary:</strong> 3 assets to replace, 3 to keep, 7 strong references. The proposed direction: a two-layer system — graphic illustration for brand moments, real photography for product moments.</p>
-
-      <h3>Brand &amp; Lifestyle Imagery.</h3>
-      <p class="section-intro">Assessment of current brand and lifestyle imagery across the site.</p>
-
-      <!-- B&W popup -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/lifestyle-1-dark.png" alt="B&W popup showing man with bowl">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">B&amp;W Popup (Man with Bowl)</div>
-          <span class="img-audit-verdict verdict-replace">Replace</span>
-          <p class="img-audit-text">Tonal mismatch — reads as hardship, not "bold flavour overnight oats." Dark, grainy B&amp;W next to "Join the Cult" creates uncomfortable association. No graphic layer, no palette colours. Breaks the system entirely. Actively hurts popup conversion rate.</p>
-        </div>
-      </div>
-
-      <!-- Oat head figure -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/lifestyle-2-dark-graphic-mix.png" alt="Figure with oat head on blue geometric background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Figure (Oat Head, Blue Geometric Bg)</div>
-          <span class="img-audit-verdict verdict-replace">Replace</span>
-          <p class="img-audit-text">Visually arresting but disconnected from product. Abstract editorial that says "art gallery" not "breakfast." The blue isn't the brand blue. First-time visitor learns nothing about the product in 2–3 seconds. Doesn't use the monk illustration system.</p>
-        </div>
-      </div>
-
-      <!-- Illustrated popup -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/lifestyle-3-graphic.png" alt="Illustrated popup with graphic oaty udders">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Illustrated Popup (Graphic Oaty Udders)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Product present, brand palette present (pink/brown/cream), "cult" personality comes through. Ownable — no other oats brand looks like this. Works at popup scale. The benchmark for graphic-led brand imagery.</p>
-        </div>
-      </div>
-
-      <h3>Product Imagery.</h3>
-      <p class="section-intro">Assessment of current product photography across the site.</p>
-
-      <!-- Raw oats pour -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/product-1-plain.png" alt="Raw oats being poured into blue-grey bowl">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Raw Oats Pour (Blue-Grey Bowl)</div>
-          <span class="img-audit-verdict verdict-replace">Replace</span>
-          <p class="img-audit-text">Off-brand colours (grey marble, blue-grey bowl, pink tea towel — none are palette colours). Shows dry oats being poured — the least appetising moment. No packaging, no brand presence, no graphic layer. Can't be rescued with a monk overlay; needs reshooting on-palette.</p>
-        </div>
-      </div>
-
-      <!-- Sachet-in-hand -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/product-2-bold.png" alt="Sachet held in fist on pink graphic background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Sachet-in-Hand (Pink Graphic Background)</div>
-          <span class="img-audit-verdict verdict-keep">Keep</span>
-          <p class="img-audit-text">Product-in-hand, bold saturated brand-colour background, close crop, packaging clearly readable. The fist-grip has confident, rebellious energy. The hybrid approach (real photo composited on graphic bg) bridges illustration and product photography perfectly.</p>
-        </div>
-      </div>
-
-      <!-- Product lineup on pink -->
-      <div class="img-audit">
-        <div class="img-audit-visual">
-          <img src="images/product-3-calm-bold.png" alt="Three sachet flavours lined up on pink background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Product Lineup on Pink (PDP Gallery)</div>
-          <span class="img-audit-verdict verdict-keep">Keep</span>
-          <p class="img-audit-text">Shows full range clearly (Strawberry Goji/Cinnamon/Cacao), on-palette pink background, good for product grid. Pink sachets blend into pink bg slightly. Best as PDP image 2–3, not the lead image.</p>
-        </div>
-      </div>
-
-      <h3>Proposed Direction.</h3>
-      <p class="section-intro">A two-layer imagery system is already emerging in the strongest assets above. Below are examples — mostly from existing site content — that show how graphic-led brand imagery and photo-led product imagery could work together as a deliberate system. The illustrated popup assessed above is the benchmark for the graphic-led side; the examples here build on that foundation. This is a recommendation, not a locked decision.</p>
-
-      <!-- How-to-prepare monks -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/How-to-prep-monk.png" alt="Three-step how-to-prepare illustration with monk character">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">How-to-Prepare Monks (Brown Bg)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Pure illustration in the right context — step-by-step instructions benefit from it because you're teaching, not selling. Pink circles on brown is on-palette. The monk's hands interacting with real-looking product (sachet, jar, bowl) keeps it grounded. Works as homepage "how it works" strip or PDP section.</p>
-        </div>
-      </div>
-
-      <!-- Sachet fan with monk -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/Sachet-fan-monk-probiotic.jpg" alt="Three sachets fanned out with small monk and faded probiotic graphic on pink background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Sachet Fan with Monk (Pink Bg, Probiotic)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Real sachets are the hero — three flavours fanned, packaging readable, brand name prominent. Small arms-raised monk at bottom-right adds personality without competing. Faded probiotic graphic at top-right layers in the gut health messaging subtly. Benefit bullets scannable and well-spaced. Headline copy ("gut-worshipping live cultures") lands the product story with brand voice. Two levels of graphic — solid illustration and ghosted accent — working at different intensities on one card.</p>
-        </div>
-      </div>
-
-      <!-- Review speech bubbles -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/Review-bubbles.jpg" alt="Customer review speech bubbles in brand colours">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Review Speech Bubbles (Cream/Pink/Blue)</div>
-          <span class="img-audit-verdict verdict-keep">Keep</span>
-          <p class="img-audit-text">Pure social proof in brand-colour speech bubbles — pink, blue, cream all on-palette. Real customer voice matches brand personality. Functional and effective. Could be elevated further with a small monk or product element alongside, but works well as-is for testimonial sections.</p>
-        </div>
-      </div>
-
-      <!-- Review card with bowl -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/Review-bowl-oatyudder.png" alt="Cacao overnight oats bowl with oaty udder graphic and customer review on pink background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Review Card (Cacao Bowl, Pink Bg, Oaty Udder)</div>
-          <span class="img-audit-verdict verdict-strong">Strong — Benchmark</span>
-          <p class="img-audit-text">The finished cacao bowl is the hero — real food, appetising, topped generously. Oaty udder graphic in the corner adds brand personality without competing with the product. Real customer review underneath builds trust. Pink background on-palette. Photo carries appetite appeal, illustration carries identity, review carries social proof — three jobs, one card. This is the benchmark for photo-led product imagery.</p>
-        </div>
-      </div>
-
-      <!-- Benefits section with three bowls -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/Benefits-bowls-monk.jpg" alt="Three overhead bowls with benefit callouts above and below, small monk at bottom, on light blue background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Benefits Section (Three Bowls, Monk, Light Blue Bg)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Three real bowls with fresh toppings (strawberry, banana, blueberry) are the clear hero — overhead angle is appetising, each flavour distinct. Benefit callouts sit above and below the bowls in a clean grid — six claims scannable at a glance. Small arms-raised monk at the bottom adds personality without competing. Light blue background on-palette, calmer than bold blue which lets the food colours pop. The graphic-to-product ratio is well judged here — product dominates, illustration supports.</p>
-        </div>
-      </div>
-
-      <!-- Back-of-pack -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/Back-of-pack-probiotic.jpg" alt="Back of sachet on light blue background with pink probiotic graphic and probiotic tagline">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Back-of-Pack (Brown Sachet, Light Blue Bg, Probiotic)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Full back-of-pack on a light blue background — nutritional info, prep steps, and credentials all readable. Pink probiotic graphic peeking from the top-right corner adds brand personality to what could be a dry information shot. Probiotic tagline banner across the top ties into the gut health messaging. Brown sachet on blue is on-palette. Shows the packaging illustration system (how-to icons, credential badges) carries through to the physical product. For web: PDP "what's inside" or ingredients sections.</p>
-        </div>
-      </div>
-
-      <div style="padding: 20px; background: var(--blue); border-radius: 8px; margin-bottom: 24px;">
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The opportunity:</strong> a two-layer imagery system is already emerging in the strongest assets. We'd recommend leaning into it as the defining visual identity — graphic illustration and real photography working together, with clear rules for when each layer leads.</p>
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The split:</strong> if the goal is "feel the brand" → graphic-led (hero banners, popups, storytelling, social). If the goal is "see/buy the product" → photo-led with graphic accent (PDP, product grid, reviews, benefits).</p>
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>Why it works:</strong> real photos alone look generic (any oat brand). Illustration alone doesn't sell the food. Together, the monk system gives Oat Cult something ownable — no competitor has this — while real product photography builds the trust and appetite appeal that illustrations can't.</p>
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What to retire:</strong> assets that have neither layer — the B&amp;W popup, raw oats pour, and abstract figure. These break the system because they have no illustration, no on-palette treatment, and can't be fixed with a monk overlay. They need replacing, not patching.</p>
-        <p style="font-size: 14px; margin-bottom: 8px;"><strong>The missing shoot list:</strong> new product photography should be shot for graphic compositing — clean edges, on-palette backgrounds, space for the monk or graphic elements to be layered in.</p>
-        <ol style="font-size: 14px; padding-left: 20px; margin-bottom: 12px;">
-          <li style="margin-bottom: 4px;">Finished bowls — overhead, on pink/brown/cream backgrounds, with toppings. One per flavour.</li>
-          <li style="margin-bottom: 4px;">Morning ritual — sachet torn open, milk poured, jar going into fridge. Real hands, brand-colour surfaces.</li>
-          <li style="margin-bottom: 4px;">Lifestyle context — someone eating at a table/desk/on a commute. Real person, warm light, on-brand colours.</li>
-        </ol>
-        <p style="font-size: 14px; margin-bottom: 0;"><strong>Reference brands:</strong> Innocent Drinks (real product + illustrated character system), Oatly, Liquid Death — all illustration-led, among the most shared DTC brands.</p>
-      </div>
-
-      <h3>Pushing the Envelope.</h3>
-      <p class="section-intro">An alternative direction that takes the hybrid approach further — fusing real product photography directly with illustration rather than keeping them as separate layers.</p>
-
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/monk-bowl-pinkbg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on pink background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Pink Bg)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Real food (textured oats, fresh blueberries) composited onto an illustrated monk hand. The food carries the trust and appetite job, the hand carries the identity job — instantly recognisable as Oat Cult even without a logo. Bold pink background makes this the hero variant — social, ads, homepage banners.</p>
-        </div>
-      </div>
-
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/monk-bowl-creambg.png" alt="Real bowl of overnight oats with blueberries held by illustrated monk hand on cream background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Photo-Illustration Composite (Monk Hand, Real Bowl — Cream Bg)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Same composite technique on a calmer cream background. Less scroll-stopping than the pink variant but more versatile — works for PDP hero images, product grid, and contexts where the food needs to sell without competing with the background. The pair together gives flexibility across every touchpoint.</p>
-        </div>
-      </div>
-
-      <!-- Hero pack with monk hands -->
-      <div class="img-audit img-audit--square">
-        <div class="img-audit-visual">
-          <img src="images/hero-pack-monk-hands.webp" alt="Illustrated monk fists holding real cacao sachet on bold pink and cream graphic background">
-        </div>
-        <div class="img-audit-body">
-          <div class="img-audit-title">Hero Pack (Monk Hands, Cacao Sachet — Pink/Cream Bg)</div>
-          <span class="img-audit-verdict verdict-strong">Strong</span>
-          <p class="img-audit-text">Illustrated blue monk fists gripping a real cacao sachet — the composite approach applied to packaging rather than bowls. Packaging readable, brand name prominent, flavour clear. Bold pink and cream lightning shapes behind add energy. Proves the monk hand system scales beyond food to product-in-hand moments. The fist grip matches the rebellious energy of the sachet-in-hand photo from the audit, but now fully ownable. Hero, social, and ad use.</p>
-        </div>
-      </div>
-
-      <div style="padding: 20px; background: var(--cream); border: 1px solid var(--cream-dark); border-radius: 8px; margin-bottom: 24px;">
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What this changes:</strong> the proposed split above keeps graphic and photo as two distinct layers. This approach merges them into a single image — real product held by illustrated hands, on bold palette backgrounds. It's a tighter, more distinctive system where every product image is unmistakably Oat Cult.</p>
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>The upside:</strong> product imagery becomes as ownable as the brand imagery. No competitor could use the same shots. Scroll-stopping on social. The monk hand becomes a visual signature across every touchpoint.</p>
-        <p style="font-size: 14px; margin-bottom: 12px;"><strong>What to consider:</strong> compositing quality needs to be consistent — the join between real bowl and illustrated hand is where it lives or dies. This works well for "held bowl" shots but may be harder for pouring moments or sachet-in-hand where the interaction is more complex. Needs a clear production process to maintain quality at scale.</p>
-        <p style="font-size: 14px; margin-bottom: 0;"><strong>If you go this route:</strong> shoot product photography on neutral backgrounds with clean edges specifically for compositing. One illustrated hand template per pose, then swap in different bowls/sachets/products. Pink bg for hero and social, cream for PDP, brown for premium moments.</p>
-      </div>
-    </div>
-
     <!-- Conversion Principles -->
     <div class="section section-break" id="conversion">
       <h2>Conversion Principles.</h2>
@@ -1096,38 +1115,6 @@
         <div class="principle-name">Imagery.</div>
         <div class="principle-desc">Full-width, immersive, no zooming required. Product images sized so detail is clear at phone width without pinch-to-zoom.</div>
       </div>
-    </div>
-
-    <!-- Discussion Areas -->
-    <div class="section" id="discussion-areas">
-      <h2>Discussion Areas.</h2>
-      <p class="section-intro">Sections marked "for discussion" where the direction is proposed but client input is needed before locking.</p>
-
-      <div class="principle">
-        <div class="principle-name">CTA Colour.</div>
-        <div class="principle-desc">Option A (brown/cream) or Option B (yellow)? See <a href="#decision-points">Decision Points</a> above for demos and rationale. This affects every button, add-to-cart, and checkout action across the site.</div>
-      </div>
-      <div class="principle">
-        <div class="principle-name">Imagery Direction.</div>
-        <div class="principle-desc">The audit identifies 3 assets to replace (no graphic layer, off-palette) and a two-layer system already emerging in the strongest work. Key discussion: whether to commit to this graphic-led / photo-led split as the defining visual identity, and prioritising the shoot list for new product photography designed for graphic compositing.</div>
-      </div>
-    </div>
-
-    <!-- Next Steps -->
-    <div class="section" id="next-steps">
-      <h2>What We Need.</h2>
-      <p class="section-intro">Two decisions to make before we start building.</p>
-
-      <div class="principle">
-        <div class="principle-name">1. CTA Colour.</div>
-        <div class="principle-desc">Option A (brown/cream) or Option B (yellow)? See <a href="#decision-points">Decision Points</a> for demos on every background.</div>
-      </div>
-      <div class="principle">
-        <div class="principle-name">2. Imagery Direction.</div>
-        <div class="principle-desc">Commit to the two-layer system (graphic-led + photo-led) as the defining visual identity? See <a href="#imagery">Imagery Assessment</a> for the full audit and proposed direction.</div>
-      </div>
-
-      <p style="font-size: 14px; color: var(--brown-light); margin-top: 20px;">Everything else in this document is ready to implement once these are locked.</p>
     </div>
 
     <!-- Provenance -->
