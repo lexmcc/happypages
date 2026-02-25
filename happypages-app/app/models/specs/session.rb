@@ -6,8 +6,9 @@ module Specs
     PHASES = %w[explore narrow converge generate].freeze
 
     belongs_to :project, class_name: "Specs::Project", foreign_key: :specs_project_id
-    belongs_to :shop
+    belongs_to :shop, optional: true
     belongs_to :user, optional: true
+    belongs_to :specs_client, class_name: "Specs::Client", optional: true
     has_many :messages, class_name: "Specs::Message", foreign_key: :specs_session_id, dependent: :delete_all
     has_many :handoffs, class_name: "Specs::Handoff", foreign_key: :specs_session_id, dependent: :destroy
 

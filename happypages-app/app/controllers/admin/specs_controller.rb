@@ -1,6 +1,6 @@
 class Admin::SpecsController < Admin::BaseController
   before_action :require_specs_feature
-  before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff]
+  before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff, :board_cards, :update_card, :create_card]
 
   def index
     @projects = Current.shop.specs_projects.order(created_at: :desc)
@@ -91,6 +91,47 @@ class Admin::SpecsController < Admin::BaseController
       compressed_context: seed_context_from(latest)
     )
     redirect_to admin_spec_path(@project)
+  end
+
+  def board_cards
+    cards = @project.cards.ordered.group_by(&:status)
+    grouped = Specs::Card::STATUSES.each_with_object({}) do |status, hash|
+      hash[status] = (cards[status] || []).map { |c| serialize_card(c) }
+    end
+    render json: grouped
+  end
+
+  def update_card
+    card = @project.cards.find(params[:card_id])
+    new_status = params[:status]
+    new_position = params[:position].to_i
+
+    return head(:unprocessable_entity) unless new_status.in?(Specs::Card::STATUSES)
+
+    card.update!(status: new_status, position: new_position)
+
+    # Reorder siblings in the target column
+    @project.cards.where(status: new_status).where.not(id: card.id)
+      .where("position >= ?", new_position)
+      .order(position: :asc)
+      .each_with_index { |c, i| c.update_column(:position, new_position + i + 1) }
+
+    render json: serialize_card(card)
+  end
+
+  def create_card
+    card = @project.cards.create!(
+      title: params[:title],
+      description: params[:description],
+      status: "backlog",
+      position: 0
+    )
+
+    # Push existing backlog cards down
+    @project.cards.backlog.where.not(id: card.id).order(position: :asc)
+      .each_with_index { |c, i| c.update_column(:position, i + 1) }
+
+    render json: serialize_card(card), status: :created
   end
 
   def create_handoff
@@ -215,6 +256,20 @@ class Admin::SpecsController < Admin::BaseController
     end
 
     lines.join("\n")
+  end
+
+  def serialize_card(card)
+    {
+      id: card.id,
+      title: card.title,
+      description: card.description,
+      acceptance_criteria: card.acceptance_criteria,
+      has_ui: card.has_ui,
+      dependencies: card.dependencies,
+      status: card.status,
+      position: card.position,
+      chunk_index: card.chunk_index
+    }
   end
 
   def seed_context_from(previous)

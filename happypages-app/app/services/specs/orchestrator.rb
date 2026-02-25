@@ -8,16 +8,16 @@ module Specs
       @client = AnthropicClient.new
     end
 
-    def process_turn(user_text, image: nil, user: nil, active_user: nil)
+    def process_turn(user_text, image: nil, user: nil, active_user: nil, specs_client: nil, tools: nil)
       ActiveRecord::Base.transaction do
         @session.lock!
 
         compress_if_needed
         update_phase
-        prompt_context = active_user || build_active_user_context(user)
+        prompt_context = active_user || build_active_user_context(user, specs_client)
         system_prompt = Specs::PromptBuilder.new(@session, active_user: prompt_context).build
         model = select_model(user_text)
-        tools = Specs::ToolDefinitions.v1
+        tools ||= Specs::ToolDefinitions.v1
         api_messages = build_api_messages(user_text, image: image)
 
         response = @client.messages(
@@ -46,7 +46,8 @@ module Specs
           role: "user",
           content: user_text,
           turn_number: next_turn,
-          user: user
+          user: user,
+          specs_client: specs_client
         )
         user_message.image.attach(image) if image
 
@@ -153,12 +154,17 @@ module Specs
           tool_results << { "type" => "tool_result", "tool_use_id" => block["id"], "content" => "Client brief generated successfully." }
         when "generate_team_spec"
           @session.team_spec = block["input"]
+          Specs::Card.create_from_team_spec(@session.project, @session)
           tool_results << { "type" => "tool_result", "tool_use_id" => block["id"], "content" => "Team spec generated successfully." }
         when "request_handoff"
           input = block["input"]
+          from_name = @session.user&.email ||
+                      @session.specs_client&.name ||
+                      @session.specs_client&.email ||
+                      "System"
           @session.handoffs.create!(
             from_user: @session.user,
-            from_name: @session.user&.email || "System",
+            from_name: from_name,
             reason: input["reason"],
             summary: input["summary"],
             suggested_questions: input["suggested_questions"] || [],
@@ -237,8 +243,8 @@ module Specs
       @session.phase = phases[[current_idx, new_idx].max]
     end
 
-    def build_active_user_context(user)
-      return nil unless user || @session.active_handoff
+    def build_active_user_context(user, specs_client = nil)
+      return nil unless user || specs_client || @session.active_handoff || @session.specs_client
 
       if (handoff = @session.active_handoff)
         {
@@ -248,6 +254,9 @@ module Specs
         }
       elsif user
         { name: user.email, role: user.role }
+      else
+        client = specs_client || @session.specs_client
+        { name: client.name || client.email, role: "client" } if client
       end
     end
 

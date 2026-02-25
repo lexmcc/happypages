@@ -3,8 +3,9 @@ require "rails_helper"
 RSpec.describe Specs::Session, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:project).class_name("Specs::Project").with_foreign_key(:specs_project_id) }
-    it { is_expected.to belong_to(:shop) }
+    it { is_expected.to belong_to(:shop).optional }
     it { is_expected.to belong_to(:user).optional }
+    it { is_expected.to belong_to(:specs_client).class_name("Specs::Client").optional }
     it { is_expected.to have_many(:messages).class_name("Specs::Message").with_foreign_key(:specs_session_id).dependent(:delete_all) }
     it { is_expected.to have_many(:handoffs).class_name("Specs::Handoff").with_foreign_key(:specs_session_id).dependent(:destroy) }
   end

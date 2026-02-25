@@ -31,3 +31,13 @@ end
 Rack::Attack.throttle("specs/guest/message", limit: 1, period: 3) do |req|
   req.path[%r{^/specs/session/(.+)/message$}, 1] if req.post?
 end
+
+Rack::Attack.throttle("specs/client/login", limit: 5, period: 60) do |req|
+  req.ip if req.path == "/specs/login" && req.post?
+end
+
+Rack::Attack.throttle("specs/client/message", limit: 1, period: 3) do |req|
+  if req.path.match?(%r{\A/specs/projects/\d+/message\z}) && req.post?
+    req.path
+  end
+end

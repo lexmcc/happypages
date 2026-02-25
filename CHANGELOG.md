@@ -2,6 +2,11 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-25
+
+- **Specs engine (Chunk 5)** — Kanban board. `Specs::Card` model with Backlog → In Progress → Review → Done statuses. Auto-populated from `generate_team_spec` output (one card per chunk, idempotent guard). Admin gets drag-and-drop via SortableJS + manual card creation. Clients get read-only board view. Board tab on project show page (admin: 4th tab, client: 3rd tab). JSON API for board CRUD. 354 specs total, all passing.
+- **Specs engine (Chunk 4)** — Client web portal + auth. `Organisation` model for non-Shopify clients, `Specs::Client` with BCrypt auth (shared `Authenticatable` concern), client login/logout/invite acceptance, dashboard with project list, project creation and chat (v1_client tools — no handoff), client brief view and export (team spec hidden). Orchestrator updated with `specs_client:` and `tools:` kwargs. `sender_name` priority chain: user → specs_client → handoff → "Guest". Superadmin organisation management with client invite flow via `SpecsClientMailer`. Rate-limited client login (5/min) and message (1 req/3s). 335 specs total, all passing.
+
 ## 2026-02-24
 
 - **Specs engine (Chunk 3)** — Handoff + multi-user support. AI can suggest session handoffs via `request_handoff` tool (with reason, summary, suggested questions). Admin can hand off internally to another shop user or create an external client invite link (token-based, 7-day expiry). Guest access at `/specs/join/:token` with minimal layout, name entry, and full chat interface. Message attribution shows sender names when multiple participants exist. PromptBuilder adapts to active user context and includes handoff history. Guest routes rate-limited. 288 specs total, all passing.

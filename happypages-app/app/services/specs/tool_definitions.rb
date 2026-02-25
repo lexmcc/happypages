@@ -284,5 +284,9 @@ module Specs
         }
       ]
     end
+
+    def self.v1_client
+      v1.reject { |tool| tool[:name] == "request_handoff" }
+    end
   end
 end

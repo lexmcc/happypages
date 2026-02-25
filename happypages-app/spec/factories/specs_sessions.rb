@@ -7,6 +7,16 @@ FactoryBot.define do
       user { association :user, shop: shop }
     end
 
+    trait :org_scoped do
+      association :project, factory: [:specs_project, :org_scoped]
+      shop { nil }
+    end
+
+    trait :with_specs_client do
+      org_scoped
+      specs_client { association :specs_client, organisation: project.organisation }
+    end
+
     trait :completed do
       status { "completed" }
     end

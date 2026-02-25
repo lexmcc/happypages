@@ -1,0 +1,59 @@
+<% content_for(:title) { "Dashboard — #{@organisation.name} — happypages" } %>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-xl font-semibold text-gray-900"><%= @organisation.name %></h1>
+      <p class="text-sm text-gray-500">your projects</p>
+    </div>
+    <%= link_to new_specs_project_path, class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-[#ff584d] text-white hover:bg-[#e64d43] transition-colors" do %>
+      <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      new spec
+    <% end %>
+  </div>
+
+  <% if flash[:notice] %>
+    <div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-sm"><%= flash[:notice] %></div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"><%= flash[:alert] %></div>
+  <% end %>
+
+  <% if @projects.empty? %>
+    <div class="text-center py-16">
+      <p class="text-sm text-gray-400">no projects yet. start your first spec.</p>
+    </div>
+  <% else %>
+    <div class="space-y-3">
+      <% @projects.each do |project| %>
+        <% latest_session = project.sessions.order(version: :desc).first %>
+        <%= link_to specs_project_path(project), class: "block bg-white border border-gray-200 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors" do %>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900"><%= project.name %></h3>
+              <% if latest_session %>
+                <div class="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                  <span><%= latest_session.status %></span>
+                  <span class="text-gray-300">&middot;</span>
+                  <span>v<%= latest_session.version %></span>
+                  <span class="text-gray-300">&middot;</span>
+                  <span><%= latest_session.turns_used %>/<%= latest_session.turn_budget %> turns</span>
+                </div>
+              <% end %>
+            </div>
+            <div class="flex items-center gap-2">
+              <% if latest_session&.status == "completed" && latest_session.client_brief.present? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">brief ready</span>
+              <% elsif latest_session&.status == "active" %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700">in progress</span>
+              <% end %>
+              <svg class="size-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+              </svg>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

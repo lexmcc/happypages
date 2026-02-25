@@ -297,5 +297,35 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Renamed to `no_site.html.erb` (no underscore) for template rendering, or use `render partial: "no_site"` for partials
 - **Lesson**: If a controller action calls `render "name"`, the file is a template (no underscore). If called via `render partial:`, it needs an underscore.
 
+### Factory `build` Won't Set Foreign Key for nil Associations (Feb 25, 2026)
+- `build(:specs_project)` uses factory default `shop` association, but since `build` doesn't persist, `shop_id` stays nil
+- XOR validation (`shop_id.blank? && organisation_id.blank?`) then fails because neither FK is set
+- **Fix**: Use `build(:specs_project, shop: create(:shop), organisation: nil)` — explicitly create and assign the shop so the FK is populated
+- **Lesson**: When testing validations that check FK presence, `build` with factory associations that resolve to nil won't set the `_id` column. Use `create` for the associated record.
+
+### shoulda-matchers `belong_to` Implies Required (Feb 25, 2026)
+- `it { is_expected.to belong_to(:shop) }` asserts the association exists AND is required (not null)
+- Making `belongs_to :shop, optional: true` causes this matcher to fail with "expected required but got optional"
+- **Fix**: Change test to `it { is_expected.to belong_to(:shop).optional }`
+- **Lesson**: When making a `belongs_to` optional, update corresponding shoulda-matchers specs to chain `.optional`
+
+### RecordNotFound in Request Specs Returns 404 (Feb 25, 2026)
+- In request specs, `ActiveRecord::RecordNotFound` is caught by Rails middleware and converted to a 404 response
+- Using `expect { get path }.to raise_error(ActiveRecord::RecordNotFound)` fails because the exception never reaches the test
+- **Fix**: Use `get path` then `expect(response).to have_http_status(:not_found)`
+- **Lesson**: Request specs test the full middleware stack — exceptions that Rails rescues (404, 422, 500) become HTTP status codes
+
+### Testing Route Absence in Request Specs (Feb 25, 2026)
+- `expect { patch path }.to raise_error(ActionController::RoutingError)` fails when a GET route exists at the same path — Rails matches the path but rejects the method differently
+- PATCH/POST to a GET-only route returns a method-not-allowed or routing error that's caught by middleware
+- **Fix**: Use `Rails.application.routes.recognize_path(path, method: :patch)` in a begin/rescue block to test that no route matches the specific HTTP method
+- **Lesson**: To assert a route doesn't exist for a given HTTP method, use `recognize_path` rather than making the request and checking the exception
+
+### `unprocessable_entity` Deprecation in Rack (Feb 25, 2026)
+- Rack has deprecated `:unprocessable_entity` (422) status name in favour of `:unprocessable_content`
+- `have_http_status(:unprocessable_entity)` triggers a deprecation warning in specs
+- **Fix**: Use `have_http_status(:unprocessable_content)` in new specs
+- **Lesson**: Check Rack release notes for status code name changes when upgrading
+
 ---
-*Updated: Feb 24, 2026 (specs engine chunk 3: deferred-token handoff scope gotcha)*
+*Updated: Feb 25, 2026 (specs engine chunk 5: route absence testing, Rack status deprecation)*

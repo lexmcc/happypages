@@ -1,0 +1,51 @@
+<div class="py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Organisations</h1>
+        <p class="text-gray-500 mt-1">Specs client organisations</p>
+      </div>
+    </header>
+
+    <%# Create form %>
+    <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900">Create Organisation</h2>
+      </div>
+      <div class="px-6 py-4">
+        <%= form_with url: superadmin_organisations_path, method: :post, class: "flex gap-2" do |f| %>
+          <%= f.text_field :name, placeholder: "Organisation name", class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5 flex-1" %>
+          <%= f.submit "Create", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+        <% end %>
+      </div>
+    </section>
+
+    <%# List %>
+    <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900">All Organisations (<%= @organisations.count %>)</h2>
+      </div>
+      <div class="px-6 py-4">
+        <% if @organisations.any? %>
+          <div class="space-y-3">
+            <% @organisations.each do |org| %>
+              <div class="flex items-center justify-between py-2">
+                <div>
+                  <span class="text-sm font-medium text-gray-900"><%= org.name %></span>
+                  <span class="ml-2 text-xs text-gray-400"><%= org.slug %></span>
+                  <span class="ml-2 text-xs text-gray-400"><%= org.specs_clients.count %> clients</span>
+                  <span class="ml-1 text-xs text-gray-400">&middot; <%= org.specs_projects.count %> projects</span>
+                </div>
+                <div>
+                  <%= link_to "Manage →", manage_superadmin_organisation_path(org), class: "text-sm text-slate-600 hover:text-slate-900" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-400">No organisations yet</p>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

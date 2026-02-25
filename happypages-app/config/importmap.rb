@@ -9,3 +9,6 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 # Chartkick for analytics charts
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
+
+# SortableJS for kanban drag-and-drop
+pin "sortablejs", to: "https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/modular/sortable.esm.js"

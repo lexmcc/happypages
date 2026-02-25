@@ -5,6 +5,7 @@ module Specs
 
     belongs_to :session, class_name: "Specs::Session", foreign_key: :specs_session_id
     belongs_to :user, optional: true
+    belongs_to :specs_client, class_name: "Specs::Client", optional: true
     has_one_attached :image
 
     ALLOWED_IMAGE_TYPES = %w[image/png image/jpeg image/gif image/webp].freeze
@@ -20,6 +21,8 @@ module Specs
       return nil if role == "assistant"
       if user.present?
         user.email
+      elsif specs_client.present?
+        specs_client.name || specs_client.email
       elsif role == "user"
         handoffs = handoffs_cache || session.handoffs.accepted.order(turn_number: :desc).to_a
         handoff = handoffs.find { |h| h.turn_number <= turn_number }

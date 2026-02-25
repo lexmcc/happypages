@@ -53,4 +53,22 @@ RSpec.describe Specs::ToolDefinitions do
       end
     end
   end
+
+  describe ".v1_client" do
+    subject(:tools) { described_class.v1_client }
+
+    it "excludes request_handoff" do
+      names = tools.map { |t| t[:name] }
+      expect(names).not_to include("request_handoff")
+    end
+
+    it "includes the other 5 tools" do
+      expect(tools.length).to eq(5)
+    end
+
+    it "includes ask_question and generate tools" do
+      names = tools.map { |t| t[:name] }
+      expect(names).to include("ask_question", "generate_client_brief", "generate_team_spec")
+    end
+  end
 end

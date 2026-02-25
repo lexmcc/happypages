@@ -1,0 +1,95 @@
+<div class="py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-3xl font-bold text-gray-900"><%= @organisation.name %></h1>
+        </div>
+        <p class="text-gray-500 mt-1"><%= @organisation.slug %> &middot; since <%= @organisation.created_at.strftime("%b %d, %Y") %></p>
+      </div>
+      <div>
+        <%= link_to "← Back", superadmin_organisations_path, class: "text-sm text-gray-500 hover:text-gray-700" %>
+      </div>
+    </header>
+
+    <% if flash[:notice] %>
+      <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-sm"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"><%= flash[:alert] %></div>
+    <% end %>
+
+    <div class="space-y-8">
+      <%# Clients Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">Clients</h2>
+        </div>
+        <div class="px-6 py-4">
+          <% if @clients.any? %>
+            <div class="space-y-3">
+              <% @clients.each do |client| %>
+                <div class="flex items-center justify-between py-2">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900"><%= client.email %></span>
+                    <% if client.name.present? %>
+                      <span class="ml-2 text-xs text-gray-400"><%= client.name %></span>
+                    <% end %>
+                    <% if client.invite_accepted? %>
+                      <span class="ml-1 text-xs text-green-500">(accepted)</span>
+                    <% elsif client.invite_pending? %>
+                      <span class="ml-1 text-xs text-amber-500">(invite pending)</span>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= button_to "Send Invite", send_invite_superadmin_organisation_specs_client_path(@organisation, client),
+                        method: :post,
+                        class: "px-3 py-1.5 text-xs rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 cursor-pointer" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No clients</p>
+          <% end %>
+
+          <%# Add client %>
+          <%= form_with url: superadmin_organisation_specs_clients_path(@organisation), method: :post, class: "mt-4 flex gap-2" do |f| %>
+            <%= f.email_field :email, placeholder: "client@company.com", class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5 flex-1" %>
+            <%= f.text_field :name, placeholder: "Name (optional)", class: "text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+          <% end %>
+        </div>
+      </section>
+
+      <%# Projects Panel %>
+      <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-900">Projects</h2>
+        </div>
+        <div class="px-6 py-4">
+          <% if @projects.any? %>
+            <div class="space-y-3">
+              <% @projects.each do |project| %>
+                <% latest = project.sessions.order(version: :desc).first %>
+                <div class="flex items-center justify-between py-2">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900"><%= project.name %></span>
+                    <% if latest %>
+                      <span class="ml-2 text-xs text-gray-400">v<%= latest.version %> &middot; <%= latest.status %> &middot; <%= latest.turns_used %>/<%= latest.turn_budget %> turns</span>
+                    <% end %>
+                  </div>
+                  <div class="text-xs text-gray-400">
+                    <%= project.created_at.strftime("%b %d, %Y") %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No projects yet</p>
+          <% end %>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

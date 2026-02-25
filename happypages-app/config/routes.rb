@@ -95,6 +95,9 @@ Rails.application.routes.draw do
         get :export
         post :new_version
         post :create_handoff
+        get :board_cards
+        patch :update_card
+        post :create_card
       end
     end
 
@@ -116,6 +119,20 @@ Rails.application.routes.draw do
   get "specs/join/:token", to: "specs/guests#join", as: :specs_guest_join
   get "specs/session/:token", to: "specs/guests#show", as: :specs_guest_session
   post "specs/session/:token/message", to: "specs/guests#message", as: :specs_guest_message
+
+  # Specs client portal (authenticated)
+  get "specs/login", to: "specs/sessions#new", as: :specs_login
+  post "specs/login", to: "specs/sessions#create"
+  delete "specs/logout", to: "specs/sessions#destroy", as: :specs_logout
+  get "specs/invite/:token", to: "specs/invites#show", as: :specs_invite
+  patch "specs/invite/:token", to: "specs/invites#update"
+  get "specs/dashboard", to: "specs/dashboard#index", as: :specs_dashboard
+  get "specs/projects/new", to: "specs/projects#new", as: :new_specs_project
+  post "specs/projects", to: "specs/projects#create", as: :specs_projects
+  get "specs/projects/:id", to: "specs/projects#show", as: :specs_project
+  post "specs/projects/:id/message", to: "specs/projects#message", as: :specs_project_message
+  get "specs/projects/:id/export", to: "specs/projects#export", as: :specs_project_export
+  get "specs/projects/:id/board_cards", to: "specs/projects#board_cards", as: :specs_project_board_cards
 
   # Public pages
   get "privacy", to: "pages#privacy"
@@ -142,6 +159,16 @@ Rails.application.routes.draw do
       post :impersonate, on: :member
     end
     resource :impersonation, only: [ :destroy ], controller: "impersonations"
+    resources :organisations, only: [ :index, :create ] do
+      member do
+        get :manage
+      end
+      resources :specs_clients, only: [ :create ], controller: "specs_clients" do
+        member do
+          post :send_invite
+        end
+      end
+    end
     resources :scene_assets, except: [ :show ]
     resources :prompt_templates, except: [ :show ] do
       member do
