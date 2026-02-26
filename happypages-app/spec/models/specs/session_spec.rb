@@ -15,6 +15,12 @@ RSpec.describe Specs::Session, type: :model do
     it { is_expected.to validate_inclusion_of(:status).in_array(Specs::Session::STATUSES) }
     it { is_expected.to validate_presence_of(:phase) }
     it { is_expected.to validate_inclusion_of(:phase).in_array(Specs::Session::PHASES) }
+    it { is_expected.to validate_inclusion_of(:channel_type).in_array(Specs::Session::CHANNEL_TYPES) }
+
+    it "defaults channel_type to web" do
+      session = create(:specs_session)
+      expect(session.channel_type).to eq("web")
+    end
   end
 
   describe "version auto-increment" do

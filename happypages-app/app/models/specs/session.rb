@@ -4,6 +4,7 @@ module Specs
 
     STATUSES = %w[active completed archived].freeze
     PHASES = %w[explore narrow converge generate].freeze
+    CHANNEL_TYPES = %w[web slack teams].freeze
 
     belongs_to :project, class_name: "Specs::Project", foreign_key: :specs_project_id
     belongs_to :shop, optional: true
@@ -16,6 +17,7 @@ module Specs
     validates :phase, presence: true, inclusion: { in: PHASES }
     validates :version, presence: true
     validates :turn_budget, presence: true, numericality: { greater_than: 0 }
+    validates :channel_type, inclusion: { in: CHANNEL_TYPES }
 
     before_validation :set_version, on: :create
 

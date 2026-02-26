@@ -32,6 +32,38 @@ RSpec.describe Organisation, type: :model do
     end
   end
 
+  describe "encryption" do
+    it "encrypts slack_bot_token" do
+      org = create(:organisation, :with_slack)
+      expect(org.slack_bot_token).to start_with("xoxb-test-")
+      # Verify the raw DB value is not the plaintext
+      raw = Organisation.connection.select_value(
+        "SELECT slack_bot_token FROM organisations WHERE id = #{org.id}"
+      )
+      expect(raw).not_to start_with("xoxb-") if raw.present?
+    end
+  end
+
+  describe "#slack_connected?" do
+    it "returns true when bot token present" do
+      org = build(:organisation, :with_slack)
+      expect(org.slack_connected?).to be true
+    end
+
+    it "returns false when bot token absent" do
+      org = build(:organisation)
+      expect(org.slack_connected?).to be false
+    end
+  end
+
+  describe "#slack_client" do
+    it "returns a Slack::Web::Client with the bot token" do
+      org = build(:organisation, :with_slack)
+      client = org.slack_client
+      expect(client).to be_a(::Slack::Web::Client)
+    end
+  end
+
   describe "slug generation" do
     it "auto-generates slug from name" do
       org = create(:organisation, name: "My Company")

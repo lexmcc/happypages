@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :specs_session, class: "Specs::Session" do
     association :project, factory: :specs_project
     shop { project.shop }
+    channel_type { "web" }
 
     trait :with_user do
       user { association :user, shop: shop }

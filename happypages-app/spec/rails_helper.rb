@@ -64,3 +64,8 @@ end
 # WebMock — disable all external HTTP by default
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true)
+
+# Slack integration env vars for tests
+ENV["SLACK_SIGNING_SECRET"] ||= "test-slack-signing-secret"
+ENV["SLACK_CLIENT_ID"] ||= "test-slack-client-id"
+ENV["SLACK_CLIENT_SECRET"] ||= "test-slack-client-secret"

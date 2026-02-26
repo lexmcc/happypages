@@ -25,6 +25,9 @@ gem "rack-cors"
 # Rate limiting for API endpoints
 gem "rack-attack"
 
+# Slack API client
+gem "slack-ruby-client"
+
 # Web analytics: bot detection, UA parsing, GeoIP
 gem "crawler_detect"
 gem "device_detector"

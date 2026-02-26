@@ -2,6 +2,7 @@ module Specs
   class GuestsController < ApplicationController
     layout "guest"
     skip_before_action :set_current_shop
+    include Specs::MessageHandling
 
     before_action :find_handoff
     before_action :check_not_expired
@@ -33,27 +34,11 @@ module Specs
     end
 
     def message
-      spec_session = @handoff.session
-      result = ::Specs::Orchestrator.new(spec_session).process_turn(
-        params[:message].to_s.strip,
+      adapter = Specs::Adapters.for(@handoff.session)
+      handle_message(adapter, params[:message].to_s.strip,
         user: nil,
-        active_user: {
-          name: @handoff.to_name,
-          role: @handoff.to_role || "client"
-        }
+        active_user: { name: @handoff.to_name, role: @handoff.to_role || "client" }
       )
-
-      if result[:error]
-        status = result[:type] == :max_tokens ? :unprocessable_entity : :internal_server_error
-        render json: { error: result[:error] }, status: status
-      else
-        render json: result
-      end
-    rescue AnthropicClient::RateLimitError
-      render json: { error: "Too many requests. Please wait a moment and try again." }, status: :too_many_requests
-    rescue AnthropicClient::Error => e
-      Rails.logger.error "[Specs Guest] Anthropic error: #{e.message}"
-      render json: { error: "Something went wrong. Please try again." }, status: :internal_server_error
     end
 
     private

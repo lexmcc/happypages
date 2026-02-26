@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -191,8 +191,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
   create_table "organisations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.string "slack_app_id"
+    t.string "slack_bot_token"
+    t.string "slack_team_id"
     t.string "slug", null: false
     t.datetime "updated_at", null: false
+    t.index ["slack_team_id"], name: "index_organisations_on_slack_team_id", unique: true
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
   end
 
@@ -522,10 +526,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
     t.string "name"
     t.bigint "organisation_id", null: false
     t.string "password_digest"
+    t.string "slack_user_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_specs_clients_on_email"
     t.index ["invite_token"], name: "index_specs_clients_on_invite_token", unique: true, where: "(invite_token IS NOT NULL)"
     t.index ["organisation_id", "email"], name: "index_specs_clients_on_organisation_id_and_email", unique: true
+    t.index ["organisation_id", "slack_user_id"], name: "idx_specs_clients_org_slack_user", unique: true, where: "(slack_user_id IS NOT NULL)"
     t.index ["organisation_id"], name: "index_specs_clients_on_organisation_id"
   end
 
@@ -587,6 +593,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
   end
 
   create_table "specs_sessions", force: :cascade do |t|
+    t.jsonb "channel_metadata", default: {}
+    t.string "channel_type", default: "web", null: false
     t.jsonb "client_brief"
     t.text "compressed_context"
     t.datetime "created_at", null: false
@@ -605,6 +613,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_300000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.integer "version", default: 1, null: false
+    t.index "((channel_metadata ->> 'thread_ts'::text))", name: "idx_specs_sessions_slack_thread_ts", where: "((channel_type)::text = 'slack'::text)"
     t.index ["shop_id", "status"], name: "index_specs_sessions_on_shop_id_and_status"
     t.index ["shop_id"], name: "index_specs_sessions_on_shop_id"
     t.index ["specs_client_id"], name: "index_specs_sessions_on_specs_client_id"

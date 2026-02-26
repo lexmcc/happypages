@@ -345,5 +345,40 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Token lookup pattern: find by token → check expiry → nil out if expired → redirect if nil
 - **Lesson**: Token-based auth features need expiry enforced at the lookup site, not just stored in the DB
 
+### Zeitwerk Module-Level Methods Need a Matching File (Feb 25, 2026)
+- `Specs::Adapters.for(session)` calls a class method on the `Specs::Adapters` module
+- Zeitwerk autoloading expects `Specs::Adapters` to be defined in `app/services/specs/adapters.rb`
+- Defining `def self.for` only inside `app/services/specs/adapters/registry.rb` means the method never loads — Zeitwerk looks for the module at the parent path, not subdirectory files
+- **Fix**: Create `app/services/specs/adapters.rb` with the module-level `REGISTRY` constant and `self.for` method. Subclass files (`base.rb`, `web.rb`) live in the `adapters/` subdirectory as expected.
+- **Lesson**: When adding module-level methods (class methods, constants) to a namespace that also has a subdirectory, the module definition must live in `namespace.rb`, not inside a file under `namespace/`. Zeitwerk maps `Foo::Bar` → `foo/bar.rb` for the module itself, and `Foo::Bar::Baz` → `foo/bar/baz.rb` for nested constants.
+
+### `::Slack` Gem Namespace Collision (Feb 26, 2026)
+- The `slack-ruby-client` gem defines a top-level `::Slack` module
+- Naming controllers `Slack::EventsController` collides with the gem's namespace — Rails/Zeitwerk may resolve `Slack` to the gem module
+- Similarly, `REGISTRY = { "slack" => Slack }` in `Specs::Adapters` resolves to `::Slack` (the gem), not `Specs::Adapters::Slack`
+- **Fix**: Namespace controllers as `SlackIntegration::` (not `Slack::`). Use fully-qualified `Specs::Adapters::Slack` in REGISTRY hash values.
+- **Lesson**: When using a gem that defines a top-level module (e.g., `Slack`, `Stripe`), never reuse that name for your own controllers/modules. Use a distinct namespace like `SlackIntegration::` or `StripeIntegration::`.
+
+### Slack Webhook Signature Verification Pattern (Feb 26, 2026)
+- Slack sends `X-Slack-Request-Timestamp` and `X-Slack-Signature` headers
+- Signature is `v0=HMAC-SHA256(signing_secret, "v0:{timestamp}:{raw_body}")`
+- Must reject timestamps older than 300 seconds (replay protection)
+- Must use `request.raw_post` (not `params.to_json`) — the body must match exactly what Slack signed
+- Use `ActiveSupport::SecurityUtils.secure_compare` for constant-time comparison
+- In tests: compute signature from the exact request body string with the test signing secret
+
+### Slack Requires HTTP 200 Within 3 Seconds (Feb 26, 2026)
+- Slack retries webhook delivery if the server doesn't respond with 200 within ~3s
+- All AI orchestrator calls must happen in background jobs (SolidQueue), with the controller returning 200 immediately
+- Event deduplication via `Rails.cache` with 5-minute TTL prevents double-processing from retries
+- **Lesson**: For any webhook-to-AI pipeline, always enqueue and respond — never process synchronously
+
+### Testing Slack Webhooks: raw_post vs params (Feb 26, 2026)
+- Slack actions endpoint sends `payload` as a form-encoded JSON string: `payload={"type":"block_actions",...}`
+- `request.raw_post` returns the full form-encoded body, which is what the signature is computed over
+- In request specs, `params: { payload: json_string }` sends as form params, but the raw_post is the URL-encoded form
+- Must compute signature over the URL-encoded form body (`"payload=#{CGI.escape(json)}"`) to match what `raw_post` returns
+- **Lesson**: When testing signature verification, always compute the signature over the exact bytes the server will see in `raw_post`, not the logical params
+
 ---
-*Updated: Feb 25, 2026 (audit fixes: DB CHECK constraints, slug validation mismatch, invite token expiry)*
+*Updated: Feb 26, 2026 (chunk 7: Slack integration, namespace collision, webhook signatures)*

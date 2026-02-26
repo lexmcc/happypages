@@ -3,6 +3,7 @@ module Specs
     layout "client"
     skip_before_action :set_current_shop
     include Specs::ClientAuthenticatable
+    include Specs::MessageHandling
 
     before_action :set_project, only: [:show, :message, :export, :board_cards]
 
@@ -36,14 +37,8 @@ module Specs
         return render json: { error: "No active session" }, status: :unprocessable_entity
       end
 
-      user_text = params[:message].to_s.strip
-      if user_text.blank?
-        return render json: { error: "Message cannot be blank" }, status: :unprocessable_entity
-      end
-
-      orchestrator = ::Specs::Orchestrator.new(session_record)
-      result = orchestrator.process_turn(
-        user_text,
+      adapter = Specs::Adapters.for(session_record, strip_team_spec: true)
+      handle_message(adapter, params[:message].to_s.strip,
         user: nil,
         specs_client: current_specs_client,
         active_user: {
@@ -52,19 +47,6 @@ module Specs
         },
         tools: ::Specs::ToolDefinitions.v1_client
       )
-
-      if result[:error]
-        status = result[:type] == :max_tokens ? :unprocessable_entity : :internal_server_error
-        render json: { error: result[:error] }, status: status
-      else
-        result.delete(:team_spec)
-        render json: result
-      end
-    rescue AnthropicClient::RateLimitError
-      render json: { error: "Too many requests. Please wait a moment and try again." }, status: :too_many_requests
-    rescue AnthropicClient::Error => e
-      Rails.logger.error "[Specs Client] Anthropic error: #{e.message}"
-      render json: { error: "Something went wrong. Please try again." }, status: :internal_server_error
     end
 
     def board_cards

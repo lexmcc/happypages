@@ -1,4 +1,6 @@
 class Admin::SpecsController < Admin::BaseController
+  include Specs::MessageHandling
+
   before_action :require_specs_feature
   before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff, :board_cards, :update_card, :create_card]
 
@@ -40,26 +42,8 @@ class Admin::SpecsController < Admin::BaseController
       return render json: { error: "No active session" }, status: :unprocessable_entity
     end
 
-    user_text = params[:message].to_s.strip
-    if user_text.blank?
-      return render json: { error: "Message cannot be blank" }, status: :unprocessable_entity
-    end
-
-    image = params[:image]
-    orchestrator = Specs::Orchestrator.new(session)
-    result = orchestrator.process_turn(user_text, image: image, user: current_user)
-
-    if result[:error]
-      status = result[:type] == :max_tokens ? :unprocessable_entity : :internal_server_error
-      render json: { error: result[:error] }, status: status
-    else
-      render json: result
-    end
-  rescue AnthropicClient::RateLimitError
-    render json: { error: "Too many requests. Please wait a moment and try again." }, status: :too_many_requests
-  rescue AnthropicClient::Error => e
-    Rails.logger.error "[Specs] Anthropic error: #{e.message}"
-    render json: { error: "Something went wrong. Please try again." }, status: :internal_server_error
+    adapter = Specs::Adapters.for(session)
+    handle_message(adapter, params[:message].to_s.strip, image: params[:image], user: current_user)
   end
 
   def complete

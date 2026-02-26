@@ -7,5 +7,6 @@ module Specs
     belongs_to :organisation
 
     validates :email, presence: true, uniqueness: { scope: :organisation_id }
+    validates :slack_user_id, uniqueness: { scope: :organisation_id }, allow_nil: true
   end
 end

@@ -90,6 +90,7 @@ RSpec.describe "Specs::Guests", type: :request do
     it "passes active_user hash, not user record" do
       expect_any_instance_of(Specs::Orchestrator).to receive(:process_turn).with(
         "Our brand is blue",
+        image: nil,
         user: nil,
         active_user: hash_including(name: handoff.to_name, role: "client")
       ).and_call_original

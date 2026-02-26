@@ -1,4 +1,6 @@
 class Organisation < ApplicationRecord
+  encrypts :slack_bot_token
+
   has_many :specs_clients, class_name: "Specs::Client", dependent: :destroy
   has_many :specs_projects, class_name: "Specs::Project", dependent: :destroy
 
@@ -8,6 +10,14 @@ class Organisation < ApplicationRecord
   validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }
 
   before_validation :generate_slug
+
+  def slack_connected?
+    slack_bot_token.present?
+  end
+
+  def slack_client
+    ::Slack::Web::Client.new(token: slack_bot_token)
+  end
 
   private
 

@@ -24,6 +24,30 @@ RSpec.describe Specs::Client, type: :model do
     end
   end
 
+  describe "slack_user_id uniqueness" do
+    it "enforces uniqueness per organisation" do
+      org = create(:organisation)
+      create(:specs_client, organisation: org, slack_user_id: "U123")
+      dup = build(:specs_client, organisation: org, slack_user_id: "U123")
+      expect(dup).not_to be_valid
+    end
+
+    it "allows same slack_user_id in different organisations" do
+      org1 = create(:organisation, name: "Org A")
+      org2 = create(:organisation, name: "Org B")
+      create(:specs_client, organisation: org1, slack_user_id: "U123")
+      client2 = build(:specs_client, organisation: org2, slack_user_id: "U123")
+      expect(client2).to be_valid
+    end
+
+    it "allows multiple clients without slack_user_id" do
+      org = create(:organisation)
+      create(:specs_client, organisation: org, slack_user_id: nil)
+      client2 = build(:specs_client, organisation: org, slack_user_id: nil)
+      expect(client2).to be_valid
+    end
+  end
+
   describe "authenticatable" do
     it "authenticates with correct password" do
       client = create(:specs_client, :with_password)

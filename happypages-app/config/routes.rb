@@ -115,6 +115,17 @@ Rails.application.routes.draw do
   get "embedded", to: "embedded#show"
   post "embedded/authenticate", to: "embedded#authenticate"
 
+  # Slack integration webhooks
+  namespace :slack_integration do
+    post "events", to: "events#create"
+    post "actions", to: "actions#create"
+    post "commands", to: "commands#create"
+  end
+
+  # Slack OAuth (client portal context)
+  get "specs/slack/install", to: "slack_integration/oauth#install", as: :slack_install
+  get "specs/slack/callback", to: "slack_integration/oauth#callback", as: :slack_callback
+
   # Specs guest access (no login required)
   get "specs/join/:token", to: "specs/guests#join", as: :specs_guest_join
   get "specs/session/:token", to: "specs/guests#show", as: :specs_guest_session

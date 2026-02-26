@@ -90,7 +90,9 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 24** - Specs engine chunk 3: handoff + multi-user — `request_handoff` tool, internal/external invite flow, guest access with token-based join, message attribution, PromptBuilder active user context, 288 total specs
 - **Feb 25** - Specs engine chunk 4: client web portal + auth — Organisation model, Specs::Client with Authenticatable concern, client portal (login, invite, dashboard, projects, chat, brief export), v1_client tool definitions (no handoff), orchestrator specs_client/tools kwargs, superadmin org/client management with SpecsClientMailer, 335 total specs
 - **Feb 25** - Specs engine chunk 5: kanban board — Specs::Card model with status lanes, auto-populate from generate_team_spec, SortableJS drag-and-drop for admin, read-only client view, Board tab on project pages, 354 total specs
+- **Feb 25** - Specs engine chunk 6: channel adapter layer — `Specs::MessageHandling` concern, `Specs::Adapters` registry with Web adapter, `channel_type`/`channel_metadata` on sessions, guest blank-message bug fix, 389 total specs
 - **Feb 25** - Specs engine audit fixes: DB CHECK constraint for project ownership XOR, invite token expiry, password length validation, resilient card creation, 23 new specs (377 total)
+- **Feb 26** - Specs engine chunk 7: Slack integration — webhook controllers, background jobs, Block Kit renderer, OAuth flow, adapter registration, 56 new specs (445 total)
 
 ## Key Milestones
 
