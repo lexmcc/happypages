@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lune & Wild | Website Audit & Growth Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-warm: #fff0a0;
+      --bg-dark: #575e14;
+      --bg-sage: #575e14;
+      --accent: #d96b02;
+      --accent-hover: #c25e02;
+      --accent-glow: rgba(217, 107, 2, 0.25);
+      --card-bg: #fff4b8;
+      --text-primary: #2a2e15;
+      --text-muted: #5a5e45;
+      --text-light: #fff0a0;
+      --border-subtle: rgba(42,46,21,0.08);
+      --sage: #575e14;
+      --sage-light: #ccce94;
+      --butter: #fff0a0;
+      --golden: #f9d438;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-warm);
+      color: var(--text-primary);
+      overflow: hidden;
+      letter-spacing: -0.02em;
+    }
+
+    .deck {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .slide--dark {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .slide--warm {
+      background: var(--bg-warm);
+      color: var(--text-primary);
+    }
+
+    .slide--sage {
+      background: var(--bg-sage);
+      color: var(--text-light);
+    }
+
+    .slide__content {
+      max-width: 720px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .slide__content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide__label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+
+    .slide__title {
+      font-family: 'General Sans', 'Hanken Grotesk', sans-serif;
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 600;
+      line-height: 1.08;
+      margin-bottom: 24px;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+    }
+
+    .slide__title::after {
+      content: '.';
+      color: var(--accent);
+    }
+
+    .slide__subtitle {
+      font-size: clamp(15px, 2.5vw, 18px);
+      line-height: 1.6;
+      opacity: 0.75;
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Credit — title slide only */
+    .credit {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 11px;
+      opacity: 0.35;
+      letter-spacing: 0.02em;
+    }
+
+    .credit a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .credit a:hover { opacity: 0.7; }
+
+    /* Accent line */
+    .accent-line {
+      width: 48px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 24px;
+      border-radius: 1px;
+    }
+
+    .slide--dark .accent-line { background: var(--sage-light); }
+    .slide--sage .accent-line { background: var(--butter); }
+
+    /* Issues/Items List */
+    .issues {
+      text-align: left;
+      width: 100%;
+    }
+
+    .issue {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .slide--dark .issue { border-bottom-color: rgba(255,240,160,0.1); }
+    .slide--sage .issue { border-bottom-color: rgba(255,240,160,0.12); }
+
+    .issue:last-child { border-bottom: none; }
+
+    .issue__icon {
+      width: 40px;
+      height: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .slide--dark .issue__icon,
+    .slide--sage .issue__icon {
+      background: rgba(255,240,160,0.1);
+      border-color: rgba(255,240,160,0.1);
+      color: var(--text-light);
+    }
+
+    .issue__icon--accent { color: var(--accent); }
+    .issue__icon--sage { color: var(--sage); }
+    .issue__icon--golden { color: var(--golden); }
+
+    .issue__text {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .issue__text strong {
+      display: block;
+      margin-bottom: 3px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .issue__text span {
+      opacity: 0.6;
+      font-size: 13px;
+    }
+
+    /* Callout */
+    .slide__callout {
+      background: rgba(217,107,2,0.06);
+      border: 1.5px solid rgba(217,107,2,0.2);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .slide--dark .slide__callout {
+      background: rgba(255,240,160,0.06);
+      border-color: rgba(255,240,160,0.12);
+    }
+
+    .slide__callout-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+
+    .slide__callout-issue {
+      font-family: 'General Sans', 'Hanken Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+
+    .slide__callout-fix {
+      font-size: 13px;
+      opacity: 0.6;
+      line-height: 1.5;
+    }
+
+    /* Observation cards on opportunity slide */
+    .observations {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .observation {
+      background: rgba(255,240,160,0.06);
+      border: 1px solid rgba(255,240,160,0.1);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .observation__label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      opacity: 0.4;
+      margin-bottom: 6px;
+    }
+
+    .observation__text {
+      font-size: 13px;
+      line-height: 1.45;
+      opacity: 0.8;
+    }
+
+    /* Option Cards */
+    .option-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(42,46,21,0.04);
+    }
+
+    .option-card--recommended {
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 20px var(--accent-glow);
+      position: relative;
+    }
+
+    .option-card__badge {
+      position: absolute;
+      top: -12px;
+      left: 28px;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    .option-card__name {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .option-card__discount {
+      display: inline-block;
+      background: var(--sage-light);
+      color: var(--bg-dark);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .option-card__price {
+      font-family: 'General Sans', 'Hanken Grotesk', sans-serif;
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .option-card__price s {
+      font-size: 0.5em;
+      opacity: 0.35;
+      text-decoration: line-through;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    .option-card__price-note {
+      font-size: 13px;
+      opacity: 0.45;
+      margin-bottom: 16px;
+    }
+
+    .option-card__desc {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .option-card__list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .option-card__list li {
+      font-size: 13px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-card__list li:last-child { border-bottom: none; }
+
+    .option-card__list li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: var(--sage-light);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .option-card--recommended .option-card__list li::before {
+      background: var(--accent);
+    }
+
+    .option-card__recommendation {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: rgba(217,107,2,0.06);
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .option-card__recommendation strong {
+      color: var(--accent);
+    }
+
+    .option-footnote {
+      font-size: 13px;
+      opacity: 0.45;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    /* Comparison Table */
+    .comparison {
+      width: 100%;
+      text-align: left;
+      margin-top: 16px;
+    }
+
+    .comparison__row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,240,160,0.1);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .comparison__row--header {
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1.5px solid rgba(255,240,160,0.2);
+    }
+
+    .comparison__cell {
+      padding: 11px 10px;
+    }
+
+    .comparison__cell:first-child {
+      font-weight: 500;
+      opacity: 0.6;
+    }
+
+    .comparison__cell--highlight {
+      background: rgba(217,107,2,0.1);
+    }
+
+    .comparison__row--header .comparison__cell--highlight {
+      color: var(--accent);
+      position: relative;
+    }
+
+    .comparison__cell--check {
+      color: var(--sage-light);
+      font-weight: 700;
+    }
+
+    .comparison__cell--muted {
+      opacity: 0.25;
+    }
+
+    .comparison__cell s {
+      opacity: 0.4;
+      font-size: 0.85em;
+    }
+
+    .comparison__rec-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 8px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* Horizontal Timeline */
+    .timeline-horizontal {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      position: relative;
+      margin-top: 16px;
+    }
+
+    .timeline-horizontal::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--sage-light);
+      opacity: 0.3;
+    }
+
+    .timeline__phase {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 8px;
+    }
+
+    .timeline__phase--wide { flex: 2.5; }
+
+    .timeline__marker {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 0 auto 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline__content h3 {
+      font-family: 'General Sans', 'Hanken Grotesk', sans-serif;
+      font-size: 15px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+    }
+
+    .timeline__content p {
+      font-size: 12px;
+      opacity: 0.55;
+      line-height: 1.4;
+    }
+
+    /* Why happypages — one person slide */
+    .value-props {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .value-prop {
+      background: rgba(255,240,160,0.08);
+      border: 1px solid rgba(255,240,160,0.1);
+      padding: 24px 18px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .value-prop__icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .value-prop__title {
+      font-family: 'General Sans', 'Hanken Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .value-prop__desc {
+      font-size: 12px;
+      opacity: 0.55;
+      line-height: 1.4;
+    }
+
+    /* Client logos */
+    .client-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      margin-top: 28px;
+    }
+
+    .client-logo {
+      height: auto;
+      width: auto;
+      max-height: 24px;
+      max-width: 100px;
+      filter: grayscale(100%) brightness(0) invert(1);
+      opacity: 0.35;
+      object-fit: contain;
+    }
+
+    .client-logo--text {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
+      opacity: 0.25;
+      color: var(--text-light);
+    }
+
+    .client-logos__label {
+      font-size: 10px;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      opacity: 0.3;
+      margin-top: 16px;
+    }
+
+    /* CTA */
+    .cta-button {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 16px 36px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      margin-top: 24px;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .cta-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(217, 107, 2, 0.35);
+    }
+
+    .cta-secondary {
+      display: inline-block;
+      color: var(--text-light);
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 12px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .cta-secondary:hover { opacity: 0.8; }
+
+    .cta-deadline {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 12px;
+      opacity: 0.4;
+      padding: 6px 14px;
+      border: 1px solid rgba(255,240,160,0.15);
+      border-radius: 20px;
+    }
+
+    /* Progress Indicator */
+    .progress {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .progress__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(42,46,21,0.15);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .progress__dot:hover { background: rgba(42,46,21,0.3); }
+
+    .progress__dot.active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.4;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    .scroll-hint__arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      margin-top: -4px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* Hide scrollbar */
+    .deck::-webkit-scrollbar { display: none; }
+    .deck { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .slide { padding: 32px 20px; }
+
+      .observations {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .value-props {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .value-prop {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+        padding: 16px 18px;
+      }
+
+      .value-prop__icon {
+        margin-bottom: 0;
+        font-size: 20px;
+      }
+
+      .progress { right: 8px; }
+      .progress__dot { width: 5px; height: 5px; }
+
+      .timeline-horizontal {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .timeline-horizontal::before { display: none; }
+
+      .timeline__phase {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
+        padding: 0;
+      }
+
+      .timeline__marker {
+        margin: 0;
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+
+      .timeline__content { padding-top: 4px; }
+
+      .issue__icon {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+      }
+
+      .credit { bottom: 16px; right: 16px; font-size: 10px; }
+
+      .option-card { padding: 22px; }
+      .option-card__badge { left: 22px; }
+
+      /* Comparison table: mobile stacked cards */
+      .comparison { display: none; }
+      .comparison-mobile { display: block; }
+
+      .client-logos {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .client-logo {
+        max-height: 20px;
+        max-width: 80px;
+      }
+    }
+
+    @media (min-width: 601px) {
+      .comparison-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <!-- Slide 1: Title -->
+    <div class="slide slide--dark" data-slide="0">
+      <div class="slide__content">
+        <p style="font-size: clamp(12px, 1.8vw, 14px); opacity: 0.35; margin-bottom: 28px; letter-spacing: 0.1em; text-transform: lowercase;">prepared for</p>
+        <div role="img" aria-label="Lune & Wild" style="width: min(320px, 70vw); aspect-ratio: 256/45; margin: 0 auto 28px; background: #fff0a0; -webkit-mask: url('logo.png') center/contain no-repeat; mask: url('logo.png') center/contain no-repeat; -webkit-mask-size: contain; mask-size: contain; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"></div>
+        <div class="accent-line"></div>
+        <p class="slide__subtitle" style="opacity: 0.55;">website audit & growth roadmap</p>
+        <p style="font-size: 13px; opacity: 0.25; margin-top: 4px;">6-month engagement proposal</p>
+      </div>
+      <div class="scroll-hint">
+        <div class="scroll-hint__arrow"></div>
+      </div>
+      <div class="credit">
+        <a href="https://happypages.co" target="_blank">by happypages</a>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Opportunity -->
+    <div class="slide slide--dark" data-slide="1">
+      <div class="slide__content">
+        <div class="slide__label">the opportunity</div>
+        <h1 class="slide__title">we've already spotted the gaps</h1>
+        <p class="slide__subtitle">a quick look at your site surfaces real conversion opportunities. a proper audit will quantify them and tell you exactly where to start.</p>
+        <div class="observations">
+          <div class="observation">
+            <div class="observation__label">discovery</div>
+            <div class="observation__text">no guided shopping flow — product discovery relies entirely on navigation and search, missing a major personalisation opportunity</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">trust</div>
+            <div class="observation__text">social proof is deferred below the fold — reviews and trust signals don't appear until deep in the scroll</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">performance</div>
+            <div class="observation__text">15+ third-party scripts loading on every page — potential drag on mobile checkout speed</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">approach</div>
+            <div class="observation__text">audit first, then build what matters most. month 1 finds the money. months 2–6 ship the fixes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: What We'll Audit -->
+    <div class="slide slide--warm" data-slide="2">
+      <div class="slide__content">
+        <div class="slide__label">what we'll audit</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">three workstreams</h1>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon issue__icon--accent">1</div>
+            <div class="issue__text">
+              <strong>site journey & conversion flow</strong>
+              <span>homepage to checkout. where do customers drop off, and why?</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--sage">2</div>
+            <div class="issue__text">
+              <strong>landing pages & acquisition</strong>
+              <span>do your entry points actually sell? value prop, mobile experience, trust signals, path to purchase</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--golden">3</div>
+            <div class="issue__text">
+              <strong>guided shopping + personalisation</strong>
+              <span>product discovery flow, recommendation logic, personalisation rules, and whether octane data is actually being used</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Month 1 -->
+    <div class="slide slide--warm" data-slide="3">
+      <div class="slide__content">
+        <div class="slide__label">month 1</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">the audit</h1>
+        <p class="slide__subtitle" style="margin-bottom: 24px;">one month of digging before we build anything.</p>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon issue__icon--accent">W1</div>
+            <div class="issue__text">
+              <strong>data collection & heuristic review</strong>
+              <span>full site walkthrough on mobile + desktop, analytics access, recorded observations</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--sage">W2</div>
+            <div class="issue__text">
+              <strong>deep analysis</strong>
+              <span>funnel data, session recordings, competitor teardowns, where personalisation has gaps</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--golden">W3</div>
+            <div class="issue__text">
+              <strong>synthesis & prioritisation</strong>
+              <span>every finding scored by impact, confidence, and effort. grouped into a 6-month roadmap</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--accent">W4</div>
+            <div class="issue__text">
+              <strong>delivery & alignment</strong>
+              <span>audit doc, video walkthrough, roadmap review. agree what gets built first</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Growth Partner (anchor high) -->
+    <div class="slide slide--warm" data-slide="4">
+      <div class="slide__content">
+        <div class="option-card">
+          <div class="option-card__name">growth partner<span class="option-card__discount">founder's discount</span></div>
+          <div class="option-card__price"><s>&pound;5,995</s> &pound;2,995<span style="font-size: 16px; font-weight: 400; opacity: 0.4; font-family: 'Hanken Grotesk', sans-serif;">/month</span></div>
+          <div class="option-card__price-note">&pound;17,970 total over 6 months</div>
+          <div class="option-card__desc">full CRO audit across 8 areas with GA4 analysis, session recordings, competitor teardowns, and video walkthrough. then 4–6 deliverables per month with weekly updates and before/after measurement.</div>
+          <ul class="option-card__list">
+            <li>8-area strategic audit with GA4 funnel analysis</li>
+            <li>20–30 session recordings reviewed</li>
+            <li>3–4 competitor teardowns with side-by-side comparisons</li>
+            <li>Octane + Klaviyo personalisation strategy</li>
+            <li>25–40 page audit document + 30–45 min video walkthrough</li>
+            <li>4–6 deliverables per month (months 2–6)</li>
+            <li>weekly async updates + quarterly roadmap re-prioritisation</li>
+            <li>before/after measurement on every shipped change</li>
+          </ul>
+        </div>
+        <p class="option-footnote">the full package. deeper analysis, more output each month, and a continuous measurement loop.</p>
+      </div>
+    </div>
+
+    <!-- Slide 6: Hybrid (recommended, centre stage) -->
+    <div class="slide slide--warm" data-slide="5">
+      <div class="slide__content">
+        <div class="option-card option-card--recommended">
+          <div class="option-card__badge">recommended</div>
+          <div class="option-card__name">hybrid<span class="option-card__discount">founder's discount</span></div>
+          <div class="option-card__price"><s>&pound;5,995</s> &pound;2,995 <span style="font-size: 16px; font-weight: 400; opacity: 0.4; font-family: 'Hanken Grotesk', sans-serif;">month 1</span> <span style="font-size: 18px; opacity: 0.3;">&rarr;</span> <s>&pound;1,995</s> &pound;1,095<span style="font-size: 16px; font-weight: 400; opacity: 0.4; font-family: 'Hanken Grotesk', sans-serif;">/month</span></div>
+          <div class="option-card__price-note">&pound;8,470 total over 6 months</div>
+          <div class="option-card__desc">month 1 is identical to growth partner: full 8-area audit, data analysis, competitors, video walkthrough, ICE-scored roadmap. then flex down to build retainer pricing for months 2–6.</div>
+          <ul class="option-card__list">
+            <li>month 1: full 8-area strategic audit with data + competitors + video</li>
+            <li>month 1: ICE-scored roadmap with prioritised 6-month plan</li>
+            <li>months 2–6: 2–3 deliverables per month from the roadmap</li>
+            <li>months 2–6: board-based async communication</li>
+            <li>you give up: weekly updates + quarterly re-prioritisation</li>
+            <li>you keep: everything that tells you what to build and why</li>
+          </ul>
+          <div class="option-card__recommendation">
+            <strong>why this one:</strong> same strategic depth as growth in month 1 — the part that determines whether everything after it works. you save &pound;9,500 vs growth and get 3 extra audit areas vs build.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Build Retainer (budget fallback) -->
+    <div class="slide slide--warm" data-slide="6">
+      <div class="slide__content">
+        <div class="option-card">
+          <div class="option-card__name">build retainer<span class="option-card__discount">founder's discount</span></div>
+          <div class="option-card__price"><s>&pound;1,995</s> &pound;1,095<span style="font-size: 16px; font-weight: 400; opacity: 0.4; font-family: 'Hanken Grotesk', sans-serif;">/month</span></div>
+          <div class="option-card__price-note">&pound;6,570 total over 6 months</div>
+          <div class="option-card__desc">month 1: conversion sprint audit across 5 key flows — homepage, guided shopping flow, PDP to checkout, subscription landing, and post-purchase. months 2–6: work through the build queue.</div>
+          <ul class="option-card__list">
+            <li>5-flow heuristic audit (homepage, guided shopping, PDP, subscription, post-purchase)</li>
+            <li>annotated findings with severity tags</li>
+            <li>prioritised build queue with effort estimates</li>
+            <li>6–8 page audit document</li>
+            <li>2–3 deliverables per month (months 2–6)</li>
+            <li>board-based async communication</li>
+          </ul>
+        </div>
+        <p class="option-footnote">no strategic review, no ongoing updates — just execution. solid if budget's tight.</p>
+      </div>
+    </div>
+
+    <!-- Slide 8: Side-by-Side Comparison (dark for gravity) -->
+    <div class="slide slide--dark" data-slide="7">
+      <div class="slide__content">
+        <div class="slide__label">at a glance</div>
+        <h1 class="slide__title" style="font-size: clamp(22px, 4vw, 32px);">side-by-side comparison</h1>
+
+        <!-- Desktop table -->
+        <div class="comparison">
+          <div class="comparison__row comparison__row--header">
+            <div class="comparison__cell"></div>
+            <div class="comparison__cell">growth</div>
+            <div class="comparison__cell comparison__cell--highlight">hybrid <span class="comparison__rec-badge">pick</span></div>
+            <div class="comparison__cell">build</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">monthly price</div>
+            <div class="comparison__cell"><s>&pound;5,995</s> &pound;2,995</div>
+            <div class="comparison__cell comparison__cell--highlight"><s>&pound;5,995</s> &pound;2,995 &rarr; &pound;1,095</div>
+            <div class="comparison__cell"><s>&pound;1,995</s> &pound;1,095</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">6-month total</div>
+            <div class="comparison__cell">&pound;17,970</div>
+            <div class="comparison__cell comparison__cell--highlight">&pound;8,470</div>
+            <div class="comparison__cell">&pound;6,570</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">audit scope</div>
+            <div class="comparison__cell comparison__cell--check">8 areas</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">8 areas</div>
+            <div class="comparison__cell">5 flows</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">GA4 + session data</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">competitor teardowns</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">video walkthrough</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">deliverables/month</div>
+            <div class="comparison__cell">4–6</div>
+            <div class="comparison__cell comparison__cell--highlight">2–3</div>
+            <div class="comparison__cell">2–3</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">weekly updates</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--muted">&mdash;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">measurement loop</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--muted">&mdash;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+        </div>
+
+        <!-- Mobile stacked cards -->
+        <div class="comparison-mobile">
+          <div style="margin-top: 16px;">
+            <div style="background: rgba(217,107,2,0.12); border: 1.5px solid rgba(217,107,2,0.3); border-radius: 10px; padding: 18px; margin-bottom: 12px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; color: var(--accent); margin-bottom: 8px;">hybrid — recommended</div>
+              <div style="font-family: 'General Sans', 'Hanken Grotesk', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;8,470 <span style="font-size: 13px; opacity: 0.5; font-family: 'Hanken Grotesk', sans-serif;">over 6 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">8-area audit &middot; GA4 data &middot; competitors &middot; video walkthrough &middot; 2–3 deliverables/month</div>
+            </div>
+            <div style="background: rgba(255,240,160,0.06); border: 1px solid rgba(255,240,160,0.1); border-radius: 10px; padding: 18px; margin-bottom: 12px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; opacity: 0.5; margin-bottom: 8px;">growth partner</div>
+              <div style="font-family: 'General Sans', 'Hanken Grotesk', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;17,970 <span style="font-size: 13px; opacity: 0.5; font-family: 'Hanken Grotesk', sans-serif;">over 6 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">everything in hybrid + weekly updates &middot; 4–6 deliverables/month &middot; measurement loop</div>
+            </div>
+            <div style="background: rgba(255,240,160,0.06); border: 1px solid rgba(255,240,160,0.1); border-radius: 10px; padding: 18px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; opacity: 0.5; margin-bottom: 8px;">build retainer</div>
+              <div style="font-family: 'General Sans', 'Hanken Grotesk', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;6,570 <span style="font-size: 13px; opacity: 0.5; font-family: 'Hanken Grotesk', sans-serif;">over 6 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">5-flow audit &middot; 2–3 deliverables/month &middot; no data analysis or competitors</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: 6-Month Timeline -->
+    <div class="slide slide--warm" data-slide="8">
+      <div class="slide__content">
+        <div class="slide__label">the engagement</div>
+        <h1 class="slide__title" style="font-size: clamp(22px, 4vw, 32px); margin-bottom: 32px;">6-month timeline</h1>
+        <div class="timeline-horizontal">
+          <div class="timeline__phase">
+            <div class="timeline__marker">1</div>
+            <div class="timeline__content">
+              <h3>audit</h3>
+              <p>full site review, data analysis, findings prioritised into roadmap</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">2</div>
+            <div class="timeline__content">
+              <h3>quick wins</h3>
+              <p>highest-impact fixes shipped first</p>
+            </div>
+          </div>
+          <div class="timeline__phase timeline__phase--wide">
+            <div class="timeline__marker">3-5</div>
+            <div class="timeline__content">
+              <h3>build + iterate</h3>
+              <p>landing pages, guided shopping, subscription flow, personalisation</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">6</div>
+            <div class="timeline__content">
+              <h3>review</h3>
+              <p>measure results, assess remaining backlog, plan next steps</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: One Person + Social Proof -->
+    <div class="slide slide--sage" data-slide="9">
+      <div class="slide__content">
+        <div class="slide__label">why happypages</div>
+        <h1 class="slide__title" style="font-size: clamp(26px, 5vw, 42px);">one person, every workstream</h1>
+        <p class="slide__subtitle">the person who finds the problems builds the fixes. no handoffs, no account managers, no lost context. same brain on the audit, the builds, and the measurement.</p>
+        <div class="value-props">
+          <div class="value-prop">
+            <div class="value-prop__icon">&larr;&rarr;</div>
+            <div>
+              <div class="value-prop__title">24hr response</div>
+              <div class="value-prop__desc">async, always available</div>
+            </div>
+          </div>
+          <div class="value-prop">
+            <div class="value-prop__icon">&check;</div>
+            <div>
+              <div class="value-prop__title">board-based</div>
+              <div class="value-prop__desc">full visibility, no surprises</div>
+            </div>
+          </div>
+          <div class="value-prop">
+            <div class="value-prop__icon">&infin;</div>
+            <div>
+              <div class="value-prop__title">no contracts</div>
+              <div class="value-prop__desc">month-to-month after month 1</div>
+            </div>
+          </div>
+        </div>
+        <div class="client-logos">
+          <img src="butternutbox-logo.svg" alt="Butternut Box" class="client-logo">
+          <img src="gousto-logo.png" alt="Gousto" class="client-logo">
+          <img src="oatcult-logo.avif" alt="Oat Cult" class="client-logo">
+          <img src="fielddoctor-logo.webp" alt="Field Doctor" class="client-logo">
+        </div>
+        <p class="client-logos__label">previously worked with</p>
+      </div>
+    </div>
+
+    <!-- Slide 11: CTA -->
+    <div class="slide slide--dark" data-slide="10">
+      <div class="slide__content">
+        <div class="slide__label">next steps</div>
+        <h1 class="slide__title">let's get started</h1>
+        <p class="slide__subtitle">if hybrid sounds right, reply "hybrid" and i'll send the agreement. or book a quick call to talk it through.</p>
+        <a href="mailto:alex@happypages.co?subject=Lune%20%26%20Wild%20%E2%80%94%20Hybrid" class="cta-button">reply to alex</a>
+        <br>
+        <a href="mailto:alex@happypages.co" class="cta-secondary">or email alex@happypages.co</a>
+        <br>
+        <span class="cta-deadline">founder's pricing available for engagements starting by april 2026</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress" id="progress"></div>
+
+  <script>
+    const deck = document.getElementById('deck');
+    const progress = document.getElementById('progress');
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    // Create progress dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'progress__dot';
+      dot.dataset.slide = i;
+      dot.addEventListener('click', () => {
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+      });
+      progress.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.progress__dot');
+
+    // Update active dot on scroll
+    function updateProgress() {
+      const scrollPos = deck.scrollTop;
+      const slideHeight = window.innerHeight;
+      const currentSlide = Math.round(scrollPos / slideHeight);
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+
+      const activeSlide = slides[currentSlide];
+      if (!activeSlide) return;
+      const isDark = activeSlide.classList.contains('slide--dark') ||
+                     activeSlide.classList.contains('slide--sage');
+
+      dots.forEach(dot => {
+        if (isDark) {
+          dot.style.background = dot.classList.contains('active')
+            ? 'var(--butter)' : 'rgba(255,240,160,0.2)';
+        } else {
+          dot.style.background = dot.classList.contains('active')
+            ? 'var(--accent)' : 'rgba(42,46,21,0.12)';
+        }
+      });
+    }
+
+    deck.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const slideHeight = window.innerHeight;
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'j') {
+        e.preventDefault();
+        deck.scrollBy({ top: slideHeight, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'k') {
+        e.preventDefault();
+        deck.scrollBy({ top: -slideHeight, behavior: 'smooth' });
+      }
+    });
+
+    // Fade-in on scroll (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.slide__content').forEach(el => observer.observe(el));
+
+    // Hide scroll hint after first scroll
+    deck.addEventListener('scroll', function hideHint() {
+      const hint = document.querySelector('.scroll-hint');
+      if (hint && deck.scrollTop > 50) {
+        hint.style.opacity = '0';
+        hint.style.transition = 'opacity 0.3s';
+        setTimeout(() => hint.remove(), 300);
+        deck.removeEventListener('scroll', hideHint);
+      }
+    });
+  </script>
+</body>
+</html>
