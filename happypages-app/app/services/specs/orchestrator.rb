@@ -9,6 +9,9 @@ module Specs
     end
 
     def process_turn(user_text, image: nil, user: nil, active_user: nil, specs_client: nil, tools: nil)
+      notification_queue = []
+      result = nil
+
       ActiveRecord::Base.transaction do
         @session.lock!
 
@@ -72,15 +75,43 @@ module Specs
         @session.total_input_tokens += usage["input_tokens"].to_i
         @session.total_output_tokens += usage["output_tokens"].to_i
 
+        # Turn limit notification at 80% threshold
+        if @session.turn_budget > 0 && @session.project.shop_id.present?
+          prev_pct = (next_turn - 1).to_f / @session.turn_budget
+          curr_pct = next_turn.to_f / @session.turn_budget
+          if curr_pct >= 0.8 && prev_pct < 0.8
+            notification_queue << {
+              action: "turn_limit_approaching",
+              notifiable_type: "Specs::Session", notifiable_id: @session.id,
+              shop_id: @session.project.shop_id,
+              data: { project_id: @session.project.id, project_name: @session.project.name,
+                      turns_used: next_turn, turn_budget: @session.turn_budget,
+                      percentage: (curr_pct * 100).round }
+            }
+          end
+        end
+
         # Auto-complete if both outputs are present
         if @session.client_brief.present? && @session.team_spec.present?
           @session.status = "completed"
+          if @session.project.shop_id.present?
+            notification_queue << {
+              action: "spec_completed",
+              notifiable_type: "Specs::Session", notifiable_id: @session.id,
+              shop_id: @session.project.shop_id, exclude_user_id: user&.id,
+              data: { project_id: @session.project.id, project_name: @session.project.name }
+            }
+          end
         end
 
         @session.save!
 
-        build_result(assistant_message, display_text, tool_use_blocks, model)
+        result = build_result(assistant_message, display_text, tool_use_blocks, model)
       end
+
+      notification_queue.each { |params| Specs::NotifyJob.perform_later(**params) }
+
+      result
     rescue AnthropicClient::MaxTokensError => e
       { error: "Response was too long. Please try a shorter message.", type: :max_tokens }
     rescue AnthropicClient::RefusalError => e

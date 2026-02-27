@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_27_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_27_200001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -186,6 +186,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_100000) do
     t.datetime "updated_at", null: false
     t.index ["shop_id", "created_at"], name: "index_media_assets_on_shop_id_and_created_at"
     t.index ["shop_id"], name: "index_media_assets_on_shop_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}
+    t.bigint "notifiable_id", null: false
+    t.string "notifiable_type", null: false
+    t.datetime "read_at"
+    t.bigint "recipient_id", null: false
+    t.string "recipient_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
+    t.index ["recipient_type", "recipient_id", "created_at"], name: "idx_notifications_recipient_recent"
+    t.index ["recipient_type", "recipient_id"], name: "idx_notifications_recipient_unread", where: "(read_at IS NULL)"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -636,6 +651,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_100000) do
     t.datetime "invite_sent_at"
     t.string "invite_token"
     t.datetime "last_sign_in_at"
+    t.jsonb "notification_preferences", default: {}
     t.string "password_digest"
     t.string "role", default: "owner"
     t.bigint "shop_id", null: false

@@ -1,0 +1,93 @@
+<div class="py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Specs Overview</h1>
+
+    <%# Filters %>
+    <div class="flex gap-3 mb-6">
+      <%= form_tag superadmin_specs_overview_index_path, method: :get, class: "flex gap-3" do %>
+        <select name="shop_id" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700">
+          <option value="">All Shops</option>
+          <% @shops.each do |shop| %>
+            <option value="<%= shop.id %>" <%= "selected" if params[:shop_id].to_s == shop.id.to_s %>><%= shop.name %></option>
+          <% end %>
+        </select>
+        <select name="organisation_id" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700">
+          <option value="">All Organisations</option>
+          <% @organisations.each do |org| %>
+            <option value="<%= org.id %>" <%= "selected" if params[:organisation_id].to_s == org.id.to_s %>><%= org.name %></option>
+          <% end %>
+        </select>
+        <select name="status" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700">
+          <option value="">All Statuses</option>
+          <option value="active" <%= "selected" if params[:status] == "active" %>>Active</option>
+          <option value="completed" <%= "selected" if params[:status] == "completed" %>>Completed</option>
+        </select>
+        <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer">Filter</button>
+        <% if params[:shop_id].present? || params[:organisation_id].present? || params[:status].present? %>
+          <%= link_to "Clear", superadmin_specs_overview_index_path, class: "px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Projects table %>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <% if @projects.any? %>
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-100">
+              <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Project</th>
+              <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+              <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sessions</th>
+              <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cards</th>
+              <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <% @projects.each do |project| %>
+              <tr class="hover:bg-gray-50/50">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= project.name %></td>
+                <td class="px-6 py-4 text-sm text-gray-600">
+                  <% if project.shop %>
+                    <%= link_to project.shop.name, superadmin_shop_path(project.shop), class: "text-slate-600 hover:text-slate-900 underline" %>
+                  <% elsif project.organisation %>
+                    <%= link_to project.organisation.name, manage_superadmin_organisation_path(project.organisation), class: "text-slate-600 hover:text-slate-900 underline" %>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-600">
+                  <% active_count = project.sessions.count { |s| s.status == "active" } %>
+                  <% completed_count = project.sessions.count { |s| s.status == "completed" } %>
+                  <span class="text-green-600"><%= active_count %> active</span>
+                  <% if completed_count > 0 %>
+                    <span class="text-gray-400 mx-1">/</span>
+                    <span class="text-gray-500"><%= completed_count %> done</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  <% card_counts = project.cards.group_by(&:status).transform_values(&:count) %>
+                  <div class="flex gap-2">
+                    <% Specs::Card::STATUSES.each do |status| %>
+                      <% count = card_counts[status] || 0 %>
+                      <% next if count == 0 %>
+                      <% badge_color = case status
+                           when "backlog" then "bg-gray-100 text-gray-600"
+                           when "in_progress" then "bg-blue-100 text-blue-700"
+                           when "review" then "bg-amber-100 text-amber-700"
+                           when "done" then "bg-green-100 text-green-700"
+                           end %>
+                      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium <%= badge_color %>">
+                        <%= count %> <%= status.gsub("_", " ") %>
+                      </span>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-xs text-gray-400"><%= project.created_at.strftime("%b %d, %Y") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="px-6 py-12 text-center text-sm text-gray-400">No specs projects yet.</div>
+      <% end %>
+    </div>
+  </div>
+</div>

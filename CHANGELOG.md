@@ -4,6 +4,7 @@ Dated record of shipped features across both products.
 
 ## 2026-02-27
 
+- **Specs engine (Chunk 10)** — Admin dashboard + notifications. Polymorphic `Notification` model with 3 action types (spec_completed, card_review, turn_limit_approaching). `Specs::NotifyJob` background job keeps notification creation outside Orchestrator transactions (notification_queue pattern). Bell icon in admin sidebar with 30s Stimulus polling. Notifications page with per-type preference toggles and mark-as-read (redirects to project). Superadmin specs overview at `/superadmin/specs_overview` — cross-shop/org project visibility with filters. Per-shop "Specs" tab on shop detail page. Nil guard for impersonation edge case. 539 total specs, all passing.
 - **Specs engine (Chunk 9)** — Linear integration. `LinearClient` service (Net::HTTP + GraphQL, follows AnthropicClient pattern). Admin OAuth flow for connecting Linear workspace — auto-selects team if only one, otherwise team selector dropdown. Push kanban cards to Linear as issues via background job (`Specs::LinearPushJob`) with status-to-state mapping. Bi-directional status sync via `LinearIntegration::WebhooksController` with per-team HMAC-SHA256 verification and 60s replay protection (`Specs::LinearSyncJob`). Integrations page shows Linear card with connect/team-select/disconnect states. Kanban cards display "LIN" badge linking to Linear issue. Shop-scoped only (org-owned projects deferred). 493 total specs, all passing.
 
 ## 2026-02-26

@@ -1,0 +1,84 @@
+<div class="max-w-3xl mx-auto py-8 px-4">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900" style="letter-spacing: -0.03em;">notifications.</h1>
+    <% if @notifications&.any? { |n| n.read_at.nil? } %>
+      <%= button_to "Mark all read", mark_all_read_admin_notifications_path, method: :post,
+          class: "text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer" %>
+    <% end %>
+  </div>
+
+  <% if flash[:notice] %>
+    <div class="mb-4 px-4 py-2 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200"><%= flash[:notice] %></div>
+  <% end %>
+
+  <%# Preferences %>
+  <div class="bg-[#f9f9f9] border border-black/5 rounded-xl p-5 mb-6" style="box-shadow: inset 1px 1px 0 rgba(255,255,255,1), inset -1px -1px 0 rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.05);">
+    <h2 class="text-sm font-semibold text-gray-900 mb-3">Notification preferences</h2>
+    <%= form_tag update_preferences_admin_notifications_path, method: :patch do %>
+      <div class="space-y-2">
+        <% Notification::ACTIONS.each do |action| %>
+          <% enabled = current_user.notification_preferences.dig(action) != false %>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="hidden" name="preferences[<%= action %>]" value="0">
+            <input type="checkbox" name="preferences[<%= action %>]" value="1" <%= "checked" if enabled %>
+                   class="rounded border-gray-300 text-[#ff584d] focus:ring-[#ff584d]">
+            <span class="text-sm text-gray-700"><%= action.humanize %></span>
+          </label>
+        <% end %>
+      </div>
+      <button type="submit" class="mt-3 px-4 py-2 text-sm font-medium rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-colors cursor-pointer">Save preferences</button>
+    <% end %>
+  </div>
+
+  <%# Notification list %>
+  <% if @notifications.present? %>
+    <div class="space-y-2">
+      <% @notifications.each do |notification| %>
+        <%= link_to mark_read_admin_notification_path(notification), method: :patch, class: "block" do %>
+          <div class="flex items-start gap-3 px-4 py-3 rounded-xl transition-colors hover:bg-white/80 <%= notification.read_at.nil? ? 'bg-white border-l-3 border-[#ff584d]' : 'bg-transparent' %>" style="<%= notification.read_at.nil? ? 'box-shadow: 0 2px 4px rgba(0,0,0,0.04);' : '' %>">
+            <%# Icon %>
+            <div class="mt-0.5 flex-shrink-0">
+              <% case notification.action %>
+              <% when "spec_completed" %>
+                <svg class="size-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <% when "card_review" %>
+                <svg class="size-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              <% when "turn_limit_approaching" %>
+                <svg class="size-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+                </svg>
+              <% end %>
+            </div>
+
+            <%# Content %>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-900">
+                <% case notification.action %>
+                <% when "spec_completed" %>
+                  Spec session completed for <strong><%= notification.data["project_name"] %></strong>
+                <% when "card_review" %>
+                  Card <strong><%= notification.data["card_title"] %></strong> moved to Review in <strong><%= notification.data["project_name"] %></strong>
+                <% when "turn_limit_approaching" %>
+                  Session in <strong><%= notification.data["project_name"] %></strong> is at <%= notification.data["percentage"] %>% of turn budget
+                <% end %>
+              </p>
+              <p class="text-xs text-gray-400 mt-0.5"><%= time_ago_in_words(notification.created_at) %> ago</p>
+            </div>
+
+            <%# Unread dot %>
+            <% unless notification.read_at %>
+              <div class="mt-2 size-2 rounded-full bg-[#ff584d] flex-shrink-0"></div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 text-sm text-gray-400">No notifications yet.</div>
+  <% end %>
+</div>

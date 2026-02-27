@@ -93,6 +93,7 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 25** - Specs engine chunk 6: channel adapter layer — `Specs::MessageHandling` concern, `Specs::Adapters` registry with Web adapter, `channel_type`/`channel_metadata` on sessions, guest blank-message bug fix, 389 total specs
 - **Feb 25** - Specs engine audit fixes: DB CHECK constraint for project ownership XOR, invite token expiry, password length validation, resilient card creation, 23 new specs (377 total)
 - **Feb 26** - Specs engine chunk 7: Slack integration — webhook controllers, background jobs, Block Kit renderer, OAuth flow, adapter registration, 56 new specs (445 total)
+- **Feb 27** - Specs engine chunk 10: admin notifications + superadmin dashboard — polymorphic Notification model, NotifyJob background job, bell icon with Stimulus polling, notification preferences, specs overview page, per-shop specs tab, 46 new specs (539 total)
 - **Feb 27** - Specs engine chunk 9: Linear integration — OAuth flow, push kanban cards to Linear as issues, bi-directional status sync via webhooks, integrations page UI, 48 new specs (493 total)
 
 ## Key Milestones

@@ -56,4 +56,35 @@ RSpec.describe User, type: :model do
       expect(user.reload.invite_token).to be_nil
     end
   end
+
+  describe "notifications" do
+    it { is_expected.to have_many(:notifications).dependent(:destroy) }
+
+    describe "#notification_muted?" do
+      it "returns false for empty preferences" do
+        user = build(:user)
+        expect(user.notification_muted?("spec_completed")).to be false
+      end
+
+      it "returns true when action set to false" do
+        user = build(:user, notification_preferences: { "spec_completed" => false })
+        expect(user.notification_muted?("spec_completed")).to be true
+      end
+
+      it "returns false when action set to true" do
+        user = build(:user, notification_preferences: { "spec_completed" => true })
+        expect(user.notification_muted?("spec_completed")).to be false
+      end
+    end
+
+    describe "#unread_notification_count" do
+      it "returns count of unread notifications" do
+        user = create(:user)
+        create(:notification, recipient: user, read_at: nil)
+        create(:notification, recipient: user, read_at: nil)
+        create(:notification, :read, recipient: user)
+        expect(user.unread_notification_count).to eq(2)
+      end
+    end
+  end
 end

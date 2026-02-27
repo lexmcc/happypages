@@ -50,6 +50,14 @@ class Admin::SpecsController < Admin::BaseController
     session = active_session
     if session
       session.update!(status: "completed")
+      if @project.shop_id.present?
+        Specs::NotifyJob.perform_later(
+          action: "spec_completed",
+          notifiable_type: "Specs::Session", notifiable_id: session.id,
+          shop_id: @project.shop_id, exclude_user_id: current_user&.id,
+          data: { project_id: @project.id, project_name: @project.name }
+        )
+      end
     end
     redirect_to admin_spec_path(@project)
   end
@@ -93,6 +101,15 @@ class Admin::SpecsController < Admin::BaseController
     return head(:unprocessable_entity) unless new_status.in?(Specs::Card::STATUSES)
 
     card.update!(status: new_status, position: new_position)
+
+    if new_status == "review" && @project.shop_id.present?
+      Specs::NotifyJob.perform_later(
+        action: "card_review",
+        notifiable_type: "Specs::Card", notifiable_id: card.id,
+        shop_id: @project.shop_id, exclude_user_id: current_user&.id,
+        data: { project_id: @project.id, project_name: @project.name, card_title: card.title }
+      )
+    end
 
     # Reorder siblings in the target column
     @project.cards.where(status: new_status).where.not(id: card.id)

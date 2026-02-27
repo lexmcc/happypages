@@ -394,5 +394,24 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - This is different from Slack OAuth which is client-scoped (no admin session)
 - **Lesson**: Admin-scoped OAuth is simpler — no need for token-based auth or special session handling. Just use the existing admin auth.
 
+### Notification Queue Pattern for Orchestrator Transactions (Feb 27, 2026)
+- The Orchestrator runs inside a pessimistic-locked transaction — `Notification.create!` inside that block means notification failure rolls back the entire user message + assistant response
+- Even `create` (no bang) adds risk: if notifications query other tables inside the lock, it extends lock hold time
+- **Fix**: Collect notification intents into a `notification_queue` array inside the transaction, then enqueue `Specs::NotifyJob.perform_later` outside the transaction (after `end`)
+- This pattern also applies to any non-critical side effect that shouldn't block the main transaction
+- **Lesson**: Never create non-critical records inside a pessimistic-locked transaction. Capture intent inside, execute outside.
+
+### ActiveJob `have_enqueued_job` Matches Symbol Keys (Feb 27, 2026)
+- `Specs::NotifyJob.perform_later(data: { project_id: 1 })` enqueues with symbol keys in the data hash
+- `have_enqueued_job.with(data: hash_including("project_id" => 1))` fails because RSpec compares symbol vs string keys
+- **Fix**: Use `hash_including(action: "spec_completed", shop_id: shop.id)` with symbol keys, or match only the outer params you care about
+- **Lesson**: ActiveJob preserves Ruby hash key types in test assertions — match the same key type you used in `perform_later`
+
+### Model Spec Type Doesn't Have Route Helpers (Feb 27, 2026)
+- `type: :model` specs don't include `Rails.application.routes.url_helpers`
+- Calling `login_path` or `admin_spec_path` raises `NameError: undefined local variable or method`
+- **Fix**: Move controller-testing specs to `type: :request` files, or use `include Rails.application.routes.url_helpers`
+- **Lesson**: Keep request-level assertions (HTTP calls, route helpers) in request specs, even when testing side effects like job enqueuing
+
 ---
-*Updated: Feb 27, 2026 (chunk 9: Linear integration, per-team webhook secrets, admin-scoped OAuth)*
+*Updated: Feb 27, 2026 (chunk 10: notification queue pattern, ActiveJob test matchers, model vs request spec types)*

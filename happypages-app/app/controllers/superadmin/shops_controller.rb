@@ -33,6 +33,7 @@ class Superadmin::ShopsController < Superadmin::BaseController
 
     @credential = @shop.integration_for(@shop.platform_type) || @shop.shop_credential
     @generation_logs = @shop.generation_logs.recent.limit(50)
+    @specs_projects = @shop.specs_projects.includes(:sessions, :cards).order(created_at: :desc)
   end
 
   def create

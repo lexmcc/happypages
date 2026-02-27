@@ -11,6 +11,15 @@ module Specs
       return if card.status == new_status
 
       card.update!(status: new_status)
+
+      if new_status == "review" && card.project.shop_id.present?
+        Specs::NotifyJob.perform_later(
+          action: "card_review",
+          notifiable_type: "Specs::Card", notifiable_id: card.id,
+          shop_id: card.project.shop_id,
+          data: { project_id: card.project.id, project_name: card.project.name, card_title: card.title }
+        )
+      end
     end
 
     private

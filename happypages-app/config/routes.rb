@@ -102,6 +102,17 @@ Rails.application.routes.draw do
       end
     end
 
+    # Notifications
+    resources :notifications, only: [:index] do
+      member do
+        patch :mark_read
+      end
+      collection do
+        post :mark_all_read
+        patch :update_preferences
+      end
+    end
+
     # Linear integration (OAuth flow)
     get "linear/install", to: "linear#install", as: :linear_install
     get "linear/callback", to: "linear#callback", as: :linear_callback
@@ -183,6 +194,7 @@ Rails.application.routes.draw do
       post :impersonate, on: :member
     end
     resource :impersonation, only: [ :destroy ], controller: "impersonations"
+    resources :specs_overview, only: [:index]
     resources :organisations, only: [ :index, :create ] do
       member do
         get :manage

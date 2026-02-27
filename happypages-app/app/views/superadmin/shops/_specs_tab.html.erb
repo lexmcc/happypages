@@ -1,0 +1,55 @@
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+  <div class="px-6 py-4 border-b border-gray-100">
+    <h3 class="text-sm font-semibold text-gray-900">Specs Projects</h3>
+  </div>
+
+  <% if @specs_projects.any? %>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-gray-100">
+          <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Project</th>
+          <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sessions</th>
+          <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Latest Status</th>
+          <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cards</th>
+          <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% @specs_projects.each do |project| %>
+          <tr class="hover:bg-gray-50/50">
+            <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= project.name %></td>
+            <td class="px-6 py-4 text-sm text-gray-600"><%= project.sessions.size %></td>
+            <td class="px-6 py-4 text-sm">
+              <% latest = project.sessions.max_by(&:version) %>
+              <% if latest %>
+                <% status_color = latest.status == "active" ? "text-green-600" : "text-gray-500" %>
+                <span class="<%= status_color %>"><%= latest.status %></span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-sm">
+              <% card_counts = project.cards.group_by(&:status).transform_values(&:count) %>
+              <div class="flex gap-2">
+                <% Specs::Card::STATUSES.each do |status| %>
+                  <% count = card_counts[status] || 0 %>
+                  <% next if count == 0 %>
+                  <% badge_color = case status
+                       when "backlog" then "bg-gray-100 text-gray-600"
+                       when "in_progress" then "bg-blue-100 text-blue-700"
+                       when "review" then "bg-amber-100 text-amber-700"
+                       when "done" then "bg-green-100 text-green-700"
+                       end %>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium <%= badge_color %>">
+                    <%= count %> <%= status.gsub("_", " ") %>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-xs text-gray-400"><%= project.created_at.strftime("%b %d, %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-6 py-12 text-center text-sm text-gray-400">No specs projects for this shop.</div>
+  <% end %>
+</div>
