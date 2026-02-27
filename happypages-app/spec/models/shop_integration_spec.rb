@@ -53,5 +53,29 @@ RSpec.describe ShopIntegration, type: :model do
     it "#custom? returns true for custom provider" do
       expect(build(:shop_integration, :custom)).to be_custom
     end
+
+    it "#linear? returns true for linear provider" do
+      expect(build(:shop_integration, :linear)).to be_linear
+    end
+
+    it "#linear_connected? returns true when linear with token" do
+      integration = build(:shop_integration, :linear)
+      expect(integration).to be_linear_connected
+    end
+
+    it "#linear_connected? returns false without token" do
+      integration = build(:shop_integration, provider: "linear", linear_access_token: nil)
+      expect(integration).not_to be_linear_connected
+    end
+  end
+
+  describe "linear encryption" do
+    it "encrypts linear_access_token" do
+      integration = create(:shop_integration, :linear)
+      raw_value = ShopIntegration.connection.select_value(
+        "SELECT linear_access_token FROM shop_integrations WHERE id = #{integration.id}"
+      )
+      expect(raw_value).not_to eq(integration.linear_access_token)
+    end
   end
 end

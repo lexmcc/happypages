@@ -52,6 +52,49 @@
         </div>
       </div>
 
+      <%# Linear %>
+      <% linear_integration = Current.shop.shop_integrations.active.find_by(provider: "linear") %>
+      <% linear_connected = linear_integration&.linear_connected? %>
+      <% linear_team_selected = linear_integration&.linear_team_id.present? %>
+      <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
+        <div class="px-6 py-5 bg-[#5E6AD2] flex items-center justify-between">
+          <span class="text-white font-semibold text-lg tracking-tight">Linear</span>
+          <% if linear_connected && linear_team_selected %>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300">
+              <span class="size-1.5 rounded-full bg-emerald-400"></span>
+              Connected
+            </span>
+          <% elsif linear_connected %>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-300">
+              <span class="size-1.5 rounded-full bg-amber-400"></span>
+              Select team
+            </span>
+          <% else %>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 text-white/60">
+              <span class="size-1.5 rounded-full bg-white/40"></span>
+              Not connected
+            </span>
+          <% end %>
+        </div>
+        <div class="px-6 py-5 flex-1">
+          <p class="text-sm text-gray-600 leading-relaxed">Project management — push spec cards to Linear as issues with status sync.</p>
+          <% if linear_connected && linear_team_selected %>
+            <%= button_to "Disconnect", admin_linear_disconnect_path, method: :delete, class: "mt-4 inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 cursor-pointer transition-colors", data: { turbo_confirm: "Disconnect Linear?" } %>
+          <% elsif linear_connected %>
+            <div class="mt-4" data-controller="linear-teams" data-linear-teams-url-value="<%= admin_linear_teams_path %>" data-linear-teams-select-url-value="<%= admin_linear_select_team_path %>" data-linear-teams-csrf-value="<%= form_authenticity_token %>">
+              <div class="flex gap-2">
+                <select data-linear-teams-target="select" class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5E6AD2]/40 focus:border-[#5E6AD2]">
+                  <option>Loading teams...</option>
+                </select>
+                <button data-action="click->linear-teams#submit" class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#4C5ABF] cursor-pointer transition-colors">Select</button>
+              </div>
+            </div>
+          <% else %>
+            <%= link_to "Connect", admin_linear_install_path, class: "mt-4 inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#4C5ABF] transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+
       <%# Klaviyo %>
       <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col opacity-60">
         <div class="px-6 py-5 bg-[#f0f0ec] flex items-center justify-between border-b border-black/5">

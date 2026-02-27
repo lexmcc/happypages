@@ -2,7 +2,7 @@ class Admin::SpecsController < Admin::BaseController
   include Specs::MessageHandling
 
   before_action :require_specs_feature
-  before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff, :board_cards, :update_card, :create_card]
+  before_action :set_project, only: [:show, :message, :complete, :export, :new_version, :create_handoff, :board_cards, :update_card, :create_card, :push_to_linear]
 
   def index
     @projects = Current.shop.specs_projects.order(created_at: :desc)
@@ -116,6 +116,24 @@ class Admin::SpecsController < Admin::BaseController
       .each_with_index { |c, i| c.update_column(:position, i + 1) }
 
     render json: serialize_card(card), status: :created
+  end
+
+  def push_to_linear
+    return render json: { error: "Linear not available for this project" }, status: :unprocessable_entity unless @project.shop_id.present?
+
+    card_ids = params[:card_ids]
+    cards = @project.cards.where(id: card_ids).where(linear_issue_id: nil)
+
+    integration = Current.shop.shop_integrations.find_by(provider: "linear")
+    return render json: { error: "Linear not connected" }, status: :unprocessable_entity unless integration&.linear_connected?
+    return render json: { error: "No Linear team selected" }, status: :unprocessable_entity unless integration.linear_team_id.present?
+
+    Specs::LinearPushJob.perform_later(
+      card_ids: cards.pluck(:id),
+      integration_id: integration.id
+    )
+
+    render json: { message: "Pushing #{cards.count} cards to Linear..." }
   end
 
   def create_handoff
@@ -252,7 +270,9 @@ class Admin::SpecsController < Admin::BaseController
       dependencies: card.dependencies,
       status: card.status,
       position: card.position,
-      chunk_index: card.chunk_index
+      chunk_index: card.chunk_index,
+      linear_issue_id: card.linear_issue_id,
+      linear_issue_url: card.linear_issue_url
     }
   end
 

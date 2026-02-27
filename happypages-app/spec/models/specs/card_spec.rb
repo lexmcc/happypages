@@ -35,6 +35,22 @@ RSpec.describe Specs::Card, type: :model do
     end
   end
 
+  describe "#linear_synced?" do
+    let(:shop) { create(:shop) }
+    let(:project) { create(:specs_project, shop: shop) }
+    let(:session) { create(:specs_session, project: project, shop: shop) }
+
+    it "returns true when linear_issue_id present" do
+      card = create(:specs_card, project: project, session: session, linear_issue_id: "iss-1")
+      expect(card).to be_linear_synced
+    end
+
+    it "returns false when linear_issue_id nil" do
+      card = create(:specs_card, project: project, session: session)
+      expect(card).not_to be_linear_synced
+    end
+  end
+
   describe ".create_from_team_spec" do
     let(:shop) { create(:shop) }
     let(:project) { create(:specs_project, shop: shop) }

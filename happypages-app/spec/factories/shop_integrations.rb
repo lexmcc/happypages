@@ -15,5 +15,13 @@ FactoryBot.define do
       api_endpoint { "https://api.example.com" }
       api_key { SecureRandom.hex(16) }
     end
+
+    trait :linear do
+      provider { "linear" }
+      linear_access_token { "lin_api_#{SecureRandom.hex(16)}" }
+      linear_team_id { "team-#{SecureRandom.uuid}" }
+      linear_webhook_id { "wh-#{SecureRandom.uuid}" }
+      linear_webhook_secret { SecureRandom.hex(32) }
+    end
   end
 end

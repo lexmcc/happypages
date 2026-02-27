@@ -98,8 +98,16 @@ Rails.application.routes.draw do
         get :board_cards
         patch :update_card
         post :create_card
+        post :push_to_linear
       end
     end
+
+    # Linear integration (OAuth flow)
+    get "linear/install", to: "linear#install", as: :linear_install
+    get "linear/callback", to: "linear#callback", as: :linear_callback
+    get "linear/teams", to: "linear#teams", as: :linear_teams
+    patch "linear/select_team", to: "linear#select_team", as: :linear_select_team
+    delete "linear/disconnect", to: "linear#destroy", as: :linear_disconnect
 
     # Feature preview pages (locked features)
     resources :features, only: [ :show ], param: :feature_name
@@ -120,6 +128,11 @@ Rails.application.routes.draw do
     post "events", to: "events#create"
     post "actions", to: "actions#create"
     post "commands", to: "commands#create"
+  end
+
+  # Linear integration webhooks
+  namespace :linear_integration do
+    post "webhooks", to: "webhooks#create"
   end
 
   # Slack OAuth (client portal context)

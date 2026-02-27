@@ -16,6 +16,10 @@ module Specs
     scope :done, -> { where(status: "done") }
     scope :ordered, -> { order(position: :asc) }
 
+    def linear_synced?
+      linear_issue_id.present?
+    end
+
     def self.create_from_team_spec(project, session)
       return if project.cards.where(specs_session_id: session.id).exists?
 

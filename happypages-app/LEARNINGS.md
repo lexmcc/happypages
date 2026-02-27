@@ -380,5 +380,19 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Must compute signature over the URL-encoded form body (`"payload=#{CGI.escape(json)}"`) to match what `raw_post` returns
 - **Lesson**: When testing signature verification, always compute the signature over the exact bytes the server will see in `raw_post`, not the logical params
 
+### Linear Webhook Per-Team Secret (Feb 27, 2026)
+- Linear webhook signing uses a per-webhook secret returned from `webhookCreate` mutation — NOT a global signing secret like Slack
+- Must explicitly select `{ webhook { id secret enabled } }` in the GraphQL response to get the secret
+- Verification: HMAC-SHA256 of raw body using the stored webhook secret, compared against `Linear-Signature` header
+- Replay protection: `webhookTimestamp` field in payload — reject if >60s old
+- Team lookup: extract `data.teamId` from payload, find `ShopIntegration` by `linear_team_id` to get the correct webhook secret
+- **Lesson**: Unlike Slack (global `SLACK_SIGNING_SECRET`), Linear webhook verification requires looking up the secret per-team from the database
+
+### Linear OAuth is Admin-Scoped (Feb 27, 2026)
+- Linear OAuth redirect stays on the same domain (`app.happypages.co/admin/linear/callback`)
+- The admin session cookie is preserved across the OAuth redirect since it's same-domain
+- This is different from Slack OAuth which is client-scoped (no admin session)
+- **Lesson**: Admin-scoped OAuth is simpler — no need for token-based auth or special session handling. Just use the existing admin auth.
+
 ---
-*Updated: Feb 26, 2026 (chunk 7: Slack integration, namespace collision, webhook signatures)*
+*Updated: Feb 27, 2026 (chunk 9: Linear integration, per-team webhook secrets, admin-scoped OAuth)*

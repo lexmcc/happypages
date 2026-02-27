@@ -130,6 +130,9 @@ export default class extends Controller {
     if (card.has_ui) {
       badges.push('<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700">UI</span>')
     }
+    if (card.linear_issue_url) {
+      badges.push(`<a href="${this.escapeHtml(card.linear_issue_url)}" target="_blank" rel="noopener" class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 no-underline" title="View in Linear">LIN</a>`)
+    }
     if (card.chunk_index !== null && card.chunk_index !== undefined) {
       badges.push(`<span class="inline-flex items-center justify-center size-4 rounded-full bg-gray-100 text-[9px] font-bold text-gray-500">${card.chunk_index + 1}</span>`)
     }

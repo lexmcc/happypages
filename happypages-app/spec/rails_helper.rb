@@ -69,3 +69,7 @@ WebMock.disable_net_connect!(allow_localhost: true)
 ENV["SLACK_SIGNING_SECRET"] ||= "test-slack-signing-secret"
 ENV["SLACK_CLIENT_ID"] ||= "test-slack-client-id"
 ENV["SLACK_CLIENT_SECRET"] ||= "test-slack-client-secret"
+
+# Linear integration env vars for tests
+ENV["LINEAR_CLIENT_ID"] ||= "test-linear-client-id"
+ENV["LINEAR_CLIENT_SECRET"] ||= "test-linear-client-secret"

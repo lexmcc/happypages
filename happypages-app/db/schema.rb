@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_26_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_27_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -345,6 +345,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_100000) do
     t.datetime "created_at", null: false
     t.string "granted_scopes"
     t.string "klaviyo_api_key"
+    t.string "linear_access_token"
+    t.string "linear_team_id"
+    t.string "linear_webhook_id"
+    t.string "linear_webhook_secret"
     t.string "provider", null: false
     t.bigint "shop_id", null: false
     t.string "shopify_access_token"
@@ -504,12 +508,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_100000) do
     t.jsonb "dependencies", default: []
     t.text "description"
     t.boolean "has_ui", default: false
+    t.string "linear_issue_id"
+    t.string "linear_issue_url"
     t.integer "position", default: 0, null: false
     t.bigint "specs_project_id", null: false
     t.bigint "specs_session_id"
     t.string "status", default: "backlog", null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.index ["linear_issue_id"], name: "index_specs_cards_on_linear_issue_id", unique: true, where: "(linear_issue_id IS NOT NULL)"
     t.index ["specs_project_id", "status", "position"], name: "index_specs_cards_on_specs_project_id_and_status_and_position"
     t.index ["specs_project_id"], name: "index_specs_cards_on_specs_project_id"
     t.index ["specs_session_id"], name: "index_specs_cards_on_specs_session_id"

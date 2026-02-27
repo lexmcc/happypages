@@ -2,6 +2,10 @@
 
 Dated record of shipped features across both products.
 
+## 2026-02-27
+
+- **Specs engine (Chunk 9)** — Linear integration. `LinearClient` service (Net::HTTP + GraphQL, follows AnthropicClient pattern). Admin OAuth flow for connecting Linear workspace — auto-selects team if only one, otherwise team selector dropdown. Push kanban cards to Linear as issues via background job (`Specs::LinearPushJob`) with status-to-state mapping. Bi-directional status sync via `LinearIntegration::WebhooksController` with per-team HMAC-SHA256 verification and 60s replay protection (`Specs::LinearSyncJob`). Integrations page shows Linear card with connect/team-select/disconnect states. Kanban cards display "LIN" badge linking to Linear issue. Shop-scoped only (org-owned projects deferred). 493 total specs, all passing.
+
 ## 2026-02-26
 
 - **Specs engine (Chunk 7)** — Slack integration. `slack-ruby-client` gem, Organisation stores encrypted Slack bot token. Webhook controllers (`SlackIntegration::EventsController`, `ActionsController`, `CommandsController`) with HMAC signature verification. Background jobs via SolidQueue for all orchestrator calls (Slack requires 200 within 3s). `SlackRenderer` converts tool outputs to Block Kit JSON (buttons with session-encoded action_ids). `/spec new` slash command creates project + session + thread. OAuth flow with CSRF state parameter. Event deduplication, bot message filtering, threaded-only processing. `Specs::Adapters::Slack` registered in adapter layer. JSONB partial index for session-by-thread lookup. 445 total specs, all passing.
