@@ -3,12 +3,10 @@ module ShopifySessionTokenVerifiable
 
   private
 
-  # Verifies a Shopify session token (JWT) signed with SHOPIFY_CLIENT_SECRET.
+  # Verifies a Shopify session token (JWT) signed with the app's client secret.
+  # Supports multiple apps by resolving credentials from the JWT's aud claim.
   # Returns decoded claims hash on success, nil on failure.
   def verify_session_token(token)
-    client_secret = ENV.fetch("SHOPIFY_CLIENT_SECRET")
-    client_id = ENV.fetch("SHOPIFY_CLIENT_ID")
-
     # Split JWT
     parts = token.split(".")
     return nil unless parts.length == 3
@@ -17,6 +15,24 @@ module ShopifySessionTokenVerifiable
     payload_json = base64url_decode(parts[1])
     signature = base64url_decode(parts[2])
     return nil unless header_json && payload_json && signature
+
+    # Peek at unverified payload to determine which app's credentials to use
+    unverified_claims = JSON.parse(payload_json)
+    aud = unverified_claims["aud"]
+
+    # Resolve credentials based on aud (client_id)
+    default_client_id = ENV.fetch("SHOPIFY_CLIENT_ID")
+    if aud == default_client_id
+      client_id = default_client_id
+      client_secret = ENV.fetch("SHOPIFY_CLIENT_SECRET")
+    else
+      integration = ShopIntegration.find_by_app_client_id(aud)
+      return nil unless integration
+      client_id = integration.app_client_id
+      client_secret = integration.app_client_secret
+    end
+
+    return nil unless client_secret.present?
 
     # Verify algorithm
     header = JSON.parse(header_json)

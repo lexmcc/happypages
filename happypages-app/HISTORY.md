@@ -96,6 +96,10 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 27** - Specs engine chunk 10: admin notifications + superadmin dashboard — polymorphic Notification model, NotifyJob background job, bell icon with Stimulus polling, notification preferences, specs overview page, per-shop specs tab, 46 new specs (539 total)
 - **Feb 27** - Specs engine chunk 9: Linear integration — OAuth flow, push kanban cards to Linear as issues, bi-directional status sync via webhooks, integrations page UI, 48 new specs (493 total)
 
+### Week 12: Multi-App Credential Hardening (Mar 2, 2026)
+
+- **Mar 2** - Post-audit fixes for multi-app credential support: 9 fixes across embedded layout, JWT verification, OAuth flow, seeds, and model validations. 557 total specs, all passing.
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

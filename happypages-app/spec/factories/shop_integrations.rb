@@ -16,6 +16,11 @@ FactoryBot.define do
       api_key { SecureRandom.hex(16) }
     end
 
+    trait :with_custom_app do
+      app_client_id { "custom-client-id-#{SecureRandom.hex(8)}" }
+      app_client_secret { "custom-client-secret-#{SecureRandom.hex(16)}" }
+    end
+
     trait :linear do
       provider { "linear" }
       linear_access_token { "lin_api_#{SecureRandom.hex(16)}" }

@@ -219,6 +219,7 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 
 ### Testing
 - **Framework**: RSpec + factory_bot + shoulda-matchers + webmock
+- **Ruby version**: 3.4.8 via rbenv (`.ruby-version`). If `bundle exec` fails with bundler version errors, run `eval "$(rbenv init -)"` first.
 - **Run tests**: `cd happypages-app && bundle exec rspec`
 - **Run single file**: `bundle exec rspec spec/models/shop_spec.rb`
 - **Run single test**: `bundle exec rspec spec/models/shop_spec.rb:15`

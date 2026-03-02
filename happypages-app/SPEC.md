@@ -11,14 +11,14 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 
 ### Key Components
 
-- **Dual auth** — Shopify OAuth (self-service install, creates Shop + ShopCredential + ShopIntegration + User) and email/password login (invite-only, BCrypt). Users have roles (`owner`, `admin`, `member`) and invite tokens. Rate-limited login (20 req/min/IP).
+- **Dual auth** — Shopify OAuth (self-service install, creates Shop + ShopCredential + ShopIntegration + User) and email/password login (invite-only, BCrypt). Users have roles (`owner`, `admin`, `member`) and invite tokens. Rate-limited login (20 req/min/IP). OAuth state consumed atomically via `session.delete(:oauth_state)` to prevent replay. `params[:app]` allowlisted to `%w[custom]`.
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
 - **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Referral events tracked via `ReferralEvent` model.
-- **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback.
+- **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback. `app_client_id` uniqueness enforced, `app_client_secret` required when `app_client_id` present. `find_by_app_client_id` scoped to active integrations only.
 - **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, specs, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin, super_admin_impersonating.
-- **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret, validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
+- **Embedded app page** — `/embedded` loads inside Shopify admin iframe with App Bridge 4.x CDN. API key meta tag resolves from `Current.shop`'s integration (falls back to ENV). Session token (JWT) auth via `POST /embedded/authenticate` — App Bridge auto-injects Bearer token, backend verifies HS256 signature against client secret (nil/blank secret rejected before HMAC), validates required claims (exp, nbf, aud, iss↔dest consistency), and establishes cookie session.
 
 ### Brand Scraping & AI Imagery
 
@@ -166,7 +166,7 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 | Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
 | Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
 | Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
-| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 539 specs (model, request, service, concern, mailer, job) |
+| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 557 specs (model, request, service, concern, mailer, job) |
 
 ### Housekeeping
 - [ ] Delete old custom distribution app from Partner Dashboard

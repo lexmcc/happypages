@@ -73,3 +73,10 @@ ENV["SLACK_CLIENT_SECRET"] ||= "test-slack-client-secret"
 # Linear integration env vars for tests
 ENV["LINEAR_CLIENT_ID"] ||= "test-linear-client-id"
 ENV["LINEAR_CLIENT_SECRET"] ||= "test-linear-client-secret"
+
+# Shopify app env vars for tests
+ENV["SHOPIFY_CLIENT_ID"] ||= "test-shopify-client-id"
+ENV["SHOPIFY_CLIENT_SECRET"] ||= "test-shopify-client-secret"
+ENV["SHOPIFY_REDIRECT_URI"] ||= "https://test.example.com/auth/shopify/callback"
+ENV["SHOPIFY_CUSTOM_CLIENT_ID"] ||= "test-shopify-custom-client-id"
+ENV["SHOPIFY_CUSTOM_CLIENT_SECRET"] ||= "test-shopify-custom-client-secret"

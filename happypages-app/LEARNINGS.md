@@ -169,6 +169,31 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Changed `pending_handoff` to query `where(invite_accepted_at: nil, to_user_id: nil)` directly — matches handoffs that haven't been actioned yet, regardless of token presence
 - **Lesson**: When a model has a "pending" scope with a strict definition, a controller helper for "awaiting action" may need a different, broader query. Name them differently to avoid confusion.
 
+### Multi-App Embedded Layout Hardcodes Wrong API Key (Mar 2, 2026)
+- `ENV.fetch('SHOPIFY_CLIENT_ID')` in the embedded layout `<meta>` tag gives custom-app shops the wrong API key — App Bridge breaks entirely
+- **Fix**: `Current.shop&.integration_for('shopify')&.app_client_id.presence || ENV.fetch('SHOPIFY_CLIENT_ID')`
+- **Lesson**: Any embedded page meta tag or client-side config that references app credentials must resolve per-shop, not from a global ENV
+
+### Revoked Integrations Still Verify JWTs (Mar 2, 2026)
+- `ShopIntegration.find_by_app_client_id(aud)` in JWT verification didn't scope to `.active` — revoked/expired integrations' credentials still matched
+- **Fix**: Added `.active` scope to the lookup
+- **Lesson**: Any credential lookup used for authentication must filter by status — revoked credentials should be dead
+
+### Stale `session[:oauth_app]` Causes Credential Confusion (Mar 2, 2026)
+- If OAuth callback fails, `session[:oauth_app]` persists. A subsequent default-app initiate (no `?app=`) doesn't clear it
+- Combined fix: `session[:oauth_app] = %w[custom].include?(params[:app]) ? params[:app] : nil` — always sets/clears, and allowlists valid values
+- **Lesson**: Session values set during multi-step flows must be explicitly cleared on every entry point, not just set when present
+
+### Nil `app_client_secret` Crashes HMAC Verification (Mar 2, 2026)
+- `OpenSSL::HMAC.digest("SHA256", nil, signing_input)` raises `TypeError`; empty string produces a forgeable HMAC
+- **Fix**: `return nil unless client_secret.present?` before the HMAC call
+- **Lesson**: Always guard HMAC inputs — nil key is a crash, empty string key is a security hole
+
+### OAuth State Should Be Consumed Atomically (Mar 2, 2026)
+- `session[:oauth_state]` was read but not deleted — error paths left it reusable for replay
+- **Fix**: `session.delete(:oauth_state)` atomically reads and removes in one operation
+- **Lesson**: Any one-time session token (CSRF state, nonce) should use `session.delete` not `session[]`
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -414,4 +439,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: Keep request-level assertions (HTTP calls, route helpers) in request specs, even when testing side effects like job enqueuing
 
 ---
-*Updated: Feb 27, 2026 (chunk 10: notification queue pattern, ActiveJob test matchers, model vs request spec types)*
+*Updated: Mar 2, 2026 (multi-app credential audit: embedded layout key resolution, revoked integration JWT leak, stale OAuth session, nil HMAC key, atomic state consumption)*

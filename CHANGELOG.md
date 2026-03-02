@@ -2,6 +2,10 @@
 
 Dated record of shipped features across both products.
 
+## 2026-03-02
+
+- **Multi-app credential audit fixes** — 9 fixes (1 critical, 2 high, 5 medium) for the multi-app staging pipeline. Embedded layout now resolves API key from shop's integration. `find_by_app_client_id` scoped to active integrations. OAuth state consumed atomically, `params[:app]` allowlisted. Nil client secret guarded in JWT path. Seeds wrapped in `Shop.exists?` guard. Model validations for credential consistency. 557 total specs, all passing.
+
 ## 2026-02-27
 
 - **Specs engine (Chunk 10)** — Admin dashboard + notifications. Polymorphic `Notification` model with 3 action types (spec_completed, card_review, turn_limit_approaching). `Specs::NotifyJob` background job keeps notification creation outside Orchestrator transactions (notification_queue pattern). Bell icon in admin sidebar with 30s Stimulus polling. Notifications page with per-type preference toggles and mark-as-read (redirects to project). Superadmin specs overview at `/superadmin/specs_overview` — cross-shop/org project visibility with filters. Per-shop "Specs" tab on shop detail page. Nil guard for impersonation edge case. 539 total specs, all passing.

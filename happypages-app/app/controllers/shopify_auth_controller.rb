@@ -16,6 +16,7 @@ class ShopifyAuthController < ApplicationController
     state = SecureRandom.hex(24)
     session[:oauth_state] = state
     session[:oauth_shop] = shop_domain
+    session[:oauth_app] = %w[custom].include?(params[:app]) ? params[:app] : nil
 
     redirect_to shopify_oauth_url(shop_domain, state), allow_other_host: true
   end
@@ -23,7 +24,7 @@ class ShopifyAuthController < ApplicationController
   # GET /auth/shopify/callback
   def callback
     # Verify state
-    unless params[:state] == session[:oauth_state]
+    unless params[:state] == session.delete(:oauth_state)
       return redirect_to login_path, alert: "Invalid state parameter"
     end
 
@@ -65,6 +66,8 @@ class ShopifyAuthController < ApplicationController
 
     scopes_upgraded = false
 
+    oauth_app = session[:oauth_app]
+
     ActiveRecord::Base.transaction do
       existing_shop = Shop.find_by(domain: shop_domain)
 
@@ -91,6 +94,17 @@ class ShopifyAuthController < ApplicationController
             shopify_access_token: access_token,
             granted_scopes: granted_scopes
           )
+        end
+
+        # Store custom app credentials if this is a custom app install and integration doesn't already have them
+        if oauth_app == "custom"
+          target = integration || existing_shop.integration_for("shopify")
+          if target&.app_client_id.blank?
+            target.update!(
+              app_client_id: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID"),
+              app_client_secret: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_SECRET")
+            )
+          end
         end
 
         scopes_upgraded = old_scopes&.split(",")&.map(&:strip)&.sort != granted_scopes.split(",").map(&:strip).sort
@@ -123,13 +137,18 @@ class ShopifyAuthController < ApplicationController
         )
 
         # Also create ShopIntegration (dual-write during transition)
-        @shop.shop_integrations.create!(
+        integration_attrs = {
           provider: "shopify",
           status: "active",
           shopify_domain: shop_domain,
           shopify_access_token: access_token,
           granted_scopes: granted_scopes
-        )
+        }
+        if oauth_app == "custom"
+          integration_attrs[:app_client_id] = ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID")
+          integration_attrs[:app_client_secret] = ENV.fetch("SHOPIFY_CUSTOM_CLIENT_SECRET")
+        end
+        @shop.shop_integrations.create!(integration_attrs)
 
         # Create default features
         @shop.shop_features.create!(feature: "referrals", status: "active", activated_at: Time.current)
@@ -183,7 +202,11 @@ class ShopifyAuthController < ApplicationController
   end
 
   def shopify_oauth_url(shop_domain, state)
-    client_id = ENV.fetch("SHOPIFY_CLIENT_ID")
+    client_id = if session[:oauth_app] == "custom"
+      ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID")
+    else
+      ENV.fetch("SHOPIFY_CLIENT_ID")
+    end
     redirect_uri = ENV.fetch("SHOPIFY_REDIRECT_URI")
 
     "https://#{shop_domain}/admin/oauth/authorize?" + {
@@ -194,7 +217,16 @@ class ShopifyAuthController < ApplicationController
     }.to_query
   end
 
+  def shopify_app_credentials
+    if session[:oauth_app] == "custom"
+      { client_id: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID"), client_secret: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_SECRET") }
+    else
+      { client_id: ENV.fetch("SHOPIFY_CLIENT_ID"), client_secret: ENV.fetch("SHOPIFY_CLIENT_SECRET") }
+    end
+  end
+
   def exchange_code_for_token(shop_domain, code)
+    credentials = shopify_app_credentials
     uri = URI("https://#{shop_domain}/admin/oauth/access_token")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -202,8 +234,8 @@ class ShopifyAuthController < ApplicationController
     request = Net::HTTP::Post.new(uri)
     request["Content-Type"] = "application/json"
     request.body = {
-      client_id: ENV.fetch("SHOPIFY_CLIENT_ID"),
-      client_secret: ENV.fetch("SHOPIFY_CLIENT_SECRET"),
+      client_id: credentials[:client_id],
+      client_secret: credentials[:client_secret],
       code: code
     }.to_json
 

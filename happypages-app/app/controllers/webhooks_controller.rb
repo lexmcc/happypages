@@ -76,8 +76,13 @@ class WebhooksController < ApplicationController
   def verify_webhook_signature
     if Current.shop
       handler = Current.shop.order_handler
-      # Shopify signs webhooks with the app client secret, not a per-shop secret
-      secret = Current.shop.shopify? ? ENV["SHOPIFY_CLIENT_SECRET"] : Current.shop.webhook_secret
+      # Shopify signs webhooks with the app client secret — check per-shop override first
+      secret = if Current.shop.shopify?
+        integration = Current.shop.integration_for("shopify")
+        integration&.app_client_secret.presence || ENV["SHOPIFY_CLIENT_SECRET"]
+      else
+        Current.shop.webhook_secret
+      end
     else
       secret = ENV["SHOPIFY_CLIENT_SECRET"]
       handler = Providers::Shopify::OrderHandler.new(nil)
