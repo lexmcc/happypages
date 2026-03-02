@@ -446,6 +446,19 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Use `hash_including(action: "spec_completed", shop_id: shop.id)` with symbol keys, or match only the outer params you care about
 - **Lesson**: ActiveJob preserves Ruby hash key types in test assertions — match the same key type you used in `perform_later`
 
+### JSONB Metadata Needs Application-Level Validation (Mar 2, 2026)
+- ShopFeature `metadata` is a JSONB column — any JSON can be stored without DB-level validation
+- Superadmin `update_specs_usage` initially stored any tier string (e.g., `"hacked"`) directly into metadata
+- Unlike typed columns (which can use model `validates :inclusion`), JSONB fields need explicit validation in the controller/service
+- **Fix**: `tier.in?(Specs::UsageChecker::TIERS.keys) ? tier : nil` — reject unknown tiers before storing
+- **Lesson**: JSONB metadata fields bypass model validations. Always validate individual keys in the controller or service before writing, especially for enum-like values.
+
+### `before_action` Extraction for Shared Lookups (Mar 2, 2026)
+- Organisation controller had inline `Organisation.find(params[:id])` in both `manage` and `update_specs_usage`
+- The shops controller already used `before_action :set_shop` with a private method — the org controller should match this pattern
+- **Fix**: Extracted `before_action :set_organisation, only: [:manage, :update_specs_usage]` + private `set_organisation` method
+- **Lesson**: When adding a new action that needs the same record lookup as existing actions, extract to `before_action` if not already done
+
 ### Model Spec Type Doesn't Have Route Helpers (Feb 27, 2026)
 - `type: :model` specs don't include `Rails.application.routes.url_helpers`
 - Calling `login_path` or `admin_spec_path` raises `NameError: undefined local variable or method`
@@ -453,4 +466,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: Keep request-level assertions (HTTP calls, route helpers) in request specs, even when testing side effects like job enqueuing
 
 ---
-*Updated: Mar 2, 2026 (custom app deploy: extension api_version/package mismatch, CLI --force flag)*
+*Updated: Mar 2, 2026 (session limits: JSONB metadata validation, before_action extraction pattern)*

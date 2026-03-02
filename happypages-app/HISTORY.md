@@ -100,6 +100,7 @@ A chronicle of the referral app's evolution from initial commit to production-re
 
 - **Mar 2** - Post-audit fixes for multi-app credential support: 9 fixes across embedded layout, JWT verification, OAuth flow, seeds, and model validations. 557 total specs, all passing.
 - **Mar 2** - Deployed `[FD] - Happypages Referrals` custom app: TOML config, webhook subscriptions, and checkout UI extension released via Shopify CLI.
+- **Mar 2** - Specs engine chunk 11: session limits + usage gating — UsageChecker service, per-shop/org tier configuration, enforcement at all 4 creation points, usage pills, superadmin controls, 40 new specs (597 total)
 
 ## Key Milestones
 

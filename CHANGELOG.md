@@ -6,6 +6,7 @@ Dated record of shipped features across both products.
 
 - **Custom app webhook deployment** — Created TOML config for `[FD] - Happypages Referrals` custom app and deployed webhook subscriptions (`orders/create` + compliance topics) + checkout UI extension via Shopify CLI. Fixed `api_version` mismatch by downgrading extension TOML from `2026-04` to `2025-10` to match available `@shopify/ui-extensions` package.
 - **Multi-app credential audit fixes** — 9 fixes (1 critical, 2 high, 5 medium) for the multi-app staging pipeline. Embedded layout now resolves API key from shop's integration. `find_by_app_client_id` scoped to active integrations. OAuth state consumed atomically, `params[:app]` allowlisted. Nil client secret guarded in JWT path. Seeds wrapped in `Shop.exists?` guard. Model validations for credential consistency. 557 total specs, all passing.
+- **Specs engine (Chunk 11)** — Session limits + usage gating. `Specs::UsageChecker` service with per-shop (ShopFeature JSONB metadata) and per-org (dedicated columns) tier/limit/anchor configuration. Two tiers (Tier 1: 5/mo, Tier 2: 8/mo), nil = unlimited. Enforced at 4 session creation points (admin create, admin new_version, client portal, Slack `/spec new`). Usage pill with progress bar on admin index and client dashboard. "New project" button disabled at limit. Superadmin manage pages for shop + org with tier/limit/anchor edit forms. Tier validation against TIERS constant. 40 new specs (597 total), all passing.
 
 ## 2026-02-27
 
