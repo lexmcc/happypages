@@ -4,6 +4,7 @@ Dated record of shipped features across both products.
 
 ## 2026-03-02
 
+- **Custom app webhook deployment** — Created TOML config for `[FD] - Happypages Referrals` custom app and deployed webhook subscriptions (`orders/create` + compliance topics) + checkout UI extension via Shopify CLI. Fixed `api_version` mismatch by downgrading extension TOML from `2026-04` to `2025-10` to match available `@shopify/ui-extensions` package.
 - **Multi-app credential audit fixes** — 9 fixes (1 critical, 2 high, 5 medium) for the multi-app staging pipeline. Embedded layout now resolves API key from shop's integration. `find_by_app_client_id` scoped to active integrations. OAuth state consumed atomically, `params[:app]` allowlisted. Nil client secret guarded in JWT path. Seeds wrapped in `Shop.exists?` guard. Model validations for credential consistency. 557 total specs, all passing.
 
 ## 2026-02-27

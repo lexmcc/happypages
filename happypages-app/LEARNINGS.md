@@ -194,6 +194,20 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: `session.delete(:oauth_state)` atomically reads and removes in one operation
 - **Lesson**: Any one-time session token (CSRF state, nonce) should use `session.delete` not `session[]`
 
+### Shopify CLI Extension `api_version` Must Match `@shopify/ui-extensions` Package (Mar 2, 2026)
+- `shopify app deploy` validates the extension's target types (e.g., `purchase.thank-you.block.render`) against the installed `@shopify/ui-extensions` npm package
+- The extension TOML's `api_version` determines which package version is expected (e.g., `2026-04` expects `~2026.4.0`)
+- If the matching package version isn't released yet (only RC available), deploy fails with "Type reference could not be found"
+- The app-level TOML `api_version` (under `[webhooks]`) is separate — it controls webhook API version, not extension validation
+- **Fix**: Downgrade the extension TOML `api_version` to match the latest stable `@shopify/ui-extensions` release (e.g., `2025-10` ↔ `2025.10.x`)
+- **Lesson**: Before deploying, check `npm view @shopify/ui-extensions versions --json | tail -5` to see what's actually published. RC versions (`-rc.0`) don't satisfy `~` semver ranges.
+
+### Shopify CLI `--force` Flag for Non-Interactive Environments (Mar 2, 2026)
+- `shopify app deploy` in non-interactive terminals (piped input, CI) requires `--force` flag
+- Without it, the CLI errors with "Flag not specified: allow-updates"
+- This applies to any environment where stdin isn't a TTY (e.g., Claude Code's bash tool)
+- **Lesson**: Always use `shopify app deploy --force` when running from scripts or non-interactive shells
+
 ## Patterns & Best Practices
 
 ### Alpine.js x-if vs x-show for Layout Restructuring (Feb 10, 2026)
@@ -238,7 +252,7 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - `shopify app webhook trigger --topic <topic> --address <url> --api-version <version>`
 - Sends properly signed payloads with sample/fake data
 - Test domains use `{shop}.myshopify.com` placeholder
-- API version must match TOML config (currently `2026-04`)
+- Webhook API version must match TOML config. Extension TOML `api_version` must match installed `@shopify/ui-extensions` package (currently `2025-10` / `2025.10.x`)
 
 ### Network Access for Extensions
 - Theme extensions making external API calls need "Allow network access" approved in Dev Dashboard
@@ -439,4 +453,4 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Lesson**: Keep request-level assertions (HTTP calls, route helpers) in request specs, even when testing side effects like job enqueuing
 
 ---
-*Updated: Mar 2, 2026 (multi-app credential audit: embedded layout key resolution, revoked integration JWT leak, stale OAuth session, nil HMAC key, atomic state consumption)*
+*Updated: Mar 2, 2026 (custom app deploy: extension api_version/package mismatch, CLI --force flag)*

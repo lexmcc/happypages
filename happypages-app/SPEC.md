@@ -4,6 +4,7 @@ Shopify referral rewards app — merchants install it, customers share referral 
 
 **Live:** https://app.happypages.co
 **Client ID:** `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
+**Custom App:** `[FD] - Happypages Referrals` — client ID `61162a744826a338fa331f460b18a82c`, same backend, TOML at `happypages-referrals/shopify.app.fd-happypages-referrals.toml`
 
 ## Architecture
 
@@ -14,7 +15,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **Dual auth** — Shopify OAuth (self-service install, creates Shop + ShopCredential + ShopIntegration + User) and email/password login (invite-only, BCrypt). Users have roles (`owner`, `admin`, `member`) and invite tokens. Rate-limited login (20 req/min/IP). OAuth state consumed atomically via `session.delete(:oauth_state)` to prevent replay. `params[:app]` allowlisted to `%w[custom]`.
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
-- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `webhook_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Referral events tracked via `ReferralEvent` model.
+- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `app_client_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Both the public app and custom app (`[FD] - Happypages Referrals`) have identical webhook subscriptions pointing at the same backend. Referral events tracked via `ReferralEvent` model.
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback. `app_client_id` uniqueness enforced, `app_client_secret` required when `app_client_id` present. `find_by_app_client_id` scoped to active integrations only.
 - **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, specs, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin, super_admin_impersonating.
@@ -131,7 +132,7 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 ### Shopify App Submission
 
 #### Pre-Deploy
-- [ ] Deploy app + webhooks: `cd happypages-referrals && shopify app deploy --force`
+- [ ] Deploy public app webhooks: `cd happypages-referrals && shopify app deploy --force` (custom app already deployed)
 - [ ] Verify webhook subscriptions in Partner Dashboard
 
 #### Partner Dashboard

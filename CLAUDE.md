@@ -228,9 +228,9 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **TDD rule**: New platform architecture code gets tests first. Existing code gets tested when modified.
 
 ### Shopify App Identity
-- **Client ID**: `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted)
-- **Distribution**: Public (unlisted) — installable via link on any store
-- **TOML config**: `shopify.app.happypages-friendly-referrals.toml` is the linked config file
+- **Public app**: Client ID `98f21e1016de2f503ac53f40072eb71b` (public distribution, unlisted). TOML: `shopify.app.happypages-friendly-referrals.toml`
+- **Custom app**: `[FD] - Happypages Referrals`, client ID `61162a744826a338fa331f460b18a82c`. TOML: `shopify.app.fd-happypages-referrals.toml`. Same backend, same webhooks.
+- Both TOMLs live in `happypages-referrals/`. Deploy with `shopify app deploy --config <toml> --force`
 
 ### Media & Storage
 - **Active Storage** with Railway Bucket (Tigris, S3-compatible) — config in `config/storage.yml`, production uses `:tigris` service
