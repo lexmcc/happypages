@@ -3,6 +3,11 @@
 
   <div class="bg-[#f4f4f0] rounded-xl border border-black/5 shadow-[inset_1px_1px_0_rgba(255,255,255,1),inset_-1px_-1px_0_rgba(0,0,0,0.05),0_4px_8px_rgba(0,0,0,0.05)] p-6">
     <%= form_with model: @project, url: admin_specs_path, class: "space-y-5" do |f| %>
+      <% if flash[:alert] %>
+        <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-sm text-red-700"><%= flash[:alert] %></p>
+        </div>
+      <% end %>
       <% if @project.errors.any? %>
         <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
           <p class="text-sm text-red-700"><%= @project.errors.full_messages.join(", ") %></p>

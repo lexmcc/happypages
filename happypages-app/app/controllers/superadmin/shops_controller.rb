@@ -1,5 +1,5 @@
 class Superadmin::ShopsController < Superadmin::BaseController
-  before_action :set_shop, only: [ :show, :manage, :suspend, :reactivate, :rescrape_brand, :impersonate ]
+  before_action :set_shop, only: [ :show, :manage, :suspend, :reactivate, :rescrape_brand, :impersonate, :update_specs_usage ]
 
   def index
     @shops = Shop.all.order(created_at: :desc)
@@ -91,6 +91,25 @@ class Superadmin::ShopsController < Superadmin::BaseController
     BrandScrapeJob.perform_later(@shop.id)
     audit!(action: "rescrape_brand", shop: @shop)
     redirect_to superadmin_shop_path(@shop), notice: "Brand scrape queued"
+  end
+
+  def update_specs_usage
+    feature = @shop.shop_features.find_by!(feature: "specs")
+
+    metadata = feature.metadata || {}
+    tier = params[:tier].presence
+    metadata["tier"] = tier.in?(Specs::UsageChecker::TIERS.keys) ? tier : nil
+    metadata["monthly_limit"] = params[:monthly_limit].present? ? params[:monthly_limit].to_i : nil
+    metadata["billing_cycle_anchor"] = params[:billing_cycle_anchor].presence
+
+    if metadata["tier"].present? && metadata["monthly_limit"].nil?
+      tier_config = Specs::UsageChecker::TIERS[metadata["tier"]]
+      metadata["monthly_limit"] = tier_config[:default_limit] if tier_config
+    end
+
+    feature.update!(metadata: metadata)
+    audit!(action: "update", shop: @shop, details: { change: "specs_usage", metadata: metadata })
+    redirect_to manage_superadmin_shop_path(@shop), notice: "Specs usage limits updated"
   end
 
   private

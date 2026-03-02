@@ -184,6 +184,7 @@ Rails.application.routes.draw do
         post :suspend
         post :reactivate
         post :rescrape_brand
+        patch :update_specs_usage
       end
       resources :shop_features, only: [ :create, :update, :destroy ]
       resources :shop_users, only: [ :create ] do
@@ -198,6 +199,7 @@ Rails.application.routes.draw do
     resources :organisations, only: [ :index, :create ] do
       member do
         get :manage
+        patch :update_specs_usage
       end
       resources :specs_clients, only: [ :create ], controller: "specs_clients" do
         member do

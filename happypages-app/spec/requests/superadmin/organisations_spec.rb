@@ -49,6 +49,35 @@ RSpec.describe "Superadmin::Organisations", type: :request do
     end
   end
 
+  describe "PATCH /superadmin/organisations/:id/update_specs_usage" do
+    let!(:org) { create(:organisation) }
+
+    it "updates organisation specs columns" do
+      patch update_specs_usage_superadmin_organisation_path(org), params: {
+        tier: "tier_1", monthly_limit: "10", billing_cycle_anchor: "2026-03-15"
+      }
+      expect(response).to redirect_to(manage_superadmin_organisation_path(org))
+
+      org.reload
+      expect(org.specs_tier).to eq("tier_1")
+      expect(org.specs_monthly_limit).to eq(10)
+      expect(org.specs_billing_cycle_anchor).to eq(Date.new(2026, 3, 15))
+    end
+
+    it "auto-sets limit from tier when limit not provided" do
+      patch update_specs_usage_superadmin_organisation_path(org), params: { tier: "tier_2" }
+
+      org.reload
+      expect(org.specs_tier).to eq("tier_2")
+      expect(org.specs_monthly_limit).to eq(8)
+    end
+
+    it "shows Specs Usage section on manage page" do
+      get manage_superadmin_organisation_path(org)
+      expect(response.body).to include("Specs Usage")
+    end
+  end
+
   context "without superadmin session" do
     before { delete superadmin_logout_path }
 

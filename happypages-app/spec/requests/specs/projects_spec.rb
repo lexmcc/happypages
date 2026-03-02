@@ -74,6 +74,43 @@ RSpec.describe "Specs::Projects", type: :request do
     end
   end
 
+  describe "session limit enforcement" do
+    context "when org at limit" do
+      before do
+        organisation.update!(specs_monthly_limit: 1)
+        project = create(:specs_project, :org_scoped, organisation: organisation)
+        create(:specs_session, :org_scoped, project: project, specs_client: client, status: "completed")
+      end
+
+      it "blocks create when at session limit" do
+        post specs_projects_path, params: { specs_project: { name: "Should Fail" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("session limit")
+      end
+    end
+
+    context "when under limit" do
+      before { organisation.update!(specs_monthly_limit: 5) }
+
+      it "allows create" do
+        expect {
+          post specs_projects_path, params: { specs_project: { name: "Allowed" } }
+        }.to change(Specs::Project, :count).by(1)
+      end
+    end
+
+    it "dashboard shows usage data when limited" do
+      organisation.update!(specs_monthly_limit: 5)
+      get specs_dashboard_path
+      expect(response.body).to include("sessions used this cycle")
+    end
+
+    it "dashboard does not show usage pill when unlimited" do
+      get specs_dashboard_path
+      expect(response.body).not_to include("sessions used this cycle")
+    end
+  end
+
   describe "POST /specs/projects/:id/message" do
     let(:project) { create(:specs_project, :org_scoped, organisation: organisation) }
     let!(:session_record) do

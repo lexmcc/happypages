@@ -23,6 +23,28 @@ RSpec.describe Organisation, type: :model do
       expect(org.errors[:slug]).to include("only allows lowercase letters, numbers, and hyphens")
     end
 
+    it "validates specs_tier inclusion" do
+      org = build(:organisation, specs_tier: "invalid")
+      expect(org).not_to be_valid
+      expect(org.errors[:specs_tier]).to be_present
+    end
+
+    it "allows nil specs_tier" do
+      org = build(:organisation, specs_tier: nil)
+      expect(org).to be_valid
+    end
+
+    it "validates specs_monthly_limit numericality" do
+      org = build(:organisation, specs_monthly_limit: -1)
+      expect(org).not_to be_valid
+      expect(org.errors[:specs_monthly_limit]).to be_present
+    end
+
+    it "allows nil specs_monthly_limit" do
+      org = build(:organisation, specs_monthly_limit: nil)
+      expect(org).to be_valid
+    end
+
     it "validates slug length" do
       org = build(:organisation, slug: "ab")
       expect(org).not_to be_valid

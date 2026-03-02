@@ -6,10 +6,16 @@ class Organisation < ApplicationRecord
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true
+  validates :specs_tier, inclusion: { in: Specs::UsageChecker::TIERS.keys }, allow_nil: true
+  validates :specs_monthly_limit, numericality: { greater_than: 0 }, allow_nil: true
   validates :slug, length: { minimum: 3, maximum: 50 }
   validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }
 
   before_validation :generate_slug
+
+  def specs_usage_checker
+    Specs::UsageChecker.new(organisation: self)
+  end
 
   def slack_connected?
     slack_bot_token.present?

@@ -6,6 +6,13 @@ module Specs
 
     def perform(team_id:, channel_id:, slack_user_id:, project_name:, response_url:)
       org = find_org!(team_id)
+      checker = org.specs_usage_checker
+
+      unless checker.can_create_session?
+        post_ephemeral_error(response_url, checker.limit_message)
+        return
+      end
+
       client = find_or_create_client!(org, slack_user_id, org.slack_client)
 
       project = org.specs_projects.create!(name: project_name)
@@ -42,6 +49,18 @@ module Specs
         req.body = { response_type: "ephemeral", text: "Project \"#{project_name}\" created! Continue in the thread above." }.to_json
         http.request(req)
       end
+    end
+
+    private
+
+    def post_ephemeral_error(response_url, message)
+      return unless response_url.present?
+      uri = URI.parse(response_url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      req = Net::HTTP::Post.new(uri.path, "Content-Type" => "application/json")
+      req.body = { response_type: "ephemeral", text: message }.to_json
+      http.request(req)
     end
   end
 end

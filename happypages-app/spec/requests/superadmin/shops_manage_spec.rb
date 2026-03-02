@@ -67,6 +67,53 @@ RSpec.describe "Superadmin::Shops Management", type: :request do
     end
   end
 
+  describe "PATCH /superadmin/shops/:id/update_specs_usage" do
+    let!(:shop) { create(:shop) }
+    let!(:specs_feature) { create(:shop_feature, shop: shop, feature: "specs", status: "active") }
+
+    it "updates ShopFeature metadata" do
+      patch update_specs_usage_superadmin_shop_path(shop), params: {
+        tier: "tier_1", monthly_limit: "10", billing_cycle_anchor: "2026-03-15"
+      }
+      expect(response).to redirect_to(manage_superadmin_shop_path(shop))
+
+      specs_feature.reload
+      expect(specs_feature.metadata["tier"]).to eq("tier_1")
+      expect(specs_feature.metadata["monthly_limit"]).to eq(10)
+      expect(specs_feature.metadata["billing_cycle_anchor"]).to eq("2026-03-15")
+    end
+
+    it "auto-sets limit from tier when limit not provided" do
+      patch update_specs_usage_superadmin_shop_path(shop), params: { tier: "tier_2" }
+
+      specs_feature.reload
+      expect(specs_feature.metadata["tier"]).to eq("tier_2")
+      expect(specs_feature.metadata["monthly_limit"]).to eq(8)
+    end
+
+    it "clears tier and limit when empty values" do
+      specs_feature.update!(metadata: { "tier" => "tier_1", "monthly_limit" => 5 })
+
+      patch update_specs_usage_superadmin_shop_path(shop), params: { tier: "", monthly_limit: "" }
+
+      specs_feature.reload
+      expect(specs_feature.metadata["tier"]).to be_nil
+      expect(specs_feature.metadata["monthly_limit"]).to be_nil
+    end
+
+    it "shows Specs Usage section on manage page" do
+      get manage_superadmin_shop_path(shop)
+      expect(response.body).to include("Specs Usage")
+    end
+
+    it "rejects invalid tier values" do
+      patch update_specs_usage_superadmin_shop_path(shop), params: { tier: "hacked" }
+
+      specs_feature.reload
+      expect(specs_feature.metadata["tier"]).to be_nil
+    end
+  end
+
   describe "GET /superadmin/shops with search" do
     let!(:shop1) { create(:shop, name: "Acme Store", domain: "acme.myshopify.com") }
     let!(:shop2) { create(:shop, name: "Beta Shop", domain: "beta.myshopify.com") }

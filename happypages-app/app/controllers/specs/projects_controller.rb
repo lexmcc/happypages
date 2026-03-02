@@ -9,15 +9,27 @@ module Specs
 
     def new
       @project = current_specs_client.organisation.specs_projects.new
+      @usage = current_specs_client.organisation.specs_usage_checker.usage
     end
 
     def create
-      @project = current_specs_client.organisation.specs_projects.new(project_params)
+      org = current_specs_client.organisation
+      checker = org.specs_usage_checker
 
+      unless checker.can_create_session?
+        flash.now[:alert] = checker.limit_message
+        @project = org.specs_projects.new(project_params)
+        @usage = checker.usage
+        render :new, status: :unprocessable_entity
+        return
+      end
+
+      @project = org.specs_projects.new(project_params)
       if @project.save
         @project.sessions.create!(specs_client: current_specs_client)
         redirect_to specs_project_path(@project)
       else
+        @usage = checker.usage
         render :new, status: :unprocessable_entity
       end
     end

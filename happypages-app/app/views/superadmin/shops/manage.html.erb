@@ -185,6 +185,50 @@
         </div>
       </section>
 
+      <%# Specs Usage Panel %>
+      <% specs_feature = @features.find { |f| f.feature == "specs" } %>
+      <% if specs_feature %>
+        <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-900">Specs Usage</h2>
+          </div>
+          <div class="px-6 py-4">
+            <% checker = @shop.specs_usage_checker %>
+            <% usage = checker.usage %>
+
+            <div class="mb-4 flex items-center gap-4">
+              <div>
+                <p class="text-2xl font-bold text-gray-900 tabular-nums"><%= usage[:used] %><span class="text-base font-normal text-gray-400"> / <%= usage[:unlimited] ? "\u221E" : usage[:limit] %></span></p>
+                <p class="text-xs text-gray-500">completed sessions this cycle (since <%= usage[:cycle_start].strftime("%b %d") %>)</p>
+              </div>
+            </div>
+
+            <%= form_with url: update_specs_usage_superadmin_shop_path(@shop), method: :patch, class: "grid grid-cols-3 gap-4" do |f| %>
+              <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Tier</label>
+                <%= f.select :tier, [["No limit", ""], ["Tier 1 (5/mo)", "tier_1"], ["Tier 2 (8/mo)", "tier_2"]],
+                    { selected: specs_feature.metadata&.dig("tier") },
+                    class: "w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Monthly limit</label>
+                <%= f.number_field :monthly_limit, value: specs_feature.metadata&.dig("monthly_limit"),
+                    min: 0, placeholder: "0 = unlimited",
+                    class: "w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Billing cycle anchor</label>
+                <%= f.date_field :billing_cycle_anchor, value: specs_feature.metadata&.dig("billing_cycle_anchor"),
+                    class: "w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5" %>
+              </div>
+              <div class="col-span-3">
+                <%= f.submit "Update specs limits", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 cursor-pointer" %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
       <%# Shopify-specific actions %>
       <% if @shop.shopify? %>
         <section class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

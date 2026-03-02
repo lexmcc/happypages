@@ -7,6 +7,7 @@ module Specs
     def index
       @organisation = current_specs_client.organisation
       @projects = @organisation.specs_projects.order(created_at: :desc)
+      @usage = @organisation.specs_usage_checker.usage
     end
   end
 end

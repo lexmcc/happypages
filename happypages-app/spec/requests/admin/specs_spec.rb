@@ -254,6 +254,65 @@ RSpec.describe "Admin::Specs", type: :request do
     end
   end
 
+  describe "session limit enforcement" do
+    context "when at session limit" do
+      before do
+        feature = shop.shop_features.find_by(feature: "specs")
+        feature.update!(metadata: { "monthly_limit" => 1 })
+        project = Specs::Project.create!(shop: shop, name: "Existing")
+        Specs::Session.create!(project: project, shop: shop, user: user, status: "completed")
+      end
+
+      it "blocks create when at session limit" do
+        post admin_specs_path, params: { specs_project: { name: "Should Fail" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("session limit")
+      end
+
+      it "blocks new_version when at session limit" do
+        project = Specs::Project.create!(shop: shop, name: "Version Test")
+        Specs::Session.create!(project: project, shop: shop, user: user)
+        post new_version_admin_spec_path(project)
+        expect(response).to redirect_to(admin_spec_path(project))
+        expect(flash[:alert]).to include("session limit")
+      end
+    end
+
+    context "when under limit" do
+      before do
+        feature = shop.shop_features.find_by(feature: "specs")
+        feature.update!(metadata: { "monthly_limit" => 5 })
+      end
+
+      it "allows create when under limit" do
+        expect {
+          post admin_specs_path, params: { specs_project: { name: "Allowed" } }
+        }.to change(Specs::Project, :count).by(1)
+        expect(response).to redirect_to(admin_spec_path(Specs::Project.last))
+      end
+    end
+
+    context "when unlimited (no limit set)" do
+      it "allows create" do
+        expect {
+          post admin_specs_path, params: { specs_project: { name: "Unlimited" } }
+        }.to change(Specs::Project, :count).by(1)
+      end
+    end
+
+    it "index shows usage data when limited" do
+      feature = shop.shop_features.find_by(feature: "specs")
+      feature.update!(metadata: { "monthly_limit" => 5 })
+      get admin_specs_path
+      expect(response.body).to include("sessions used this cycle")
+    end
+
+    it "index does not show usage pill when unlimited" do
+      get admin_specs_path
+      expect(response.body).not_to include("sessions used this cycle")
+    end
+  end
+
   describe "feature gating" do
     it "redirects to feature page when specs feature not active" do
       ShopFeature.where(shop: shop, feature: "specs").destroy_all

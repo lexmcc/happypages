@@ -98,6 +98,39 @@ RSpec.describe Specs::SlackCommandJob, type: :job do
     expect(WebMock).to have_requested(:post, "https://hooks.slack.com/response/test")
   end
 
+  context "when org is at session limit" do
+    before do
+      org.update!(specs_monthly_limit: 1)
+      project = create(:specs_project, :org_scoped, organisation: org)
+      create(:specs_session, :org_scoped, project: project, status: "completed")
+    end
+
+    it "skips project creation when at limit" do
+      expect {
+        described_class.perform_now(
+          team_id: org.slack_team_id,
+          channel_id: "C123",
+          slack_user_id: "U456",
+          project_name: "Over Limit",
+          response_url: "https://hooks.slack.com/response/test"
+        )
+      }.not_to change(Specs::Project, :count)
+    end
+
+    it "posts ephemeral error when at limit" do
+      described_class.perform_now(
+        team_id: org.slack_team_id,
+        channel_id: "C123",
+        slack_user_id: "U456",
+        project_name: "Over Limit",
+        response_url: "https://hooks.slack.com/response/test"
+      )
+
+      expect(WebMock).to have_requested(:post, "https://hooks.slack.com/response/test")
+        .with { |req| JSON.parse(req.body)["text"].include?("session limit") }
+    end
+  end
+
   it "creates new client for unknown Slack user" do
     orchestrator = instance_double(Specs::Orchestrator)
     allow(Specs::Orchestrator).to receive(:new).and_return(orchestrator)

@@ -6,6 +6,7 @@ class Admin::SpecsController < Admin::BaseController
 
   def index
     @projects = Current.shop.specs_projects.order(created_at: :desc)
+    @usage = Current.shop.specs_usage_checker.usage
   end
 
   def new
@@ -14,6 +15,13 @@ class Admin::SpecsController < Admin::BaseController
 
   def create
     @project = Current.shop.specs_projects.new(project_params)
+    checker = Current.shop.specs_usage_checker
+
+    unless checker.can_create_session?
+      flash.now[:alert] = checker.limit_message
+      render :new, status: :unprocessable_entity
+      return
+    end
 
     if @project.save
       @project.sessions.create!(shop: Current.shop, user: current_user)
@@ -76,6 +84,12 @@ class Admin::SpecsController < Admin::BaseController
   end
 
   def new_version
+    checker = Current.shop.specs_usage_checker
+    unless checker.can_create_session?
+      redirect_to admin_spec_path(@project), alert: checker.limit_message
+      return
+    end
+
     latest = @project.sessions.order(version: :desc).first
     @project.sessions.create!(
       shop: Current.shop,

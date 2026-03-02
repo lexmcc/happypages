@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_02_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_02_200001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -210,6 +210,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_02_100000) do
     t.string "slack_bot_token"
     t.string "slack_team_id"
     t.string "slug", null: false
+    t.date "specs_billing_cycle_anchor"
+    t.integer "specs_monthly_limit"
+    t.string "specs_tier"
     t.datetime "updated_at", null: false
     t.index ["slack_team_id"], name: "index_organisations_on_slack_team_id", unique: true
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
@@ -345,6 +348,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_02_100000) do
     t.datetime "created_at", null: false
     t.datetime "expires_at"
     t.string "feature", null: false
+    t.jsonb "metadata", default: {}
     t.bigint "shop_id", null: false
     t.string "status", default: "active", null: false
     t.datetime "updated_at", null: false

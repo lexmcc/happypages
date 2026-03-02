@@ -33,6 +33,10 @@ class Shop < ApplicationRecord
   scope :shopify, -> { where(platform_type: "shopify") }
   scope :custom, -> { where(platform_type: "custom") }
 
+  def specs_usage_checker
+    Specs::UsageChecker.new(shop: self)
+  end
+
   # Feature & integration helpers
   def feature_enabled?(feature_name)
     shop_features.active.exists?(feature: feature_name)
