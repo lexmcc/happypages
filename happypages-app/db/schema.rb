@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_02_200001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -254,6 +254,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_02_200001) do
     t.datetime "consumed_at"
     t.datetime "created_at", null: false
     t.datetime "expires_at"
+    t.integer "order_total_cents"
     t.bigint "referral_id", null: false
     t.bigint "shop_id", null: false
     t.string "shopify_discount_id"

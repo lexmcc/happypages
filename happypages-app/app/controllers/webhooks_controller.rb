@@ -229,7 +229,7 @@ class WebhooksController < ApplicationController
     )
 
     # Create a reward discount for the referrer
-    create_referrer_reward(referral, order_id: order[:order_id])
+    create_referrer_reward(referral, order_id: order[:order_id], order_total: order[:total])
   end
 
   def process_reward_consumption(code, order_id)
@@ -358,7 +358,7 @@ class WebhooksController < ApplicationController
     Rails.logger.error "Error adding customer note: #{e.message}"
   end
 
-  def create_referrer_reward(referral, order_id: nil)
+  def create_referrer_reward(referral, order_id: nil, order_total: nil)
     return unless Current.shop  # Requires shop context
 
     discount_provider = Current.shop.discount_provider
@@ -402,6 +402,7 @@ class WebhooksController < ApplicationController
         code: result[:reward_code],
         shopify_discount_id: shopify_discount_id,
         shopify_order_id: order_id,
+        order_total_cents: order_total.present? ? (order_total.to_f * 100).round : nil,
         status: "created",
         usage_number: referral.usage_count,
         expires_at: 30.days.from_now
