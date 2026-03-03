@@ -354,6 +354,17 @@ class WebhooksController < ApplicationController
     else
       Rails.logger.error "Failed to add customer note: #{result[:errors]}"
     end
+
+    # Write referral code to customer metafield
+    mf_result = customer_provider.set_metafield(
+      customer_id: referral.shopify_customer_id,
+      namespace: Current.shop.metafield_namespace,
+      key: "referral_code",
+      value: referral.referral_code
+    )
+    unless mf_result[:success]
+      Rails.logger.error "Metafield write failed for #{referral.referral_code}: #{mf_result[:errors]}"
+    end
   rescue => e
     Rails.logger.error "Error adding customer note: #{e.message}"
   end

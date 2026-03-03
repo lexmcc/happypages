@@ -32,6 +32,9 @@ module Api
       referral = scope.find_by(email: email)
 
       if referral
+        # Ensure metafield exists (backfill if webhook created without it)
+        ensure_customer_metafield(referral) if Current.shop
+
         render json: {
           success: true,
           referral_code: referral.referral_code,
@@ -113,6 +116,22 @@ module Api
       Rails.logger.error "Discount creation error: #{e.message}"
     end
 
+    def ensure_customer_metafield(referral)
+      return unless referral.shopify_customer_id.present?
+      customer_provider = Current.shop.customer_provider
+      mf_result = customer_provider.set_metafield(
+        customer_id: referral.shopify_customer_id,
+        namespace: Current.shop.metafield_namespace,
+        key: "referral_code",
+        value: referral.referral_code
+      )
+      unless mf_result[:success]
+        Rails.logger.error "Metafield backfill failed for #{referral.referral_code}: #{mf_result[:errors]}"
+      end
+    rescue => e
+      Rails.logger.error "Metafield backfill error: #{e.message}"
+    end
+
     def add_customer_note(referral)
       return unless Current.shop  # Requires shop context
 
@@ -134,12 +153,15 @@ module Api
         end
 
         # Write referral code to customer metafield
-        customer_provider.set_metafield(
+        mf_result = customer_provider.set_metafield(
           customer_id: customer_id,
-          namespace: "app--happypages-friendly-referrals",
+          namespace: Current.shop.metafield_namespace,
           key: "referral_code",
           value: referral.referral_code
         )
+        unless mf_result[:success]
+          Rails.logger.error "Metafield write failed for #{referral.referral_code}: #{mf_result[:errors]}"
+        end
       else
         Rails.logger.warn "No customer found for #{referral.email}, skipping note"
       end

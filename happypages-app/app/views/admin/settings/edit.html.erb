@@ -103,8 +103,8 @@
             <p class="text-sm text-gray-700">Paste this Liquid snippet into your theme (e.g. header, account page, or navigation) to show a "My Referrals" link to logged-in customers:</p>
 
             <div class="relative">
-              <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{% raw %}{%- assign slug = shop.metafields['app--happypages-friendly-referrals'].shop_slug -%}
-{%- assign code = customer.metafields['app--happypages-friendly-referrals'].referral_code -%}
+              <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{% raw %}{%- assign slug = shop.metafields['<%= Current.shop.metafield_namespace %>'].shop_slug -%}
+{%- assign code = customer.metafields['<%= Current.shop.metafield_namespace %>'].referral_code -%}
 {%- if slug and code -%}
   <a href="https://app.happypages.co/{{ slug }}/refer?code={{ code }}">
     My Referrals
@@ -206,7 +206,7 @@ const CREATE_CART_WITH_DISCOUNT = `#graphql
               <div class="relative">
                 <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto leading-relaxed"><code>query CustomerReferral {
   customer {
-    metafield(namespace: "app--happypages-friendly-referrals", key: "referral_code") {
+    metafield(namespace: "<%= Current.shop.metafield_namespace %>", key: "referral_code") {
       value
     }
   }

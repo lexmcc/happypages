@@ -20,7 +20,7 @@ class ShopMetafieldWriter
     set_metafield(
       credentials: credentials,
       owner_id: shop_gid,
-      namespace: "app--happypages-friendly-referrals",
+      namespace: @shop.metafield_namespace,
       key: "shop_slug",
       value: @shop.slug
     )

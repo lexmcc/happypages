@@ -107,6 +107,15 @@ class Shop < ApplicationRecord
     end
   end
 
+  def metafield_namespace
+    integration = integration_for("shopify")
+    if integration&.app_client_id == ENV["SHOPIFY_CUSTOM_CLIENT_ID"]
+      "app--fd-happypages-referrals"
+    else
+      "app--happypages-friendly-referrals"
+    end
+  end
+
   # Provider accessors
   def discount_provider
     @discount_provider ||= provider_class("DiscountProvider").new(self)

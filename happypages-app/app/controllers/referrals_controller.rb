@@ -163,12 +163,15 @@ class ReferralsController < ApplicationController
       end
 
       # Write referral code to customer metafield
-      customer_provider.set_metafield(
+      mf_result = customer_provider.set_metafield(
         customer_id: customer_id,
-        namespace: "app--happypages-friendly-referrals",
+        namespace: Current.shop.metafield_namespace,
         key: "referral_code",
         value: referral.referral_code
       )
+      unless mf_result[:success]
+        Rails.logger.error "Metafield write failed for #{referral.referral_code}: #{mf_result[:errors]}"
+      end
     else
       Rails.logger.warn "No customer found for #{referral.email}, skipping note"
     end

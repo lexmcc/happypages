@@ -67,7 +67,7 @@ class CustomerImportJob < ApplicationJob
 
         metafield_batch << {
           ownerId: customer_gid,
-          namespace: "app--happypages-friendly-referrals",
+          namespace: shop.metafield_namespace,
           key: "referral_code",
           value: referral.referral_code,
           type: "single_line_text_field"
