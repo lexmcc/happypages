@@ -107,6 +107,45 @@ RSpec.describe Shop, type: :model do
     end
   end
 
+  describe "#metafield_namespace" do
+    it "returns custom app namespace when app_client_id matches SHOPIFY_CUSTOM_CLIENT_ID" do
+      shop = create(:shop)
+      integration = create(:shop_integration, :with_custom_app, shop: shop, provider: "shopify")
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("SHOPIFY_CUSTOM_CLIENT_ID").and_return(integration.app_client_id)
+      expect(shop.metafield_namespace).to eq("app--fd-happypages-referrals")
+    end
+
+    it "returns public app namespace when app_client_id does not match" do
+      shop = create(:shop)
+      create(:shop_integration, :with_custom_app, shop: shop, provider: "shopify")
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("SHOPIFY_CUSTOM_CLIENT_ID").and_return("different-id")
+      expect(shop.metafield_namespace).to eq("app--happypages-friendly-referrals")
+    end
+
+    it "returns public app namespace when no integration exists" do
+      shop = create(:shop)
+      expect(shop.metafield_namespace).to eq("app--happypages-friendly-referrals")
+    end
+
+    it "returns public app namespace when app_client_id is nil" do
+      shop = create(:shop)
+      create(:shop_integration, shop: shop, provider: "shopify")
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("SHOPIFY_CUSTOM_CLIENT_ID").and_return("custom-id-123")
+      expect(shop.metafield_namespace).to eq("app--happypages-friendly-referrals")
+    end
+
+    it "returns public app namespace when env var is unset" do
+      shop = create(:shop)
+      create(:shop_integration, :with_custom_app, shop: shop, provider: "shopify")
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("SHOPIFY_CUSTOM_CLIENT_ID").and_return(nil)
+      expect(shop.metafield_namespace).to eq("app--happypages-friendly-referrals")
+    end
+  end
+
   describe "slug generation" do
     it "auto-generates slug from name" do
       shop = create(:shop, name: "My Test Shop")
