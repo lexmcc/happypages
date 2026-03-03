@@ -27,12 +27,12 @@ RSpec.describe SidebarHelper, type: :helper do
 
     it "separates active and locked features" do
       create(:shop_feature, shop: shop, feature: "referrals", status: "active")
-      create(:shop_feature, shop: shop, feature: "analytics", status: "active")
+      create(:shop_feature, shop: shop, feature: "specs", status: "active")
       create(:shop_feature, shop: shop, feature: "cro", status: "locked")
       groups = helper.sidebar_feature_groups
       expect(groups[:active].length).to eq(2)
-      # 7 locked: specs, cro (explicit), insights, landing_pages, funnels, ads, ambassadors (implicit)
-      expect(groups[:locked].length).to eq(7)
+      # 6 locked: cro (explicit), insights, landing_pages, funnels, ads, ambassadors (implicit)
+      expect(groups[:locked].length).to eq(6)
     end
 
     it "includes locked features that have no ShopFeature record" do
@@ -56,12 +56,12 @@ RSpec.describe SidebarHelper, type: :helper do
   describe "#sidebar_nav_items_for" do
     it "returns sub-nav items for referrals" do
       items = helper.sidebar_nav_items_for("referrals")
-      expect(items.map { |i| i[:label] }).to include("Dashboard", "Campaigns", "Settings")
+      expect(items.map { |i| i[:label] }).to include("Dashboard", "Performance", "Campaigns", "Settings")
     end
 
-    it "returns sub-nav items for analytics" do
-      items = helper.sidebar_nav_items_for("analytics")
-      expect(items.map { |i| i[:label] }).to include("Dashboard")
+    it "returns sub-nav items for specs" do
+      items = helper.sidebar_nav_items_for("specs")
+      expect(items.map { |i| i[:label] }).to include("Projects")
     end
 
     it "returns nil for locked features" do

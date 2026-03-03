@@ -83,7 +83,7 @@ module Referrals
       shares_total = share_clicks + copy_clicks
 
       referred_orders = rw_scope.count
-      revenue_cents = rw_scope.sum(:order_total_cents)
+      revenue_cents = rw_scope.sum(:order_total_cents).to_i
 
       share_rate = extension_loads > 0 ? (shares_total.to_f / extension_loads * 100).round(1) : 0
       conversion_rate = extension_loads > 0 ? (referred_orders.to_f / extension_loads * 100).round(1) : 0
@@ -117,7 +117,7 @@ module Referrals
         page_visits: days.map { |d| page_by_day[d] || 0 },
         shares: days.map { |d| shares_by_day[d] || 0 },
         referred_orders: days.map { |d| orders_by_day[d] || 0 },
-        referred_revenue: days.map { |d| (revenue_by_day[d] || 0) / 100.0 }
+        referred_revenue: days.map { |d| revenue_by_day[d].to_i / 100.0 }
       }
     end
 
@@ -152,7 +152,7 @@ module Referrals
         page_visits: days.map { |d| page_by_day[d] || 0 },
         shares: days.map { |d| shares_by_day[d] || 0 },
         referred_orders: days.map { |d| orders_by_day[d] || 0 },
-        referred_revenue: days.map { |d| (revenue_by_day[d] || 0) / 100.0 }
+        referred_revenue: days.map { |d| revenue_by_day[d].to_i / 100.0 }
       }
     end
 
@@ -200,17 +200,20 @@ module Referrals
     # --- Top referrers ---
 
     def top_referrers
+      join_sql = ActiveRecord::Base.sanitize_sql_array([
+        "LEFT JOIN referral_rewards ON referral_rewards.referral_id = referrals.id AND referral_rewards.created_at BETWEEN ? AND ?",
+        period_range.first, period_range.last
+      ])
+
       shop.referrals
-        .where("usage_count > 0")
-        .order(usage_count: :desc)
+        .where("referrals.usage_count > 0")
+        .joins(join_sql)
+        .group("referrals.id")
+        .order("referrals.usage_count DESC")
         .limit(10)
-        .map do |referral|
-          revenue_cents = referral.referral_rewards.where(created_at: period_range).sum(:order_total_cents)
-          {
-            referral_code: referral.referral_code,
-            usage_count: referral.usage_count,
-            revenue: revenue_cents / 100.0
-          }
+        .select("referrals.referral_code, referrals.usage_count, COALESCE(SUM(referral_rewards.order_total_cents), 0) AS period_revenue_cents")
+        .map do |r|
+          { referral_code: r.referral_code, usage_count: r.usage_count, revenue: r.period_revenue_cents.to_i / 100.0 }
         end
     end
 

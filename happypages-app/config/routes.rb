@@ -61,6 +61,9 @@ Rails.application.routes.draw do
     # Analytics
     resources :analytics, only: [ :index ]
 
+    # Referral Performance
+    resources :performance, only: [ :index ]
+
     # Thank-You Card editor
     resource :thank_you_card, only: [ :edit, :update ], controller: "thank_you_card"
 

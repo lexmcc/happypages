@@ -5,18 +5,12 @@ module SidebarHelper
       icon: "megaphone",
       items: [
         { label: "Dashboard", path: :admin_dashboard_path },
+        { label: "Performance", path: :admin_performance_index_path },
         { label: "Campaigns", path: :admin_campaigns_path },
         { label: "Thank-You Card", path: :edit_admin_thank_you_card_path },
         { label: "Referral Page", path: :edit_admin_referral_page_path },
         { label: "Media", path: :admin_media_assets_path },
         { label: "Settings", path: :edit_admin_settings_path }
-      ]
-    },
-    "analytics" => {
-      label: "Analytics",
-      icon: "chart_bar",
-      items: [
-        { label: "Dashboard", path: :admin_analytics_path }
       ]
     },
     "specs" => {

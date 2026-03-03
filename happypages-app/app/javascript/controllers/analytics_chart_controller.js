@@ -3,7 +3,12 @@ import { Controller } from "@hotwired/stimulus"
 const COLORS = {
   visitors: "#0072B2",
   pageviews: "#E69F00",
-  revenue: "#009E73"
+  revenue: "#009E73",
+  extension_loads: "#0072B2",
+  page_visits: "#56B4E9",
+  shares: "#E69F00",
+  referred_orders: "#009E73",
+  referred_revenue: "#D55E00"
 }
 
 const COMPARISON_COLOR = "#CC79A7"
@@ -97,7 +102,7 @@ export default class extends Controller {
             callbacks: {
               label: (ctx) => {
                 const val = ctx.parsed.y
-                if (metric === "revenue") return `${ctx.dataset.label}: £${val.toFixed(2)}`
+                if (metric === "revenue" || metric === "referred_revenue") return `${ctx.dataset.label}: £${val.toFixed(2)}`
                 return `${ctx.dataset.label}: ${val.toLocaleString()}`
               }
             }
@@ -119,7 +124,7 @@ export default class extends Controller {
               font: { family: "Inter, system-ui, sans-serif", size: 11 },
               color: "#9ca3af",
               callback: (val) => {
-                if (metric === "revenue") return `£${val}`
+                if (metric === "revenue" || metric === "referred_revenue") return `£${val}`
                 if (val >= 1000) return `${(val / 1000).toFixed(1)}K`
                 return val
               }
@@ -131,6 +136,15 @@ export default class extends Controller {
   }
 
   metricLabel(metric) {
-    return { visitors: "Visitors", pageviews: "Pageviews", revenue: "Revenue" }[metric] || metric
+    return {
+      visitors: "Visitors",
+      pageviews: "Pageviews",
+      revenue: "Revenue",
+      extension_loads: "Extension Loads",
+      page_visits: "Page Visits",
+      shares: "Shares",
+      referred_orders: "Referred Orders",
+      referred_revenue: "Referred Revenue"
+    }[metric] || metric
   }
 }
