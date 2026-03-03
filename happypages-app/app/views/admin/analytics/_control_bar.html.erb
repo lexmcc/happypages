@@ -34,6 +34,7 @@
       <label class="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer select-none">
         <input
           type="checkbox"
+          data-analytics-filter-target="compare"
           data-action="change->analytics-filter#toggleCompare"
           <%= "checked" if @compare %>
           class="rounded border-gray-300 text-[#ff584d] focus:ring-[#ff584d]/20 h-3.5 w-3.5"

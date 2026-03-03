@@ -2,6 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 import * as Turbo from "@hotwired/turbo-rails"
 
 export default class extends Controller {
+  static targets = ["compare"]
+
+  connect() {
+    if (this.hasCompareTarget) {
+      this.compareTarget.checked = new URL(window.location.href).searchParams.get("compare") === "1"
+    }
+  }
+
   setPeriod(event) {
     event.preventDefault()
     const period = event.currentTarget.dataset.period
