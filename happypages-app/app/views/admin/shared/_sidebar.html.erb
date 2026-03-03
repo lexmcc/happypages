@@ -69,7 +69,7 @@
             <div data-sidebar-collapse-target="content" class="space-y-0.5">
               <% feature[:items]&.each do |item| %>
                 <% item_path = send(item[:path]) %>
-                <% active = request.path == item_path || request.path.start_with?(item_path.chomp('/')) %>
+                <% active = request.path == item_path || (item_path.count('/') > 1 && request.path.start_with?(item_path.chomp('/'))) %>
                 <%= link_to item_path, class: "flex items-center gap-3 pl-6 pr-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{active ? 'bg-white border-l-2 border-[#ff584d] text-[#ff584d] shadow-sm' : 'text-gray-600 hover:bg-white/60 hover:text-gray-900'}" do %>
                   <%= item[:label] %>
                 <% end %>
