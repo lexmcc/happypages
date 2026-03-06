@@ -1,14 +1,29 @@
-<% if @dashboard_html %>
-  <%= raw @dashboard_html %>
-  <script>var OPS_DASHBOARD_URL = '<%= @dashboard_url %>';</script>
-<% else %>
-  <div class="py-16 text-center">
-    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ops-surface-hover mb-4">
-      <svg class="w-6 h-6 text-ops-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    </div>
-    <p class="text-ops-text-secondary font-medium">Ops Dashboard</p>
-    <p class="text-sm text-ops-text-tertiary mt-1">Available when running locally with the dashboard server</p>
-  </div>
-<% end %>
+<div id="ops-mount"></div>
+
+<script>
+(function() {
+  var url = 'http://127.0.0.1:3333/?embed=1&dashboardUrl=http://127.0.0.1:3333';
+  var mount = document.getElementById('ops-mount');
+
+  fetch(url)
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      mount.innerHTML = html;
+      var scripts = mount.querySelectorAll('script');
+      scripts.forEach(function(s) {
+        var ns = document.createElement('script');
+        ns.textContent = s.textContent;
+        s.replaceWith(ns);
+      });
+    })
+    .catch(function() {
+      mount.innerHTML = '<div class="py-16 text-center">' +
+        '<div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ops-surface-hover mb-4">' +
+        '<svg class="w-6 h-6 text-ops-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>' +
+        '</div>' +
+        '<p class="text-ops-text-secondary font-medium">Ops Dashboard</p>' +
+        '<p class="text-sm text-ops-text-tertiary mt-1">Start the dashboard server locally: <code class="text-ops-text-secondary">cd ops/dashboard && npm start</code></p>' +
+        '</div>';
+    });
+})();
+</script>
