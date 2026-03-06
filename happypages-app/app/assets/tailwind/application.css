@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ops-bg: #0e0e11;
+  --color-ops-surface: #16161a;
+  --color-ops-surface-hover: #1c1c22;
+  --color-ops-surface-active: #22222a;
+  --color-ops-border: rgba(255, 255, 255, 0.06);
+  --color-ops-border-strong: rgba(255, 255, 255, 0.12);
+  --color-ops-text: #ececf0;
+  --color-ops-text-secondary: #8b8b97;
+  --color-ops-text-tertiary: #56565e;
+  --color-ops-accent: #6e6eff;
+  --color-ops-green: #3dd68c;
+  --color-ops-amber: #f0b429;
+  --color-ops-red: #ef4444;
+}

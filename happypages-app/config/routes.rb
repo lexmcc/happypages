@@ -181,6 +181,7 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy", as: :logout
     root to: "shops#index"
+    get "ops", to: "ops#index"
     resources :shops, only: [ :index, :show, :create ] do
       member do
         get :manage
