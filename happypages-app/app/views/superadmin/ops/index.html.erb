@@ -1,9 +1,6 @@
 <% if @dashboard_html %>
   <%= raw @dashboard_html %>
-  <script>
-    var OPS_TOKEN = '<%= @ops_token %>';
-    var OPS_DASHBOARD_URL = '<%= @dashboard_url %>';
-  </script>
+  <script>var OPS_DASHBOARD_URL = '<%= @dashboard_url %>';</script>
 <% else %>
   <div class="py-16 text-center">
     <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ops-surface-hover mb-4">
