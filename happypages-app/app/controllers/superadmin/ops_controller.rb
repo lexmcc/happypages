@@ -6,6 +6,7 @@ class Superadmin::OpsController < Superadmin::BaseController
     @dashboard_html = response.body
     @dashboard_url = dashboard_url
   rescue => e
+    Rails.logger.error("[OPS] #{e.class}: #{e.message}")
     @dashboard_html = nil
   end
 end
