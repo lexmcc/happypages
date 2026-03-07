@@ -1,46 +1,46 @@
-<div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-  <table class="min-w-full divide-y divide-ops-border-strong">
-    <thead class="bg-ops-bg">
+<div class="border-t border-ops-border">
+  <table class="min-w-full">
+    <thead>
       <tr>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Name</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Active</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Referred Discount</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Referrer Reward</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Override</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Generations</th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Created</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Name</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Active</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Referred Discount</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Referrer Reward</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Override</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Generations</th>
+        <th class="px-4 py-2 text-left text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Created</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-ops-border">
       <% @campaigns.each do |campaign| %>
         <tr>
-          <td class="px-6 py-3 text-sm font-medium text-ops-text"><%= campaign.name %></td>
-          <td class="px-6 py-3">
+          <td class="px-4 py-1.5 text-xs font-medium text-ops-text"><%= campaign.name %></td>
+          <td class="px-4 py-1.5">
             <% if campaign.is_active %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-green/10 text-ops-green">Active</span>
+              <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-green/10 text-ops-green">Active</span>
             <% else %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-surface-hover text-ops-text-tertiary">Inactive</span>
+              <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-surface-hover text-ops-text-tertiary">Inactive</span>
             <% end %>
           </td>
-          <td class="px-6 py-3 text-sm text-ops-text-secondary"><%= campaign.referred_discount_display %></td>
-          <td class="px-6 py-3 text-sm text-ops-text-secondary"><%= campaign.referrer_reward_display %></td>
-          <td class="px-6 py-3">
+          <td class="px-4 py-1.5 text-xs text-ops-text-secondary"><%= campaign.referred_discount_display %></td>
+          <td class="px-4 py-1.5 text-xs text-ops-text-secondary"><%= campaign.referrer_reward_display %></td>
+          <td class="px-4 py-1.5">
             <% if campaign.override_active? %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-amber/10 text-ops-amber">Active</span>
+              <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-amber/10 text-ops-amber">Active</span>
             <% elsif campaign.override_scheduled? %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-accent/10 text-ops-accent">Scheduled</span>
+              <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-accent/10 text-ops-accent">Scheduled</span>
             <% else %>
-              <span class="text-xs text-ops-text-tertiary">None</span>
+              <span class="text-[11px] text-ops-text-tertiary">None</span>
             <% end %>
           </td>
-          <td class="px-6 py-3 text-sm text-ops-text tabular-nums"><%= campaign.discount_generations.size %></td>
-          <td class="px-6 py-3 text-sm text-ops-text-secondary"><%= campaign.created_at.strftime("%b %d, %Y") %></td>
+          <td class="px-4 py-1.5 text-xs text-ops-text tabular-nums"><%= campaign.discount_generations.size %></td>
+          <td class="px-4 py-1.5 text-xs text-ops-text-secondary"><%= campaign.created_at.strftime("%b %d, %Y") %></td>
         </tr>
       <% end %>
 
       <% if @campaigns.empty? %>
         <tr>
-          <td colspan="7" class="px-6 py-8 text-center text-ops-text-tertiary text-sm">No campaigns yet</td>
+          <td colspan="7" class="px-4 py-6 text-center text-ops-text-tertiary text-xs">No campaigns yet</td>
         </tr>
       <% end %>
     </tbody>

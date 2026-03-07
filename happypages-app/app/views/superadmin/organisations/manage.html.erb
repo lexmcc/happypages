@@ -1,133 +1,133 @@
-<div class="py-8">
+<div class="py-4">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <header class="mb-8 flex items-center justify-between">
+    <header class="mb-4 flex items-center justify-between">
       <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-3xl font-bold text-ops-text"><%= @organisation.name %></h1>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-semibold text-ops-text"><%= @organisation.name %></h1>
         </div>
-        <p class="text-ops-text-secondary mt-1"><%= @organisation.slug %> &middot; since <%= @organisation.created_at.strftime("%b %d, %Y") %></p>
+        <p class="text-xs text-ops-text-secondary"><%= @organisation.slug %> &middot; since <%= @organisation.created_at.strftime("%b %d, %Y") %></p>
       </div>
       <div>
-        <%= link_to "← Back", superadmin_organisations_path, class: "text-sm text-ops-text-secondary hover:text-ops-text" %>
+        <%= link_to "← Back", superadmin_organisations_path, class: "text-xs text-ops-text-secondary hover:text-ops-text" %>
       </div>
     </header>
 
     <% if flash[:notice] %>
-      <div class="mb-6 p-4 bg-ops-green/10 border border-ops-green/20 rounded-lg text-ops-green text-sm"><%= flash[:notice] %></div>
+      <div class="mb-4 px-3 py-2 bg-ops-green/10 border border-ops-green/20 rounded text-ops-green text-xs"><%= flash[:notice] %></div>
     <% end %>
     <% if flash[:alert] %>
-      <div class="mb-6 p-4 bg-ops-red/10 border border-ops-red/20 rounded-lg text-ops-red text-sm"><%= flash[:alert] %></div>
+      <div class="mb-4 px-3 py-2 bg-ops-red/10 border border-ops-red/20 rounded text-ops-red text-xs"><%= flash[:alert] %></div>
     <% end %>
 
-    <div class="space-y-8">
+    <div class="space-y-0">
       <%# Clients Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Clients</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Clients</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% if @clients.any? %>
-            <div class="space-y-3">
+            <div class="space-y-1">
               <% @clients.each do |client| %>
-                <div class="flex items-center justify-between py-2">
+                <div class="flex items-center justify-between py-1">
                   <div>
-                    <span class="text-sm font-medium text-ops-text"><%= client.email %></span>
+                    <span class="text-xs font-medium text-ops-text"><%= client.email %></span>
                     <% if client.name.present? %>
-                      <span class="ml-2 text-xs text-ops-text-tertiary"><%= client.name %></span>
+                      <span class="ml-2 text-[11px] text-ops-text-tertiary"><%= client.name %></span>
                     <% end %>
                     <% if client.invite_accepted? %>
-                      <span class="ml-1 text-xs text-ops-green">(accepted)</span>
+                      <span class="ml-1 text-[11px] text-ops-green">(accepted)</span>
                     <% elsif client.invite_pending? %>
-                      <span class="ml-1 text-xs text-ops-amber">(invite pending)</span>
+                      <span class="ml-1 text-[11px] text-ops-amber">(invite pending)</span>
                     <% end %>
                   </div>
                   <div>
                     <%= button_to "Send Invite", send_invite_superadmin_organisation_specs_client_path(@organisation, client),
                         method: :post,
-                        class: "px-3 py-1.5 text-xs rounded-lg border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
+                        class: "px-2 py-1 text-[11px] rounded border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
                   </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-sm text-ops-text-tertiary">No clients</p>
+            <p class="text-xs text-ops-text-tertiary">No clients</p>
           <% end %>
 
           <%# Add client %>
-          <%= form_with url: superadmin_organisation_specs_clients_path(@organisation), method: :post, class: "mt-4 flex gap-2" do |f| %>
-            <%= f.email_field :email, placeholder: "client@company.com", class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
-            <%= f.text_field :name, placeholder: "Name (optional)", class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
-            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+          <%= form_with url: superadmin_organisation_specs_clients_path(@organisation), method: :post, class: "mt-3 flex gap-2" do |f| %>
+            <%= f.email_field :email, placeholder: "client@company.com", class: "text-xs border border-ops-border-strong rounded px-2 py-1 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+            <%= f.text_field :name, placeholder: "Name (optional)", class: "text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
           <% end %>
         </div>
       </section>
 
       <%# Specs Usage Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Specs Usage</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Specs Usage</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% checker = @organisation.specs_usage_checker %>
           <% usage = checker.usage %>
 
-          <div class="mb-4 flex items-center gap-4">
+          <div class="mb-3 flex items-center gap-4">
             <div>
-              <p class="text-2xl font-bold text-ops-text tabular-nums"><%= usage[:used] %><span class="text-base font-normal text-ops-text-tertiary"> / <%= usage[:unlimited] ? "\u221E" : usage[:limit] %></span></p>
-              <p class="text-xs text-ops-text-secondary">completed sessions this cycle (since <%= usage[:cycle_start].strftime("%b %d") %>)</p>
+              <p class="text-lg font-bold text-ops-text tabular-nums"><%= usage[:used] %><span class="text-xs font-normal text-ops-text-tertiary"> / <%= usage[:unlimited] ? "\u221E" : usage[:limit] %></span></p>
+              <p class="text-[11px] text-ops-text-secondary">completed sessions this cycle (since <%= usage[:cycle_start].strftime("%b %d") %>)</p>
             </div>
           </div>
 
-          <%= form_with url: update_specs_usage_superadmin_organisation_path(@organisation), method: :patch, class: "grid grid-cols-3 gap-4" do |f| %>
+          <%= form_with url: update_specs_usage_superadmin_organisation_path(@organisation), method: :patch, class: "grid grid-cols-3 gap-3" do |f| %>
             <div>
-              <label class="block text-xs font-medium text-ops-text-secondary mb-1">Tier</label>
+              <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Tier</label>
               <%= f.select :tier, [["No limit", ""], ["Tier 1 (5/mo)", "tier_1"], ["Tier 2 (8/mo)", "tier_2"]],
                   { selected: @organisation.specs_tier },
-                  class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
+                  class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
             </div>
             <div>
-              <label class="block text-xs font-medium text-ops-text-secondary mb-1">Monthly limit</label>
+              <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Monthly limit</label>
               <%= f.number_field :monthly_limit, value: @organisation.specs_monthly_limit,
                   min: 0, placeholder: "0 = unlimited",
-                  class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+                  class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
             </div>
             <div>
-              <label class="block text-xs font-medium text-ops-text-secondary mb-1">Billing cycle anchor</label>
+              <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Billing cycle anchor</label>
               <%= f.date_field :billing_cycle_anchor, value: @organisation.specs_billing_cycle_anchor,
-                  class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
+                  class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
             </div>
             <div class="col-span-3">
-              <%= f.submit "Update specs limits", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+              <%= f.submit "Update specs limits", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
             </div>
           <% end %>
         </div>
       </section>
 
       <%# Projects Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Projects</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Projects</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% if @projects.any? %>
-            <div class="space-y-3">
+            <div class="space-y-1">
               <% @projects.each do |project| %>
                 <% latest = project.sessions.order(version: :desc).first %>
-                <div class="flex items-center justify-between py-2">
+                <div class="flex items-center justify-between py-1">
                   <div>
-                    <span class="text-sm font-medium text-ops-text"><%= project.name %></span>
+                    <span class="text-xs font-medium text-ops-text"><%= project.name %></span>
                     <% if latest %>
-                      <span class="ml-2 text-xs text-ops-text-tertiary">v<%= latest.version %> &middot; <%= latest.status %> &middot; <%= latest.turns_used %>/<%= latest.turn_budget %> turns</span>
+                      <span class="ml-2 text-[11px] text-ops-text-tertiary">v<%= latest.version %> &middot; <%= latest.status %> &middot; <%= latest.turns_used %>/<%= latest.turn_budget %> turns</span>
                     <% end %>
                   </div>
-                  <div class="text-xs text-ops-text-tertiary">
+                  <div class="text-[11px] text-ops-text-tertiary">
                     <%= project.created_at.strftime("%b %d, %Y") %>
                   </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-sm text-ops-text-tertiary">No projects yet</p>
+            <p class="text-xs text-ops-text-tertiary">No projects yet</p>
           <% end %>
         </div>
       </section>

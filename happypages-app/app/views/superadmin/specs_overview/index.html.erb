@@ -1,59 +1,59 @@
-<div class="py-8">
+<div class="py-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <h1 class="text-2xl font-bold text-ops-text mb-6">Specs Overview</h1>
+    <h1 class="text-base font-semibold text-ops-text mb-4">Specs Overview</h1>
 
     <%# Filters %>
-    <div class="flex gap-3 mb-6">
-      <%= form_tag superadmin_specs_overview_index_path, method: :get, class: "flex gap-3" do %>
-        <select name="shop_id" class="text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-surface text-ops-text">
+    <div class="flex gap-2 mb-4">
+      <%= form_tag superadmin_specs_overview_index_path, method: :get, class: "flex gap-2" do %>
+        <select name="shop_id" class="text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-surface text-ops-text">
           <option value="">All Shops</option>
           <% @shops.each do |shop| %>
             <option value="<%= shop.id %>" <%= "selected" if params[:shop_id].to_s == shop.id.to_s %>><%= shop.name %></option>
           <% end %>
         </select>
-        <select name="organisation_id" class="text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-surface text-ops-text">
+        <select name="organisation_id" class="text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-surface text-ops-text">
           <option value="">All Organisations</option>
           <% @organisations.each do |org| %>
             <option value="<%= org.id %>" <%= "selected" if params[:organisation_id].to_s == org.id.to_s %>><%= org.name %></option>
           <% end %>
         </select>
-        <select name="status" class="text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-surface text-ops-text">
+        <select name="status" class="text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-surface text-ops-text">
           <option value="">All Statuses</option>
           <option value="active" <%= "selected" if params[:status] == "active" %>>Active</option>
           <option value="completed" <%= "selected" if params[:status] == "completed" %>>Completed</option>
         </select>
-        <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer">Filter</button>
+        <button type="submit" class="px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer">Filter</button>
         <% if params[:shop_id].present? || params[:organisation_id].present? || params[:status].present? %>
-          <%= link_to "Clear", superadmin_specs_overview_index_path, class: "px-3 py-1.5 text-sm text-ops-text-secondary hover:text-ops-text" %>
+          <%= link_to "Clear", superadmin_specs_overview_index_path, class: "px-3 py-1.5 text-xs text-ops-text-secondary hover:text-ops-text" %>
         <% end %>
       <% end %>
     </div>
 
     <%# Projects table %>
-    <div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
+    <div class="border-t border-ops-border">
       <% if @projects.any? %>
         <table class="w-full">
           <thead>
             <tr class="border-b border-ops-border">
-              <th class="text-left px-6 py-3 text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Project</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Owner</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Sessions</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Cards</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-ops-text-secondary uppercase tracking-wider">Created</th>
+              <th class="text-left px-4 py-2 text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Project</th>
+              <th class="text-left px-4 py-2 text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Owner</th>
+              <th class="text-left px-4 py-2 text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Sessions</th>
+              <th class="text-left px-4 py-2 text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Cards</th>
+              <th class="text-left px-4 py-2 text-[11px] font-semibold text-ops-text-secondary uppercase tracking-wider">Created</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-ops-border">
             <% @projects.each do |project| %>
               <tr class="hover:bg-ops-surface-hover">
-                <td class="px-6 py-4 text-sm font-medium text-ops-text"><%= project.name %></td>
-                <td class="px-6 py-4 text-sm text-ops-text-secondary">
+                <td class="px-4 py-1.5 text-xs font-medium text-ops-text"><%= project.name %></td>
+                <td class="px-4 py-1.5 text-xs text-ops-text-secondary">
                   <% if project.shop %>
                     <%= link_to project.shop.name, superadmin_shop_path(project.shop), class: "text-ops-accent hover:text-ops-accent/80 underline" %>
                   <% elsif project.organisation %>
                     <%= link_to project.organisation.name, manage_superadmin_organisation_path(project.organisation), class: "text-ops-accent hover:text-ops-accent/80 underline" %>
                   <% end %>
                 </td>
-                <td class="px-6 py-4 text-sm text-ops-text-secondary">
+                <td class="px-4 py-1.5 text-xs text-ops-text-secondary">
                   <% active_count = project.sessions.count { |s| s.status == "active" } %>
                   <% completed_count = project.sessions.count { |s| s.status == "completed" } %>
                   <span class="text-ops-green"><%= active_count %> active</span>
@@ -62,9 +62,9 @@
                     <span class="text-ops-text-secondary"><%= completed_count %> done</span>
                   <% end %>
                 </td>
-                <td class="px-6 py-4 text-sm">
+                <td class="px-4 py-1.5 text-xs">
                   <% card_counts = project.cards.group_by(&:status).transform_values(&:count) %>
-                  <div class="flex gap-2">
+                  <div class="flex gap-1.5">
                     <% Specs::Card::STATUSES.each do |status| %>
                       <% count = card_counts[status] || 0 %>
                       <% next if count == 0 %>
@@ -74,19 +74,19 @@
                            when "review" then "bg-ops-amber/10 text-ops-amber"
                            when "done" then "bg-ops-green/10 text-ops-green"
                            end %>
-                      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium <%= badge_color %>">
+                      <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium <%= badge_color %>">
                         <%= count %> <%= status.gsub("_", " ") %>
                       </span>
                     <% end %>
                   </div>
                 </td>
-                <td class="px-6 py-4 text-xs text-ops-text-tertiary"><%= project.created_at.strftime("%b %d, %Y") %></td>
+                <td class="px-4 py-1.5 text-[11px] text-ops-text-tertiary"><%= project.created_at.strftime("%b %d, %Y") %></td>
               </tr>
             <% end %>
           </tbody>
         </table>
       <% else %>
-        <div class="px-6 py-12 text-center text-sm text-ops-text-tertiary">No specs projects yet.</div>
+        <div class="px-4 py-8 text-center text-xs text-ops-text-tertiary">No specs projects yet.</div>
       <% end %>
     </div>
   </div>

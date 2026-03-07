@@ -1,47 +1,47 @@
-<div class="py-8" data-controller="tabs">
+<div class="py-4" data-controller="tabs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <%# Header %>
-    <div class="flex items-start justify-between mb-8">
+    <div class="flex items-start justify-between mb-4">
       <div>
-        <%= link_to superadmin_root_path, class: "text-sm text-ops-text-secondary hover:text-ops-text transition-colors mb-2 inline-block" do %>
+        <%= link_to superadmin_root_path, class: "text-xs text-ops-text-secondary hover:text-ops-text transition-colors mb-1 inline-block" do %>
           &larr; Back to shops
         <% end %>
-        <h1 class="text-3xl font-bold text-ops-text"><%= @shop.name %></h1>
-        <p class="text-ops-text-secondary mt-1"><%= @shop.domain %></p>
+        <h1 class="text-base font-semibold text-ops-text"><%= @shop.name %></h1>
+        <p class="text-xs text-ops-text-secondary"><%= @shop.domain %></p>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
         <% badge_class = case @shop.status
            when "active" then "bg-ops-green/10 text-ops-green border-ops-green/20"
            when "suspended" then "bg-ops-red/10 text-ops-red border-ops-red/20"
            when "uninstalled" then "bg-ops-surface-hover text-ops-text-tertiary border-ops-border-strong"
            end %>
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border <%= badge_class %>">
+        <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium border <%= badge_class %>">
           <%= @shop.status %>
         </span>
 
         <% if @shop.active? %>
           <%= button_to "Suspend", suspend_superadmin_shop_path(@shop), method: :post,
               data: { turbo_confirm: "Suspend #{@shop.name}? This will block their admin access." },
-              class: "px-4 py-2 bg-ops-red/10 text-ops-red border border-ops-red/20 rounded-lg text-sm font-medium hover:bg-ops-red/20 transition-colors" %>
+              class: "px-3 py-1.5 bg-ops-red/10 text-ops-red border border-ops-red/20 rounded text-xs font-medium hover:bg-ops-red/20 transition-colors" %>
         <% elsif @shop.suspended? %>
           <%= button_to "Reactivate", reactivate_superadmin_shop_path(@shop), method: :post,
               data: { turbo_confirm: "Reactivate #{@shop.name}?" },
-              class: "px-4 py-2 bg-ops-green/10 text-ops-green border border-ops-green/20 rounded-lg text-sm font-medium hover:bg-ops-green/20 transition-colors" %>
+              class: "px-3 py-1.5 bg-ops-green/10 text-ops-green border border-ops-green/20 rounded text-xs font-medium hover:bg-ops-green/20 transition-colors" %>
         <% end %>
       </div>
     </div>
 
     <%# Tab navigation %>
-    <div class="border-b border-ops-border-strong mb-6">
-      <nav class="flex gap-6" role="tablist">
+    <div class="border-b border-ops-border-strong mb-4">
+      <nav class="flex gap-4" role="tablist">
         <% ["Referrals", "Campaigns", "Analytics", "Brand & AI", "Credentials", "Specs"].each_with_index do |tab, i| %>
           <button
             data-tabs-target="tab"
             data-action="click->tabs#switch"
             data-index="<%= i %>"
             role="tab"
-            class="pb-3 text-sm font-medium border-b-2 transition-colors <%= i == 0 ? 'border-ops-accent text-ops-accent' : 'border-transparent text-ops-text-secondary hover:text-ops-text' %>"
+            class="pb-2 text-xs font-medium border-b-2 transition-colors <%= i == 0 ? 'border-ops-accent text-ops-accent' : 'border-transparent text-ops-text-secondary hover:text-ops-text' %>"
           >
             <%= tab %>
           </button>

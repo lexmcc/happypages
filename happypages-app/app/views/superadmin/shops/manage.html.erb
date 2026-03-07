@@ -1,186 +1,186 @@
-<div class="py-8">
+<div class="py-4">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
     <%# Header %>
-    <header class="mb-8 flex items-center justify-between">
+    <header class="mb-4 flex items-center justify-between">
       <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-3xl font-bold text-ops-text"><%= @shop.name %></h1>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-semibold text-ops-text"><%= @shop.name %></h1>
           <% badge_class = case @shop.status
              when "active" then "bg-ops-green/10 text-ops-green"
              when "suspended" then "bg-ops-red/10 text-ops-red"
              when "uninstalled" then "bg-ops-surface-hover text-ops-text-tertiary"
              end %>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+          <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium <%= badge_class %>">
             <%= @shop.status %>
           </span>
         </div>
-        <p class="text-ops-text-secondary mt-1"><%= @shop.domain %> &middot; <%= @shop.platform_type %><%= " &middot; since #{@shop.created_at.strftime("%b %d, %Y")}".html_safe if @shop.created_at %></p>
+        <p class="text-xs text-ops-text-secondary"><%= @shop.domain %> &middot; <%= @shop.platform_type %><%= " &middot; since #{@shop.created_at.strftime("%b %d, %Y")}".html_safe if @shop.created_at %></p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
         <%= button_to "View as shop owner →", impersonate_superadmin_shop_path(@shop),
             method: :post,
-            class: "px-4 py-2 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
-        <%= link_to "← Back", superadmin_shops_path, class: "text-sm text-ops-text-secondary hover:text-ops-text" %>
+            class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+        <%= link_to "← Back", superadmin_shops_path, class: "text-xs text-ops-text-secondary hover:text-ops-text" %>
       </div>
     </header>
 
     <% if flash[:notice] %>
-      <div class="mb-6 p-4 bg-ops-green/10 border border-ops-green/20 rounded-lg text-ops-green text-sm"><%= flash[:notice] %></div>
+      <div class="mb-4 px-3 py-2 bg-ops-green/10 border border-ops-green/20 rounded text-ops-green text-xs"><%= flash[:notice] %></div>
     <% end %>
     <% if flash[:alert] %>
-      <div class="mb-6 p-4 bg-ops-red/10 border border-ops-red/20 rounded-lg text-ops-red text-sm"><%= flash[:alert] %></div>
+      <div class="mb-4 px-3 py-2 bg-ops-red/10 border border-ops-red/20 rounded text-ops-red text-xs"><%= flash[:alert] %></div>
     <% end %>
 
-    <div class="space-y-8">
+    <div class="space-y-0">
       <%# Features Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-ops-text">Features</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Features</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% if @features.any? %>
-            <div class="space-y-3">
+            <div class="space-y-1">
               <% @features.each do |feature| %>
-                <div class="flex items-center justify-between py-2">
+                <div class="flex items-center justify-between py-1">
                   <div>
-                    <span class="text-sm font-medium text-ops-text"><%= feature.feature %></span>
+                    <span class="text-xs font-medium text-ops-text"><%= feature.feature %></span>
                     <% status_class = case feature.status
                        when "active" then "bg-ops-green/10 text-ops-green"
                        when "locked" then "bg-ops-surface-hover text-ops-text-tertiary"
                        when "trial" then "bg-ops-amber/10 text-ops-amber"
                        when "expired" then "bg-ops-red/10 text-ops-red"
                        end %>
-                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= status_class %>"><%= feature.status %></span>
+                    <span class="ml-2 inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium <%= status_class %>"><%= feature.status %></span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1">
                     <% ShopFeature::STATUSES.each do |status| %>
                       <% next if status == feature.status %>
                       <%= button_to status, superadmin_shop_shop_feature_path(@shop, feature),
                           params: { shop_feature: { status: status } },
                           method: :patch,
-                          class: "px-2 py-1 text-xs rounded border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
+                          class: "px-1.5 py-0.5 text-[11px] rounded border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
                     <% end %>
                     <%= button_to "Remove", superadmin_shop_shop_feature_path(@shop, feature),
                         method: :delete,
-                        class: "px-2 py-1 text-xs rounded border border-ops-red/20 hover:bg-ops-red/10 text-ops-red cursor-pointer",
+                        class: "px-1.5 py-0.5 text-[11px] rounded border border-ops-red/20 hover:bg-ops-red/10 text-ops-red cursor-pointer",
                         data: { turbo_confirm: "Remove #{feature.feature}?" } %>
                   </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-sm text-ops-text-tertiary">No features configured</p>
+            <p class="text-xs text-ops-text-tertiary">No features configured</p>
           <% end %>
 
           <%# Add feature %>
           <% available = ShopFeature::FEATURES - @features.map(&:feature) %>
           <% if available.any? %>
-            <%= form_with url: superadmin_shop_shop_features_path(@shop), method: :post, class: "mt-4 flex gap-2" do |f| %>
-              <%= f.select :feature, available, {}, class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
-              <%= f.select :status, ShopFeature::STATUSES, {}, class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
-              <%= f.submit "Add Feature", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+            <%= form_with url: superadmin_shop_shop_features_path(@shop), method: :post, class: "mt-3 flex gap-2" do |f| %>
+              <%= f.select :feature, available, {}, class: "text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
+              <%= f.select :status, ShopFeature::STATUSES, {}, class: "text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
+              <%= f.submit "Add Feature", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
             <% end %>
           <% end %>
         </div>
       </section>
 
       <%# Users Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Users</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Users</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% if @users.any? %>
-            <div class="space-y-3">
+            <div class="space-y-1">
               <% @users.each do |user| %>
-                <div class="flex items-center justify-between py-2">
+                <div class="flex items-center justify-between py-1">
                   <div>
-                    <span class="text-sm font-medium text-ops-text"><%= user.email %></span>
-                    <span class="ml-2 text-xs text-ops-text-tertiary"><%= user.role || "owner" %></span>
+                    <span class="text-xs font-medium text-ops-text"><%= user.email %></span>
+                    <span class="ml-2 text-[11px] text-ops-text-tertiary"><%= user.role || "owner" %></span>
                     <% if user.shopify_user? %>
-                      <span class="ml-1 text-xs text-ops-accent">(Shopify)</span>
+                      <span class="ml-1 text-[11px] text-ops-accent">(Shopify)</span>
                     <% end %>
                     <% if user.invite_accepted_at.present? %>
-                      <span class="ml-1 text-xs text-ops-green">(accepted)</span>
+                      <span class="ml-1 text-[11px] text-ops-green">(accepted)</span>
                     <% elsif user.invite_sent_at.present? %>
-                      <span class="ml-1 text-xs text-ops-amber">(invite pending)</span>
+                      <span class="ml-1 text-[11px] text-ops-amber">(invite pending)</span>
                     <% end %>
                   </div>
                   <div>
                     <%= button_to "Send Invite", send_invite_superadmin_shop_shop_user_path(@shop, user),
                         method: :post,
-                        class: "px-3 py-1.5 text-xs rounded-lg border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
+                        class: "px-2 py-1 text-[11px] rounded border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
                   </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-sm text-ops-text-tertiary">No users</p>
+            <p class="text-xs text-ops-text-tertiary">No users</p>
           <% end %>
 
           <%# Add user %>
-          <%= form_with url: superadmin_shop_shop_users_path(@shop), method: :post, class: "mt-4 flex gap-2" do |f| %>
-            <%= f.email_field :email, placeholder: "user@example.com", class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
-            <%= f.select :role, User::ROLES, {}, class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
-            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+          <%= form_with url: superadmin_shop_shop_users_path(@shop), method: :post, class: "mt-3 flex gap-2" do |f| %>
+            <%= f.email_field :email, placeholder: "user@example.com", class: "text-xs border border-ops-border-strong rounded px-2 py-1 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+            <%= f.select :role, User::ROLES, {}, class: "text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
+            <%= f.submit "Add & Invite", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
           <% end %>
         </div>
       </section>
 
       <%# Integrations Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Integrations</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Integrations</h2>
         </div>
-        <div class="px-6 py-4">
+        <div class="px-4 py-3">
           <% if @integrations.any? %>
-            <div class="space-y-3">
+            <div class="space-y-1">
               <% @integrations.each do |integration| %>
-                <div class="flex items-center justify-between py-2">
+                <div class="flex items-center justify-between py-1">
                   <div>
-                    <span class="text-sm font-medium text-ops-text"><%= integration.provider %></span>
-                    <span class="ml-2 text-xs text-ops-text-tertiary">(<%= integration.status %>)</span>
+                    <span class="text-xs font-medium text-ops-text"><%= integration.provider %></span>
+                    <span class="ml-2 text-[11px] text-ops-text-tertiary">(<%= integration.status %>)</span>
                     <% if integration.shopify_domain.present? %>
-                      <span class="ml-2 text-xs text-ops-text-secondary"><%= integration.shopify_domain %></span>
+                      <span class="ml-2 text-[11px] text-ops-text-secondary"><%= integration.shopify_domain %></span>
                     <% end %>
                   </div>
                   <div>
                     <% if integration.shopify_access_token.present? %>
-                      <span class="text-xs text-ops-green">Token: present</span>
+                      <span class="text-[11px] text-ops-green">Token: present</span>
                     <% else %>
-                      <span class="text-xs text-ops-text-tertiary">Token: missing</span>
+                      <span class="text-[11px] text-ops-text-tertiary">Token: missing</span>
                     <% end %>
                   </div>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-sm text-ops-text-tertiary">No integrations connected</p>
+            <p class="text-xs text-ops-text-tertiary">No integrations connected</p>
           <% end %>
         </div>
       </section>
 
       <%# Usage Panel %>
-      <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-ops-border">
-          <h2 class="text-lg font-semibold text-ops-text">Usage</h2>
+      <section class="border-b border-ops-border">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+          <h2 class="text-sm font-semibold text-ops-text">Usage</h2>
         </div>
-        <div class="px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
-            <p class="text-2xl font-bold text-ops-text tabular-nums"><%= @shop.referrals.count %></p>
-            <p class="text-xs text-ops-text-secondary">Referrals</p>
+            <p class="text-lg font-bold text-ops-text tabular-nums"><%= @shop.referrals.count %></p>
+            <p class="text-[11px] text-ops-text-secondary">Referrals</p>
           </div>
           <div>
-            <p class="text-2xl font-bold text-ops-text tabular-nums"><%= @shop.referral_events.count %></p>
-            <p class="text-xs text-ops-text-secondary">Events</p>
+            <p class="text-lg font-bold text-ops-text tabular-nums"><%= @shop.referral_events.count %></p>
+            <p class="text-[11px] text-ops-text-secondary">Events</p>
           </div>
           <div>
-            <p class="text-2xl font-bold text-ops-text tabular-nums"><%= @shop.shared_discounts.count %></p>
-            <p class="text-xs text-ops-text-secondary">Campaigns</p>
+            <p class="text-lg font-bold text-ops-text tabular-nums"><%= @shop.shared_discounts.count %></p>
+            <p class="text-[11px] text-ops-text-secondary">Campaigns</p>
           </div>
           <div>
-            <p class="text-2xl font-bold text-ops-text tabular-nums"><%= @shop.media_assets.count %></p>
-            <p class="text-xs text-ops-text-secondary">Media Assets</p>
+            <p class="text-lg font-bold text-ops-text tabular-nums"><%= @shop.media_assets.count %></p>
+            <p class="text-[11px] text-ops-text-secondary">Media Assets</p>
           </div>
         </div>
       </section>
@@ -188,41 +188,41 @@
       <%# Specs Usage Panel %>
       <% specs_feature = @features.find { |f| f.feature == "specs" } %>
       <% if specs_feature %>
-        <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-          <div class="px-6 py-4 border-b border-ops-border">
-            <h2 class="text-lg font-semibold text-ops-text">Specs Usage</h2>
+        <section class="border-b border-ops-border">
+          <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+            <h2 class="text-sm font-semibold text-ops-text">Specs Usage</h2>
           </div>
-          <div class="px-6 py-4">
+          <div class="px-4 py-3">
             <% checker = @shop.specs_usage_checker %>
             <% usage = checker.usage %>
 
-            <div class="mb-4 flex items-center gap-4">
+            <div class="mb-3 flex items-center gap-4">
               <div>
-                <p class="text-2xl font-bold text-ops-text tabular-nums"><%= usage[:used] %><span class="text-base font-normal text-ops-text-tertiary"> / <%= usage[:unlimited] ? "\u221E" : usage[:limit] %></span></p>
-                <p class="text-xs text-ops-text-secondary">completed sessions this cycle (since <%= usage[:cycle_start].strftime("%b %d") %>)</p>
+                <p class="text-lg font-bold text-ops-text tabular-nums"><%= usage[:used] %><span class="text-xs font-normal text-ops-text-tertiary"> / <%= usage[:unlimited] ? "\u221E" : usage[:limit] %></span></p>
+                <p class="text-[11px] text-ops-text-secondary">completed sessions this cycle (since <%= usage[:cycle_start].strftime("%b %d") %>)</p>
               </div>
             </div>
 
-            <%= form_with url: update_specs_usage_superadmin_shop_path(@shop), method: :patch, class: "grid grid-cols-3 gap-4" do |f| %>
+            <%= form_with url: update_specs_usage_superadmin_shop_path(@shop), method: :patch, class: "grid grid-cols-3 gap-3" do |f| %>
               <div>
-                <label class="block text-xs font-medium text-ops-text-secondary mb-1">Tier</label>
+                <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Tier</label>
                 <%= f.select :tier, [["No limit", ""], ["Tier 1 (5/mo)", "tier_1"], ["Tier 2 (8/mo)", "tier_2"]],
                     { selected: specs_feature.metadata&.dig("tier") },
-                    class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
+                    class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
               </div>
               <div>
-                <label class="block text-xs font-medium text-ops-text-secondary mb-1">Monthly limit</label>
+                <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Monthly limit</label>
                 <%= f.number_field :monthly_limit, value: specs_feature.metadata&.dig("monthly_limit"),
                     min: 0, placeholder: "0 = unlimited",
-                    class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+                    class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
               </div>
               <div>
-                <label class="block text-xs font-medium text-ops-text-secondary mb-1">Billing cycle anchor</label>
+                <label class="block text-[11px] font-medium text-ops-text-secondary mb-1">Billing cycle anchor</label>
                 <%= f.date_field :billing_cycle_anchor, value: specs_feature.metadata&.dig("billing_cycle_anchor"),
-                    class: "w-full text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 bg-ops-bg text-ops-text" %>
+                    class: "w-full text-xs border border-ops-border-strong rounded px-2 py-1 bg-ops-bg text-ops-text" %>
               </div>
               <div class="col-span-3">
-                <%= f.submit "Update specs limits", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+                <%= f.submit "Update specs limits", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
               </div>
             <% end %>
           </div>
@@ -231,20 +231,20 @@
 
       <%# Shopify-specific actions %>
       <% if @shop.shopify? %>
-        <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-          <div class="px-6 py-4 border-b border-ops-border">
-            <h2 class="text-lg font-semibold text-ops-text">Shopify Actions</h2>
+        <section class="border-b border-ops-border">
+          <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+            <h2 class="text-sm font-semibold text-ops-text">Shopify Actions</h2>
           </div>
-          <div class="px-6 py-4 flex gap-3">
+          <div class="px-4 py-3 flex gap-2">
             <%= button_to "Re-scrape Brand", rescrape_brand_superadmin_shop_path(@shop),
                 method: :post,
-                class: "px-4 py-2 text-sm rounded-lg border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
+                class: "px-3 py-1.5 text-xs rounded border border-ops-border-strong hover:bg-ops-surface-hover text-ops-text-secondary cursor-pointer" %>
           </div>
         </section>
       <% end %>
 
       <%# Quick links %>
-      <div class="flex gap-3 text-sm">
+      <div class="flex gap-3 text-xs pt-4">
         <%= link_to "View detail page →", superadmin_shop_path(@shop), class: "text-ops-accent hover:text-ops-accent/80" %>
       </div>
     </div>

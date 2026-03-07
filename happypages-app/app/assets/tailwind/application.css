@@ -14,4 +14,6 @@
   --color-ops-green: #3dd68c;
   --color-ops-amber: #f0b429;
   --color-ops-red: #ef4444;
+  --font-ops: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-ops-mono: 'SF Mono', 'Fira Code', Consolas, monospace;
 }

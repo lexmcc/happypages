@@ -1,24 +1,24 @@
-<div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-xl p-8">
-  <div class="text-center mb-6">
-    <img src="/refrral-app-icon-large.png" alt="Happypages" class="size-12 rounded-xl mx-auto mb-3">
-    <h1 class="text-xl font-semibold text-ops-text">Super Admin</h1>
-    <p class="text-sm text-ops-text-secondary mt-1">Sign in to manage all shops</p>
+<div class="bg-ops-surface rounded-md border border-ops-border-strong shadow-xl p-6">
+  <div class="text-center mb-4">
+    <img src="/refrral-app-icon-large.png" alt="Happypages" class="size-10 rounded-lg mx-auto mb-2">
+    <h1 class="text-sm font-semibold text-ops-text">Super Admin</h1>
+    <p class="text-xs text-ops-text-secondary mt-0.5">Sign in to manage all shops</p>
   </div>
 
-  <%= form_with url: superadmin_login_path, method: :post, class: "space-y-4" do |f| %>
+  <%= form_with url: superadmin_login_path, method: :post, class: "space-y-3" do |f| %>
     <div>
-      <label for="email" class="block text-sm font-medium text-ops-text-secondary mb-1">Email</label>
+      <label for="email" class="block text-xs font-medium text-ops-text-secondary mb-1">Email</label>
       <input type="email" name="email" id="email" required autofocus
-        class="w-full px-3 py-2 bg-ops-bg border border-ops-border-strong rounded-lg text-ops-text placeholder-ops-text-tertiary focus:outline-none focus:ring-2 focus:ring-ops-accent/50 focus:border-ops-accent">
+        class="w-full px-2 py-1 bg-ops-bg border border-ops-border-strong rounded text-xs text-ops-text placeholder-ops-text-tertiary focus:outline-none focus:ring-2 focus:ring-ops-accent/50 focus:border-ops-accent">
     </div>
 
     <div>
-      <label for="password" class="block text-sm font-medium text-ops-text-secondary mb-1">Password</label>
+      <label for="password" class="block text-xs font-medium text-ops-text-secondary mb-1">Password</label>
       <input type="password" name="password" id="password" required
-        class="w-full px-3 py-2 bg-ops-bg border border-ops-border-strong rounded-lg text-ops-text placeholder-ops-text-tertiary focus:outline-none focus:ring-2 focus:ring-ops-accent/50 focus:border-ops-accent">
+        class="w-full px-2 py-1 bg-ops-bg border border-ops-border-strong rounded text-xs text-ops-text placeholder-ops-text-tertiary focus:outline-none focus:ring-2 focus:ring-ops-accent/50 focus:border-ops-accent">
     </div>
 
-    <button type="submit" class="w-full px-4 py-2.5 bg-ops-accent hover:bg-ops-accent/90 text-white font-semibold rounded-lg transition-colors">
+    <button type="submit" class="w-full px-3 py-1.5 bg-ops-accent hover:bg-ops-accent/90 text-white font-semibold rounded text-xs transition-colors">
       Sign in
     </button>
   <% end %>

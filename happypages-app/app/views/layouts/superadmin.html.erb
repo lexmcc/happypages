@@ -6,24 +6,21 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-ops-bg text-ops-text">
+  <body class="bg-ops-bg text-ops-text font-[ops] text-[13px] leading-tight antialiased">
     <div class="flex min-h-screen">
       <%= render "superadmin/shared/sidebar" %>
       <main class="flex-1 min-w-0 lg:ml-0">
         <% if flash[:alert] %>
-          <div class="mx-4 mt-4 px-4 py-3 bg-ops-red/10 border border-ops-red/20 rounded-lg text-ops-red text-sm">
+          <div class="mx-4 mt-4 px-3 py-2 bg-ops-red/10 border border-ops-red/20 rounded text-ops-red text-xs">
             <%= flash[:alert] %>
           </div>
         <% end %>
         <% if flash[:notice] %>
-          <div class="mx-4 mt-4 px-4 py-3 bg-ops-green/10 border border-ops-green/20 rounded-lg text-ops-green text-sm">
+          <div class="mx-4 mt-4 px-3 py-2 bg-ops-green/10 border border-ops-green/20 rounded text-ops-green text-xs">
             <%= flash[:notice] %>
           </div>
         <% end %>

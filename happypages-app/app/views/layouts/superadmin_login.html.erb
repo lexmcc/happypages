@@ -10,15 +10,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-ops-bg min-h-screen flex items-center justify-center">
+  <body class="bg-ops-bg min-h-screen flex items-center justify-center font-[ops] text-[13px] leading-tight antialiased">
     <div class="w-full max-w-sm mx-auto px-4">
       <% if flash[:alert] %>
-        <div class="mb-4 px-4 py-3 bg-ops-red/10 border border-ops-red/20 rounded-lg text-ops-red text-sm">
+        <div class="mb-4 px-3 py-2 bg-ops-red/10 border border-ops-red/20 rounded text-ops-red text-xs">
           <%= flash[:alert] %>
         </div>
       <% end %>
       <% if flash[:notice] %>
-        <div class="mb-4 px-4 py-3 bg-ops-green/10 border border-ops-green/20 rounded-lg text-ops-green text-sm">
+        <div class="mb-4 px-3 py-2 bg-ops-green/10 border border-ops-green/20 rounded text-ops-green text-xs">
           <%= flash[:notice] %>
         </div>
       <% end %>

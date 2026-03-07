@@ -1,43 +1,43 @@
-<div class="space-y-6">
+<div class="space-y-0">
   <%# Brand Profile Card %>
-  <div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-ops-border flex items-center justify-between">
-      <h3 class="text-sm font-semibold text-ops-text">Brand Profile</h3>
+  <section class="border-b border-ops-border">
+    <div class="px-4 py-2 border-b border-ops-border flex items-center justify-between">
+      <h3 class="text-xs font-semibold text-ops-text">Brand Profile</h3>
       <div class="flex items-center gap-2">
         <% if @shop.brand_scraped? %>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-green/10 text-ops-green">Scraped</span>
-          <span class="text-xs text-ops-text-tertiary">
+          <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-green/10 text-ops-green">Scraped</span>
+          <span class="text-[11px] text-ops-text-tertiary">
             <%= time_ago_in_words(Time.parse(@shop.brand_profile["scraped_at"])) %> ago
           </span>
         <% else %>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-surface-hover text-ops-text-tertiary">Not scraped</span>
+          <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-surface-hover text-ops-text-tertiary">Not scraped</span>
         <% end %>
         <%= button_to "Rescrape", rescrape_brand_superadmin_shop_path(@shop), method: :post,
             data: { turbo_confirm: "Re-scrape brand identity for #{@shop.name}?" },
-            class: "px-3 py-1.5 bg-ops-accent text-white rounded-lg text-xs font-medium hover:bg-ops-accent/90 transition-colors" %>
+            class: "px-3 py-1.5 bg-ops-accent text-white rounded text-xs font-medium hover:bg-ops-accent/90 transition-colors" %>
       </div>
     </div>
 
     <% if @shop.brand_scraped? %>
-      <div class="p-6 grid grid-cols-2 gap-6">
+      <div class="px-4 py-3 grid grid-cols-2 gap-4">
         <div>
           <table class="w-full">
             <tbody class="divide-y divide-ops-border">
               <tr>
-                <td class="py-2 text-sm font-medium text-ops-text-secondary w-32">Category</td>
-                <td class="py-2 text-sm text-ops-text"><%= @shop.brand_category || "—" %></td>
+                <td class="py-1.5 text-xs font-medium text-ops-text-secondary w-32">Category</td>
+                <td class="py-1.5 text-xs text-ops-text"><%= @shop.brand_category || "—" %></td>
               </tr>
               <tr>
-                <td class="py-2 text-sm font-medium text-ops-text-secondary">Style</td>
-                <td class="py-2 text-sm text-ops-text"><%= @shop.brand_style || "—" %></td>
+                <td class="py-1.5 text-xs font-medium text-ops-text-secondary">Style</td>
+                <td class="py-1.5 text-xs text-ops-text"><%= @shop.brand_style || "—" %></td>
               </tr>
               <tr>
-                <td class="py-2 text-sm font-medium text-ops-text-secondary">Vibe</td>
-                <td class="py-2 text-sm text-ops-text"><%= @shop.brand_vibe || "—" %></td>
+                <td class="py-1.5 text-xs font-medium text-ops-text-secondary">Vibe</td>
+                <td class="py-1.5 text-xs text-ops-text"><%= @shop.brand_vibe || "—" %></td>
               </tr>
               <tr>
-                <td class="py-2 text-sm font-medium text-ops-text-secondary">Fonts</td>
-                <td class="py-2 text-sm text-ops-text"><%= (@shop.brand_profile["fonts"] || []).join(", ").presence || "—" %></td>
+                <td class="py-1.5 text-xs font-medium text-ops-text-secondary">Fonts</td>
+                <td class="py-1.5 text-xs text-ops-text"><%= (@shop.brand_profile["fonts"] || []).join(", ").presence || "—" %></td>
               </tr>
             </tbody>
           </table>
@@ -45,28 +45,28 @@
 
         <div>
           <%# Color palette %>
-          <p class="text-sm font-medium text-ops-text-secondary mb-2">Palette</p>
-          <div class="flex gap-2 mb-4">
+          <p class="text-xs font-medium text-ops-text-secondary mb-1">Palette</p>
+          <div class="flex gap-2 mb-3">
             <% @shop.brand_colors.each do |color| %>
               <% next unless color.to_s.match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
               <div class="flex items-center gap-1.5">
-                <div class="size-6 rounded border border-ops-border-strong" style="background-color: <%= color %>"></div>
-                <span class="text-xs font-mono text-ops-text-secondary"><%= color %></span>
+                <div class="size-5 rounded border border-ops-border-strong" style="background-color: <%= color %>"></div>
+                <span class="text-[11px] font-mono text-ops-text-secondary"><%= color %></span>
               </div>
             <% end %>
           </div>
 
           <%# Products detected %>
-          <p class="text-sm font-medium text-ops-text-secondary mb-2">Products (<%= @shop.brand_products.size %>)</p>
+          <p class="text-xs font-medium text-ops-text-secondary mb-1">Products (<%= @shop.brand_products.size %>)</p>
           <div class="space-y-1">
             <% @shop.brand_products.first(5).each do |product| %>
               <div class="flex items-center gap-2">
                 <% if product["image_url"].present? %>
-                  <img src="<%= product["image_url"] %>" class="size-6 rounded object-cover" loading="lazy" />
+                  <img src="<%= product["image_url"] %>" class="size-5 rounded object-cover" loading="lazy" />
                 <% end %>
-                <span class="text-xs text-ops-text-secondary"><%= product["title"] %></span>
+                <span class="text-[11px] text-ops-text-secondary"><%= product["title"] %></span>
                 <% if product["type"].present? %>
-                  <span class="text-xs text-ops-text-tertiary">(<%= product["type"] %>)</span>
+                  <span class="text-[11px] text-ops-text-tertiary">(<%= product["type"] %>)</span>
                 <% end %>
               </div>
             <% end %>
@@ -74,55 +74,57 @@
         </div>
       </div>
     <% else %>
-      <div class="p-6 text-center text-ops-text-secondary text-sm">
+      <div class="px-4 py-6 text-center text-ops-text-secondary text-xs">
         No brand profile yet. Click "Rescrape" to analyze this shop's brand identity.
       </div>
     <% end %>
-  </div>
+  </section>
 
   <%# Credits Card %>
-  <div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm p-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-semibold text-ops-text mb-1">Generation Credits</h3>
-        <p class="text-2xl font-bold text-ops-text">
-          <%= @shop.generation_credits_remaining.to_i %>
-          <span class="text-sm font-normal text-ops-text-tertiary">/ 10 remaining</span>
-        </p>
-        <% if @shop.credits_reset_at.present? %>
-          <p class="text-xs text-ops-text-tertiary mt-1">Last reset: <%= @shop.credits_reset_at.strftime("%b %d, %Y") %></p>
-        <% end %>
+  <section class="border-b border-ops-border">
+    <div class="px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-xs font-semibold text-ops-text mb-1">Generation Credits</h3>
+          <p class="text-lg font-bold text-ops-text">
+            <%= @shop.generation_credits_remaining.to_i %>
+            <span class="text-xs font-normal text-ops-text-tertiary">/ 10 remaining</span>
+          </p>
+          <% if @shop.credits_reset_at.present? %>
+            <p class="text-[11px] text-ops-text-tertiary mt-0.5">Last reset: <%= @shop.credits_reset_at.strftime("%b %d, %Y") %></p>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <%# Generation History %>
-  <div class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-ops-border">
-      <h3 class="text-sm font-semibold text-ops-text">Generation History</h3>
+  <section class="border-b border-ops-border">
+    <div class="px-4 py-2 border-b border-ops-border">
+      <h3 class="text-xs font-semibold text-ops-text">Generation History</h3>
     </div>
 
     <% if @generation_logs.any? %>
       <table class="min-w-full">
         <thead>
-          <tr class="bg-ops-bg border-b border-ops-border">
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Surface</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Quality</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Cost</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Retry</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Prompt</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-ops-text-secondary uppercase tracking-wider">Time</th>
+          <tr class="border-b border-ops-border">
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Surface</th>
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Quality</th>
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Cost</th>
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Retry</th>
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Prompt</th>
+            <th class="px-4 py-2 text-left text-[11px] font-medium text-ops-text-secondary uppercase tracking-wider">Time</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-ops-border">
           <% @generation_logs.each do |log| %>
             <tr>
-              <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ops-accent/10 text-ops-accent">
+              <td class="px-4 py-1.5">
+                <span class="inline-flex items-center px-1.5 py-px rounded text-[11px] font-medium bg-ops-accent/10 text-ops-accent">
                   <%= log.surface.humanize %>
                 </span>
               </td>
-              <td class="px-6 py-4 text-sm">
+              <td class="px-4 py-1.5 text-xs">
                 <% if log.quality_score %>
                   <% color = log.quality_score >= 7 ? "text-ops-green" : "text-ops-amber" %>
                   <span class="<%= color %> font-medium"><%= log.quality_score %>/10</span>
@@ -130,27 +132,27 @@
                   <span class="text-ops-text-tertiary">—</span>
                 <% end %>
               </td>
-              <td class="px-6 py-4 text-sm text-ops-text-secondary">
+              <td class="px-4 py-1.5 text-xs text-ops-text-secondary">
                 <%= log.cost_cents ? "$#{'%.2f' % (log.cost_cents / 100.0)}" : "—" %>
               </td>
-              <td class="px-6 py-4 text-sm">
+              <td class="px-4 py-1.5 text-xs">
                 <% if log.is_retry? %>
                   <span class="text-ops-amber">Yes</span>
                 <% else %>
                   <span class="text-ops-text-tertiary">No</span>
                 <% end %>
               </td>
-              <td class="px-6 py-4 text-sm text-ops-text-secondary max-w-xs">
+              <td class="px-4 py-1.5 text-xs text-ops-text-secondary max-w-xs">
                 <% if log.prompt_text.present? %>
                   <details>
                     <summary class="cursor-pointer text-ops-accent hover:text-ops-accent/80">View prompt</summary>
-                    <pre class="mt-2 text-xs whitespace-pre-wrap font-mono bg-ops-bg rounded p-2 max-h-40 overflow-y-auto text-ops-text-secondary"><%= h log.prompt_text %></pre>
+                    <pre class="mt-1 text-[11px] whitespace-pre-wrap font-mono bg-ops-bg rounded p-2 max-h-40 overflow-y-auto text-ops-text-secondary"><%= h log.prompt_text %></pre>
                   </details>
                 <% else %>
                   —
                 <% end %>
               </td>
-              <td class="px-6 py-4 text-sm text-ops-text-secondary whitespace-nowrap">
+              <td class="px-4 py-1.5 text-xs text-ops-text-secondary whitespace-nowrap">
                 <%= log.created_at.strftime("%b %d %H:%M") %>
               </td>
             </tr>
@@ -158,9 +160,9 @@
         </tbody>
       </table>
     <% else %>
-      <div class="p-6 text-center text-ops-text-secondary text-sm">
+      <div class="px-4 py-6 text-center text-ops-text-secondary text-xs">
         No generations yet
       </div>
     <% end %>
-  </div>
+  </section>
 </div>

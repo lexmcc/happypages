@@ -1,9 +1,9 @@
-<div class="py-8">
+<div class="py-4">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <%= link_to superadmin_prompt_templates_path, class: "text-sm text-ops-text-secondary hover:text-ops-text transition-colors mb-2 inline-block" do %>
+    <%= link_to superadmin_prompt_templates_path, class: "text-xs text-ops-text-secondary hover:text-ops-text transition-colors mb-1 inline-block" do %>
       &larr; Back to templates
     <% end %>
-    <h1 class="text-3xl font-bold text-ops-text mb-6">Edit: <%= @prompt_template.key %></h1>
+    <h1 class="text-base font-semibold text-ops-text mb-4">Edit: <%= @prompt_template.key %></h1>
     <%= render "form", prompt_template: @prompt_template %>
   </div>
 </div>

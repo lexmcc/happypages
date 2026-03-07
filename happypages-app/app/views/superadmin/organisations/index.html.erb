@@ -1,49 +1,49 @@
-<div class="py-8">
+<div class="py-4">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <header class="mb-8 flex items-center justify-between">
+    <header class="mb-4 flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-ops-text">Organisations</h1>
-        <p class="text-ops-text-secondary mt-1">Specs client organisations</p>
+        <h1 class="text-base font-semibold text-ops-text">Organisations</h1>
+        <p class="text-xs text-ops-text-secondary">Specs client organisations</p>
       </div>
     </header>
 
     <%# Create form %>
-    <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden mb-8">
-      <div class="px-6 py-4 border-b border-ops-border">
-        <h2 class="text-lg font-semibold text-ops-text">Create Organisation</h2>
+    <section class="border-b border-ops-border mb-4">
+      <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+        <h2 class="text-sm font-semibold text-ops-text">Create Organisation</h2>
       </div>
-      <div class="px-6 py-4">
+      <div class="px-4 py-3">
         <%= form_with url: superadmin_organisations_path, method: :post, class: "flex gap-2" do |f| %>
-          <%= f.text_field :name, placeholder: "Organisation name", class: "text-sm border border-ops-border-strong rounded-lg px-3 py-1.5 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
-          <%= f.submit "Create", class: "px-3 py-1.5 text-sm font-medium rounded-lg bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
+          <%= f.text_field :name, placeholder: "Organisation name", class: "text-xs border border-ops-border-strong rounded px-2 py-1 flex-1 bg-ops-bg text-ops-text placeholder-ops-text-tertiary" %>
+          <%= f.submit "Create", class: "px-3 py-1.5 text-xs font-medium rounded bg-ops-accent text-white hover:bg-ops-accent/90 cursor-pointer" %>
         <% end %>
       </div>
     </section>
 
     <%# List %>
-    <section class="bg-ops-surface rounded-xl border border-ops-border-strong shadow-sm overflow-hidden">
-      <div class="px-6 py-4 border-b border-ops-border">
-        <h2 class="text-lg font-semibold text-ops-text">All Organisations (<%= @organisations.count %>)</h2>
+    <section class="border-b border-ops-border">
+      <div class="flex items-center gap-2 px-4 py-2 border-b border-ops-border">
+        <h2 class="text-sm font-semibold text-ops-text">All Organisations (<%= @organisations.count %>)</h2>
       </div>
-      <div class="px-6 py-4">
+      <div class="px-4 py-3">
         <% if @organisations.any? %>
-          <div class="space-y-3">
+          <div class="space-y-1">
             <% @organisations.each do |org| %>
-              <div class="flex items-center justify-between py-2">
+              <div class="flex items-center justify-between py-1">
                 <div>
-                  <span class="text-sm font-medium text-ops-text"><%= org.name %></span>
-                  <span class="ml-2 text-xs text-ops-text-tertiary"><%= org.slug %></span>
-                  <span class="ml-2 text-xs text-ops-text-tertiary"><%= org.specs_clients.count %> clients</span>
-                  <span class="ml-1 text-xs text-ops-text-tertiary">&middot; <%= org.specs_projects.count %> projects</span>
+                  <span class="text-xs font-medium text-ops-text"><%= org.name %></span>
+                  <span class="ml-2 text-[11px] text-ops-text-tertiary"><%= org.slug %></span>
+                  <span class="ml-2 text-[11px] text-ops-text-tertiary"><%= org.specs_clients.count %> clients</span>
+                  <span class="ml-1 text-[11px] text-ops-text-tertiary">&middot; <%= org.specs_projects.count %> projects</span>
                 </div>
                 <div>
-                  <%= link_to "Manage →", manage_superadmin_organisation_path(org), class: "text-sm text-ops-accent hover:text-ops-accent/80" %>
+                  <%= link_to "Manage →", manage_superadmin_organisation_path(org), class: "text-xs text-ops-accent hover:text-ops-accent/80" %>
                 </div>
               </div>
             <% end %>
           </div>
         <% else %>
-          <p class="text-sm text-ops-text-tertiary">No organisations yet</p>
+          <p class="text-xs text-ops-text-tertiary">No organisations yet</p>
         <% end %>
       </div>
     </section>
