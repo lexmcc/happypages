@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Doctor — Component Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ══════════════════════════════════════════════
+     DESIGN TOKENS (from design-system.html)
+     ══════════════════════════════════════════════ */
+  :root {
+    /* ── Colour ── */
+    --fd-forest:          #00311A;
+    --fd-sage:            #B5D9C8;
+    --fd-sage-light:      #f2f9f6;
+    --fd-gold:            #E8C547;
+    --fd-gold-hover:      #debb3e;
+    --fd-offwhite:        #F9F9F9;
+    --fd-white:           #fff;
+    --fd-black:           #000;
+    --fd-near-black:      #101828;
+    --fd-red:             #D92D20;
+    --fd-pink:            #FFC8CB;
+    --fd-cyan:            #C8EDED;
+    --fd-text:            #000;
+    --fd-text-secondary:  #888;
+    --fd-text-label:      #888;
+    --fd-border:          #E5E5E5;
+    --fd-border-input:    #ccc;
+
+    /* ── Radius ── */
+    --fd-radius:          1px;
+    --fd-radius-circle:   50%;
+
+    /* ── Shadow ── */
+    --fd-shadow-card:     0 2px 8px rgba(0, 49, 26, 0.08);
+    --fd-shadow-modal:    0 4px 24px rgba(0, 0, 0, 0.12);
+    --fd-shadow-toast:    0 4px 16px rgba(0, 49, 26, 0.18);
+
+    /* ── Spacing ── */
+    --fd-space-xs:        4px;
+    --fd-space-sm:        8px;
+    --fd-space-md:        12px;
+    --fd-space-base:      16px;
+    --fd-space-lg:        20px;
+    --fd-space-xl:        24px;
+
+    /* ── Typography ── */
+    --fd-font:            'Inter', system-ui, -apple-system, sans-serif;
+    --fd-text-xs:         11px;
+    --fd-text-sm:         12px;
+    --fd-text-base:       13px;
+    --fd-text-md:         14px;
+    --fd-text-lg:         15px;
+    --fd-text-xl:         18px;
+  }
+
+  /* ══════════════════════════════════════════════
+     PAGE CHROME
+     ══════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--fd-font);
+    background: #F0F0F0;
+    color: var(--fd-near-black);
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    max-width: 1400px;
+    margin: 0 auto 48px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--fd-forest);
+  }
+  .page-header p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .page-instructions {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: var(--fd-sage-light);
+    border-left: 3px solid var(--fd-sage);
+    border-radius: var(--fd-radius);
+  }
+  .page-instructions h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--fd-forest);
+    margin: 0 0 10px;
+  }
+  .page-instructions ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .page-instructions li {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .page-instructions li:last-child {
+    margin-bottom: 0;
+  }
+
+  .section {
+    max-width: 1400px;
+    margin: 0 auto 56px;
+  }
+  .section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+    color: var(--fd-forest);
+  }
+
+  .variant-grid {
+    display: flex;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .variant-grid { flex-direction: column; }
+  }
+
+  .variant-cell {
+    width: 380px;
+    flex-shrink: 0;
+  }
+  .variant-cell--desktop {
+    flex: 1;
+    min-width: 700px;
+    width: auto;
+  }
+  @media (max-width: 960px) {
+    .variant-cell { width: 100%; max-width: 380px; }
+    .variant-cell--desktop { min-width: 0; max-width: 100%; }
+  }
+
+  .variant-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .variant-desc {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: PHONE FRAME
+     ══════════════════════════════════════════════ */
+
+  .fd-phone {
+    width: 380px;
+    background: var(--fd-white);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  @media (max-width: 960px) {
+    .fd-phone { width: 100%; max-width: 380px; }
+  }
+
+  .fd-phone__content {
+    flex: 1;
+    padding: 0 var(--fd-space-base) var(--fd-space-base);
+    position: relative;
+  }
+
+  .fd-phone__page-title {
+    font-size: var(--fd-text-xl);
+    font-weight: 700;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    padding: 20px var(--fd-space-base) var(--fd-space-md);
+  }
+
+  .fd-delivery-card {
+    background: var(--fd-sage-light);
+    border-radius: var(--fd-radius);
+    padding: 14px var(--fd-space-base);
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-md);
+  }
+  .fd-delivery-card__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--fd-forest);
+  }
+  .fd-delivery-card__icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+  .fd-delivery-card__body {
+    flex: 1;
+    min-width: 0;
+  }
+  .fd-delivery-card__date {
+    font-size: var(--fd-text-md);
+    font-weight: 600;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+  }
+  .fd-delivery-card__sub {
+    font-size: var(--fd-text-sm);
+    color: var(--fd-text-secondary);
+    text-transform: lowercase;
+  }
+  .fd-delivery-card__edit {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--fd-text-secondary);
+  }
+  .fd-delivery-card__edit svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  .fd-action-btn {
+    display: block;
+    width: 100%;
+    font-family: var(--fd-font);
+    font-size: var(--fd-text-base);
+    font-weight: 500;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 11px 16px;
+    border: 1px solid var(--fd-border);
+    border-radius: var(--fd-radius);
+    background: var(--fd-white);
+    color: var(--fd-forest);
+    cursor: pointer;
+    margin-bottom: var(--fd-space-sm);
+  }
+
+  .fd-items-heading {
+    font-size: var(--fd-text-base);
+    font-weight: 600;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    margin: var(--fd-space-lg) 0 var(--fd-space-md);
+  }
+
+  .fd-meal-card {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--fd-border);
+  }
+  .fd-meal-card:last-of-type {
+    border-bottom: none;
+  }
+  .fd-meal-card__img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--fd-radius-circle);
+    background: #e0e0e0;
+    flex-shrink: 0;
+  }
+  .fd-meal-card__info {
+    flex: 1;
+    min-width: 0;
+  }
+  .fd-meal-card__name {
+    font-size: var(--fd-text-base);
+    font-weight: 600;
+    color: var(--fd-black);
+    text-transform: lowercase;
+  }
+  .fd-meal-card__meta {
+    font-size: var(--fd-text-sm);
+    color: var(--fd-text-secondary);
+    text-transform: lowercase;
+  }
+  .fd-meal-card__qty {
+    font-size: var(--fd-text-base);
+    font-weight: 500;
+    color: var(--fd-text-secondary);
+    flex-shrink: 0;
+  }
+
+  .fd-show-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: var(--fd-text-sm);
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    font-weight: 500;
+    padding: var(--fd-space-md) 0;
+    cursor: pointer;
+  }
+  .fd-show-more svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .fd-sticky-cta {
+    padding: var(--fd-space-md) var(--fd-space-base);
+    border-top: 1px solid var(--fd-border);
+  }
+  .fd-sticky-cta .fd-btn {
+    margin: 0;
+  }
+
+  .fd-tab-bar {
+    display: flex;
+    border-top: 1px solid var(--fd-border);
+  }
+  .fd-tab-bar__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 0;
+    font-size: var(--fd-text-xs);
+    font-weight: 500;
+    text-transform: lowercase;
+    color: var(--fd-text-secondary);
+    cursor: pointer;
+  }
+  .fd-tab-bar__item--active {
+    color: var(--fd-forest);
+  }
+  .fd-tab-bar__item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: TOAST / NOTIFICATION
+     ══════════════════════════════════════════════ */
+
+  .fd-toast {
+    background: var(--fd-forest);
+    border-radius: var(--fd-radius);
+    box-shadow: var(--fd-shadow-toast);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+    width: 100%;
+    transition: transform 0.15s, background 0.15s;
+  }
+
+  .fd-toast__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--fd-white);
+  }
+  .fd-toast__icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    stroke-dasharray: 22;
+    stroke-dashoffset: 22;
+    animation: fd-check-draw 0.4s ease-out 0.25s forwards;
+  }
+
+  .fd-toast__text {
+    font-size: var(--fd-text-md);
+    font-weight: 600;
+    color: var(--fd-white);
+    text-transform: lowercase;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  /* Toast positions within phone frame */
+  .fd-toast--top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    border-radius: 0;
+    border-left: none;
+    animation: fd-slide-down 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Exit animations */
+  .fd-toast--top.fd-toast--exit {
+    animation: fd-slide-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .fd-toast__dismiss {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    line-height: 1;
+    border: none;
+    background: none;
+    border-radius: var(--fd-radius);
+    font-family: var(--fd-font);
+    transition: color 0.15s, background 0.15s;
+  }
+  .fd-toast__dismiss:hover {
+    color: var(--fd-white);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Utility classes */
+  .fd-toast--hidden { display: none !important; }
+
+  /* Replay button */
+  .fd-replay-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 5px 12px;
+    font-family: var(--fd-font);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: lowercase;
+    color: var(--fd-forest);
+    background: var(--fd-white);
+    border: 1px solid var(--fd-border);
+    border-radius: var(--fd-radius);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .fd-replay-btn:hover {
+    background: var(--fd-sage-light);
+  }
+  .fd-replay-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Spec panel (collapsible) */
+  .spec-panel {
+    margin-top: 24px;
+    border: 1px solid var(--fd-border);
+    border-radius: 6px;
+    background: var(--fd-white);
+    overflow: hidden;
+  }
+  .spec-panel__toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 12px 16px;
+    font-family: var(--fd-font);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .spec-panel__toggle:hover { color: var(--fd-forest); }
+  .spec-panel__toggle svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.2s;
+  }
+  .spec-panel--open .spec-panel__toggle svg {
+    transform: rotate(90deg);
+  }
+  .spec-panel__body {
+    display: none;
+    padding: 0 16px 16px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #444;
+  }
+  .spec-panel--open .spec-panel__body {
+    display: block;
+  }
+  .spec-panel__body h4 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fd-forest);
+    margin: 16px 0 6px;
+  }
+  .spec-panel__body h4:first-child { margin-top: 0; }
+  .spec-panel__body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+  }
+  .spec-panel__body th,
+  .spec-panel__body td {
+    text-align: left;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .spec-panel__body th {
+    font-weight: 600;
+    color: #666;
+    width: 160px;
+  }
+  .spec-panel__body code {
+    font-size: 11px;
+    background: #f5f5f5;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .spec-panel__body ul {
+    padding-left: 18px;
+    margin-bottom: 8px;
+  }
+  .spec-panel__body li { margin-bottom: 2px; }
+
+  /* ── Keyframes ── */
+  @keyframes fd-slide-down {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fd-slide-up {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100%); opacity: 0; }
+  }
+  @keyframes fd-check-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: BUTTONS (from design system)
+     ══════════════════════════════════════════════ */
+
+  .fd-btn {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    font-family: var(--fd-font);
+    font-weight: 600;
+    text-align: center;
+    text-transform: lowercase;
+    font-size: var(--fd-text-md);
+    border-radius: var(--fd-radius);
+    padding: 13px 24px;
+    transition: background 0.15s;
+  }
+  .fd-btn--primary {
+    background: var(--fd-gold);
+    color: var(--fd-black);
+    border: 1px solid var(--fd-forest);
+  }
+  .fd-btn--primary:hover {
+    background: var(--fd-gold-hover);
+  }
+  .fd-btn--secondary {
+    background: transparent;
+    color: var(--fd-text-secondary);
+    border: none;
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: var(--fd-text-base);
+  }
+  .fd-btn--secondary:hover {
+    color: var(--fd-black);
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: MODAL (from design system)
+     ══════════════════════════════════════════════ */
+
+  .fd-modal {
+    background: var(--fd-white);
+    border-radius: var(--fd-radius);
+    overflow: hidden;
+    box-shadow: var(--fd-shadow-modal);
+    width: 100%;
+  }
+  .fd-modal__head {
+    padding: var(--fd-space-xl) var(--fd-space-xl) 0;
+  }
+  .fd-modal__title {
+    font-size: var(--fd-text-xl);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    margin-bottom: 4px;
+  }
+  .fd-modal__sub {
+    font-size: var(--fd-text-base);
+    color: var(--fd-text-secondary);
+    text-transform: lowercase;
+  }
+  .fd-modal__body {
+    padding: var(--fd-space-lg) var(--fd-space-xl) var(--fd-space-xl);
+  }
+
+  .fd-detail-block {
+    background: var(--fd-offwhite);
+    border-radius: var(--fd-radius);
+    padding: 14px 16px;
+    margin-bottom: var(--fd-space-lg);
+  }
+  .fd-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: var(--fd-text-base);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .fd-detail-row:last-child {
+    margin-bottom: 0;
+  }
+  .fd-detail-row__label {
+    color: var(--fd-text-label);
+    text-transform: lowercase;
+  }
+  .fd-detail-row__value {
+    font-weight: 600;
+    color: var(--fd-black);
+    text-align: right;
+  }
+  .fd-detail-row__value--discount {
+    color: var(--fd-red);
+    font-weight: 600;
+  }
+  .fd-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: var(--fd-space-md) 0;
+  }
+
+  .fd-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--fd-space-lg);
+    padding: 0 2px;
+  }
+  .fd-total-row__label {
+    font-size: var(--fd-text-md);
+    font-weight: 600;
+    color: var(--fd-black);
+    text-transform: lowercase;
+  }
+  .fd-total-row__price {
+    font-size: var(--fd-text-xl);
+    font-weight: 700;
+    color: var(--fd-black);
+  }
+  .fd-total-row__price span {
+    font-size: var(--fd-text-sm);
+    font-weight: 400;
+    color: var(--fd-text-secondary);
+  }
+
+  .fd-modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: OFFER STRIP
+     ══════════════════════════════════════════════ */
+
+  .fd-offer {
+    background: var(--fd-pink);
+    border-radius: var(--fd-radius);
+    padding: 12px 16px;
+    margin-bottom: var(--fd-space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+  }
+  .fd-offer__badge {
+    font-size: var(--fd-text-xs);
+    font-weight: 600;
+    text-transform: lowercase;
+    color: var(--fd-white);
+    background: var(--fd-red);
+    padding: 2px 8px;
+    border-radius: var(--fd-radius);
+    white-space: nowrap;
+  }
+  .fd-offer__text {
+    font-size: var(--fd-text-base);
+    font-weight: 600;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+  }
+
+  /* ══════════════════════════════════════════════
+     COMPONENT: DESKTOP FRAME
+     ══════════════════════════════════════════════ */
+
+  .fd-desktop {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
+    background: var(--fd-white);
+    display: flex;
+    flex-direction: column;
+    max-width: 960px;
+    width: 100%;
+  }
+
+  .fd-desktop__header {
+    background: var(--fd-sage);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .fd-desktop__logo {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+  }
+  .fd-desktop__menu-btn {
+    font-family: var(--fd-font);
+    font-size: var(--fd-text-sm);
+    font-weight: 500;
+    color: var(--fd-forest);
+    background: var(--fd-white);
+    border: 1px solid var(--fd-border);
+    border-radius: var(--fd-radius);
+    padding: 6px 14px;
+    cursor: pointer;
+    text-transform: lowercase;
+  }
+
+  .fd-desktop__body {
+    display: flex;
+    min-height: 520px;
+  }
+
+  .fd-desktop__sidebar {
+    width: 220px;
+    border-right: 1px solid var(--fd-border);
+    padding: var(--fd-space-lg) 0;
+    flex-shrink: 0;
+  }
+  .fd-desktop__user {
+    padding: 0 var(--fd-space-base) var(--fd-space-lg);
+    border-bottom: 1px solid var(--fd-border);
+    margin-bottom: var(--fd-space-md);
+  }
+  .fd-desktop__user-name {
+    font-size: var(--fd-text-md);
+    font-weight: 600;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+  }
+  .fd-desktop__user-email {
+    font-size: var(--fd-text-sm);
+    color: var(--fd-text-secondary);
+    margin-top: 2px;
+  }
+
+  .fd-desktop__nav-item {
+    display: block;
+    font-size: var(--fd-text-base);
+    font-weight: 500;
+    color: var(--fd-text-secondary);
+    text-transform: lowercase;
+    padding: 9px var(--fd-space-base);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+  .fd-desktop__nav-item:hover {
+    background: var(--fd-sage-light);
+    color: var(--fd-forest);
+  }
+  .fd-desktop__nav-item--active {
+    background: var(--fd-sage-light);
+    color: var(--fd-forest);
+    font-weight: 600;
+    border-left: 3px solid var(--fd-forest);
+    padding-left: 13px;
+  }
+
+  .fd-desktop__main {
+    flex: 1;
+    padding: var(--fd-space-xl) 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fd-desktop__page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    margin-bottom: var(--fd-space-lg);
+  }
+
+  .fd-desktop__columns {
+    display: flex;
+    gap: 32px;
+  }
+  .fd-desktop__col-primary {
+    flex: 1;
+    min-width: 0;
+  }
+  .fd-desktop__col-aside {
+    width: 300px;
+    flex-shrink: 0;
+  }
+
+  /* Desktop action buttons — side by side */
+  .fd-desktop__action-btns {
+    display: flex;
+    gap: var(--fd-space-sm);
+    margin-bottom: var(--fd-space-lg);
+  }
+  .fd-desktop__action-btns .fd-action-btn {
+    flex: 1;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Desktop order summary sidebar */
+  .fd-desktop__order-summary {
+    border: 1px solid var(--fd-border);
+    border-radius: var(--fd-radius);
+    overflow: hidden;
+  }
+  .fd-desktop__summary-header {
+    padding: 14px var(--fd-space-base);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--fd-border);
+    cursor: pointer;
+  }
+  .fd-desktop__summary-label {
+    font-size: var(--fd-text-md);
+    font-weight: 600;
+    color: var(--fd-black);
+    text-transform: lowercase;
+  }
+  .fd-desktop__summary-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .fd-desktop__summary-price {
+    font-size: var(--fd-text-md);
+    font-weight: 700;
+    color: var(--fd-black);
+  }
+  .fd-desktop__summary-was {
+    font-size: var(--fd-text-sm);
+    color: var(--fd-text-secondary);
+    text-decoration: line-through;
+  }
+  .fd-desktop__summary-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--fd-text-secondary);
+    flex-shrink: 0;
+  }
+  .fd-desktop__summary-chevron svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  .fd-desktop__summary-row {
+    padding: 12px var(--fd-space-base);
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+    border-bottom: 1px solid var(--fd-border);
+    font-size: var(--fd-text-base);
+    text-transform: lowercase;
+  }
+  .fd-desktop__summary-row:last-child {
+    border-bottom: none;
+  }
+  .fd-desktop__summary-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--fd-text-secondary);
+  }
+  .fd-desktop__summary-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .fd-desktop__summary-icon--payment {
+    color: var(--fd-red);
+  }
+  .fd-desktop__summary-detail {
+    flex: 1;
+    color: var(--fd-black);
+    font-weight: 500;
+  }
+  .fd-desktop__summary-link {
+    font-size: var(--fd-text-sm);
+    color: var(--fd-forest);
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    flex-shrink: 0;
+  }
+
+  .fd-desktop__discount-row {
+    padding: 10px var(--fd-space-base);
+    display: flex;
+    gap: var(--fd-space-sm);
+    align-items: center;
+    border-bottom: 1px solid var(--fd-border);
+  }
+  .fd-desktop__discount-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--fd-text-secondary);
+  }
+  .fd-desktop__discount-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .fd-desktop__discount-input {
+    flex: 1;
+    font-family: var(--fd-font);
+    font-size: var(--fd-text-sm);
+    border: 1px solid var(--fd-border-input);
+    border-radius: var(--fd-radius);
+    padding: 6px 10px;
+    color: var(--fd-black);
+    text-transform: lowercase;
+  }
+  .fd-desktop__discount-input::placeholder {
+    color: var(--fd-text-secondary);
+  }
+  .fd-desktop__discount-apply {
+    font-family: var(--fd-font);
+    font-size: var(--fd-text-sm);
+    font-weight: 600;
+    color: var(--fd-forest);
+    background: var(--fd-sage-light);
+    border: 1px solid var(--fd-border);
+    border-radius: var(--fd-radius);
+    padding: 6px 14px;
+    cursor: pointer;
+    text-transform: lowercase;
+  }
+
+  .fd-desktop__savings-banner {
+    background: var(--fd-pink);
+    padding: 12px var(--fd-space-base);
+    font-size: var(--fd-text-base);
+    font-weight: 600;
+    color: var(--fd-forest);
+    text-transform: lowercase;
+    text-align: center;
+  }
+
+  /* Desktop CTA */
+  .fd-desktop__cta {
+    margin-top: var(--fd-space-lg);
+  }
+  .fd-desktop__cta .fd-btn {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Desktop toast positioning */
+  .fd-desktop .fd-toast--top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    border-radius: 0;
+    border-left: none;
+  }
+
+  /* Desktop overlay for modal */
+  .fd-desktop__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 32px;
+  }
+  .fd-desktop__overlay .fd-modal {
+    max-width: 400px;
+    box-shadow: var(--fd-shadow-modal);
+  }
+
+  /* Phone overlay for modal */
+  .fd-phone__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: var(--fd-space-base);
+  }
+  .fd-phone__overlay .fd-modal {
+    box-shadow: var(--fd-shadow-modal);
+  }
+
+  /* Pop-in targets the modal card only (backdrop appears instantly) */
+  .fd-phone__overlay .fd-modal,
+  .fd-desktop__overlay .fd-modal {
+    animation: fd-pop-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes fd-pop-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Exit: backdrop fades, card pops out */
+  .fd-phone__overlay--exit,
+  .fd-desktop__overlay--exit {
+    animation: fd-fade-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .fd-phone__overlay--exit .fd-modal,
+  .fd-desktop__overlay--exit .fd-modal {
+    animation: fd-pop-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes fd-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  @keyframes fd-pop-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  }
+
+  .fd-phone__overlay--hidden,
+  .fd-desktop__overlay--hidden {
+    display: none !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>field doctor — component variants</h1>
+  <p>Toast and restart modal in mobile + desktop context. All use <code>--fd-</code> design tokens.</p>
+  <div class="page-instructions">
+    <h3>how to use this page</h3>
+    <ul>
+      <li><strong>Section 1 — toast</strong> shows the "menu saved" toast in mobile and desktop frames. Each variant has a <em>replay</em> button to re-trigger the animation and a collapsible <em>implementation spec</em> with tokens, classes, and behaviour notes.</li>
+      <li><strong>Section 2 — restart modal</strong> shows the confirmation modal with backdrop. Click <em>replay</em> to reopen the modal. Clicking "restart deliveries" dismisses the modal and reveals a welcome-back toast; the toast auto-dismisses after 10 s or can be closed manually.</li>
+      <li>Every component is self-contained — copy the HTML and matching <code>.fd-</code> CSS classes into production. Design tokens are defined as CSS custom properties at the top of this file.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1: TOAST — "MENU SAVED"
+     ════════════════════════════════════════ -->
+<div class="section">
+  <h2>toast — "menu saved"</h2>
+
+  <div class="variant-grid">
+
+    <!-- ═══ MOBILE — top overlay, auto-dismiss ═══ -->
+    <div class="variant-cell">
+      <div class="variant-label">mobile</div>
+      <div class="variant-desc">slides down below page title, auto-dismiss 3s. overlays content.</div>
+      <div class="fd-phone">
+        <div class="fd-phone__page-title">your next order</div>
+        <div class="fd-phone__content" style="position: relative;">
+          <!-- toast: top overlay -->
+          <div class="fd-toast fd-toast--top" role="status" aria-live="polite" data-variant="a">
+            <div class="fd-toast__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 12 10 17 19 7"/>
+              </svg>
+            </div>
+            <span class="fd-toast__text">menu saved for next delivery: thursday 12th march</span>
+          </div>
+
+          <!-- delivery card -->
+          <div class="fd-delivery-card">
+            <div class="fd-delivery-card__icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="8"/>
+                <polyline points="10 6 10 10 13 12"/>
+              </svg>
+            </div>
+            <div class="fd-delivery-card__body">
+              <div class="fd-delivery-card__date">thursday, 12th march</div>
+              <div class="fd-delivery-card__sub">15 hours left to edit order.</div>
+            </div>
+            <div class="fd-delivery-card__edit">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 3.5l2 2L6 16H4v-2L14.5 3.5z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- action buttons -->
+          <button class="fd-action-btn">skip a week</button>
+          <button class="fd-action-btn">delay or pause</button>
+
+          <!-- items -->
+          <div class="fd-items-heading">6 items scheduled for delivery</div>
+          <div class="fd-meal-card">
+            <div class="fd-meal-card__img"></div>
+            <div class="fd-meal-card__info">
+              <div class="fd-meal-card__name">thai green curry</div>
+              <div class="fd-meal-card__meta">thai · 2 servings · £7.29</div>
+            </div>
+            <span class="fd-meal-card__qty">× 1</span>
+          </div>
+          <div class="fd-meal-card">
+            <div class="fd-meal-card__img"></div>
+            <div class="fd-meal-card__info">
+              <div class="fd-meal-card__name">mushroom risotto</div>
+              <div class="fd-meal-card__meta">italian · 2 servings · £7.29</div>
+            </div>
+            <span class="fd-meal-card__qty">× 1</span>
+          </div>
+          <div class="fd-meal-card">
+            <div class="fd-meal-card__img"></div>
+            <div class="fd-meal-card__info">
+              <div class="fd-meal-card__name">chicken shawarma bowl</div>
+              <div class="fd-meal-card__meta">middle eastern · 2 servings · £7.29</div>
+            </div>
+            <span class="fd-meal-card__qty">× 1</span>
+          </div>
+
+          <div class="fd-show-more">
+            show all items
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 5.5 7 8.5 10 5.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="fd-sticky-cta">
+          <button class="fd-btn fd-btn--primary">change meals →</button>
+        </div>
+
+        <div class="fd-tab-bar">
+          <div class="fd-tab-bar__item fd-tab-bar__item--active">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="14" height="12" rx="1"/>
+              <line x1="3" y1="8" x2="17" y2="8"/>
+            </svg>
+            next order
+          </div>
+          <div class="fd-tab-bar__item">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="14" height="14" rx="1"/>
+              <line x1="7" y1="7" x2="13" y2="7"/>
+              <line x1="7" y1="10" x2="13" y2="10"/>
+              <line x1="7" y1="13" x2="10" y2="13"/>
+            </svg>
+            menu
+          </div>
+        </div>
+      </div>
+      <button class="fd-replay-btn" data-replay="a">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 7a5.5 5.5 0 1 1 1.6 3.9"/><polyline points="1.5 11.5 1.5 7.5 5.5 7.5"/></svg>
+        replay
+      </button>
+    </div>
+
+    <!-- ═══ DESKTOP — toast in full page layout ═══ -->
+    <div class="variant-cell variant-cell--desktop">
+      <div class="variant-label">desktop</div>
+      <div class="variant-desc">same toast slides down below header, across main content area.</div>
+      <div class="fd-desktop">
+        <!-- header -->
+        <div class="fd-desktop__header">
+          <span class="fd-desktop__logo">field doctor</span>
+          <button class="fd-desktop__menu-btn">≡ menu</button>
+        </div>
+        <div class="fd-desktop__body">
+          <!-- sidebar -->
+          <nav class="fd-desktop__sidebar">
+            <div class="fd-desktop__user">
+              <div class="fd-desktop__user-name">alex mcconnell</div>
+              <div class="fd-desktop__user-email">lexmcconnell@gmail.com</div>
+            </div>
+            <a class="fd-desktop__nav-item fd-desktop__nav-item--active">next order</a>
+            <a class="fd-desktop__nav-item">order history</a>
+            <a class="fd-desktop__nav-item">account details</a>
+            <a class="fd-desktop__nav-item">refer a friend</a>
+            <a class="fd-desktop__nav-item">contact</a>
+          </nav>
+          <!-- main -->
+          <div class="fd-desktop__main">
+            <!-- toast -->
+            <div class="fd-toast fd-toast--top" role="status" aria-live="polite" data-variant="a-desktop">
+              <div class="fd-toast__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="5 12 10 17 19 7"/>
+                </svg>
+              </div>
+              <span class="fd-toast__text">menu saved for next delivery: thursday 12th march</span>
+            </div>
+
+            <h1 class="fd-desktop__page-title">your next order</h1>
+
+            <div class="fd-desktop__columns">
+              <div class="fd-desktop__col-primary">
+                <!-- delivery card -->
+                <div class="fd-delivery-card">
+                  <div class="fd-delivery-card__icon">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="10" cy="10" r="8"/>
+                      <polyline points="10 6 10 10 13 12"/>
+                    </svg>
+                  </div>
+                  <div class="fd-delivery-card__body">
+                    <div class="fd-delivery-card__date">thursday, 12th march</div>
+                    <div class="fd-delivery-card__sub">15 hours left to edit order.</div>
+                  </div>
+                  <div class="fd-delivery-card__edit">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14.5 3.5l2 2L6 16H4v-2L14.5 3.5z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- action buttons (side by side) -->
+                <div class="fd-desktop__action-btns">
+                  <button class="fd-action-btn">▶ skip a week</button>
+                  <button class="fd-action-btn">⚙ delay or pause</button>
+                </div>
+
+                <!-- items -->
+                <div class="fd-items-heading">6 items scheduled for delivery</div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">thai green curry</div>
+                    <div class="fd-meal-card__meta">thai · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">mushroom risotto</div>
+                    <div class="fd-meal-card__meta">italian · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">chicken shawarma bowl</div>
+                    <div class="fd-meal-card__meta">middle eastern · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+
+                <div class="fd-show-more">
+                  show all items
+                  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 5.5 7 8.5 10 5.5"/>
+                  </svg>
+                </div>
+
+                <div class="fd-desktop__cta">
+                  <button class="fd-btn fd-btn--primary">🔄 change meals →</button>
+                </div>
+              </div>
+
+              <div class="fd-desktop__col-aside">
+                <!-- order summary -->
+                <div class="fd-desktop__order-summary">
+                  <div class="fd-desktop__summary-header">
+                    <span class="fd-desktop__summary-label">order total</span>
+                    <div class="fd-desktop__summary-prices">
+                      <span class="fd-desktop__summary-price">£33.96</span>
+                      <span class="fd-desktop__summary-was">£46.74</span>
+                    </div>
+                    <div class="fd-desktop__summary-chevron">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 6 8 10 12 6"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <!-- address -->
+                  <div class="fd-desktop__summary-row">
+                    <div class="fd-desktop__summary-icon">
+                      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="6" width="16" height="9" rx="1"/>
+                        <polyline points="1 6 9 12 17 6"/>
+                      </svg>
+                    </div>
+                    <span class="fd-desktop__summary-detail">8, flat 1, richmond, TW9 2AP</span>
+                    <span class="fd-desktop__summary-link">change</span>
+                  </div>
+                  <!-- payment -->
+                  <div class="fd-desktop__summary-row">
+                    <div class="fd-desktop__summary-icon fd-desktop__summary-icon--payment">
+                      <svg viewBox="0 0 18 18" fill="currentColor">
+                        <circle cx="9" cy="9" r="5"/>
+                      </svg>
+                    </div>
+                    <span class="fd-desktop__summary-detail">card ending in *0257</span>
+                    <span class="fd-desktop__summary-link">change</span>
+                  </div>
+                  <!-- discount code -->
+                  <div class="fd-desktop__discount-row">
+                    <div class="fd-desktop__discount-icon">
+                      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15.5 9.5l-7 7-6-6 7-7h6v6z"/>
+                        <circle cx="12.5" cy="5.5" r="1" fill="currentColor"/>
+                      </svg>
+                    </div>
+                    <input class="fd-desktop__discount-input" type="text" placeholder="discount code">
+                    <button class="fd-desktop__discount-apply">apply</button>
+                  </div>
+                  <!-- savings banner -->
+                  <div class="fd-desktop__savings-banner">
+                    saving £11.78 on this order
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="fd-replay-btn" data-replay="a-desktop">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 7a5.5 5.5 0 1 1 1.6 3.9"/><polyline points="1.5 11.5 1.5 7.5 5.5 7.5"/></svg>
+        replay
+      </button>
+    </div>
+
+  </div>
+
+  <div class="spec-panel">
+    <button class="spec-panel__toggle">
+      <svg viewBox="0 0 8 10" fill="currentColor"><path d="M1 1l6 4-6 4z"/></svg>
+      Implementation spec
+    </button>
+    <div class="spec-panel__body">
+      <h4>Design tokens</h4>
+      <table>
+        <tr><th>Token</th><th>Value</th></tr>
+        <tr><td>background</td><td><code>--fd-forest</code> (#00311A)</td></tr>
+        <tr><td>text colour</td><td><code>--fd-white</code></td></tr>
+        <tr><td>shadow</td><td><code>--fd-shadow-toast</code></td></tr>
+        <tr><td>radius</td><td><code>--fd-radius</code> (1px)</td></tr>
+        <tr><td>padding</td><td>14px 16px</td></tr>
+        <tr><td>gap</td><td><code>--fd-space-md</code> (12px)</td></tr>
+        <tr><td>font size</td><td><code>--fd-text-md</code> (14px)</td></tr>
+        <tr><td>font weight</td><td>600</td></tr>
+        <tr><td>text-transform</td><td>lowercase</td></tr>
+      </table>
+
+      <h4>CSS classes</h4>
+      <ul>
+        <li><code>.fd-toast</code> — base container (flex row)</li>
+        <li><code>.fd-toast--top</code> — anchored to top of phone frame (absolute, full width)</li>
+        <li><code>.fd-toast--exit</code> — exit animation modifier</li>
+        <li><code>.fd-toast--hidden</code> — display none after exit</li>
+        <li><code>.fd-toast__icon</code> — 24×24 SVG container</li>
+        <li><code>.fd-toast__text</code> — message label (flex: 1)</li>
+        <li><code>.fd-toast__dismiss</code> — close button (32×32 tap target)</li>
+      </ul>
+
+      <h4>Animations</h4>
+      <ul>
+        <li>Entry: <code>fd-slide-down</code> 0.35s <code>cubic-bezier(0.22, 1, 0.36, 1)</code> — translateY(-100%) → 0</li>
+        <li>Exit: <code>fd-slide-up</code> 0.6s <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — translateY(0) → -100%</li>
+        <li>Checkmark: <code>fd-check-draw</code> 0.4s ease-out 0.25s — stroke-dashoffset 22 → 0</li>
+      </ul>
+
+      <h4>Behaviour</h4>
+      <ul>
+        <li>Auto-dismisses after 10s (adds <code>--exit</code>, then <code>--hidden</code> on <code>animationend</code>)</li>
+        <li>Dismiss button triggers same exit flow immediately</li>
+        <li>Checkmark SVG is cloned on replay to restart stroke animation</li>
+      </ul>
+
+      <h4>Responsive</h4>
+      <ul>
+        <li>Mobile: full-width inside phone frame, no border-radius, no left border</li>
+        <li>Desktop: inset toast within <code>.fd-desktop__main</code>, inherits container width</li>
+      </ul>
+
+      <h4>Accessibility</h4>
+      <ul>
+        <li><code>role="status"</code> + <code>aria-live="polite"</code> for screen reader announcement</li>
+        <li>Dismiss button uses <code>×</code> character (consider <code>aria-label="dismiss"</code>)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 2: RESTART CONFIRMATION MODAL
+     ════════════════════════════════════════ -->
+<div class="section">
+  <h2>restart confirmation modal</h2>
+
+  <div class="variant-grid">
+
+    <!-- ═══ MOBILE — modal in phone frame ═══ -->
+    <div class="variant-cell">
+      <div class="variant-label">mobile</div>
+      <div class="variant-desc">modal card centered over "your next order" page with backdrop.</div>
+      <div class="fd-phone" style="min-height: 640px;">
+        <div class="fd-phone__page-title">your next order</div>
+        <div class="fd-phone__content" style="position: relative;">
+          <!-- welcome-back toast (hidden until restart) -->
+          <div class="fd-toast fd-toast--top fd-toast--hidden" role="status" aria-live="polite" data-toast-restart="phone">
+            <div class="fd-toast__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 12 10 17 19 7"/>
+              </svg>
+            </div>
+            <span class="fd-toast__text">welcome back! your next box will be delivered on thursday 12th march</span>
+          </div>
+          <!-- delivery card -->
+          <div class="fd-delivery-card">
+            <div class="fd-delivery-card__icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="8"/>
+                <polyline points="10 6 10 10 13 12"/>
+              </svg>
+            </div>
+            <div class="fd-delivery-card__body">
+              <div class="fd-delivery-card__date">thursday, 12th march</div>
+              <div class="fd-delivery-card__sub">15 hours left to edit order.</div>
+            </div>
+            <div class="fd-delivery-card__edit">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 3.5l2 2L6 16H4v-2L14.5 3.5z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- action buttons -->
+          <button class="fd-action-btn">skip a week</button>
+          <button class="fd-action-btn">delay or pause</button>
+
+          <!-- items -->
+          <div class="fd-items-heading">6 items scheduled for delivery</div>
+          <div class="fd-meal-card">
+            <div class="fd-meal-card__img"></div>
+            <div class="fd-meal-card__info">
+              <div class="fd-meal-card__name">thai green curry</div>
+              <div class="fd-meal-card__meta">thai · 2 servings · £7.29</div>
+            </div>
+            <span class="fd-meal-card__qty">× 1</span>
+          </div>
+          <div class="fd-meal-card">
+            <div class="fd-meal-card__img"></div>
+            <div class="fd-meal-card__info">
+              <div class="fd-meal-card__name">mushroom risotto</div>
+              <div class="fd-meal-card__meta">italian · 2 servings · £7.29</div>
+            </div>
+            <span class="fd-meal-card__qty">× 1</span>
+          </div>
+        </div>
+
+        <div class="fd-sticky-cta">
+          <button class="fd-btn fd-btn--primary">change meals →</button>
+        </div>
+
+        <div class="fd-tab-bar">
+          <div class="fd-tab-bar__item fd-tab-bar__item--active">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="14" height="12" rx="1"/>
+              <line x1="3" y1="8" x2="17" y2="8"/>
+            </svg>
+            next order
+          </div>
+          <div class="fd-tab-bar__item">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="14" height="14" rx="1"/>
+              <line x1="7" y1="7" x2="13" y2="7"/>
+              <line x1="7" y1="10" x2="13" y2="10"/>
+              <line x1="7" y1="13" x2="10" y2="13"/>
+            </svg>
+            menu
+          </div>
+        </div>
+
+        <!-- modal overlay -->
+        <div class="fd-phone__overlay">
+          <div class="fd-modal">
+            <div class="fd-modal__head">
+              <h4 class="fd-modal__title">restart for thursday 12 march</h4>
+              <p class="fd-modal__sub">you can pause again anytime</p>
+            </div>
+            <div class="fd-modal__body">
+              <div class="fd-offer">
+                <span class="fd-offer__text">20% off your first box back</span>
+              </div>
+              <div class="fd-detail-block">
+                <div class="fd-detail-row">
+                  <span class="fd-detail-row__label">plan</span>
+                  <span class="fd-detail-row__value">4 meals for 2 people</span>
+                </div>
+                <div class="fd-detail-row">
+                  <span class="fd-detail-row__label">next delivery</span>
+                  <span class="fd-detail-row__value">thursday 12 march</span>
+                </div>
+                <hr class="fd-divider">
+                <div class="fd-detail-row">
+                  <span class="fd-detail-row__label">subtotal</span>
+                  <span class="fd-detail-row__value">£29.16</span>
+                </div>
+                <div class="fd-detail-row">
+                  <span class="fd-detail-row__label">first box discount (20%)</span>
+                  <span class="fd-detail-row__value fd-detail-row__value--discount">−£5.83</span>
+                </div>
+                <hr class="fd-divider">
+                <div class="fd-detail-row">
+                  <span class="fd-detail-row__label">payment</span>
+                  <span class="fd-detail-row__value">visa ending 4242</span>
+                </div>
+              </div>
+              <div class="fd-total-row">
+                <span class="fd-total-row__label">total</span>
+                <span class="fd-total-row__price">£23.33 <span>(£5.83/portion)</span></span>
+              </div>
+              <div class="fd-modal__actions">
+                <button class="fd-btn fd-btn--primary">restart & save 20%</button>
+                <button class="fd-btn fd-btn--secondary">not now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="fd-replay-btn" data-replay-modal="phone">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 7a5.5 5.5 0 1 1 1.6 3.9"/><polyline points="1.5 11.5 1.5 7.5 5.5 7.5"/></svg>
+        replay
+      </button>
+    </div>
+
+    <!-- ═══ DESKTOP — modal overlay on full page layout ═══ -->
+    <div class="variant-cell variant-cell--desktop">
+      <div class="variant-label">desktop</div>
+      <div class="variant-desc">modal centered with backdrop overlay on the full page layout.</div>
+      <div class="fd-desktop">
+        <!-- header -->
+        <div class="fd-desktop__header">
+          <span class="fd-desktop__logo">field doctor</span>
+          <button class="fd-desktop__menu-btn">≡ menu</button>
+        </div>
+        <div class="fd-desktop__body" style="position: relative;">
+          <!-- sidebar -->
+          <nav class="fd-desktop__sidebar">
+            <div class="fd-desktop__user">
+              <div class="fd-desktop__user-name">alex mcconnell</div>
+              <div class="fd-desktop__user-email">lexmcconnell@gmail.com</div>
+            </div>
+            <a class="fd-desktop__nav-item fd-desktop__nav-item--active">next order</a>
+            <a class="fd-desktop__nav-item">order history</a>
+            <a class="fd-desktop__nav-item">account details</a>
+            <a class="fd-desktop__nav-item">refer a friend</a>
+            <a class="fd-desktop__nav-item">contact</a>
+          </nav>
+          <!-- main -->
+          <div class="fd-desktop__main">
+            <!-- welcome-back toast (hidden until restart) -->
+            <div class="fd-toast fd-toast--top fd-toast--hidden" role="status" aria-live="polite" data-toast-restart="desktop">
+              <div class="fd-toast__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="5 12 10 17 19 7"/>
+                </svg>
+              </div>
+              <span class="fd-toast__text">welcome back! your next box will be delivered on thursday 12th march</span>
+            </div>
+            <h1 class="fd-desktop__page-title">your next order</h1>
+
+            <div class="fd-desktop__columns">
+              <div class="fd-desktop__col-primary">
+                <!-- delivery card -->
+                <div class="fd-delivery-card">
+                  <div class="fd-delivery-card__icon">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="10" cy="10" r="8"/>
+                      <polyline points="10 6 10 10 13 12"/>
+                    </svg>
+                  </div>
+                  <div class="fd-delivery-card__body">
+                    <div class="fd-delivery-card__date">thursday, 12th march</div>
+                    <div class="fd-delivery-card__sub">15 hours left to edit order.</div>
+                  </div>
+                  <div class="fd-delivery-card__edit">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14.5 3.5l2 2L6 16H4v-2L14.5 3.5z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- action buttons (side by side) -->
+                <div class="fd-desktop__action-btns">
+                  <button class="fd-action-btn">▶ skip a week</button>
+                  <button class="fd-action-btn">⚙ delay or pause</button>
+                </div>
+
+                <!-- items -->
+                <div class="fd-items-heading">6 items scheduled for delivery</div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">thai green curry</div>
+                    <div class="fd-meal-card__meta">thai · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">mushroom risotto</div>
+                    <div class="fd-meal-card__meta">italian · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+                <div class="fd-meal-card">
+                  <div class="fd-meal-card__img"></div>
+                  <div class="fd-meal-card__info">
+                    <div class="fd-meal-card__name">chicken shawarma bowl</div>
+                    <div class="fd-meal-card__meta">middle eastern · 2 servings · £7.29</div>
+                  </div>
+                  <span class="fd-meal-card__qty">× 1</span>
+                </div>
+
+                <div class="fd-show-more">
+                  show all items
+                  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 5.5 7 8.5 10 5.5"/>
+                  </svg>
+                </div>
+
+                <div class="fd-desktop__cta">
+                  <button class="fd-btn fd-btn--primary">🔄 change meals →</button>
+                </div>
+              </div>
+
+              <div class="fd-desktop__col-aside">
+                <!-- order summary -->
+                <div class="fd-desktop__order-summary">
+                  <div class="fd-desktop__summary-header">
+                    <span class="fd-desktop__summary-label">order total</span>
+                    <div class="fd-desktop__summary-prices">
+                      <span class="fd-desktop__summary-price">£33.96</span>
+                      <span class="fd-desktop__summary-was">£46.74</span>
+                    </div>
+                    <div class="fd-desktop__summary-chevron">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 6 8 10 12 6"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <!-- address -->
+                  <div class="fd-desktop__summary-row">
+                    <div class="fd-desktop__summary-icon">
+                      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="6" width="16" height="9" rx="1"/>
+                        <polyline points="1 6 9 12 17 6"/>
+                      </svg>
+                    </div>
+                    <span class="fd-desktop__summary-detail">8, flat 1, richmond, TW9 2AP</span>
+                    <span class="fd-desktop__summary-link">change</span>
+                  </div>
+                  <!-- payment -->
+                  <div class="fd-desktop__summary-row">
+                    <div class="fd-desktop__summary-icon fd-desktop__summary-icon--payment">
+                      <svg viewBox="0 0 18 18" fill="currentColor">
+                        <circle cx="9" cy="9" r="5"/>
+                      </svg>
+                    </div>
+                    <span class="fd-desktop__summary-detail">card ending in *0257</span>
+                    <span class="fd-desktop__summary-link">change</span>
+                  </div>
+                  <!-- discount code -->
+                  <div class="fd-desktop__discount-row">
+                    <div class="fd-desktop__discount-icon">
+                      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15.5 9.5l-7 7-6-6 7-7h6v6z"/>
+                        <circle cx="12.5" cy="5.5" r="1" fill="currentColor"/>
+                      </svg>
+                    </div>
+                    <input class="fd-desktop__discount-input" type="text" placeholder="discount code">
+                    <button class="fd-desktop__discount-apply">apply</button>
+                  </div>
+                  <!-- savings banner -->
+                  <div class="fd-desktop__savings-banner">
+                    saving £11.78 on this order
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- modal overlay covers sidebar + main -->
+          <div class="fd-desktop__overlay">
+            <div class="fd-modal">
+              <div class="fd-modal__head">
+                <h4 class="fd-modal__title">restart for thursday 12 march</h4>
+                <p class="fd-modal__sub">you can pause again anytime</p>
+              </div>
+              <div class="fd-modal__body">
+                <div class="fd-offer">
+                  <span class="fd-offer__text">20% off your first box back</span>
+                </div>
+                <div class="fd-detail-block">
+                  <div class="fd-detail-row">
+                    <span class="fd-detail-row__label">plan</span>
+                    <span class="fd-detail-row__value">4 meals for 2 people</span>
+                  </div>
+                  <div class="fd-detail-row">
+                    <span class="fd-detail-row__label">next delivery</span>
+                    <span class="fd-detail-row__value">thursday 12 march</span>
+                  </div>
+                  <hr class="fd-divider">
+                  <div class="fd-detail-row">
+                    <span class="fd-detail-row__label">subtotal</span>
+                    <span class="fd-detail-row__value">£29.16</span>
+                  </div>
+                  <div class="fd-detail-row">
+                    <span class="fd-detail-row__label">first box discount (20%)</span>
+                    <span class="fd-detail-row__value fd-detail-row__value--discount">−£5.83</span>
+                  </div>
+                  <hr class="fd-divider">
+                  <div class="fd-detail-row">
+                    <span class="fd-detail-row__label">payment</span>
+                    <span class="fd-detail-row__value">visa ending 4242</span>
+                  </div>
+                </div>
+                <div class="fd-total-row">
+                  <span class="fd-total-row__label">total</span>
+                  <span class="fd-total-row__price">£23.33 <span>(£5.83/portion)</span></span>
+                </div>
+                <div class="fd-modal__actions">
+                  <button class="fd-btn fd-btn--primary">restart & save 20%</button>
+                  <button class="fd-btn fd-btn--secondary">not now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="fd-replay-btn" data-replay-modal="desktop">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 7a5.5 5.5 0 1 1 1.6 3.9"/><polyline points="1.5 11.5 1.5 7.5 5.5 7.5"/></svg>
+        replay
+      </button>
+    </div>
+
+  </div>
+
+  <div class="spec-panel">
+    <button class="spec-panel__toggle">
+      <svg viewBox="0 0 8 10" fill="currentColor"><path d="M1 1l6 4-6 4z"/></svg>
+      Implementation spec
+    </button>
+    <div class="spec-panel__body">
+      <h4>Design tokens</h4>
+      <table>
+        <tr><th>Token</th><th>Value</th></tr>
+        <tr><td>background</td><td><code>--fd-white</code></td></tr>
+        <tr><td>shadow</td><td><code>--fd-shadow-modal</code></td></tr>
+        <tr><td>radius</td><td><code>--fd-radius</code> (1px)</td></tr>
+        <tr><td>head padding</td><td><code>--fd-space-xl</code> (24px) top/sides, 0 bottom</td></tr>
+        <tr><td>body padding</td><td>20px 24px 24px</td></tr>
+        <tr><td>title font</td><td><code>--fd-text-xl</code> (18px), weight 700</td></tr>
+        <tr><td>title colour</td><td><code>--fd-forest</code></td></tr>
+        <tr><td>subtitle</td><td><code>--fd-text-base</code> (13px), <code>--fd-text-secondary</code></td></tr>
+        <tr><td>overlay bg</td><td>rgba(0, 0, 0, 0.4)</td></tr>
+      </table>
+
+      <h4>CSS classes</h4>
+      <ul>
+        <li><code>.fd-modal</code> — card container (white, overflow hidden)</li>
+        <li><code>.fd-modal__head</code> — title area</li>
+        <li><code>.fd-modal__title</code> — heading (h4, lowercase)</li>
+        <li><code>.fd-modal__sub</code> — subtitle paragraph</li>
+        <li><code>.fd-modal__body</code> — content area</li>
+        <li><code>.fd-modal__actions</code> — button stack (flex column, gap 4px)</li>
+        <li><code>.fd-phone__overlay</code> / <code>.fd-desktop__overlay</code> — backdrop + centring</li>
+        <li><code>--exit</code> modifier — triggers exit animations</li>
+        <li><code>--hidden</code> modifier — display none after exit</li>
+      </ul>
+
+      <h4>Sub-components</h4>
+      <ul>
+        <li><code>.fd-offer</code> — pink highlight strip (<code>--fd-pink</code> bg, bold text)</li>
+        <li><code>.fd-detail-block</code> — summary table (<code>--fd-offwhite</code> bg, 14px 16px padding)</li>
+        <li><code>.fd-detail-row</code> — flex row with label + value</li>
+        <li><code>.fd-detail-row__value--discount</code> — red (<code>--fd-red</code>) for discount values</li>
+        <li><code>.fd-divider</code> — 1px #eee border</li>
+        <li><code>.fd-total-row</code> — total with large price (<code>--fd-text-xl</code>, weight 700)</li>
+      </ul>
+
+      <h4>Buttons</h4>
+      <ul>
+        <li>Primary: <code>--fd-gold</code> bg, black text, <code>--fd-forest</code> border, 13px 24px padding</li>
+        <li>Secondary: transparent, <code>--fd-text-secondary</code>, no border, 12px 24px</li>
+      </ul>
+
+      <h4>Animations</h4>
+      <ul>
+        <li>Entry: <code>fd-pop-in</code> 0.6s <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — applies to <code>.fd-modal</code> only (backdrop appears instantly)</li>
+        <li>Exit backdrop: <code>fd-fade-out</code> 0.6s — opacity 1 → 0 on overlay</li>
+        <li>Exit card: <code>fd-pop-out</code> 0.6s — scale(1) → scale(0.95) + opacity fade on <code>.fd-modal</code></li>
+        <li>After <code>animationend</code> on overlay: <code>--hidden</code> class applied</li>
+      </ul>
+
+      <h4>Behaviour</h4>
+      <ul>
+        <li>"not now" button triggers exit sequence</li>
+
+      </ul>
+
+      <h4>Responsive</h4>
+      <ul>
+        <li>Mobile: overlay padding <code>--fd-space-base</code> (16px), modal fills available width</li>
+        <li>Desktop: overlay padding 32px, modal capped at <code>max-width: 400px</code></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  /* ── helpers ── */
+  function getToast(variant) {
+    return document.querySelector('[data-variant="' + variant + '"]');
+  }
+
+  function resetCheckmark(toast) {
+    var svg = toast.querySelector('.fd-toast__icon svg');
+    if (!svg) return;
+    var clone = svg.cloneNode(true);
+    svg.parentNode.replaceChild(clone, svg);
+  }
+
+  function showToast(toast) {
+    toast.classList.remove('fd-toast--hidden', 'fd-toast--exit');
+    resetCheckmark(toast);
+    toast.style.animation = 'none';
+    toast.offsetHeight; /* force reflow */
+    toast.style.animation = '';
+  }
+
+  /* ── auto-dismiss logic (shared) ── */
+  function autoDismiss(variant) {
+    var toast = getToast(variant);
+    if (!toast || toast.classList.contains('fd-toast--hidden')) return;
+    setTimeout(function () {
+      if (toast.classList.contains('fd-toast--hidden')) return;
+      toast.classList.add('fd-toast--exit');
+      toast.addEventListener('animationend', function handler() {
+        toast.removeEventListener('animationend', handler);
+        toast.classList.add('fd-toast--hidden');
+      });
+    }, 10000);
+  }
+
+  /* ── init toasts ── */
+  autoDismiss('a');
+  autoDismiss('a-desktop');
+
+  /* ── replay buttons ── */
+  document.querySelectorAll('.fd-replay-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var variant = btn.getAttribute('data-replay');
+      var toast = getToast(variant);
+      if (!toast) return;
+
+      toast.classList.add('fd-toast--hidden');
+      toast.classList.remove('fd-toast--exit');
+
+      setTimeout(function () {
+        showToast(toast);
+        autoDismiss(variant);
+      }, 500);
+    });
+  });
+  /* ── dismiss overlay buttons ── */
+  document.querySelectorAll('.fd-phone__overlay .fd-btn--secondary, .fd-desktop__overlay .fd-btn--secondary').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var overlay = btn.closest('.fd-phone__overlay, .fd-desktop__overlay');
+      if (!overlay) return;
+      overlay.classList.add(
+        overlay.classList.contains('fd-phone__overlay') ? 'fd-phone__overlay--exit' : 'fd-desktop__overlay--exit'
+      );
+      overlay.addEventListener('animationend', function handler() {
+        overlay.removeEventListener('animationend', handler);
+        overlay.classList.add(
+          overlay.classList.contains('fd-phone__overlay') ? 'fd-phone__overlay--hidden' : 'fd-desktop__overlay--hidden'
+        );
+      });
+    });
+  });
+  /* ── restart (primary) button — dismiss modal, show welcome-back toast ── */
+  document.querySelectorAll('.fd-phone__overlay .fd-btn--primary, .fd-desktop__overlay .fd-btn--primary').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var overlay = btn.closest('.fd-phone__overlay, .fd-desktop__overlay');
+      if (!overlay) return;
+      var isPhone = overlay.classList.contains('fd-phone__overlay');
+      var toastType = isPhone ? 'phone' : 'desktop';
+
+      overlay.classList.add(isPhone ? 'fd-phone__overlay--exit' : 'fd-desktop__overlay--exit');
+      overlay.addEventListener('animationend', function handler() {
+        overlay.removeEventListener('animationend', handler);
+        overlay.classList.add(isPhone ? 'fd-phone__overlay--hidden' : 'fd-desktop__overlay--hidden');
+
+        var toast = document.querySelector('[data-toast-restart="' + toastType + '"]');
+        if (!toast) return;
+        setTimeout(function () {
+          showToast(toast);
+          setTimeout(function () {
+            if (toast.classList.contains('fd-toast--hidden')) return;
+            toast.classList.add('fd-toast--exit');
+            toast.addEventListener('animationend', function h2() {
+              toast.removeEventListener('animationend', h2);
+              toast.classList.add('fd-toast--hidden');
+            });
+          }, 10000);
+        }, 300);
+      });
+    });
+  });
+  /* ── replay modal buttons ── */
+  document.querySelectorAll('[data-replay-modal]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var type = btn.getAttribute('data-replay-modal');
+      var toast = document.querySelector('[data-toast-restart="' + type + '"]');
+      if (toast) {
+        toast.classList.add('fd-toast--hidden');
+        toast.classList.remove('fd-toast--exit');
+      }
+      var overlay = document.querySelector(
+        type === 'phone' ? '.fd-phone__overlay' : '.fd-desktop__overlay'
+      );
+      if (!overlay) return;
+      overlay.classList.remove(
+        'fd-phone__overlay--exit', 'fd-desktop__overlay--exit',
+        'fd-phone__overlay--hidden', 'fd-desktop__overlay--hidden'
+      );
+      var modal = overlay.querySelector('.fd-modal');
+      modal.style.animation = 'none';
+      modal.offsetHeight;
+      modal.style.animation = '';
+    });
+  });
+
+  /* ── spec panel toggles ── */
+  document.querySelectorAll('.spec-panel__toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.closest('.spec-panel').classList.toggle('spec-panel--open');
+    });
+  });
+})();
+</script>
+</body>
+</html>
