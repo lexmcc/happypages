@@ -15,7 +15,7 @@ Rails 8.1 + PostgreSQL on Railway. Multi-tenant via `Current.shop` thread-isolat
 - **Dual auth** — Shopify OAuth (self-service install, creates Shop + ShopCredential + ShopIntegration + User) and email/password login (invite-only, BCrypt). Users have roles (`owner`, `admin`, `member`) and invite tokens. Rate-limited login (20 req/min/IP). OAuth state consumed atomically via `session.delete(:oauth_state)` to prevent replay. `params[:app]` allowlisted to `%w[custom]`.
 - **Checkout UI Extension** — Preact + Polaris thank you page widget showing referral link
 - **White-labeled URLs** — `/:shop_slug/refer` routes with auto-generated slugs
-- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `app_client_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Both the public app and custom app (`[FD] - Happypages Referrals`) have identical webhook subscriptions pointing at the same backend. Referral events tracked via `ReferralEvent` model.
+- **Webhook pipeline** — `orders/create` triggers referral matching and reward generation, HMAC-verified against `SHOPIFY_CLIENT_SECRET` (Shopify) or per-shop `app_client_secret` (Custom). Shop lookup via `Shop.find_by_shopify_domain` (checks ShopIntegration first, falls back to `shops.domain`). Both the public app and custom app (`[FD] - Happypages Referrals`) have identical webhook subscriptions pointing at the same backend. Webhook flow writes both customer note and `referral_code` metafield. Referral events tracked via `ReferralEvent` model.
 - **Encrypted credentials** — Active Record Encryption on all sensitive fields (API keys, tokens, PII). `ShopIntegration` model holds per-provider credentials (Shopify, WooCommerce, Custom) with encrypted tokens. `ShopCredential` retained as read-only fallback. `app_client_id` uniqueness enforced, `app_client_secret` required when `app_client_id` present. `find_by_app_client_id` scoped to active integrations only.
 - **Feature gating** — `ShopFeature` model tracks per-shop feature activation (referrals, analytics, specs, cro, insights, landing_pages, funnels, ads, ambassadors). Status: active, locked, trial, expired. Sidebar navigation dynamically shows/hides features based on status.
 - **Audit logging** — AuditLog model with JSONB details for compliance events. Actors: webhook, admin, system, customer, super_admin, super_admin_impersonating.
@@ -42,7 +42,8 @@ Automated brand analysis and marketing image generation pipeline powered by Gemi
 ### Admin UI
 
 - **Collapsible sidebar** — persistent left nav with feature-gated sections. Collapsible on desktop (icon-only mode persisted to localStorage via Stimulus). Mobile: slide-out drawer with backdrop. Shows active features with icons; locked features show lock icon and link to feature preview pages. Section headers group related features (Main, Marketing, Insights).
-- **Analytics Dashboard** — web analytics dashboard with KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Powered by `Analytics::DashboardQueryService`. URL-based period/filter/comparison state via Stimulus filter controller. Also available in superadmin with site picker.
+- **Referral Performance Dashboard** — dedicated `/admin/performance` page with 6 KPI cards (extension loads, share rate %, page visits, referred orders, conversion rate %, referred revenue) with sparklines and period comparison badges. Time series chart (click KPI to switch metric, previous-period comparison overlay). 4-stage funnel visualisation (extension loads → page visits → shares → referred orders) with step-to-step conversion rates. Source breakdown (extension vs direct). Top referrers table. Period selector (today/7d/30d/90d). Empty state for new merchants. Powered by `Referrals::PerformanceQueryService`. Reuses `analytics_chart_controller.js` and `analytics_sparkline_controller.js` Stimulus controllers.
+- **Analytics Dashboard** — web analytics dashboard with KPI cards (visitors, pageviews, bounce rate, avg duration, revenue) with sparklines, time series chart (Chart.js), top pages, referrers, UTM campaigns, geography, devices, goals, first-touch revenue attribution, and referral performance. Powered by `Analytics::DashboardQueryService`. URL-based period/filter/comparison state via Stimulus filter controller. Also available in superadmin with site picker. Hidden from sidebar (accessible by URL).
 - **Referral Page** — configurable customer-facing referral page editor with inline media picker
 - **Thank You Card** — checkout extension configuration with inline media picker
 - **Media** — image upload and management library. Drag-and-drop uploads to Railway Bucket (Tigris, S3-compatible). Automatic resizing to optimized WebP variants per display context (1200x400 referral banner, 600x400 extension banner, 300x200 thumbnail). 50-image-per-shop limit. Inline media pickers replace URL inputs on editor pages with thumbnail grid selection + URL fallback. Surface-filtered: each picker shows only images relevant to its context (referral banner or extension card) plus untagged uploads. AI-generated images are auto-tagged by surface; user uploads are tagged based on which picker they're uploaded from.
@@ -65,6 +66,7 @@ Master dashboard for the app owner to manage all onboarded shops. Env-var-based 
 - **Specs Overview** (`/superadmin/specs_overview`) — cross-shop/org read-only view of all specs projects. Filterable by shop, organisation, and session status (active/completed). Table shows project name, owner (linked), session counts, card status badges, and creation date.
 - **Per-shop specs tab** — 6th "Specs" tab on shop detail page showing shop's specs projects with session/card summaries.
 - **Organisations** (`/superadmin/organisations`) — create and manage organisations for non-Shopify specs clients. Per-org management page shows clients and projects. Create clients (generates invite token, sends email via `SpecsClientMailer`), resend invites.
+- **Ops Dashboard** (`/superadmin/ops`) — embeds the local ops dashboard (comms log, meetings, commitments, backlogs) via client-side fetch from `127.0.0.1:3333`. Shows graceful fallback when the local Node server isn't running. Dashboard server lives at `ops/dashboard/` (outside git repo, local-only).
 
 ### Web Analytics System
 
@@ -117,7 +119,7 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 - Optional `storefront_url` field on Shop — merchants set this in Settings (Hydrogen tab) for headless storefronts
 - `customer_facing_url` helper returns `storefront_url` or falls back to `https://{domain}`
 - Referral copy-link, back-to-store link, and config API all use `customer_facing_url`
-- `shop_slug` and `referral_code` metafields have storefront API read access for Liquid/Storefront API queries
+- `shop_slug` and `referral_code` metafields have storefront API read access for Liquid/Storefront API queries. Metafield namespace is dynamic via `Shop#metafield_namespace` — returns `app--fd-happypages-referrals` for the custom app, `app--happypages-friendly-referrals` for the public app (matched by `SHOPIFY_CUSTOM_CLIENT_ID` env var).
 - **Discount route snippet** — copyable `app/routes/discount.$code.tsx` Remix route file provided in admin Settings. Uses Storefront API `cartCreate` mutation to apply discount code and redirect to homepage, replicating Online Store's built-in `/discount/CODE` route for Hydrogen stores.
 
 ### Data Protection
@@ -132,32 +134,7 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 
 ### Shopify App Submission
 
-#### Pre-Deploy
-- [ ] Deploy public app webhooks: `cd happypages-referrals && shopify app deploy --force` (custom app already deployed)
-- [ ] Verify webhook subscriptions in Partner Dashboard
-
-#### Partner Dashboard
-- [ ] Add privacy policy URL: `https://app.happypages.co/privacy`
-- [ ] Verify protected customer data access approved (email, first_name)
-- [ ] Verify network access approval for theme extension
-- [ ] Upload walkthrough video (.mp4, 1080p, < 3 min)
-- [ ] Fill in testing instructions
-- [ ] App intro (100 chars), app details (500 chars), feature bullets (80 chars each)
-- [ ] Submit for review
-
-#### Walkthrough Video Scenes
-1. Install flow — OAuth from app listing → grant screen → redirect to admin
-2. First-time setup — Configure extension in admin UI → save → live preview
-3. Referral page — Visit `/:shop_slug/refer`
-4. Customer journey — Checkout → thank you page shows extension → share link
-5. Referral tracked — Referred order via webhook → reward code generated
-6. Analytics — Admin analytics dashboard
-
-#### Test Store Cleanup (`happypages-test-store`)
-- [ ] Remove messy test/dummy orders
-- [ ] Ensure theme has extension block enabled and visible
-- [ ] Verify referral page loads at `/:slug/refer`
-- [ ] Test fresh install flow (uninstall → reinstall)
+App submitted for review. Public app webhooks deployed, privacy policy live, protected customer data and network access approved, walkthrough video uploaded, test store cleaned up.
 
 ### App Hardening
 
@@ -168,7 +145,8 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 | Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
 | Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
 | Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
-| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 597 specs (model, request, service, concern, mailer, job) |
+| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 647 specs (model, request, service, concern, mailer, job) |
 
 ### Housekeeping
-- [ ] Delete old custom distribution app from Partner Dashboard
+
+Old custom distribution app deleted from Partner Dashboard.

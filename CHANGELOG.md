@@ -2,6 +2,17 @@
 
 Dated record of shipped features across both products.
 
+## 2026-03-06
+
+- **Super admin dark theme reskin** — all 22 superadmin views reskinned with `ops-*` design tokens (dark theme). Collapsible sidebar with Ops Dashboard link.
+- **Ops Dashboard in super admin** — `/superadmin/ops` loads the local ops dashboard (comms, meetings, commitments, backlogs) via client-side fetch from `127.0.0.1:3333`. Works from any environment (staging/prod) when the local Node server is running. Graceful fallback when unavailable.
+
+## 2026-03-03
+
+- **Referral Performance Dashboard** — dedicated `/admin/performance` page with 6 KPI cards (extension loads, share rate, page visits, referred orders, conversion rate, referred revenue), time series chart, 4-stage funnel visualisation, source breakdown, top referrers table, and period selector. Replaced Analytics link in sidebar and dashboard with Performance. `Referrals::PerformanceQueryService` computes all metrics from `ReferralEvent` + `ReferralReward` data. 642 total specs, all passing.
+- **Performance audit fixes** — fixed chart rendering (wrong Stimulus data attributes + missing canvas), comparison toggle logic (inverted), nil SUM crash on revenue queries, N+1 query in top referrers (replaced per-referral loop with single LEFT JOIN + COALESCE).
+- **Dynamic metafield namespace** — fixed metafield writes silently failing for the custom app (`[FD] - Happypages Referrals`). All metafield writes now use `Shop#metafield_namespace` instead of hardcoded public app namespace. Added missing metafield write to webhook flow and backfill on the API "already_existed" path. All metafield writes now log failures. 647 total specs.
+
 ## 2026-03-02
 
 - **Custom app webhook deployment** — Created TOML config for `[FD] - Happypages Referrals` custom app and deployed webhook subscriptions (`orders/create` + compliance topics) + checkout UI extension via Shopify CLI. Fixed `api_version` mismatch by downgrading extension TOML from `2026-04` to `2025-10` to match available `@shopify/ui-extensions` package.

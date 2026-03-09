@@ -96,11 +96,18 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Feb 27** - Specs engine chunk 10: admin notifications + superadmin dashboard — polymorphic Notification model, NotifyJob background job, bell icon with Stimulus polling, notification preferences, specs overview page, per-shop specs tab, 46 new specs (539 total)
 - **Feb 27** - Specs engine chunk 9: Linear integration — OAuth flow, push kanban cards to Linear as issues, bi-directional status sync via webhooks, integrations page UI, 48 new specs (493 total)
 
-### Week 12: Multi-App Credential Hardening + Custom App Deploy (Mar 2, 2026)
+### Week 12: Multi-App Hardening + Referral Performance (Mar 2-3, 2026)
 
 - **Mar 2** - Post-audit fixes for multi-app credential support: 9 fixes across embedded layout, JWT verification, OAuth flow, seeds, and model validations. 557 total specs, all passing.
 - **Mar 2** - Deployed `[FD] - Happypages Referrals` custom app: TOML config, webhook subscriptions, and checkout UI extension released via Shopify CLI.
 - **Mar 2** - Specs engine chunk 11: session limits + usage gating — UsageChecker service, per-shop/org tier configuration, enforcement at all 4 creation points, usage pills, superadmin controls, 40 new specs (597 total)
+- **Mar 3** - Referral Performance Dashboard: 6-chunk feature (revenue migration → query service → controller → UI → sidebar cleanup → tests). KPI cards with sparklines, time series chart, funnel visualisation, source breakdown, top referrers. Post-build audit fixed chart rendering, comparison toggle, nil SUM, and N+1 query. 642 total specs.
+- **Mar 3** - Fixed dynamic metafield namespace: custom app writes were silently rejected (wrong namespace). Added `Shop#metafield_namespace`, webhook metafield write, API backfill path, and failure logging across all metafield writes. 647 total specs.
+
+### Week 13: Super Admin Reskin + Ops Dashboard (Mar 6, 2026)
+
+- **Mar 6** - Super admin dark theme reskin: all 22 views reskinned with `ops-*` design tokens, collapsible sidebar with Ops Dashboard link.
+- **Mar 6** - Ops Dashboard integration: client-side fetch from local Node server (`127.0.0.1:3333`), works from staging/prod. Removed server-side proxy and token auth — superadmin auth layer is sufficient.
 
 ## Key Milestones
 

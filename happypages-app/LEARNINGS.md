@@ -465,5 +465,59 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Move controller-testing specs to `type: :request` files, or use `include Rails.application.routes.url_helpers`
 - **Lesson**: Keep request-level assertions (HTTP calls, route helpers) in request specs, even when testing side effects like job enqueuing
 
+### Stimulus Data Attribute Names Must Match Controller Value Declarations (Mar 3, 2026)
+- `analytics_chart_controller.js` declares `static values = { metrics: Object, activeMetric: String }`
+- Stimulus maps these to `data-analytics-chart-metrics-value` and `data-analytics-chart-active-metric-value`
+- The performance view used `data-analytics-chart-data-value` and `data-analytics-chart-metric-value` — completely wrong attribute names
+- The controller also requires a `<canvas data-analytics-chart-target="canvas">` element — without it, `this.hasCanvasTarget` returns false and `renderChart()` silently no-ops
+- **Lesson**: When reusing a Stimulus controller, always check its `static targets` and `static values` declarations and match the HTML data attributes exactly
+
+### Comparison Toggle Default Must Match JS Checkbox Behavior (Mar 3, 2026)
+- `@compare = params[:compare] != "0"` means comparison is ON by default (any value except "0", including nil/absent param)
+- But the JS checkbox sends `compare=1` when checked and omits the param when unchecked
+- So on first load (no param), `!= "0"` evaluates to `true` — comparison is always on, toggle appears to do nothing
+- **Fix**: `@compare = params[:compare] == "1"` — off by default, on only when checkbox explicitly sends "1"
+- **Lesson**: When a controller param controls a checkbox toggle, use `== "1"` (opt-in), not `!= "0"` (opt-out)
+
+### PostgreSQL SUM Returns nil for Empty Result Sets (Mar 3, 2026)
+- `scope.sum(:column)` returns `nil` (not 0) when no rows match the scope
+- `nil / 100.0` raises `NoMethodError: undefined method '/' for nil:NilClass`
+- `.group(:date).sum(:column)` returns a hash — present keys can have nil values if all rows in that group have NULL in the column
+- **Fix**: Use `.to_i` on SUM results — converts nil to 0, leaves integers unchanged
+- **Lesson**: Always guard `SUM` results with `.to_i` or `|| 0` when dividing or doing arithmetic
+
+### N+1 Queries in Map Blocks with Association Queries (Mar 3, 2026)
+- `referrals.limit(10).map { |r| r.referral_rewards.where(...).sum(...) }` fires 10 individual queries
+- **Fix**: Use a single query with `LEFT JOIN` + `COALESCE(SUM(...), 0)` and `group("referrals.id")`
+- For date-scoped JOINs, put the date filter in the JOIN condition (not WHERE) so unmatched rows still appear with 0 revenue
+- Use `ActiveRecord::Base.sanitize_sql_array` for safe parameter interpolation in raw JOIN clauses
+- **Lesson**: When computing aggregates per-record in a list, always use a single grouped query instead of N+1 individual queries
+
+### Shopify Metafield Namespace Is App-Specific (Mar 3, 2026)
+- Each Shopify app owns a unique metafield namespace (e.g. `app--happypages-friendly-referrals` vs `app--fd-happypages-referrals`)
+- Writing to the wrong namespace silently fails — Shopify returns no error, the metafield just doesn't appear
+- When multiple apps share a backend, namespace must be resolved dynamically per-shop based on which app installed it
+- **Fix**: `Shop#metafield_namespace` checks `integration.app_client_id` against `SHOPIFY_CUSTOM_CLIENT_ID` env var
+- **Lesson**: Never hardcode app-owned namespaces; always derive from the shop's integration record
+
+### FactoryBot Traits Exist for Validation Reasons (Mar 3, 2026)
+- `ShopIntegration` validates `app_client_secret` presence when `app_client_id` is set
+- Passing `app_client_id: "..."` directly to `create(:shop_integration)` fails validation
+- The `:with_custom_app` trait provides both fields together
+- **Lesson**: When a test needs a specific attribute that has cross-field validations, check factory traits first
+
+### macOS localhost Resolves to IPv6, Not IPv4 (Mar 6, 2026)
+- `Net::HTTP.start("localhost", 3333)` tries `::1` (IPv6) first on macOS
+- A Node server bound to `127.0.0.1` won't respond — `Errno::ECONNREFUSED`
+- **Fix**: Always use `127.0.0.1` explicitly when targeting a local IPv4-only server
+- **Lesson**: `localhost` ≠ `127.0.0.1` on macOS — use the IP directly
+
+### Server-Side Proxy Won't Reach Local Services from Cloud (Mar 6, 2026)
+- Rails on Railway can't `Net::HTTP.start("127.0.0.1", 3333)` — that's the Railway container's loopback, not your laptop
+- But the user's **browser** can reach `127.0.0.1:3333` on their machine
+- **Fix**: Client-side `fetch()` from the browser instead of server-side proxy from Rails
+- Node server needs `Access-Control-Allow-Origin: *` (safe for localhost-only servers)
+- **Lesson**: When a service is truly local-only, use client-side fetch — the browser is on the user's machine, the server is not
+
 ---
-*Updated: Mar 2, 2026 (session limits: JSONB metadata validation, before_action extraction pattern)*
+*Updated: Mar 6, 2026 (localhost IPv6 resolution, client-side fetch for local services)*
