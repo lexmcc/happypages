@@ -15,8 +15,9 @@
         ns.textContent = s.textContent;
         s.replaceWith(ns);
       });
-      var firstPill = mount.querySelector('.pill');
-      if (firstPill) firstPill.focus();
+      var firstRow = mount.querySelector('.comm-row');
+      if (firstRow) { firstRow.setAttribute('tabindex', '0'); firstRow.focus(); }
+      else { var fp = mount.querySelector('.pill'); if (fp) fp.focus(); }
     })
     .catch(function() {
       mount.innerHTML = '<div class="py-16 text-center">' +

@@ -35,65 +35,65 @@
 
     <%# Navigation %>
     <nav class="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-      <%= link_to superadmin_ops_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/ops') ? 'bg-ops-accent/15 text-ops-accent' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_ops_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/ops') ? 'bg-ops-accent/15 text-ops-accent' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Ops Dashboard" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
-        Ops Dashboard
+        <span class="nav-label">Ops Dashboard</span>
       <% end %>
 
-      <%= link_to superadmin_root_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/shops') || request.path == '/superadmin' || request.path == '/superadmin/' ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_root_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/shops') || request.path == '/superadmin' || request.path == '/superadmin/' ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Shops" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"></path>
         </svg>
-        Shops
+        <span class="nav-label">Shops</span>
       <% end %>
 
       <div class="pt-4 pb-2 px-3">
         <p class="text-[10px] font-bold uppercase tracking-wider text-ops-text-tertiary">Specs</p>
       </div>
 
-      <%= link_to superadmin_specs_overview_index_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/specs_overview') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_specs_overview_index_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/specs_overview') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Overview" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <rect x="3" y="3" width="7" height="7" rx="1"></rect>
           <rect x="14" y="3" width="7" height="7" rx="1"></rect>
           <rect x="3" y="14" width="7" height="7" rx="1"></rect>
           <rect x="14" y="14" width="7" height="7" rx="1"></rect>
         </svg>
-        Overview
+        <span class="nav-label">Overview</span>
       <% end %>
 
-      <%= link_to superadmin_organisations_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/organisations') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_organisations_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/organisations') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Organisations" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
           <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        Organisations
+        <span class="nav-label">Organisations</span>
       <% end %>
 
       <div class="pt-4 pb-2 px-3">
         <p class="text-[10px] font-bold uppercase tracking-wider text-ops-text-tertiary">AI Imagery</p>
       </div>
 
-      <%= link_to superadmin_scene_assets_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/scene_assets') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_scene_assets_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/scene_assets') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Scene Assets" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
           <circle cx="8.5" cy="8.5" r="1.5"></circle>
           <polyline points="21 15 16 10 5 21"></polyline>
         </svg>
-        Scene Assets
+        <span class="nav-label">Scene Assets</span>
       <% end %>
 
-      <%= link_to superadmin_prompt_templates_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/prompt_templates') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}" do %>
+      <%= link_to superadmin_prompt_templates_path, class: "flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/superadmin/prompt_templates') ? 'bg-ops-surface-hover text-ops-text' : 'text-ops-text-secondary hover:bg-ops-surface-hover hover:text-ops-text'}", data: { tooltip: "Prompt Templates" } do %>
         <svg class="size-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
           <line x1="16" y1="13" x2="8" y2="13"></line>
           <line x1="16" y1="17" x2="8" y2="17"></line>
         </svg>
-        Prompt Templates
+        <span class="nav-label">Prompt Templates</span>
       <% end %>
     </nav>
 
