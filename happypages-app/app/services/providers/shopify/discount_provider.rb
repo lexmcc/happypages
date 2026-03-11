@@ -127,7 +127,7 @@ module Providers
 
         value_input = build_value_input(discount_type, discount_value)
 
-        customer_selection = if customer_id.present?
+        context = if customer_id.present?
           { customers: { add: [ customer_id ] } }
         else
           { all: true }
@@ -139,7 +139,7 @@ module Providers
             code: reward_code,
             startsAt: Time.current.iso8601,
             endsAt: (Time.current + 30.days).iso8601,
-            customerSelection: customer_selection,
+            context: context,
             customerGets: {
               value: value_input,
               items: { all: true },
@@ -226,7 +226,7 @@ module Providers
             title: title,
             code: code,
             startsAt: Time.current.iso8601,
-            customerSelection: { all: true },
+            context: { all: true },
             customerGets: {
               value: value_input,
               items: { all: true },
