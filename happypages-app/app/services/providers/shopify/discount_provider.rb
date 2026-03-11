@@ -130,7 +130,7 @@ module Providers
         context = if customer_id.present?
           { customers: { add: [ customer_id ] } }
         else
-          { all: true }
+          { all: "ALL" }
         end
 
         variables = {
@@ -226,7 +226,7 @@ module Providers
             title: title,
             code: code,
             startsAt: Time.current.iso8601,
-            context: { all: true },
+            context: { all: "ALL" },
             customerGets: {
               value: value_input,
               items: { all: true },
