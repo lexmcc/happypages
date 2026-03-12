@@ -1,7 +1,7 @@
-<div data-controller="sidebar">
+<div data-controller="superadmin-sidebar">
   <%# Mobile hamburger button %>
   <button
-    data-action="click->sidebar#toggle"
+    data-action="click->superadmin-sidebar#toggle"
     class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-ops-surface border border-ops-border-strong rounded shadow-lg"
     aria-label="Toggle navigation"
   >
@@ -12,14 +12,14 @@
 
   <%# Backdrop %>
   <div
-    data-sidebar-target="backdrop"
-    data-action="click->sidebar#close"
+    data-superadmin-sidebar-target="backdrop"
+    data-action="click->superadmin-sidebar#close"
     class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"
   ></div>
 
   <%# Sidebar %>
   <aside
-    data-sidebar-target="sidebar"
+    data-superadmin-sidebar-target="sidebar"
     class="fixed lg:sticky top-0 left-0 z-40 h-screen w-52 bg-ops-surface border-r border-ops-border-strong flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200"
   >
     <%# Header with badge %>
