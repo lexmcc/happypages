@@ -40,10 +40,20 @@ class Admin::DiscountGroupsController < Admin::BaseController
       value: @group.referred_discount_value
     }
 
+    old_new_customers_only = @group.new_customers_only
+
     if @group.update(group_params)
       # Check if referred discount changed (needs grandfathering)
       if referred_discount_changed?(old_referred)
         create_new_generation_for_group(@group)
+      end
+
+      # Sync customer eligibility to Shopify if toggle changed
+      if @group.new_customers_only != old_new_customers_only && @group.current_generation&.shopify_discount_id.present? && Current.shop
+        Current.shop.discount_provider.update_discount_context(
+          generation: @group.current_generation,
+          new_customers_only: @group.new_customers_only
+        )
       end
 
       redirect_to admin_campaigns_path, notice: "Discount group '#{@group.name}' updated successfully!"
@@ -131,7 +141,8 @@ class Admin::DiscountGroupsController < Admin::BaseController
       :referrer_reward_type,
       :referrer_reward_value,
       :applies_on_subscription,
-      :applies_on_one_time_purchase
+      :applies_on_one_time_purchase,
+      :new_customers_only
     )
   end
 

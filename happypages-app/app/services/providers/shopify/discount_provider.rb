@@ -16,7 +16,8 @@ module Providers
           discount_value: discount_value,
           title: "#{group.name} - Referral Discounts",
           applies_on_subscription: group.applies_on_subscription,
-          applies_on_one_time_purchase: group.applies_on_one_time_purchase
+          applies_on_one_time_purchase: group.applies_on_one_time_purchase,
+          new_customers_only: group.new_customers_only
         )
 
         discount_id = result.dig("data", "discountCodeBasicCreate", "codeDiscountNode", "id")
@@ -67,6 +68,41 @@ module Providers
           { success: true, discount_id: generation.shopify_discount_id, generation: generation }
         else
           { success: false, errors: result["errors"] }
+        end
+      end
+
+      def update_discount_context(generation:, new_customers_only:)
+        return { success: false, error: "No Shopify discount ID" } unless generation&.shopify_discount_id.present?
+
+        mutation = <<~GRAPHQL
+          mutation discountCodeBasicUpdate($id: ID!, $basicCodeDiscount: DiscountCodeBasicInput!) {
+            discountCodeBasicUpdate(id: $id, basicCodeDiscount: $basicCodeDiscount) {
+              codeDiscountNode {
+                id
+              }
+              userErrors {
+                field
+                message
+              }
+            }
+          }
+        GRAPHQL
+
+        context = build_customer_context(new_customers_only)
+
+        result = execute_graphql(mutation, {
+          id: generation.shopify_discount_id,
+          basicCodeDiscount: {
+            customerSelection: context
+          }
+        })
+
+        errors = result.dig("data", "discountCodeBasicUpdate", "userErrors")
+
+        if errors&.empty? || errors.nil?
+          { success: true, discount_id: generation.shopify_discount_id }
+        else
+          { success: false, errors: errors }
         end
       end
 
@@ -204,7 +240,8 @@ module Providers
       private
 
       def create_shared_parent_discount(code:, discount_type:, discount_value:, title: "Referral Program - Discounts",
-                                        applies_on_subscription: true, applies_on_one_time_purchase: true)
+                                        applies_on_subscription: true, applies_on_one_time_purchase: true,
+                                        new_customers_only: true)
         mutation = <<~GRAPHQL
           mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
             discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
@@ -220,13 +257,14 @@ module Providers
         GRAPHQL
 
         value_input = build_value_input(discount_type, discount_value)
+        context = build_customer_context(new_customers_only)
 
         variables = {
           basicCodeDiscount: {
             title: title,
             code: code,
             startsAt: Time.current.iso8601,
-            context: { all: "ALL" },
+            customerSelection: context,
             customerGets: {
               value: value_input,
               items: { all: true },
@@ -257,6 +295,49 @@ module Providers
         end
 
         false
+      end
+
+      def build_customer_context(new_customers_only)
+        if new_customers_only
+          segment_gid = ensure_new_customer_segment
+          segment_gid ? { customerSegments: { add: [segment_gid] } } : { all: "ALL" }
+        else
+          { all: "ALL" }
+        end
+      end
+
+      def ensure_new_customer_segment
+        existing_id = shop.platform_config["new_customer_segment_id"]
+        return existing_id if existing_id.present?
+
+        mutation = <<~GRAPHQL
+          mutation segmentCreate($name: String!, $query: String!) {
+            segmentCreate(name: $name, query: $query) {
+              segment {
+                id
+              }
+              userErrors {
+                field
+                message
+              }
+            }
+          }
+        GRAPHQL
+
+        result = execute_graphql(mutation, {
+          name: "Happypages: New Customers",
+          query: "number_of_orders = 0"
+        })
+
+        segment_gid = result.dig("data", "segmentCreate", "segment", "id")
+
+        if segment_gid.present?
+          shop.update!(platform_config: shop.platform_config.merge("new_customer_segment_id" => segment_gid))
+        else
+          Rails.logger.error "Failed to create customer segment: #{result.inspect}"
+        end
+
+        segment_gid
       end
 
       def build_value_input(discount_type, discount_value)

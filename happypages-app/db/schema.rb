@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_03_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -311,6 +311,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_100000) do
     t.string "discount_type", null: false
     t.boolean "is_active", default: false
     t.string "name"
+    t.boolean "new_customers_only", default: true
     t.boolean "override_applied", default: false
     t.datetime "override_ends_at"
     t.string "override_referred_type"
