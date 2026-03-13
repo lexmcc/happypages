@@ -1,0 +1,2965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rollr — Wizard Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Kalice';
+    src: url('https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Regular.woff2?v=1710785896') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --plum: #430632;
+    --plum-light: #5a1a4a;
+    --plum-dark: #2e0422;
+    --plum-tint: #f3e8ef;
+    --warm-white: #fafafa;
+    --warm-grey: #f0ece8;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666;
+    --text-muted: #999;
+    --border: #e0dcd8;
+    --mist: #e9e9e9;
+    --coral: #ffa674;
+    --radius: 3px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --font-heading: 'Kalice', Georgia, serif;
+    --font-body: 'Outfit', -apple-system, sans-serif;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --spring: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Scent colours */
+    --vetiver: #8b9f6f;
+    --mandarin: #d4a574;
+    --clary-sage: #7cb5a3;
+    --juniper: #6db3d1;
+  }
+
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: var(--font-body);
+    background: #eae6e1;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  /* ── Page Chrome ── */
+
+  .page-header {
+    background: var(--plum-dark);
+    color: white;
+    padding: 32px 24px;
+  }
+  .page-header__inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .page-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .page-intro {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    max-width: 560px;
+    line-height: 1.5;
+  }
+
+  .page-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  .section-header {
+    margin-bottom: 28px;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--plum);
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+  }
+
+  /* ── Variant Grid ── */
+
+  .variant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 880px) {
+    .variant-grid {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
+
+  .variant-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 415px;
+  }
+  .variant-label {
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--plum);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .variant-rationale {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 360px;
+  }
+
+  /* ── Preview Card ── */
+
+  .preview-card {
+    width: 430px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    transform-origin: top center;
+  }
+  @media (max-width: 470px) {
+    .preview-card { width: calc(100vw - 32px); }
+  }
+  .preview-card--wizard {
+    height: 932px;
+    display: flex;
+    flex-direction: column;
+  }
+  .preview-card--wizard > [data-wizard] {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .proto-nav {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+  .proto-nav__logo {
+    height: 30px;
+    display: block;
+  }
+
+  /* ── Shared Step Styles ── */
+
+  .step-heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--plum);
+    margin: 4px 0 4px;
+    line-height: 1.2;
+  }
+  .step-heading[tabindex] { outline: none; }
+  .step-sub {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 300;
+  }
+  .trust-line {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+  .trust-line .stars { color: var(--plum); letter-spacing: 1px; }
+  .trust-line strong { font-weight: 500; color: var(--text-primary); }
+
+  .skip-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    padding: 8px;
+    width: 100%;
+  }
+  .skip-link:focus-visible {
+    outline: 2px solid var(--plum);
+    outline-offset: 2px;
+  }
+
+  /* ── Interstitial (Trust Builder intro) ── */
+
+  .intro-panel {
+    background: var(--warm-grey);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .intro-point {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+  .intro-point + .intro-point {
+    border-top: 1px solid var(--border);
+  }
+  .intro-point__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--plum);
+    margin-top: 1px;
+  }
+  .intro-point__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+  .intro-point__text {
+    flex: 1;
+    min-width: 0;
+  }
+  .intro-point__title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .intro-point__detail {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin-top: 1px;
+  }
+  .intro__link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    padding: 8px;
+    width: 100%;
+  }
+  .intro__link:focus-visible {
+    outline: 2px solid var(--plum);
+    outline-offset: 2px;
+  }
+
+  /* ── Product info sheet content ── */
+
+  .product-info__section {
+    margin-bottom: 16px;
+  }
+  .product-info__section:last-child {
+    margin-bottom: 0;
+  }
+  .product-info__heading {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--plum);
+    margin-bottom: 6px;
+  }
+  .product-info__list {
+    list-style: none;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .product-info__list li::before {
+    content: '\2022';
+    color: var(--plum);
+    margin-right: 6px;
+  }
+  .product-info__steps {
+    list-style: none;
+    counter-reset: steps;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .product-info__steps li {
+    counter-increment: steps;
+    padding-left: 4px;
+  }
+  .product-info__steps li::before {
+    content: counter(steps) '. ';
+    font-weight: 500;
+    color: var(--plum);
+  }
+  .product-info__text {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── Selection Check Mark ── */
+
+  .check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background: var(--plum);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0);
+    transition: transform var(--spring);
+    z-index: 3;
+  }
+  .selected .check { transform: scale(1); }
+  .check svg { width: 11px; height: 11px; }
+
+  /* ── Badge — image-bottom overlay ── */
+  .badge {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    top: auto;
+    right: auto;
+    background: var(--plum-tint);
+    color: var(--plum);
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    z-index: 4;
+  }
+
+  /* ── Shared: Learn More link ── */
+
+  .learn-more {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--plum);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 2px 0;
+    white-space: nowrap;
+  }
+  .learn-more:hover { color: var(--plum-light); }
+
+  /* ── C1 — Base Card ── */
+
+  .c1-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .c1-card {
+    position: relative;
+    background: #fff9fa;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    border: 1px solid #d4c8be;
+    border-radius: 4px;
+  }
+  .c1-card:active { transform: scale(0.98); transition: transform 80ms ease-out; }
+  .c1-card:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
+  .c1-card.selected {
+    border-color: var(--plum);
+    box-shadow: 0 0 0 1px var(--plum);
+  }
+  .c1-card__image {
+    width: 100%;
+    height: 110px;
+    overflow: hidden;
+    position: relative;
+  }
+  .c1-card__image img { width: 100%; height: 100%; object-fit: cover; }
+  .c1-card__info {
+    padding: 8px 10px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .c1-card__name {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--plum);
+    line-height: 1.2;
+  }
+  .c1-card__desc {
+    font-size: 0.68rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin: 3px 0 6px;
+  }
+  .c1-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: auto;
+  }
+  .c1-card__price {
+    font-size: 0.72rem;
+    font-family: var(--font-heading);
+    color: var(--plum);
+    font-weight: 400;
+  }
+
+  /* ── Bottom Sheet ── */
+
+  .sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px 12px 0 0;
+    z-index: 11;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 85%;
+    overflow-y: auto;
+  }
+  .sheet.open {
+    transform: translateY(0);
+  }
+
+  .sheet__handle {
+    width: 32px;
+    height: 4px;
+    background: #ccc;
+    border-radius: 2px;
+    margin: 10px auto 0;
+  }
+
+  .sheet__body {
+    padding: 16px 20px 24px;
+    position: relative;
+  }
+
+  .sheet__image {
+    width: 100%;
+    height: 220px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .sheet__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sheet__name {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--plum);
+    margin-bottom: 6px;
+  }
+
+  .sheet__desc {
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .sheet__notes {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .sheet__notes strong {
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .sheet__review {
+    padding: 10px 0;
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--plum);
+    line-height: 1.4;
+    text-align: center;
+  }
+  .sheet__review-stars {
+    color: var(--plum);
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+  .sheet__review-author {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .sheet__price {
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--plum);
+  }
+
+  .sheet__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .sheet__close-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--plum);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 0;
+    margin-left: auto;
+  }
+  .sheet__close-link:hover { color: var(--plum-light); }
+
+  /* ── S2 — Scent Cards ── */
+
+  .s2-card {
+    position: relative;
+    background: #fff9fa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    border: 1px solid #d4c8be;
+  }
+  .s2-card:active { transform: scale(0.98); transition: transform 80ms ease-out; }
+  .s2-card:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
+  .s2-card.selected {
+    border-color: var(--plum);
+    box-shadow: 0 0 0 1px var(--plum);
+  }
+
+  .s2-card__image {
+    width: 100%;
+    height: 110px;
+    overflow: hidden;
+    position: relative;
+  }
+  .s2-card__image img { width: 100%; height: 100%; object-fit: cover; }
+
+  .s2-card__info {
+    padding: 8px 10px 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .s2-card__name {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--plum);
+    line-height: 1.2;
+  }
+  .s2-card__evocative {
+    font-size: 0.68rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+  .s2-card__notes {
+    font-size: 0.62rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.3;
+    margin-top: 3px;
+  }
+  .s2-card__notes--styled {
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid var(--border);
+    font-size: 0.6rem;
+    letter-spacing: 0.02em;
+  }
+  .s2-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: auto;
+    padding: 6px 10px 10px;
+  }
+  .s2-card__price {
+    font-size: 0.68rem;
+    font-family: var(--font-heading);
+    color: var(--plum);
+    font-weight: 400;
+  }
+
+  /* ── S2 Header sub-line ── */
+
+  .step-sub--brandy {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  /* ── Spec Panel ── */
+
+  .spec-panel {
+    margin-top: 40px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .spec-toggle {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--plum);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .spec-toggle::-webkit-details-marker { display: none; }
+  .spec-toggle::before {
+    content: '\25B8';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.2s ease;
+  }
+  .spec-panel[open] .spec-toggle::before { transform: rotate(90deg); }
+  .spec-content {
+    padding: 0 20px 20px;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .spec-content h3 {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 16px 0 4px;
+  }
+  .spec-content h3:first-child { margin-top: 0; }
+  .spec-content ul {
+    padding-left: 18px;
+    margin: 4px 0;
+  }
+  .spec-content li { margin-bottom: 2px; }
+  .spec-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 0.78rem;
+  }
+  .spec-content th, .spec-content td {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  .spec-content th {
+    background: var(--warm-grey);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* ── Proto label ── */
+  .prototype-hero {
+    max-width: 460px;
+    margin: 0 auto;
+    overflow: visible;
+  }
+
+  /* ── Step 3: Delivery ── */
+
+  .s3-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .s3-option {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background: white;
+  }
+  .s3-option:hover {
+    border-color: var(--plum-light);
+  }
+  .s3-option--active {
+    border-color: var(--plum);
+    box-shadow: 0 0 0 1px var(--plum);
+  }
+  .s3-option__title {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--plum);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .s3-option__price {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-top: 2px;
+  }
+  .s3-option__price s {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+  .s3-option__meta {
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .s3-badge {
+    display: inline-block;
+    background: var(--plum-tint);
+    color: var(--plum);
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .s3-social {
+    font-size: 0.72rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .s3-trust {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    background: var(--plum-tint);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .s3-trust__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--plum);
+    white-space: nowrap;
+  }
+  .s3-trust__check {
+    font-size: 0.72rem;
+  }
+
+  .s3-benefits {
+    list-style: none;
+    margin: 8px 0 0;
+  }
+  .s3-benefits__item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    padding: 2px 0;
+  }
+  .s3-benefits__check {
+    color: var(--plum);
+    font-size: 0.72rem;
+    flex-shrink: 0;
+  }
+
+  .s3-save-pill {
+    display: inline-block;
+    background: var(--plum);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── D5: Product shelf ── */
+
+  .s3-shelf {
+    display: flex;
+    gap: 20px;
+    padding: 12px 0 8px;
+    justify-content: center;
+  }
+  .s3-shelf__product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 150px;
+  }
+  .s3-shelf__product img {
+    width: 120px;
+    height: 120px;
+    border-radius: 3px;
+    object-fit: cover;
+  }
+  .s3-shelf__product-name {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--plum);
+    text-align: center;
+    line-height: 1.2;
+  }
+  .s3-shelf__label {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .s3-shelf__scents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  .s3-shelf__scent-thumbs {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+  }
+  .s3-shelf__scent-thumbs img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .s3-shelf__scent-thumbs--single img {
+    width: 80px;
+    height: 80px;
+  }
+  .s3-shelf__scent-thumbs--grid {
+    flex-wrap: wrap;
+    max-width: 124px;
+  }
+  .s3-shelf__scent-names {
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--plum);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* Collapse behaviour */
+  .s3-toggle--once .s3-option[data-s3-choice="subscribe"] .s3-option__badge-row,
+  .s3-toggle--once .s3-option[data-s3-choice="subscribe"] .s3-benefits,
+  .s3-toggle--once .s3-option[data-s3-choice="subscribe"] .s3-social {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+  }
+  .s3-option[data-s3-choice="subscribe"] .s3-option__badge-row,
+  .s3-option[data-s3-choice="subscribe"] .s3-benefits,
+  .s3-option[data-s3-choice="subscribe"] .s3-social {
+    max-height: 200px;
+    transition: max-height 0.3s ease, opacity 0.3s ease 0.05s, margin 0.3s ease;
+  }
+  .s3-toggle--once + .s3-trust {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-top: 0;
+    padding: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+  }
+  .s3-trust {
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    max-height: 100px;
+    overflow: hidden;
+  }
+
+  .s3-option__badge-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .s3-option__price-month {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--plum);
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .s3-option__price-month small {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+  }
+  .s3-option__price-detail {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ═══════════════════════════════════════ */
+  /* NEW: Wizard Layout                      */
+  /* ═══════════════════════════════════════ */
+
+  .wizard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .wizard__progress {
+    padding: 12px 20px 0;
+    flex-shrink: 0;
+  }
+  .wizard__progress--hidden {
+    display: none;
+  }
+  .wizard__progress-text {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .wizard__steps {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .wizard__step {
+    position: absolute;
+    inset: 0;
+    padding: 12px 20px 80px;
+    overflow-y: auto;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .wizard__step--active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .wizard__step--left {
+    transform: translateX(-30%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .wizard__step--right {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wizard__step {
+      transition-duration: 150ms !important;
+      transition-property: opacity !important;
+    }
+    .wizard__step--left,
+    .wizard__step--right {
+      transform: translateX(0) !important;
+    }
+  }
+
+  /* Progress bar segments */
+  .progress { display: flex; gap: 4px; }
+  .progress__seg {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .progress__seg--active,
+  .progress__seg--done { background: var(--plum); }
+  .progress__seg--half {
+    background: linear-gradient(to right, var(--plum) 50%, var(--border) 50%);
+  }
+  .progress__labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding-bottom: 8px;
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .progress__labels span {
+    flex: 1;
+    text-align: center;
+  }
+  .progress__label--active {
+    color: var(--plum) !important;
+    font-weight: 500 !important;
+  }
+  .progress__label--done {
+    color: var(--plum) !important;
+  }
+
+  /* Cover-active: white progress bar over full-bleed image */
+  .wizard--cover-active .wizard__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background: transparent;
+  }
+  .wizard--cover-active .wizard__steps {
+    flex: 1;
+  }
+  .wizard--cover-active .wizard__step--active {
+    top: 0;
+    padding-top: 0;
+  }
+  .wizard--cover-active .progress__seg {
+    background: rgba(255,255,255,0.3);
+  }
+  .wizard--cover-active .progress__seg--done {
+    background: #fff;
+  }
+  .wizard--cover-active .progress__seg--half {
+    background: linear-gradient(to right, #fff 50%, rgba(255,255,255,0.3) 50%);
+  }
+  .wizard--cover-active .progress__labels {
+    color: rgba(255,255,255,0.5);
+  }
+  .wizard--cover-active .progress__label--active {
+    color: #fff !important;
+  }
+  .wizard--cover-active .progress__label--done {
+    color: rgba(255,255,255,0.7) !important;
+  }
+  .wizard--cover-active .wizard__progress-text {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Bottom bar */
+  .wizard__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 5;
+  }
+  .wizard__bar--hidden { display: none; }
+  .wizard__bar-summary {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    flex: 1;
+    margin-right: 12px;
+    min-width: 0;
+  }
+  .wizard__bar-summary strong {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .wizard__bar-cta {
+    background: var(--plum);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+  }
+  .wizard__bar-cta:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .wizard__bar-cta--final {
+    background: var(--plum);
+    color: white;
+  }
+
+  @keyframes price-pulse {
+    0% { opacity: 0.5; transform: scale(0.96); }
+    50% { transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .wizard__bar-summary--animate {
+    animation: price-pulse 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Back button — lives in the bottom bar */
+  .wizard__bar-back {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--plum);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 10px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .wizard__bar-back:hover {
+    border-color: var(--plum);
+    background: var(--plum-tint);
+  }
+  .wizard__bar-back--hidden { display: none; }
+  .wizard__bar-back svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Step 2 social proof review */
+  .s2-review {
+    margin-top: 14px;
+    padding: 10px 0;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--plum);
+    line-height: 1.4;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    min-height: 60px;
+  }
+  .s2-review__stars {
+    color: var(--plum);
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+  .s2-review__author {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .s2-review--light {
+    color: #fff;
+  }
+  .s2-review--light .s2-review__stars {
+    color: #fff;
+  }
+  .s2-review--light .s2-review__author {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Checkout summary */
+  .checkout { padding: 8px 0; }
+  .checkout__icon { font-size: 1.5rem; color: var(--plum); margin-bottom: 4px; }
+  .checkout__heading {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--plum);
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .checkout__lines { margin-bottom: 4px; }
+  .checkout__line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 0;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+  }
+  .checkout__line-name { flex: 1; }
+  .checkout__line-price {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .checkout__divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0;
+  }
+  .checkout__line--delivery { color: var(--plum); }
+  .checkout__line--delivery .checkout__line-price {
+    color: var(--plum);
+    font-weight: 500;
+  }
+  .checkout__line--total { font-weight: 500; }
+  .checkout__line--total .checkout__line-name {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .checkout__line--total .checkout__line-price {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--plum);
+  }
+  .checkout__recurring {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .checkout__restart {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 12px;
+    background: var(--plum-tint);
+    color: var(--plum);
+    border: 1px solid var(--plum);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s ease;
+  }
+  .checkout__restart:hover { background: #e8d5e2; }
+
+  /* Trust Builder overrides */
+  .wizard--trust .s3-option[data-s3-choice="subscribe"] {
+    border-color: var(--plum);
+  }
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ══════════════════════════════════════
+     Interstitial Design Explorations
+     ══════════════════════════════════════ */
+
+  .component-section + .component-section {
+    margin-top: 48px;
+  }
+
+  .explore-card {
+    padding: 20px;
+  }
+
+  /* ── Direction A: Editorial ── */
+
+  .ed-hero {
+    width: calc(100% + 40px);
+    margin: -20px -20px 0;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+  }
+  .ed-hero--step {
+    width: calc(100% + 40px);
+    margin: -12px -20px 0;
+  }
+  .ed-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ed-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, white);
+  }
+
+  .ed-heading {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--plum);
+    text-align: center;
+    margin: 20px 0 4px;
+    line-height: 1.2;
+  }
+  .ed-heading[tabindex] { outline: none; }
+  .ed-sub {
+    font-size: 0.82rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .ed-point {
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .ed-point:last-of-type {
+    border-bottom: 1px solid var(--border);
+  }
+  .ed-point__title {
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--plum);
+    line-height: 1.2;
+  }
+  .ed-point__detail {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  .ed-badge {
+    display: block;
+    text-align: center;
+    margin: 16px 0;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--plum);
+    background: var(--plum-tint);
+    padding: 6px 16px;
+    border-radius: 20px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── Editorial Variants ── */
+
+  /* — A: Dark Cover — */
+  .ed-cover {
+    position: relative;
+    min-height: 520px;
+    margin: -20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 60px 28px 28px;
+    overflow: hidden;
+  }
+  .wizard__step .ed-cover {
+    justify-content: flex-start;
+    margin: 0;
+    min-height: 100%;
+    padding-top: 80px;
+  }
+
+  /* Staggered fade-in for interstitial content */
+  @keyframes ed-fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ed-cover--animate .ed-cover__heading,
+  .ed-cover--animate .ed-cover__pt,
+  .ed-cover--animate .ed-cover__badge {
+    opacity: 0;
+    animation: ed-fade-up 400ms ease-out forwards;
+  }
+  .ed-cover--animate .ed-cover__heading { animation-delay: 200ms; }
+  .ed-cover--animate .ed-cover__pt:nth-child(1) { animation-delay: 350ms; }
+  .ed-cover--animate .ed-cover__pt:nth-child(2) { animation-delay: 450ms; }
+  .ed-cover--animate .ed-cover__pt:nth-child(3) { animation-delay: 550ms; }
+  .ed-cover--animate .ed-cover__pt:nth-child(4) { animation-delay: 650ms; }
+  .ed-cover--animate .ed-cover__badge { animation-delay: 800ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ed-cover--animate .ed-cover__heading,
+    .ed-cover--animate .ed-cover__pt,
+    .ed-cover--animate .ed-cover__badge {
+      opacity: 1;
+      animation: none;
+    }
+  }
+  .ed-cover__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ed-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--plum-dark) 0%, rgba(46,4,34,0.92) 40%, rgba(46,4,34,0.55) 70%, rgba(46,4,34,0.15) 90%, transparent 100%);
+    pointer-events: none;
+  }
+  .ed-cover__body {
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    color: #fff;
+  }
+  .ed-cover__heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    margin: 0 0 8px;
+    color: #fff;
+  }
+  .ed-cover__sub {
+    font-size: 0.78rem;
+    font-weight: 400;
+    opacity: 0.9;
+    margin: 0 0 24px;
+    color: #fff;
+  }
+  .ed-cover__points {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 22px;
+  }
+  .ed-cover__pt {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+  }
+  .ed-cover__pt-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+  .ed-cover__pt-detail {
+    font-size: 0.72rem;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+  .ed-cover__pt:first-child { border-top: 1px solid rgba(255,255,255,0.15); }
+  .ed-cover__badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 10px 22px;
+    border-radius: 24px;
+    margin: 0;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    text-shadow: none;
+  }
+  .ed-cover__link {
+    display: block;
+    text-align: left;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    text-decoration: underline;
+  }
+
+  /* — B: Split Editorial — */
+  .ed-split {
+    display: flex;
+    flex-direction: column;
+    margin: -20px;
+    overflow: hidden;
+  }
+  .ed-split__img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  .ed-split__body {
+    background: var(--plum-dark);
+    padding: 22px 24px 24px;
+    color: #fff;
+    flex: 1;
+  }
+  .ed-split__heading {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 300;
+    margin: 0 0 6px;
+    text-align: left;
+    color: #fff;
+  }
+  .ed-split__sub {
+    font-size: 0.78rem;
+    font-weight: 300;
+    opacity: 0.75;
+    margin: 0 0 18px;
+    text-align: left;
+    color: #fff;
+  }
+  .ed-split__pt {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 8px 0 8px 12px;
+    border-left: 2px solid var(--plum-tint);
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .ed-split__badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    margin-top: 10px;
+  }
+  .ed-split__link {
+    display: block;
+    text-align: left;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    text-decoration: underline;
+  }
+
+  /* — C: Glass Panel — */
+  .ed-glass {
+    position: relative;
+    min-height: 520px;
+    margin: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 16px;
+    overflow: hidden;
+  }
+  .ed-glass__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ed-glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.08);
+    pointer-events: none;
+  }
+  .ed-glass__panel {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 4px;
+    padding: 28px 22px;
+    text-align: center;
+    max-width: 100%;
+  }
+  @supports not (backdrop-filter: blur(16px)) {
+    .ed-glass__panel { background: rgba(255,255,255,0.88); }
+  }
+  .ed-glass__heading {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 300;
+    margin: 0 0 6px;
+    color: var(--plum);
+  }
+  .ed-glass__sub {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--plum);
+    opacity: 0.7;
+    margin: 0 0 18px;
+  }
+  .ed-glass__pt {
+    margin-bottom: 12px;
+    text-align: left;
+  }
+  .ed-glass__pt-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--plum);
+  }
+  .ed-glass__pt-detail {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .ed-glass__badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--plum);
+    background: var(--plum-tint);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+  .ed-glass__link {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    text-decoration: underline;
+  }
+
+  /* — D: Light Wash — */
+  .ed-wash {
+    position: relative;
+    min-height: 500px;
+    margin: -20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 28px 24px;
+    overflow: hidden;
+    text-align: center;
+  }
+  .ed-wash__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1.65) saturate(0.3) contrast(0.7);
+  }
+  .ed-wash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.35);
+    pointer-events: none;
+  }
+  .ed-wash__body {
+    position: relative;
+    z-index: 1;
+  }
+  .ed-wash__heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: 0 0 6px;
+    color: var(--plum);
+  }
+  .ed-wash__sub {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--plum);
+    opacity: 0.7;
+    margin: 0 0 22px;
+  }
+  .ed-wash__points {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 20px;
+  }
+  .ed-wash__pt {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 300;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(80,10,60,0.15);
+    color: var(--plum);
+  }
+  .ed-wash__pt:first-child { border-top: 1px solid rgba(80,10,60,0.15); }
+  .ed-wash__badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--plum);
+    background: var(--plum-tint);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin: 0 auto 10px;
+  }
+  .ed-wash__link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    text-decoration: underline;
+  }
+
+  .explore-link {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-header__inner">
+    <h1 class="page-title">Rollr — Purchase Flow Prototype</h1>
+    <p class="page-intro">Working prototype — tap through to explore the full purchase journey.</p>
+  </div>
+</header>
+
+<main class="page-main">
+
+  <section class="component-section" id="full-prototype">
+    <div class="prototype-hero">
+      <div class="preview-card preview-card--wizard">
+        <nav class="proto-nav">
+          <img class="proto-nav__logo" src="https://rollr.co.uk/cdn/shop/files/Rollr_Logo_Alpha_in_wine_colour.png?v=1710786414" alt="Rollr">
+        </nav>
+        <div data-wizard="trust"></div>
+        <div class="sheet-backdrop" data-sheet-backdrop></div>
+        <div class="sheet" data-sheet>
+          <div class="sheet__handle"></div>
+          <div class="sheet__body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+<script>
+  // ══════════════════════════════════════
+  // Data
+  // ══════════════════════════════════════
+
+  const cases = [
+    {
+      id: 'rose-quartz', name: 'Rose Quartz', price: 30,
+      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_RQ1_fb6ab397-76e8-49ae-9e5f-cef41fcc932b_1024x1024.png?v=1747927802',
+      popular: true,
+      desc: 'Hand-polished pink crystal. The stone of calm.',
+      detail: 'As pretty as it sounds, this stone is perfect for individuals nurturing self-love, well-being, compassion, and emotional healing.'
+    },
+    {
+      id: 'steel', name: 'Steel', price: 20,
+      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_STL_1_6745cfae-8ed3-44f9-a411-6389c5f35747_1024x1024.png?v=1747927802',
+      desc: 'Brushed stainless steel. Cool, modern, lasts forever.',
+      detail: 'Sleek and cooling. Perfect for a refreshing feel.'
+    },
+    {
+      id: 'green-aventurine', name: 'Green Aventurine', price: 30,
+      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_GA1_1358d39d-5d62-4013-b512-d5c3a6461509_1024x1024.png?v=1747927802',
+      desc: 'Natural green crystal. The stone of opportunity.',
+      detail: 'Said to calm and soothe. A real looker, too. This vibrant green gem deepens emotional balance and invigorating optimism, making every moment feel grounded yet zestful.'
+    },
+    {
+      id: 'blue-dumortierite', name: 'Blue Dumortierite', price: 30,
+      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_BD1_4db16801-4f31-4bdd-83a2-a87f72bcc7f1_1024x1024.png?v=1747927802',
+      desc: 'Deep blue crystal. The stone of patience.',
+      detail: 'Believed to help clarity and focus. A true blue beauty. This exquisite stone is your go-to for sharpening the mind and expressing thoughts with confidence.'
+    }
+  ];
+
+  const scents = [
+    {
+      id: 'vetiver', name: 'Vetiver', family: 'Fresh & Earthy',
+      evocative: 'Forest floor after rain',
+      description: 'A rush of lemon and ginger. Then comes vetiver, bitter orange, mint. At last, cedarwood.',
+      notes: 'Lemon + Ginger + Vetiver',
+      color: '#8b9f6f',
+      image: 'https://rollr.co.uk/cdn/shop/files/vet_2_1024x1024.png?v=1734429045',
+      bestseller: true,
+      reviews: [
+        { text: "My absolute favourite. Earthy without being heavy.", stars: 5, author: "Tom W." },
+        { text: "Smells like a walk in the woods. Love it.", stars: 5, author: "Sarah M." }
+      ]
+    },
+    {
+      id: 'mandarin', name: 'Mandarin', family: 'Bright & Warm',
+      evocative: 'Sun-warmed citrus groves',
+      description: 'First comes orange. Then geranium. To finish, cedar wood & patchouli.',
+      notes: 'Orange + Geranium + Cedarwood',
+      color: '#d4a574',
+      image: 'https://rollr.co.uk/cdn/shop/files/Mandarin-1_1024x1024.png?v=1734429045',
+      bestseller: false,
+      reviews: [
+        { text: "Bright and uplifting. Perfect for mornings.", stars: 5, author: "James K." },
+        { text: "The mandarin is so fresh and natural.", stars: 5, author: "Lucy H." }
+      ]
+    },
+    {
+      id: 'clary-sage', name: 'Clary Sage', family: 'Herbal & Grounding',
+      evocative: 'Quiet morning in a herb garden',
+      description: 'A rush of eucalyptus. Then comes peppermint, rosemary, lavender. At last, clary sage.',
+      notes: 'Rosemary + Peppermint + Eucalyptus',
+      color: '#7cb5a3',
+      image: 'https://rollr.co.uk/cdn/shop/files/Clary_Sage_6c5e0980-34f2-44b6-a99f-c43b75278f9b_1024x1024.png?v=1734429045',
+      bestseller: false,
+      reviews: [
+        { text: "So calming. This is my daily ritual now.", stars: 5, author: "Priya R." },
+        { text: "Herbal and sophisticated. Nothing like it.", stars: 5, author: "Anna F." }
+      ]
+    },
+    {
+      id: 'juniper', name: 'Juniper', family: 'Cool & Crisp',
+      evocative: 'Mountain air and pine',
+      description: 'Juniper opens with ho leaf. Then palmarosa, lavender, geranium and rose. A hush of chamomile and amber to finish.',
+      notes: 'Juniper + Chamomile',
+      color: '#6db3d1',
+      image: 'https://rollr.co.uk/cdn/shop/files/Juniper_Thumb_958583d5-a411-444c-8103-a8d5b4d34c26_1024x1024.png?v=1771940227',
+      bestseller: false,
+      reviews: [
+        { text: "Incredibly fresh. Like stepping outside on a crisp morning.", stars: 5, author: "Matt D." },
+        { text: "Clean and invigorating. My partner keeps stealing it.", stars: 5, author: "Chloe R." }
+      ]
+    }
+  ];
+
+  const caseReviews = [
+    { text: "The stone is genuinely beautiful. Mine has this deep green swirl — it sits on my dresser like jewellery.", stars: 5, author: "Megan T." },
+    { text: "I wasn't expecting it to feel so premium. The weight, the polish — it's a proper object.", stars: 5, author: "Chris L." },
+    { text: "Every single one is different. My friend got rose quartz, I got amethyst — both stunning.", stars: 5, author: "Priya R." },
+    { text: "Honestly the case is what sold me. It looks incredible on my bathroom shelf.", stars: 5, author: "Sophie K." },
+    { text: "I keep getting compliments on it. People think it's a decorative piece, not a deodorant!", stars: 5, author: "Dan W." },
+    { text: "The marble patterns are mesmerising. Mine has tiny gold flecks through it.", stars: 5, author: "Hannah J." }
+  ];
+
+  const checkSVG = '<svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // ══════════════════════════════════════
+  // Approach Configs
+  // ══════════════════════════════════════
+
+  const TRUST_CONFIG = {
+    id: 'trust',
+    defaultPlan: 'subscribe',
+    showProgressStep1: false,
+    subscribeBadge: 'Best Value',
+    showSavePill: true,
+    step1Heading: 'Find your Rollr',
+    step3Heading: 'How would you like your refills?',
+    showStep2Review: true,
+    trustStripItems: ['Free delivery', '30-day guarantee', 'Cancel anytime'],
+    subscribeBenefits: ['Free UK delivery, always', 'Never run out', 'Skip, edit, or cancel anytime'],
+    socialProof: 'Chosen by 4 in 5 Rollr customers',
+    onceExtra: ' \u00b7 Re-order when you\'re ready',
+    stepCount: 5,
+    interstitialStep: 2,
+    scentStep: 3,
+    planStep: 4,
+    checkoutStep: 5
+  };
+
+  const STANDARD_CONFIG = {
+    id: 'standard',
+    defaultPlan: 'subscribe',
+    showProgressStep1: true,
+    subscribeBadge: 'Best Value',
+    showSavePill: true,
+    step1Heading: 'Choose your Rollr',
+    step3Heading: 'Your Rollr, delivered',
+    showStep2Review: false,
+    trustStripItems: ['Free delivery', '30-day guarantee', 'Cancel anytime'],
+    subscribeBenefits: ['Free UK delivery', 'Skip, edit, or cancel anytime', 'Never run out'],
+    socialProof: 'Chosen by 4 in 5 customers',
+    onceExtra: '',
+    stepCount: 4,
+    interstitialStep: null,
+    scentStep: 2,
+    planStep: 3,
+    checkoutStep: 4
+  };
+
+  // ══════════════════════════════════════
+  // Utilities
+  // ══════════════════════════════════════
+
+  function formatPrice(p) {
+    return p % 1 === 0 ? '\u00a3' + p : '\u00a3' + p.toFixed(2);
+  }
+
+  // ══════════════════════════════════════
+  // Card Renderers (reused from locked steps)
+  // ══════════════════════════════════════
+
+  function renderCaseCards(grid) {
+    grid.innerHTML = cases.map(c => {
+      const badgeHTML = c.popular ? '<span class="badge">Most Popular</span>' : '';
+      return '<div class="c1-card" data-id="' + c.id + '" role="radio" aria-checked="false" aria-label="' + c.name + ', \u00a3' + c.price + '" tabindex="0">' +
+        '<span class="check">' + checkSVG + '</span>' +
+        '<div class="c1-card__image">' + badgeHTML +
+          '<img src="' + c.image + '" alt="' + c.name + ' crystal case" loading="lazy">' +
+        '</div>' +
+        '<div class="c1-card__info">' +
+          '<div class="c1-card__name">' + c.name + '</div>' +
+          '<div class="c1-card__desc">' + c.desc + '</div>' +
+          '<div class="c1-card__footer">' +
+            '<span class="c1-card__price">\u00a3' + c.price + '</span>' +
+            '<button class="learn-more" type="button" data-learn="' + c.id + '">Learn more</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderScentCards(grid) {
+    grid.innerHTML = scents.map(s => {
+      const badgeHTML = s.bestseller ? '<span class="badge">Bestseller</span>' : '';
+      return '<div class="s2-card" data-id="' + s.id + '" role="checkbox" aria-checked="false" aria-label="' + s.name + ', ' + s.notes + '" tabindex="0">' +
+        '<span class="check">' + checkSVG + '</span>' +
+        '<div class="s2-card__image">' + badgeHTML +
+          '<img src="' + s.image + '" alt="' + s.name + ' refill" loading="lazy">' +
+        '</div>' +
+        '<div class="s2-card__info">' +
+          '<div class="s2-card__name">' + s.name + '</div>' +
+          '<div class="s2-card__evocative">' + s.evocative + '</div>' +
+          '<div class="s2-card__notes s2-card__notes--styled">' + s.notes + '</div>' +
+        '</div>' +
+        '<div class="s2-card__footer">' +
+          '<span class="s2-card__price">\u00a312/refill</span>' +
+          '<button class="learn-more" type="button" data-scent-learn="' + s.id + '">Learn more</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ══════════════════════════════════════
+  // Selection Logic (with callbacks)
+  // ══════════════════════════════════════
+
+  function setupSelection(grid, onSelect) {
+    const cards = grid.querySelectorAll('[role="radio"]');
+    cards.forEach(card => {
+      const select = () => {
+        cards.forEach(c => {
+          c.classList.remove('selected');
+          c.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('selected');
+        card.setAttribute('aria-checked', 'true');
+        if (onSelect) onSelect(card.dataset.id);
+      };
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-learn]')) return;
+        select();
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          select();
+        }
+      });
+    });
+  }
+
+  function setupScentMultiSelect(grid, onToggle) {
+    const cards = grid.querySelectorAll('[role="checkbox"]');
+
+    function toggleCard(card) {
+      const isSelected = card.classList.contains('selected');
+      if (isSelected) {
+        card.classList.remove('selected');
+        card.setAttribute('aria-checked', 'false');
+      } else {
+        card.classList.add('selected');
+        card.setAttribute('aria-checked', 'true');
+      }
+      if (onToggle) {
+        const selected = Array.from(cards)
+          .filter(c => c.classList.contains('selected'))
+          .map(c => c.dataset.id);
+        onToggle(selected);
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-scent-learn]')) return;
+        toggleCard(card);
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard(card);
+        }
+      });
+    });
+  }
+
+  // ══════════════════════════════════════
+  // S3 Helpers
+  // ══════════════════════════════════════
+
+  function s3TrustStrip(items) {
+    return '<div class="s3-trust">' + items.map(t =>
+      '<span class="s3-trust__item"><span class="s3-trust__check">\u2713</span> ' + t + '</span>'
+    ).join('') + '</div>';
+  }
+
+  function s3ProductShelf(state) {
+    var c = state.selectedCase;
+    var sc = state.scents;
+    if (!c && sc.length === 0) return '';
+    var html = '<div class="s3-shelf">';
+    if (c) {
+      html += '<div class="s3-shelf__product">' +
+        '<img src="' + c.image + '" alt="' + c.name + '">' +
+        '<div class="s3-shelf__product-name">' + c.name + '</div>' +
+        '<div class="s3-shelf__label">' + formatPrice(c.price) + ', yours to keep</div>' +
+      '</div>';
+    }
+    if (sc.length > 0) {
+      var thumbs = sc.map(s => '<img src="' + s.image + '" alt="' + s.name + '">').join('');
+      var names = sc.map(s => s.name).join(', ');
+      var singleClass = sc.length === 1 ? ' s3-shelf__scent-thumbs--single' : (sc.length >= 4 ? ' s3-shelf__scent-thumbs--grid' : '');
+      var cycle = sc.length * 2;
+      var label = 'Delivered every ' + cycle + ' months';
+      html += '<div class="s3-shelf__scents">' +
+        '<div class="s3-shelf__scent-thumbs' + singleClass + '">' + thumbs + '</div>' +
+        '<div class="s3-shelf__scent-names">' + names + '</div>' +
+        '<div class="s3-shelf__label">' + label + '</div>' +
+      '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ══════════════════════════════════════
+  // Wizard State
+  // ══════════════════════════════════════
+
+  function createWizardState(config) {
+    return {
+      step: 1,
+      selectedCase: cases.find(c => c.id === 'rose-quartz') || null,
+      scents: scents.filter(s => s.id === 'vetiver'),
+      plan: config.defaultPlan,
+      config: config,
+
+      get casePrice() {
+        return this.selectedCase ? this.selectedCase.price : 0;
+      },
+      get refillPrice() {
+        return this.plan === 'subscribe' ? 12 : 15;
+      },
+      get refillTotal() {
+        return this.scents.length * this.refillPrice;
+      },
+      get deliveryCost() {
+        return this.plan === 'subscribe' ? 0 : 3.95;
+      },
+      get orderTotal() {
+        return this.casePrice + this.refillTotal + this.deliveryCost;
+      },
+      get billingCycleMonths() {
+        return this.scents.length * 2;
+      },
+      get billingTotal() {
+        return this.scents.length * 12;
+      },
+      get perMonth() {
+        return this.plan === 'subscribe' ? this.billingTotal / this.billingCycleMonths : null;
+      },
+      get canContinue() {
+        if (this.step === 1) return this.selectedCase !== null;
+        if (this.config.interstitialStep && this.step === this.config.interstitialStep) return true;
+        if (this.step === this.config.scentStep) return this.scents.length >= 1;
+        if (this.step === this.config.planStep) return true;
+        return false;
+      }
+    };
+  }
+
+  // ══════════════════════════════════════
+  // Wizard Creation
+  // ══════════════════════════════════════
+
+  function createWizard(containerEl, config) {
+    const state = createWizardState(config);
+
+    // Build step divs dynamically based on config
+    let stepDivs = '';
+    for (let i = 1; i <= config.stepCount; i++) {
+      const cls = i === 1 ? 'wizard__step--active' : 'wizard__step--right';
+      stepDivs += '<div class="wizard__step ' + cls + '" data-step="' + i + '"></div>';
+    }
+
+    containerEl.innerHTML =
+      '<div class="wizard wizard--' + config.id + '">' +
+        '<div class="sr-only" aria-live="polite" data-step-announce></div>' +
+        '<div class="wizard__progress" data-wizard-progress></div>' +
+        '<div class="wizard__steps">' + stepDivs + '</div>' +
+        '<div class="wizard__bar" data-wizard-bar>' +
+          '<button class="wizard__bar-back wizard__bar-back--hidden" data-bar-back aria-label="Go back">' +
+            '<svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          '</button>' +
+          '<div class="wizard__bar-summary" aria-live="polite" data-bar-summary></div>' +
+          '<button class="wizard__bar-cta" data-bar-cta disabled>Continue</button>' +
+        '</div>' +
+      '</div>';
+
+    const wizardEl = containerEl.querySelector('.wizard');
+    const previewCard = containerEl.closest('.preview-card');
+
+    const wizard = {
+      el: wizardEl,
+      state: state,
+      config: config,
+      previewCard: previewCard,
+      steps: Array.from(wizardEl.querySelectorAll('.wizard__step')),
+      progressEl: wizardEl.querySelector('[data-wizard-progress]'),
+      barEl: wizardEl.querySelector('[data-wizard-bar]'),
+      barSummary: wizardEl.querySelector('[data-bar-summary]'),
+      barCta: wizardEl.querySelector('[data-bar-cta]'),
+      barBack: wizardEl.querySelector('[data-bar-back]'),
+      announcer: wizardEl.querySelector('[data-step-announce]')
+    };
+
+    // Render initial steps
+    renderStep1(wizard);
+    if (config.interstitialStep) renderInterstitial(wizard);
+    renderStep2(wizard);
+    renderProgressBar(wizard);
+    updateBottomBar(wizard);
+
+    // CTA click
+    wizard.barCta.addEventListener('click', () => {
+      if (wizard.barCta.disabled) return;
+      if (state.step < config.planStep) {
+        goToStep(wizard, state.step + 1);
+      } else if (state.step === config.planStep) {
+        goToStep(wizard, config.checkoutStep);
+      }
+    });
+
+    // Back button in bar
+    wizard.barBack.addEventListener('click', () => {
+      if (state.step > 1) {
+        goToStep(wizard, state.step - 1);
+      }
+    });
+
+    // Setup sheets
+    setupWizardSheets(wizard);
+
+    return wizard;
+  }
+
+  // ══════════════════════════════════════
+  // Step Renderers
+  // ══════════════════════════════════════
+
+  function getProductInfoHTML() {
+    return '<div class="product-info__section">' +
+        '<div class="product-info__heading">Ingredients</div>' +
+        '<ul class="product-info__list">' +
+          '<li>Sodium Bicarbonate</li>' +
+          '<li>Tapioca Starch</li>' +
+          '<li>Magnesium Hydroxide</li>' +
+          '<li>Coconut Oil (Cocos Nucifera)</li>' +
+          '<li>Zinc Ricinoleate</li>' +
+          '<li>Natural Fragrance (essential oil blend)</li>' +
+        '</ul>' +
+      '</div>' +
+      '<div class="product-info__section">' +
+        '<div class="product-info__heading">Free from</div>' +
+        '<p class="product-info__text">Parabens, phthalates, aluminium, synthetic fragrances, propylene glycol, and triclosan.</p>' +
+      '</div>' +
+      '<div class="product-info__section">' +
+        '<div class="product-info__heading">How to use</div>' +
+        '<ol class="product-info__steps">' +
+          '<li>Open your Rollr case and remove the ball</li>' +
+          '<li>Empty the refill sachet into the case</li>' +
+          '<li>Add water to the fill line and stir</li>' +
+          '<li>Replace the ball and let it set (2\u20134 hours)</li>' +
+          '<li>Roll on and go \u2014 lasts ~2 months of daily use</li>' +
+        '</ol>' +
+      '</div>' +
+      '<div class="sheet__footer">' +
+        '<button class="sheet__close-link" type="button">Close</button>' +
+      '</div>';
+  }
+
+  function renderInterstitial(wizard) {
+    const config = wizard.config;
+    const stepEl = wizard.steps[config.interstitialStep - 1];
+
+    stepEl.style.padding = '0';
+    stepEl.innerHTML =
+      '<div class="ed-cover" style="margin:0; min-height:100%; border-radius:0;">' +
+        '<img class="ed-cover__img" src="https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814" alt="Rollr lifestyle" loading="lazy">' +
+        '<div class="ed-cover__body">' +
+          '<h2 class="ed-cover__heading" tabindex="-1">Natural deodorant, reimagined</h2>' +
+          '<div class="ed-cover__points">' +
+            '<div class="ed-cover__pt">' +
+              '<div class="ed-cover__pt-title">Four scents, one ritual</div>' +
+              '<div class="ed-cover__pt-detail">Each fragrance crafted from natural essential oils by master perfumers</div>' +
+            '</div>' +
+            '<div class="ed-cover__pt">' +
+              '<div class="ed-cover__pt-title">Just add water</div>' +
+              '<div class="ed-cover__pt-detail">Concentrated powder sachet. Mix, set, roll on. Lasts ~2 months.</div>' +
+            '</div>' +
+            '<div class="ed-cover__pt">' +
+              '<div class="ed-cover__pt-title">From ~\u00a36 per month</div>' +
+              '<div class="ed-cover__pt-detail">Subscribe for free delivery, or buy once. Skip or cancel anytime.</div>' +
+            '</div>' +
+            '<div class="ed-cover__pt">' +
+              '<div class="ed-cover__pt-title">Nothing to hide</div>' +
+              '<div class="ed-cover__pt-detail">No aluminium, no parabens, no synthetic fragrance. Ever.</div>' +
+            '</div>' +
+          '</div>' +
+          '<button class="ed-cover__badge" type="button" data-product-info>Full ingredients &amp; allergen info</button>' +
+          '<div class="s2-review s2-review--light" data-scent-review></div>' +
+        '</div>' +
+      '</div>';
+
+    setupScentReviews(stepEl.querySelector('[data-scent-review]'));
+  }
+
+  function renderStep1(wizard) {
+    const stepEl = wizard.steps[0];
+    const config = wizard.config;
+
+    stepEl.innerHTML =
+      '<h2 class="step-heading" tabindex="-1">' + config.step1Heading + '</h2>' +
+      '<p class="step-sub step-sub--brandy">Each ball is naturally one-of-a-kind and carved from the earth to reveal its unique colour, pattern, and energy.</p>' +
+      '<p class="trust-line"><span class="stars">\u2605\u2605\u2605\u2605\u2605</span> Rated <strong>4.97/5</strong> from 127 reviews</p>' +
+      '<div class="c1-grid" data-case-grid role="radiogroup" aria-label="Crystal case options"></div>' +
+      '<button class="skip-link" type="button" data-skip-case>I already have a case</button>' +
+      '<div class="s2-review" data-scent-review></div>';
+
+    const grid = stepEl.querySelector('[data-case-grid]');
+    renderCaseCards(grid);
+    setupSelection(grid, (id) => {
+      wizard.state.selectedCase = cases.find(c => c.id === id) || null;
+      updateBottomBar(wizard);
+    });
+
+    // Apply visual pre-selection if state already has a case
+    if (wizard.state.selectedCase) {
+      const pre = grid.querySelector('[data-id="' + wizard.state.selectedCase.id + '"]');
+      if (pre) { pre.classList.add('selected'); pre.setAttribute('aria-checked', 'true'); }
+    }
+
+    // Skip case — go to step 2 (interstitial or scent, depending on config)
+    stepEl.querySelector('[data-skip-case]').addEventListener('click', () => {
+      wizard.state.selectedCase = null;
+      goToStep(wizard, 2);
+    });
+
+    // Social proof review rotation (case/stone reviews)
+    setupCaseReviews(stepEl.querySelector('[data-scent-review]'));
+  }
+
+  function renderStep2(wizard) {
+    const config = wizard.config;
+    const stepEl = wizard.steps[config.scentStep - 1];
+
+    let reviewHTML = '';
+    if (config.showStep2Review) {
+      reviewHTML = '<div class="s2-review" data-scent-review></div>';
+    }
+
+    let ingredientsLinkHTML = config.interstitialStep
+      ? '<button class="intro__link" type="button" data-product-info>Ingredients &amp; info</button>'
+      : '';
+
+    stepEl.innerHTML =
+      '<h2 class="step-heading" tabindex="-1">Choose your scents</h2>' +
+      '<p class="step-sub">Pick as many as you like. Each refill lasts ~2 months.</p>' +
+      '<p class="step-sub step-sub--brandy" style="margin-top:0;">Anti-odorant: our pro &amp; prebiotic blend stops odour in its tracks. De-perspirant: minerals tighten pores, so you can wave goodbye to stains.</p>' +
+      '<div class="c1-grid" data-scent-grid role="group" aria-label="Scent options"></div>' +
+      ingredientsLinkHTML +
+      reviewHTML;
+
+    const grid = stepEl.querySelector('[data-scent-grid]');
+    renderScentCards(grid);
+    setupScentMultiSelect(grid, (selectedIds) => {
+      wizard.state.scents = selectedIds.map(id => scents.find(s => s.id === id)).filter(Boolean);
+      updateBottomBar(wizard);
+    });
+
+    // Apply visual pre-selection if state already has scents
+    wizard.state.scents.forEach(function(s) {
+      var pre = grid.querySelector('[data-id="' + s.id + '"]');
+      if (pre) { pre.classList.add('selected'); pre.setAttribute('aria-checked', 'true'); }
+    });
+
+    // Social proof review rotation (Trust Builder only)
+    if (config.showStep2Review) {
+      const reviewEl = stepEl.querySelector('[data-scent-review]');
+      setupScentReviews(reviewEl);
+    }
+  }
+
+  function renderStep3(wizard) {
+    const stepEl = wizard.steps[wizard.config.planStep - 1];
+    const state = wizard.state;
+    const config = wizard.config;
+    const n = state.scents.length;
+    const subPerRefill = 12;
+    const oncePerRefill = 15;
+    const subTotal = subPerRefill * n;
+    const onceTotal = oncePerRefill * n;
+    const perMonth = subTotal / (n * 2);
+
+    // Sub line
+    let subLine = '';
+    if (config.id !== 'trust') {
+      subLine = 'Choose how your refills arrive.';
+    }
+
+    // Determine active class and toggle mode
+    const isSubDefault = config.defaultPlan === 'subscribe';
+    const currentIsSub = state.plan === 'subscribe';
+    const toggleClass = currentIsSub ? '' : ' s3-toggle--once';
+
+    // Subscribe card
+    const savePillHTML = config.showSavePill ? ' <span class="s3-save-pill">Save 20%</span>' : '';
+    const subActiveClass = currentIsSub ? ' s3-option--active' : '';
+    const onceActiveClass = currentIsSub ? '' : ' s3-option--active';
+
+    const subCard =
+      '<div class="s3-option' + subActiveClass + '" data-s3-choice="subscribe">' +
+        '<div class="s3-option__badge-row">' +
+          '<span class="s3-badge">' + config.subscribeBadge + '</span>' +
+          savePillHTML +
+        '</div>' +
+        '<div class="s3-option__title">Save on every refill</div>' +
+        '<div class="s3-option__price-month">\u00a3' + perMonth + '<small>/month</small></div>' +
+        '<div class="s3-option__price-detail">Billed as \u00a3' + subTotal + ' every ' + (n * 2) + ' months' +
+          (n > 1 ? ' (' + n + ' refills \u00d7 \u00a3' + subPerRefill + ')' : '') +
+          ' <s>\u00a3' + onceTotal + '</s></div>' +
+        '<ul class="s3-benefits">' +
+          config.subscribeBenefits.map(b =>
+            '<li class="s3-benefits__item"><span class="s3-benefits__check">\u2713</span> ' + b + '</li>'
+          ).join('') +
+        '</ul>' +
+        '<div class="s3-social">' + config.socialProof + '</div>' +
+      '</div>';
+
+    const onceCard =
+      '<div class="s3-option' + onceActiveClass + '" data-s3-choice="once">' +
+        '<div class="s3-option__title">One-time purchase</div>' +
+        '<div class="s3-option__price">\u00a3' + oncePerRefill + '/refill' + (n > 1 ? ' \u00d7 ' + n : '') + '</div>' +
+        '<div class="s3-option__meta">\u00a33.95 delivery' + config.onceExtra + '</div>' +
+      '</div>';
+
+    stepEl.innerHTML =
+      '<h2 class="step-heading" tabindex="-1">' + config.step3Heading + '</h2>' +
+      (subLine ? '<p class="step-sub step-sub--brandy">' + subLine + '</p>' : '') +
+      s3ProductShelf(state) +
+      '<div class="s3-toggle' + toggleClass + '">' + subCard + onceCard + '</div>' +
+      s3TrustStrip(config.trustStripItems);
+
+    // Toggle logic
+    const options = stepEl.querySelectorAll('[data-s3-choice]');
+    const toggle = stepEl.querySelector('.s3-toggle');
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        options.forEach(o => o.classList.remove('s3-option--active'));
+        opt.classList.add('s3-option--active');
+        const choice = opt.dataset.s3Choice;
+        toggle.classList.toggle('s3-toggle--once', choice !== 'subscribe');
+        state.plan = choice;
+        updateBottomBar(wizard);
+      });
+    });
+
+  }
+
+  function renderCheckout(wizard) {
+    const stepEl = wizard.steps[wizard.config.checkoutStep - 1];
+    const state = wizard.state;
+    const isSub = state.plan === 'subscribe';
+    const refillPrice = isSub ? 12 : 15;
+    const priceLabel = isSub ? '\u00a312/2mo' : '\u00a315';
+
+    let lines = '';
+
+    // Case line
+    if (state.selectedCase) {
+      lines += '<div class="checkout__line">' +
+        '<span class="checkout__line-name">' + state.selectedCase.name + ' case</span>' +
+        '<span class="checkout__line-price">\u00a3' + state.selectedCase.price + '</span>' +
+      '</div>';
+    }
+
+    // Scent lines
+    state.scents.forEach(s => {
+      lines += '<div class="checkout__line">' +
+        '<span class="checkout__line-name">' + s.name + ' refill</span>' +
+        '<span class="checkout__line-price">' + priceLabel + '</span>' +
+      '</div>';
+    });
+
+    // Delivery
+    const deliveryText = isSub ? 'Free' : '\u00a33.95';
+    const deliveryClass = isSub ? ' checkout__line--delivery' : '';
+
+    // Total
+    const total = state.orderTotal;
+
+    // Recurring line
+    const recurringHTML = isSub
+      ? '<div class="checkout__recurring">Then \u00a3' + state.billingTotal + ' every ' + state.billingCycleMonths + ' months</div>'
+      : '';
+
+    stepEl.innerHTML =
+      '<div class="checkout">' +
+        '<h2 class="checkout__heading" tabindex="-1">Prototype finished</h2>' +
+        '<button class="checkout__restart" type="button" data-restart>Start again</button>' +
+      '</div>';
+
+    // Restart
+    stepEl.querySelector('[data-restart]').addEventListener('click', () => {
+      resetWizard(wizard);
+    });
+  }
+
+  // ══════════════════════════════════════
+  // Step Navigation
+  // ══════════════════════════════════════
+
+  function goToStep(wizard, n) {
+    const current = wizard.state.step;
+    if (n === current) return;
+
+    // Render dynamic steps
+    const config = wizard.config;
+    if (n === config.planStep) renderStep3(wizard);
+    if (n === config.checkoutStep) renderCheckout(wizard);
+
+    const forward = n > current;
+    const currentStep = wizard.steps[current - 1];
+    const targetStep = wizard.steps[n - 1];
+
+    // Outgoing
+    currentStep.classList.remove('wizard__step--active');
+    currentStep.classList.add(forward ? 'wizard__step--left' : 'wizard__step--right');
+
+    // Incoming: set start position without transition
+    targetStep.style.transition = 'none';
+    targetStep.classList.remove('wizard__step--left', 'wizard__step--right', 'wizard__step--active');
+    targetStep.classList.add(forward ? 'wizard__step--right' : 'wizard__step--left');
+    targetStep.offsetHeight; // force reflow
+
+    // Animate to active
+    targetStep.style.transition = '';
+    targetStep.classList.remove('wizard__step--left', 'wizard__step--right');
+    targetStep.classList.add('wizard__step--active');
+
+    wizard.state.step = n;
+
+    // Toggle cover-active class for interstitial full-bleed
+    if (config.interstitialStep) {
+      wizard.el.classList.toggle('wizard--cover-active', n === config.interstitialStep);
+
+      // Trigger fade-in animations when navigating to the interstitial
+      const coverEl = targetStep.querySelector('.ed-cover');
+      if (coverEl) {
+        if (n === config.interstitialStep) {
+          coverEl.classList.remove('ed-cover--animate');
+          void coverEl.offsetWidth; // reflow to restart animations
+          coverEl.classList.add('ed-cover--animate');
+        } else {
+          coverEl.classList.remove('ed-cover--animate');
+        }
+      }
+    }
+
+    renderProgressBar(wizard);
+    updateBottomBar(wizard);
+
+    // ARIA announce — build step names from config
+    const stepNameMap = {};
+    stepNameMap[1] = 'Choose your case';
+    if (config.interstitialStep) stepNameMap[config.interstitialStep] = 'What\'s inside your refill';
+    stepNameMap[config.scentStep] = 'Choose your scents';
+    stepNameMap[config.planStep] = 'Choose your plan';
+    stepNameMap[config.checkoutStep] = 'Order summary';
+    const totalVisibleSteps = config.stepCount - 1; // exclude checkout
+    wizard.announcer.textContent = n < config.checkoutStep
+      ? 'Step ' + n + ' of ' + totalVisibleSteps + ': ' + (stepNameMap[n] || '')
+      : 'Order summary \u2014 your Rollr is ready';
+
+    // Focus heading after transition
+    setTimeout(() => {
+      const heading = targetStep.querySelector('.step-heading, .ed-heading, .ed-cover__heading, .checkout__heading');
+      if (heading) heading.focus();
+    }, 320);
+  }
+
+  // ══════════════════════════════════════
+  // Progress Bar
+  // ══════════════════════════════════════
+
+  function renderProgressBar(wizard) {
+    const step = wizard.state.step;
+    const config = wizard.config;
+
+    // Trust Builder: hidden on step 1 only
+    if (!config.showProgressStep1 && step === 1) {
+      wizard.progressEl.classList.add('wizard__progress--hidden');
+      return;
+    }
+    wizard.progressEl.classList.remove('wizard__progress--hidden');
+
+    // Segment state based on config step mapping
+    const isInterstitial = config.interstitialStep && step === config.interstitialStep;
+    const caseDone = step > 1;
+    const scentDone = step > config.scentStep;
+    const scentActive = step >= config.scentStep && step < config.planStep;
+    const scentHalf = isInterstitial;
+    const planDone = step > config.planStep || step === config.checkoutStep;
+    const planActive = step === config.planStep;
+
+    // Progress text (Trust Builder only)
+    let progressText = '';
+    if (config.id === 'trust') {
+      if (isInterstitial || step === config.scentStep) progressText = 'Step 2 of 3';
+      else if (step === config.planStep) progressText = 'Step 3/3';
+    }
+
+    const segments = [
+      { label: 'Case', done: caseDone, active: step === 1, half: false },
+      { label: 'Scent', done: scentDone, active: scentActive, half: scentHalf },
+      { label: 'Plan', done: planDone, active: planActive, half: false }
+    ];
+
+    const segs = segments.map(s => {
+      let cls = 'progress__seg';
+      if (s.done) cls += ' progress__seg--done';
+      else if (s.half) cls += ' progress__seg--half';
+      else if (s.active) cls += ' progress__seg--active';
+      return '<div class="' + cls + '"></div>';
+    }).join('');
+
+    const labelHTML = segments.map(s => {
+      let cls = '';
+      if (s.done) cls = ' progress__label--done';
+      else if (s.active || s.half) cls = ' progress__label--active';
+      return '<span class="' + cls + '">' + s.label + '</span>';
+    }).join('');
+
+    wizard.progressEl.innerHTML =
+      (progressText ? '<div class="wizard__progress-text">' + progressText + '</div>' : '') +
+      '<div class="progress">' + segs + '</div>' +
+      '<div class="progress__labels">' + labelHTML + '</div>';
+  }
+
+  // ══════════════════════════════════════
+  // Bottom Bar
+  // ══════════════════════════════════════
+
+  function updateBottomBar(wizard) {
+    const state = wizard.state;
+    const config = wizard.config;
+    const step = state.step;
+
+    // Show/hide back button (visible on steps 2+)
+    wizard.barBack.classList.toggle('wizard__bar-back--hidden', step <= 1);
+
+    // Hide CTA on checkout (bar stays for back button)
+    if (step === config.checkoutStep) {
+      wizard.barCta.style.display = 'none';
+      wizard.barSummary.innerHTML = '';
+      return;
+    }
+    wizard.barCta.style.display = '';
+    wizard.barEl.classList.remove('wizard__bar--hidden');
+
+    // Summary text
+    let summary = '';
+    if (step === 1 || (config.interstitialStep && step === config.interstitialStep)) {
+      // Case step or interstitial: show case selection
+      if (state.selectedCase) {
+        summary = '<strong>' + state.selectedCase.name + '</strong> \u00b7 \u00a3' + state.selectedCase.price;
+      } else {
+        summary = step === 1 ? 'Select a case' : '';
+      }
+    } else if (step === config.scentStep) {
+      if (state.scents.length > 0) {
+        const names = state.scents.map(s => s.name).join(', ');
+        summary = '<strong>' + names + '</strong> \u00b7 ' + state.scents.length + ' refill' + (state.scents.length > 1 ? 's' : '');
+      } else {
+        summary = 'Select your scents';
+      }
+    } else if (step === config.planStep) {
+      const parts = [];
+      if (state.selectedCase) parts.push(state.selectedCase.name);
+      parts.push(state.scents.length + ' scent' + (state.scents.length > 1 ? 's' : ''));
+      summary = '<strong>' + parts.join(' + ') + '</strong>';
+    }
+
+    // Animate summary change
+    const prevText = wizard.barSummary.innerHTML;
+    wizard.barSummary.innerHTML = summary;
+    if (prevText !== summary && summary !== 'Select a case' && summary !== 'Select your scents') {
+      wizard.barSummary.classList.remove('wizard__bar-summary--animate');
+      wizard.barSummary.offsetHeight;
+      wizard.barSummary.classList.add('wizard__bar-summary--animate');
+    }
+
+    // CTA text and state
+    const cta = wizard.barCta;
+    if (step === config.planStep) {
+      // Final CTA
+      cta.classList.add('wizard__bar-cta--final');
+      cta.textContent = 'Add to Cart \u2014 ' + formatPrice(state.orderTotal);
+      cta.disabled = false;
+    } else {
+      cta.classList.remove('wizard__bar-cta--final');
+      cta.textContent = (config.interstitialStep && step === config.interstitialStep) ? 'Choose your scents' : 'Continue';
+      cta.disabled = !state.canContinue;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // Scent Review Rotation (Trust Builder)
+  // ══════════════════════════════════════
+
+  function setupCaseReviews(reviewEl) {
+    let idx = 0;
+
+    function show() {
+      const r = caseReviews[idx];
+      reviewEl.innerHTML =
+        '<div class="s2-review__stars">' + '\u2605'.repeat(r.stars) + '</div>' +
+        '<div>\"' + r.text + '\"</div>' +
+        '<div class="s2-review__author">\u2014 ' + r.author + '</div>';
+    }
+
+    show();
+    setInterval(() => {
+      reviewEl.style.opacity = '0';
+      setTimeout(() => {
+        idx = (idx + 1) % caseReviews.length;
+        show();
+        reviewEl.style.opacity = '1';
+      }, 300);
+    }, 5000);
+  }
+
+  function setupScentReviews(reviewEl) {
+    const allReviews = [];
+    scents.forEach(s => {
+      s.reviews.forEach(r => {
+        allReviews.push({ text: r.text, stars: r.stars, author: r.author, scentName: s.name });
+      });
+    });
+    let idx = 0;
+
+    function show() {
+      const r = allReviews[idx];
+      reviewEl.innerHTML =
+        '<div class="s2-review__stars">' + '\u2605'.repeat(r.stars) + '</div>' +
+        '<div>\"' + r.text + '\"</div>' +
+        '<div class="s2-review__author">\u2014 ' + r.author + ', on ' + r.scentName + '</div>';
+    }
+
+    show();
+    setInterval(() => {
+      reviewEl.style.opacity = '0';
+      setTimeout(() => {
+        idx = (idx + 1) % allReviews.length;
+        show();
+        reviewEl.style.opacity = '1';
+      }, 300);
+    }, 5000);
+  }
+
+  // ══════════════════════════════════════
+  // Wizard Reset
+  // ══════════════════════════════════════
+
+  function resetWizard(wizard) {
+    const config = wizard.config;
+    // Clear visual selections on step 1
+    wizard.steps[0].querySelectorAll('.c1-card.selected').forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-checked', 'false');
+    });
+    // Clear visual selections on scent step
+    wizard.steps[config.scentStep - 1].querySelectorAll('.s2-card.selected').forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-checked', 'false');
+    });
+
+    // Reset state
+    wizard.state.selectedCase = cases.find(c => c.id === 'rose-quartz') || null;
+    wizard.state.scents = scents.filter(s => s.id === 'vetiver');
+    wizard.state.plan = config.defaultPlan;
+    wizard.state.step = config.checkoutStep; // so goToStep sees a change
+
+    // Re-apply visual pre-selections for defaults
+    if (wizard.state.selectedCase) {
+      var pre = wizard.steps[0].querySelector('[data-id="' + wizard.state.selectedCase.id + '"]');
+      if (pre) { pre.classList.add('selected'); pre.setAttribute('aria-checked', 'true'); }
+    }
+    wizard.state.scents.forEach(function(s) {
+      var pre = wizard.steps[config.scentStep - 1].querySelector('[data-id="' + s.id + '"]');
+      if (pre) { pre.classList.add('selected'); pre.setAttribute('aria-checked', 'true'); }
+    });
+
+    goToStep(wizard, 1);
+  }
+
+  // ══════════════════════════════════════
+  // Sheet Setup (shared per wizard)
+  // ══════════════════════════════════════
+
+  function setupWizardSheets(wizard) {
+    const card = wizard.previewCard;
+    const sheet = card.querySelector('[data-sheet]');
+    const backdrop = card.querySelector('[data-sheet-backdrop]');
+    const sheetBody = sheet.querySelector('.sheet__body');
+    if (!sheet || !backdrop) return;
+
+    let openId = null;
+
+    function openSheet(content) {
+      sheetBody.innerHTML = content;
+      sheetBody.querySelector('.sheet__close-link').addEventListener('click', closeSheet);
+      sheet.classList.add('open');
+      backdrop.classList.add('open');
+    }
+
+    function closeSheet() {
+      sheet.classList.remove('open');
+      backdrop.classList.remove('open');
+      openId = null;
+    }
+
+    // Delegate clicks for product info links
+    card.addEventListener('click', (e) => {
+      const productInfo = e.target.closest('[data-product-info]');
+      if (productInfo) {
+        e.stopPropagation();
+        if (openId === 'product-info') { closeSheet(); return; }
+        openId = 'product-info';
+        openSheet(getProductInfoHTML());
+        return;
+      }
+
+      const caseLearn = e.target.closest('[data-learn]');
+      if (caseLearn) {
+        e.stopPropagation();
+        const id = caseLearn.dataset.learn;
+        if (openId === id) { closeSheet(); return; }
+        const c = cases.find(x => x.id === id);
+        if (c) {
+          openId = id;
+          openSheet(
+            '<div class="sheet__image"><img src="' + c.image + '" alt="' + c.name + '" loading="lazy"></div>' +
+            '<div class="sheet__name">' + c.name + '</div>' +
+            '<div class="sheet__desc">' + c.detail + '</div>' +
+            '<div class="sheet__footer">' +
+              '<div class="sheet__price">\u00a3' + c.price + '</div>' +
+              '<button class="sheet__close-link" type="button">Close</button>' +
+            '</div>'
+          );
+        }
+        return;
+      }
+
+      const scentLearn = e.target.closest('[data-scent-learn]');
+      if (scentLearn) {
+        e.stopPropagation();
+        const id = scentLearn.dataset.scentLearn;
+        if (openId === id) { closeSheet(); return; }
+        const s = scents.find(x => x.id === id);
+        if (s) {
+          openId = id;
+          const r = s.reviews[Math.floor(Math.random() * s.reviews.length)];
+          openSheet(
+            '<div class="sheet__image"><img src="' + s.image + '" alt="' + s.name + '" loading="lazy"></div>' +
+            '<div class="sheet__name">' + s.name + '</div>' +
+            '<div class="sheet__desc">' + s.description + '</div>' +
+            '<div class="sheet__notes"><strong>Notes:</strong> ' + s.notes + '</div>' +
+            '<div class="sheet__review">' +
+              '<div class="sheet__review-stars">' + '\u2605'.repeat(r.stars) + '</div>' +
+              '<div>\"' + r.text + '\"</div>' +
+              '<div class="sheet__review-author">\u2014 ' + r.author + '</div>' +
+            '</div>' +
+            '<div class="sheet__footer">' +
+              '<div class="sheet__price">\u00a312/refill \u00b7 lasts ~2 months</div>' +
+              '<button class="sheet__close-link" type="button">Close</button>' +
+            '</div>'
+          );
+        }
+        return;
+      }
+    });
+
+    backdrop.addEventListener('click', closeSheet);
+  }
+
+  // ══════════════════════════════════════
+  // Init
+  // ══════════════════════════════════════
+
+  document.querySelectorAll('[data-wizard]').forEach(el => {
+    const type = el.dataset.wizard;
+    const config = type === 'trust' ? TRUST_CONFIG : STANDARD_CONFIG;
+    createWizard(el, config);
+  });
+</script>
+
+<script>
+(function() {
+  var card = document.querySelector('.preview-card--wizard');
+  var hero = document.querySelector('.prototype-hero');
+  var header = document.querySelector('.page-header');
+  function fit() {
+    var headerH = header ? header.offsetHeight : 0;
+    var avail = window.innerHeight - headerH - 56;
+    var s = Math.min(1, avail / 932);
+    card.style.transform = 'scale(' + s + ')';
+    hero.style.height = (932 * s) + 'px';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
+
+</body>
+</html>
