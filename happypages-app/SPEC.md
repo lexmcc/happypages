@@ -132,21 +132,25 @@ Interview-driven specification tool powered by the Anthropic API. Stakeholders a
 
 ## What's Next
 
-### Shopify App Submission
+- [ ] PostHog Analytics Integration (see [posthog-evaluation.md](../docs/features/posthog-evaluation.md))
+- [ ] Referrals: Self-referral prevention — user's own referral code must not work for themselves. Tested and broken, needs fix
+- [ ] Referrals: Metafield storage for rewards — confirm rewards are stored in metafields so account area can display them
+- [ ] Referrals: Discount grouping — investigate whether each reward creating a separate discount (instead of grouped) is a bug. Ben ok with current behaviour for now
+- [ ] Referrals: CS team referral data access — longer term, CS team needs to look up referral info without pinging Ben. Gorgias widget or in-app view
+- [ ] Referrals: Customer timeline enrichment — reward usage events showing in Shopify customer timeline. Referral code note works, reward usage needs verification
+- [ ] Referrals: Klaviyo event on reward — fire Klaviyo event when reward is generated so email notification can be sent. Ben offered to help with API key
+- [ ] Referrals: Per-customer referral page link — metafield with link to their referral page (for checkout/thank you widget). Needs confirming setup
+- [ ] Referrals: Reward state clearing — clear reward from metafield once used (via Atomic or checkout) so account doesn't show stale rewards
+## Done
 
-App submitted for review. Public app webhooks deployed, privacy policy live, protected customer data and network access approved, walkthrough video uploaded, test store cleaned up.
+- [x] Housekeeping — old custom distribution app deleted from Partner Dashboard
 
-### App Hardening
+- [x] App Hardening
+  - [x] RSpec suite — 647 specs (model, request, service, concern, mailer, job)
+  - [x] DB indices — already in place: `discount_configs(shop_id, config_key)` composite unique, `referral_events(shop_id)` + `referral_events(created_at)` individual indices. Sufficient for current scale.
+  - [x] API auth on `/api/*` endpoints — accepted risk: header-only shop ID, but endpoints are low-sensitivity (config reads, referral CRUD), rate-limited, and only called from Shopify checkout sandbox. No destructive mutations exposed.
+  - [x] CORS initializer with Shopify + custom origins
+  - [x] rack-attack rate limiting (500/min/IP on POST /api/referrals)
+  - [x] Narrow `rescue => e` in webhooks — accepted risk: broad rescues are intentional defensive isolation preventing Shopify retry storms. Each wraps a non-critical side effect (customer note, metafield, discount) with error logging. No data corruption possible.
 
-| Priority | Issue | Notes |
-|----------|-------|-------|
-| High | No API auth on `/api/*` endpoints | Header-only shop identification, no HMAC/token |
-| Medium | Broad `rescue => e` in webhooks | Swallows errors silently — rescue specific exceptions |
-| Medium | Missing DB indices | `referral_events(shop_id, created_at)`, `discount_configs(shop_id, config_key)` (note: `analytics_events` table has proper indices) |
-| Low | ~~CORS gem included but unconfigured~~ | **Done** — CORS initializer with Shopify + custom origins |
-| Low | ~~No rate limiting~~ | **Done** — rack-attack on POST /api/referrals (500/min/IP) |
-| Low | ~~Zero automated tests~~ | **Done** — RSpec suite with 647 specs (model, request, service, concern, mailer, job) |
-
-### Housekeeping
-
-Old custom distribution app deleted from Partner Dashboard.
+- [x] Shopify App Submission — app submitted for review, public app webhooks deployed, privacy policy live, protected customer data and network access approved, walkthrough video uploaded, test store cleaned up.

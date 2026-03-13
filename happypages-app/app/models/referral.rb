@@ -13,6 +13,11 @@ class Referral < ApplicationRecord
   validates :email, presence: true
   validates :referral_code, presence: true, uniqueness: { scope: :shop_id }
 
+  def referral_page_url
+    return nil unless shop&.slug.present?
+    "https://app.happypages.co/#{shop.slug}/refer?ref=#{referral_code}"
+  end
+
   private
 
   def set_shop_from_current

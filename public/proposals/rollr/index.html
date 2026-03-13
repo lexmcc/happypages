@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rollr | CRO Audit & Growth Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-warm: #fafafa;
+      --bg-dark: #430632;
+      --bg-sage: #2a0420;
+      --accent: #ffa674;
+      --accent-hover: #e89060;
+      --accent-glow: rgba(255, 166, 116, 0.25);
+      --card-bg: #f2f2f2;
+      --text-primary: #430632;
+      --text-muted: #6b3d5d;
+      --text-light: #fafafa;
+      --border-subtle: rgba(67, 6, 50, 0.08);
+      --plum: #430632;
+      --plum-light: #8a5070;
+      --coral: #ffa674;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-warm);
+      color: var(--text-primary);
+      overflow: hidden;
+      letter-spacing: -0.02em;
+    }
+
+    .deck {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .slide--dark {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .slide--warm {
+      background: var(--bg-warm);
+      color: var(--text-primary);
+    }
+
+    .slide--sage {
+      background: var(--bg-sage);
+      color: var(--text-light);
+    }
+
+    .slide__content {
+      max-width: 720px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .slide__content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide__label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+
+    .slide__title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 24px;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+    }
+
+    .slide__title::after {
+      content: '.';
+      color: var(--accent);
+    }
+
+    .slide__subtitle {
+      font-size: clamp(15px, 2.5vw, 18px);
+      line-height: 1.6;
+      opacity: 0.75;
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Credit */
+    .credit {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 11px;
+      opacity: 0.35;
+      letter-spacing: 0.02em;
+    }
+
+    .credit a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .credit a:hover { opacity: 0.7; }
+
+    /* Accent line */
+    .accent-line {
+      width: 48px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 24px;
+      border-radius: 1px;
+    }
+
+    .slide--dark .accent-line { background: var(--plum-light); }
+    .slide--sage .accent-line { background: var(--coral); }
+
+    /* Issues/Items List */
+    .issues {
+      text-align: left;
+      width: 100%;
+    }
+
+    .issue {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .slide--dark .issue { border-bottom-color: rgba(250, 250, 250, 0.1); }
+    .slide--sage .issue { border-bottom-color: rgba(250, 250, 250, 0.12); }
+
+    .issue:last-child { border-bottom: none; }
+
+    .issue__icon {
+      width: 40px;
+      height: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .slide--dark .issue__icon,
+    .slide--sage .issue__icon {
+      background: rgba(250, 250, 250, 0.1);
+      border-color: rgba(250, 250, 250, 0.1);
+      color: var(--text-light);
+    }
+
+    .issue__icon--accent { color: var(--accent); }
+    .issue__icon--plum { color: var(--plum); }
+    .issue__icon--coral { color: var(--coral); }
+
+    .issue__text {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .issue__text strong {
+      display: block;
+      margin-bottom: 3px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .issue__text span {
+      opacity: 0.6;
+      font-size: 13px;
+    }
+
+    /* Observation cards */
+    .observations {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .observation {
+      background: rgba(250, 250, 250, 0.06);
+      border: 1px solid rgba(250, 250, 250, 0.1);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .observation__label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      opacity: 0.4;
+      margin-bottom: 6px;
+    }
+
+    .observation__text {
+      font-size: 13px;
+      line-height: 1.45;
+      opacity: 0.8;
+    }
+
+    /* Option Cards */
+    .option-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(67, 6, 50, 0.04);
+    }
+
+    .option-card--recommended {
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 20px var(--accent-glow);
+      position: relative;
+    }
+
+    .option-card__badge {
+      position: absolute;
+      top: -12px;
+      left: 28px;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    .option-card__name {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .option-card__discount {
+      display: inline-block;
+      background: var(--plum-light);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .option-card__price {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .option-card__price s {
+      font-size: 0.5em;
+      opacity: 0.35;
+      text-decoration: line-through;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    .option-card__price-note {
+      font-size: 13px;
+      opacity: 0.45;
+      margin-bottom: 16px;
+    }
+
+    .option-card__desc {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .option-card__list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .option-card__list li {
+      font-size: 13px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-card__list li:last-child { border-bottom: none; }
+
+    .option-card__list li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: var(--plum-light);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .option-card--recommended .option-card__list li::before {
+      background: var(--accent);
+    }
+
+    .option-card__recommendation {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: rgba(255, 166, 116, 0.08);
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .option-card__recommendation strong {
+      color: var(--accent);
+    }
+
+    .option-footnote {
+      font-size: 13px;
+      opacity: 0.45;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    /* Comparison Table */
+    .comparison {
+      width: 100%;
+      text-align: left;
+      margin-top: 16px;
+    }
+
+    .comparison__row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(250, 250, 250, 0.1);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .comparison__row--header {
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1.5px solid rgba(250, 250, 250, 0.2);
+    }
+
+    .comparison__cell {
+      padding: 11px 10px;
+    }
+
+    .comparison__cell:first-child {
+      font-weight: 500;
+      opacity: 0.6;
+    }
+
+    .comparison__cell--highlight {
+      background: rgba(255, 166, 116, 0.1);
+    }
+
+    .comparison__row--header .comparison__cell--highlight {
+      color: var(--accent);
+      position: relative;
+    }
+
+    .comparison__cell--check {
+      color: var(--plum-light);
+      font-weight: 700;
+    }
+
+    .slide--dark .comparison__cell--check {
+      color: var(--coral);
+    }
+
+    .comparison__cell--muted {
+      opacity: 0.25;
+    }
+
+    .comparison__cell s {
+      opacity: 0.4;
+      font-size: 0.85em;
+    }
+
+    .comparison__rec-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 8px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* Timeline */
+    .timeline-horizontal {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      position: relative;
+      margin-top: 16px;
+    }
+
+    .timeline-horizontal::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--plum-light);
+      opacity: 0.3;
+    }
+
+    .timeline__phase {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 8px;
+    }
+
+    .timeline__marker {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 0 auto 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline__content h3 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 15px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+    }
+
+    .timeline__content p {
+      font-size: 12px;
+      opacity: 0.55;
+      line-height: 1.4;
+    }
+
+    /* CTA */
+    .cta-button {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 16px 36px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      margin-top: 24px;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .cta-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(255, 166, 116, 0.35);
+    }
+
+    .cta-secondary {
+      display: inline-block;
+      color: var(--text-light);
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 12px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .cta-secondary:hover { opacity: 0.8; }
+
+    .cta-deadline {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 12px;
+      opacity: 0.4;
+      padding: 6px 14px;
+      border: 1px solid rgba(250, 250, 250, 0.15);
+      border-radius: 20px;
+    }
+
+    /* Progress Indicator */
+    .progress {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .progress__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(67, 6, 50, 0.15);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .progress__dot:hover { background: rgba(67, 6, 50, 0.3); }
+
+    .progress__dot.active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.4;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    .scroll-hint__arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      margin-top: -4px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* Hide scrollbar */
+    .deck::-webkit-scrollbar { display: none; }
+    .deck { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .slide { padding: 32px 20px; }
+
+      .observations {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .progress { right: 8px; }
+      .progress__dot { width: 5px; height: 5px; }
+
+      .timeline-horizontal {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .timeline-horizontal::before { display: none; }
+
+      .timeline__phase {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
+        padding: 0;
+      }
+
+      .timeline__marker {
+        margin: 0;
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+
+      .timeline__content { padding-top: 4px; }
+
+      .issue__icon {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+      }
+
+      .credit { bottom: 16px; right: 16px; font-size: 10px; }
+
+      .option-card { padding: 22px; }
+      .option-card__badge { left: 22px; }
+
+      .comparison { display: none; }
+      .comparison-mobile { display: block; }
+    }
+
+    @media (min-width: 601px) {
+      .comparison-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <!-- Slide 1: Title -->
+    <div class="slide slide--dark" data-slide="0">
+      <div class="slide__content">
+        <p style="font-size: clamp(12px, 1.8vw, 14px); opacity: 0.35; margin-bottom: 28px; letter-spacing: 0.1em; text-transform: lowercase;">prepared for</p>
+        <h1 class="slide__title" style="font-size: clamp(48px, 10vw, 80px); margin-bottom: 16px; text-transform: none;">Rollr</h1>
+        <div class="accent-line"></div>
+        <p class="slide__subtitle" style="opacity: 0.55;">CRO audit findings & growth options</p>
+        <p style="font-size: 13px; opacity: 0.25; margin-top: 4px;">3-month engagement</p>
+      </div>
+      <div class="scroll-hint">
+        <div class="scroll-hint__arrow"></div>
+      </div>
+      <div class="credit">
+        <a href="https://happypages.co" target="_blank">by happypages</a>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Opportunity -->
+    <div class="slide slide--dark" data-slide="1">
+      <div class="slide__content">
+        <div class="slide__label">the opportunity</div>
+        <h1 class="slide__title">1% conversion = &pound;100k</h1>
+        <p class="slide__subtitle">you're at 3% with 4.97-star reviews. the product sells itself once people try it. the site's architecture just isn't giving it the best chance.</p>
+        <div class="observations">
+          <div class="observation">
+            <div class="observation__label">landing experience</div>
+            <div class="observation__text">the homepage tells a beautiful brand story. but 75% of visitors arrive from Meta ads &mdash; they need to understand the product before they can fall in love with the brand</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">purchase flow</div>
+            <div class="observation__text">the configurator asks more of visitors than it should. scent descriptions suit brand fans but leave first-timers unsure how to choose. pricing isn't clear until the final step. mobile hides half the options</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">page structure</div>
+            <div class="observation__text">the product page does a lot at once &mdash; landing page, configurator, and content hub. the strongest selling points (efficacy, reviews, how it works) sit below the purchase flow instead of alongside it</div>
+          </div>
+          <div class="observation">
+            <div class="observation__label">messaging hierarchy</div>
+            <div class="observation__text">your reviews say "it actually works." that's the message that tips people over the edge &mdash; but it's buried mid-page. the luxury positioning is strong; efficacy just needs to sit higher</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: What We Found -->
+    <div class="slide slide--warm" data-slide="2">
+      <div class="slide__content">
+        <div class="slide__label">the audit</div>
+        <h1 class="slide__title" style="font-size: clamp(24px, 5vw, 36px);">13 findings, 4 critical</h1>
+        <p class="slide__subtitle" style="margin-bottom: 24px;">we found 13 issues. here are the ones with the biggest impact on conversion.</p>
+        <div class="issues">
+          <div class="issue">
+            <div class="issue__icon issue__icon--accent">1</div>
+            <div class="issue__text">
+              <strong>landing experience vs paid traffic</strong>
+              <span>the homepage is a brand experience page, but 75% of visitors arrive from Meta ads. they need to understand what Rollr is and whether it works before the brand story lands</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--plum">2</div>
+            <div class="issue__text">
+              <strong>configurator asks too much</strong>
+              <span>the stepped flow drives 57% subscription uptake &mdash; that's worth protecting. but on mobile &mdash; where most paid traffic lands &mdash; option cards have small tap targets, the information hierarchy is flat, and a carousel hides half the scent options. pricing isn't visible until the final step. this is the likeliest drop-off point for mobile visitors</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--coral">3</div>
+            <div class="issue__text">
+              <strong>product page doing too much at once</strong>
+              <span>the strongest selling points &mdash; efficacy, reviews, how it works &mdash; all sit below the purchase flow. they should be supporting the decision, not following it</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--accent">4</div>
+            <div class="issue__text">
+              <strong>efficacy needs to sit higher</strong>
+              <span>"it actually works" is the message your customers repeat most. the luxury positioning is strong &mdash; efficacy just needs to appear earlier so first-time visitors get the full picture</span>
+            </div>
+          </div>
+          <div class="issue">
+            <div class="issue__icon issue__icon--plum">5</div>
+            <div class="issue__text">
+              <strong>pricing isn't visible early enough</strong>
+              <span>total cost is hidden until the final step. "save 20%" doesn't show the pound difference. the subscription maths (&pound;12 every 2 months = &pound;6/month) isn't made visible anywhere</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: CRO Sprint (recommended) -->
+    <div class="slide slide--warm" data-slide="3">
+      <div class="slide__content">
+        <div class="option-card option-card--recommended">
+          <div class="option-card__badge">recommended</div>
+          <div class="option-card__name">CRO sprint<span class="option-card__discount">founder's discount</span></div>
+          <div class="option-card__price"><s>&pound;4,000</s> &pound;2,000<span style="font-size: 16px; font-weight: 400; opacity: 0.4; font-family: 'Outfit', sans-serif;">/month</span></div>
+          <div class="option-card__price-note">&pound;6,000 over 3 months</div>
+          <div class="option-card__desc">monthly CRO audit + strategy call + we design and build directly in your Shopify theme. your team handles the rest.</div>
+          <ul class="option-card__list">
+            <li>full CRO audit delivered day 1 (already complete)</li>
+            <li>monthly audit with 5 prioritised recommendations</li>
+            <li>1-hour monthly strategy call — everything between calls lives on the board</li>
+            <li>2-3 builds per month — designed, built, and shipped into your live theme</li>
+            <li>async-first communication — both teams stay focused on building</li>
+          </ul>
+          <div class="option-card__recommendation">
+            <strong>why this one:</strong> you get direction and someone building the high-impact changes. the configurator, efficacy positioning, and landing page get done instead of sitting in the queue. pays for itself at 3.2% conversion.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Side-by-Side Comparison -->
+    <div class="slide slide--dark" data-slide="4">
+      <div class="slide__content">
+        <div class="slide__label">at a glance</div>
+        <h1 class="slide__title" style="font-size: clamp(22px, 4vw, 32px);">three options</h1>
+
+        <!-- Desktop table -->
+        <div class="comparison">
+          <div class="comparison__row comparison__row--header">
+            <div class="comparison__cell"></div>
+            <div class="comparison__cell">growth</div>
+            <div class="comparison__cell comparison__cell--highlight">sprint <span class="comparison__rec-badge">pick</span></div>
+            <div class="comparison__cell">consulting</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">monthly price</div>
+            <div class="comparison__cell"><s>&pound;6,000</s> &pound;3,000</div>
+            <div class="comparison__cell comparison__cell--highlight"><s>&pound;4,000</s> &pound;2,000</div>
+            <div class="comparison__cell">&pound;1,000</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">3-month total</div>
+            <div class="comparison__cell">&pound;9,000</div>
+            <div class="comparison__cell comparison__cell--highlight">&pound;6,000</div>
+            <div class="comparison__cell">&pound;3,000</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">CRO audit</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">strategy calls</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">builds/month</div>
+            <div class="comparison__cell">4-6</div>
+            <div class="comparison__cell comparison__cell--highlight">2-3</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">weekly updates</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--muted">&mdash;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+          <div class="comparison__row">
+            <div class="comparison__cell">measurement</div>
+            <div class="comparison__cell comparison__cell--check">&check;</div>
+            <div class="comparison__cell comparison__cell--highlight comparison__cell--muted">&mdash;</div>
+            <div class="comparison__cell comparison__cell--muted">&mdash;</div>
+          </div>
+        </div>
+
+        <!-- Mobile stacked cards -->
+        <div class="comparison-mobile">
+          <div style="margin-top: 16px;">
+            <div style="background: rgba(255,166,116,0.12); border: 1.5px solid rgba(255,166,116,0.3); border-radius: 10px; padding: 18px; margin-bottom: 12px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; color: var(--accent); margin-bottom: 8px;">CRO sprint &mdash; recommended</div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;6,000 <span style="font-size: 13px; opacity: 0.5; font-family: 'Outfit', sans-serif;">over 3 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">audit + strategy calls + 2-3 builds/month &middot; we handle the high-impact changes</div>
+            </div>
+            <div style="background: rgba(250, 250, 250, 0.06); border: 1px solid rgba(250, 250, 250, 0.1); border-radius: 10px; padding: 18px; margin-bottom: 12px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; opacity: 0.5; margin-bottom: 8px;">growth partner</div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;9,000 <span style="font-size: 13px; opacity: 0.5; font-family: 'Outfit', sans-serif;">over 3 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">everything in sprint + 4-6 builds/month &middot; weekly updates &middot; measurement loop</div>
+            </div>
+            <div style="background: rgba(250, 250, 250, 0.06); border: 1px solid rgba(250, 250, 250, 0.1); border-radius: 10px; padding: 18px;">
+              <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: lowercase; opacity: 0.5; margin-bottom: 8px;">CRO consulting</div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px;">&pound;3,000 <span style="font-size: 13px; opacity: 0.5; font-family: 'Outfit', sans-serif;">over 3 months</span></div>
+              <div style="font-size: 12px; opacity: 0.6; line-height: 1.5; margin-top: 8px;">audit + strategy calls &middot; your team implements everything &middot; no builds from us</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Timeline -->
+    <div class="slide slide--warm" data-slide="5">
+      <div class="slide__content">
+        <div class="slide__label">the plan</div>
+        <h1 class="slide__title" style="font-size: clamp(22px, 4vw, 32px); margin-bottom: 32px;">3 months to 4%</h1>
+        <div class="timeline-horizontal">
+          <div class="timeline__phase">
+            <div class="timeline__marker">1</div>
+            <div class="timeline__content">
+              <h3>refine the flow</h3>
+              <p>configurator improvements, efficacy higher on the page, clearer pricing, reviews closer to the purchase decision. the audit's done &mdash; we start building immediately</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">2</div>
+            <div class="timeline__content">
+              <h3>build the landing page</h3>
+              <p>a dedicated page for paid traffic that converts cold visitors. product page restructure. subscription framing improvements</p>
+            </div>
+          </div>
+          <div class="timeline__phase">
+            <div class="timeline__marker">3</div>
+            <div class="timeline__content">
+              <h3>measure + iterate</h3>
+              <p>what worked? do more of that. plan the next phase</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: CTA -->
+    <div class="slide slide--dark" data-slide="6">
+      <div class="slide__content">
+        <div class="slide__label">next steps</div>
+        <h1 class="slide__title">interested?</h1>
+        <p class="slide__subtitle">let me know what you think. happy to jump on a call to talk through any of it.</p>
+        <a href="mailto:alex@happypages.co?subject=Rollr%20%E2%80%94%20CRO" class="cta-button">email alex</a>
+        <br>
+        <a href="mailto:alex@happypages.co" class="cta-secondary">alex@happypages.co</a>
+        <br>
+        <span class="cta-deadline">founder's pricing available for engagements starting by april 2026</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress" id="progress"></div>
+
+  <script>
+    const deck = document.getElementById('deck');
+    const progress = document.getElementById('progress');
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    // Create progress dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'progress__dot';
+      dot.dataset.slide = i;
+      dot.addEventListener('click', () => {
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+      });
+      progress.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.progress__dot');
+
+    // Update active dot on scroll
+    function updateProgress() {
+      const scrollPos = deck.scrollTop;
+      const slideHeight = window.innerHeight;
+      const currentSlide = Math.round(scrollPos / slideHeight);
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+
+      const activeSlide = slides[currentSlide];
+      if (!activeSlide) return;
+      const isDark = activeSlide.classList.contains('slide--dark') ||
+                     activeSlide.classList.contains('slide--sage');
+
+      dots.forEach(dot => {
+        if (isDark) {
+          dot.style.background = dot.classList.contains('active')
+            ? 'var(--coral)' : 'rgba(250,250,250,0.2)';
+        } else {
+          dot.style.background = dot.classList.contains('active')
+            ? 'var(--accent)' : 'rgba(67,6,50,0.12)';
+        }
+      });
+    }
+
+    deck.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const slideHeight = window.innerHeight;
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'j') {
+        e.preventDefault();
+        deck.scrollBy({ top: slideHeight, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'k') {
+        e.preventDefault();
+        deck.scrollBy({ top: -slideHeight, behavior: 'smooth' });
+      }
+    });
+
+    // Fade-in on scroll (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.slide__content').forEach(el => observer.observe(el));
+
+    // Hide scroll hint after first scroll
+    deck.addEventListener('scroll', function hideHint() {
+      const hint = document.querySelector('.scroll-hint');
+      if (hint && deck.scrollTop > 50) {
+        hint.style.opacity = '0';
+        hint.style.transition = 'opacity 0.3s';
+        setTimeout(() => hint.remove(), 300);
+        deck.removeEventListener('scroll', hideHint);
+      }
+    });
+  </script>
+</body>
+</html>

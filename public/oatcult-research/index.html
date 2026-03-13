@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oat Cult — PDP Redesign Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown-light: #6B4A2E;
+      --brown: #3C1B01;
+      --brown-dark: #2A1200;
+      --pink-light: #F9BFD2;
+      --pink: #ED6B93;
+      --pink-dark: #D44B76;
+      --tan-light: #C9AD86;
+      --tan: #A0794D;
+      --tan-dark: #7A5B35;
+      --blue-light: #D6EDF5;
+      --blue: #ACDBE7;
+      --blue-dark: #7FC4D6;
+      --cream-light: #FBF6F0;
+      --cream: #F4E7DB;
+      --cream-dark: #E5D1BF;
+      --cta: #F5C518;
+      --cta-dark: #D4A80E;
+      --success: #4A8B3F;
+      --error: #C23B22;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--brown);
+      background: var(--cream-light);
+    }
+
+    h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; line-height: 1.2; }
+    h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--brown); }
+    h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+
+    p { margin-bottom: 16px; }
+    a { color: var(--tan-dark); text-decoration-color: var(--tan-light); }
+    a:hover { color: var(--brown); text-decoration-color: var(--tan); }
+
+    .page { max-width: 800px; margin: 0 auto; padding: 0 32px; }
+
+    /* Header */
+    .hero-header {
+      background: var(--brown);
+      padding: 64px 32px 48px;
+      text-align: center;
+      color: var(--cream);
+    }
+    .hero-header img { height: 64px; margin-bottom: 24px; }
+    .hero-header h1 { color: var(--cream); font-size: 48px; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .hero-header .subtitle { font-size: 17px; color: var(--cream-dark); max-width: 600px; margin: 0 auto 24px; }
+    .accent-bar { width: 48px; height: 4px; background: var(--pink); margin: 0 auto; border-radius: 2px; }
+
+    /* Sticky Nav */
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream-light);
+      padding: 16px 0;
+      transition: padding 0.2s, box-shadow 0.2s;
+    }
+    .toc-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      background: var(--cream);
+      border: 1px solid var(--cream-dark);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .toc-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brown);
+      white-space: nowrap;
+      line-height: 28px;
+    }
+    .toc-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .toc-link {
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--brown-light);
+      background: var(--cream-light);
+      padding: 4px 12px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      line-height: 20px;
+    }
+    .toc-link:hover { background: var(--cream-dark); color: var(--brown); }
+    .toc-link.active { background: var(--brown); color: var(--cream); }
+    .toc.is-stuck { padding: 0; }
+    .toc.is-stuck .toc-inner { border-radius: 0 0 8px 8px; padding: 10px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .toc.is-stuck .toc-label { font-size: 11px; line-height: 24px; }
+    .toc.is-stuck .toc-link { font-size: 11px; padding: 3px 10px; }
+
+    /* Sections */
+    .section { padding: 56px 0; }
+    .section-intro { font-size: 14px; color: var(--brown-light); margin-bottom: 28px; }
+
+    /* Full-width colored sections */
+    .section-full { padding: 56px 32px; }
+    .section-full .section-inner { max-width: 800px; margin: 0 auto; }
+    .section-brown { background: var(--brown); color: var(--cream); }
+    .section-brown h2 { color: var(--cream); border-bottom-color: var(--brown-light); }
+    .section-brown .section-intro { color: var(--cream-dark); }
+    .section-pink { background: var(--pink); color: var(--brown); }
+    .section-pink h2 { border-bottom-color: var(--brown); }
+    .section-blue { background: var(--blue); color: var(--brown); }
+    .section-blue h2 { border-bottom-color: var(--brown); }
+    .section-cream { background: var(--cream); }
+
+    /* Callout box */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .callout-blue { background: var(--blue); color: var(--brown); }
+    .callout-pink { background: var(--pink-light); color: var(--brown); }
+    .callout-cream { background: var(--cream); border: 1px solid var(--cream-dark); }
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    /* Tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .tag {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 4px 12px;
+      border-radius: 14px;
+    }
+    .tag-brown { background: var(--brown); color: var(--cream); }
+    .tag-pink { background: var(--pink); color: white; }
+    .tag-blue { background: var(--blue); color: var(--brown); }
+    .tag-tan { background: var(--tan-light); color: var(--brown); }
+    .tag-cream { background: var(--cream); color: var(--brown); border: 1px solid var(--cream-dark); }
+
+    /* Brief grid */
+    .brief-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px 16px;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .brief-key {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--brown);
+    }
+    .brief-val { color: var(--brown-light); }
+
+    /* Brand cards for research scope */
+    .brand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .brand-col h3 { font-size: 15px; margin-bottom: 12px; }
+    .brand-card {
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--cream-light);
+      margin-bottom: 8px;
+      font-size: 13px;
+      border-left: 3px solid var(--brown);
+    }
+    .brand-card.aesthetic { border-left-color: var(--tan); }
+    .brand-card strong { font-family: 'Poppins', sans-serif; font-size: 13px; display: block; margin-bottom: 2px; }
+    .brand-card span { color: var(--brown-light); font-size: 12px; }
+
+    /* Pattern cards */
+    .pattern-card {
+      background: var(--cream-light);
+      border: 1px solid var(--cream-dark);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+    .pattern-card h4 { font-size: 15px; margin-bottom: 6px; }
+    .pattern-card .brands { font-size: 12px; color: var(--tan-dark); margin-bottom: 6px; }
+    .pattern-card p { font-size: 13px; color: var(--brown-light); margin-bottom: 0; }
+
+    /* Accordion */
+    .accordion { margin-bottom: 8px; }
+    .accordion-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .accordion-title::-webkit-details-marker { display: none; }
+    .accordion-title::after {
+      content: '+';
+      margin-left: auto;
+      font-size: 18px;
+      color: var(--brown-light);
+      transition: transform 0.2s;
+      font-weight: 400;
+    }
+    details[open] > .accordion-title::after { content: '\2212'; }
+    .accordion-body { padding: 20px 0; }
+    .section-brown .accordion-title { border-bottom-color: var(--brown-light); }
+
+    /* Bar chart */
+    .bar-chart { margin-bottom: 24px; }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .bar-label { width: 100px; text-align: right; font-weight: 600; font-family: 'Poppins', sans-serif; font-size: 12px; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 28px; background: var(--cream); border-radius: 4px; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 600; color: var(--brown); }
+    .bar-fill.highlight { background: var(--pink); color: white; }
+    .bar-fill.default { background: var(--tan-light); }
+
+    /* Flow diagram */
+    .flow { margin-bottom: 32px; }
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .flow-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .flow-step:not(:last-child) .flow-num::after {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: calc(100% + 8px);
+      background: var(--cream-dark);
+    }
+    .flow-content {
+      flex: 1;
+      padding-bottom: 20px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .flow-content h4 { font-size: 14px; margin-bottom: 4px; }
+    .flow-content p { font-size: 13px; color: var(--brown-light); margin-bottom: 0; }
+    .flow-brown .flow-num { background: var(--brown); color: var(--cream); }
+    .flow-pink .flow-num { background: var(--pink); color: white; }
+    .flow-cream .flow-num { background: var(--cream); color: var(--brown); border: 2px solid var(--cream-dark); }
+    .flow-blue .flow-num { background: var(--blue); color: var(--brown); }
+
+    /* Trust signals */
+    .trust-list { list-style: none; padding: 0; }
+    .trust-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--cream-dark);
+      font-size: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .trust-list li:last-child { border-bottom: none; }
+    .trust-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--cream);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .trust-text strong { display: block; font-family: 'Poppins', sans-serif; font-size: 13px; }
+    .trust-text span { font-size: 12px; color: var(--brown-light); }
+
+    /* Objection cards */
+    .objection-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .objection-card {
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .objection-problem { background: var(--brown); color: var(--cream); }
+    .objection-solution { background: var(--cream-light); border-left: 3px solid var(--pink); }
+    .objection-card strong { display: block; font-family: 'Poppins', sans-serif; font-size: 12px; margin-bottom: 4px; }
+
+    /* Approach option cards */
+    .option-card {
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+      background: white;
+      position: relative;
+    }
+    .option-card.recommended { border-color: var(--pink); }
+    .option-card.recommended::after {
+      content: 'Recommended';
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      background: var(--pink);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+    .option-card h3 { font-size: 20px; margin-bottom: 8px; }
+    .option-card p { font-size: 14px; color: var(--brown-light); }
+    .option-card .when { font-size: 12px; color: var(--tan-dark); margin-top: 12px; padding-left: 12px; border-left: 2px solid var(--cream-dark); margin-bottom: 0; }
+
+    /* Effort/Impact meters */
+    .meters { display: flex; gap: 24px; margin: 16px 0; }
+    .meter { flex: 1; }
+    .meter-label { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown-light); margin-bottom: 4px; }
+    .meter-track { height: 8px; background: var(--cream); border-radius: 4px; overflow: hidden; }
+    .meter-fill { height: 100%; border-radius: 4px; }
+    .meter-fill.effort { background: var(--tan); }
+    .meter-fill.impact { background: var(--pink); }
+
+    /* Impact matrix */
+    .impact-list { margin-bottom: 24px; }
+    .impact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .impact-item:last-child { border-bottom: none; }
+    .impact-rank {
+      width: 36px;
+      height: 36px;
+      background: var(--brown);
+      color: var(--cream);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .impact-rank.top3 { background: var(--pink); color: white; }
+    .impact-body { flex: 1; }
+    .impact-body strong { font-family: 'Poppins', sans-serif; font-size: 14px; display: block; margin-bottom: 4px; }
+    .impact-body span { font-size: 12px; color: var(--brown-light); }
+    .impact-meters { width: 160px; flex-shrink: 0; }
+    .impact-meter-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .impact-meter-label { font-size: 10px; font-weight: 600; width: 40px; color: var(--brown-light); }
+    .impact-meter-track { flex: 1; height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
+    .impact-meter-fill { height: 100%; border-radius: 3px; }
+
+    /* Tabs */
+    .tabs { margin-bottom: 24px; }
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--cream-dark);
+      scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 14px;
+      border: none;
+      background: var(--cream-light);
+      color: var(--brown-light);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab-btn:hover { background: var(--cream-dark); color: var(--brown); }
+    .tab-btn.active { background: var(--brown); color: var(--cream); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Benchmark steal/leave lists */
+    .benchmark-list { list-style: none; padding: 0; }
+    .benchmark-list li {
+      padding: 8px 0;
+      font-size: 13px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .benchmark-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .icon-steal { background: var(--success); color: white; }
+    .icon-leave { background: var(--error); color: white; }
+
+    /* Idea cards */
+    .idea-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .idea-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--pink);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 36px;
+    }
+    .idea-body h4 { font-size: 15px; margin-bottom: 4px; }
+    .idea-body p { font-size: 13px; color: var(--brown-light); margin-bottom: 0; }
+
+    /* Stat cards */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--cream-light);
+      border: 1px solid var(--cream-dark);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--pink);
+      letter-spacing: -0.02em;
+    }
+    .stat-label { font-size: 13px; color: var(--brown-light); margin-top: 4px; }
+
+    /* Question cards */
+    .question-card {
+      padding: 16px 20px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .section-brown .question-card { background: var(--brown-dark); }
+    .question-num {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--pink);
+      flex-shrink: 0;
+      width: 24px;
+    }
+    .question-text { color: var(--cream); }
+
+    /* Credit */
+    .credit {
+      text-align: center;
+      padding: 32px;
+      font-size: 12px;
+      color: var(--brown-light);
+    }
+    .credit a { color: var(--pink); text-decoration: none; }
+    .credit a:hover { text-decoration: underline; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .page { padding: 0 20px; }
+      .hero-header { padding: 48px 20px 36px; }
+      .hero-header h1 { font-size: 32px; }
+      .hero-header img { height: 48px; }
+      .section-full { padding: 48px 20px; }
+      h2 { font-size: 24px; }
+
+      .toc-inner { padding: 10px 16px; }
+      .toc-links {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
+      }
+      .toc-links::-webkit-scrollbar { display: none; }
+      .toc.is-stuck .toc-label { display: none; }
+
+      .brief-grid { grid-template-columns: 1fr; gap: 4px 0; }
+      .brief-key { margin-top: 8px; }
+      .brand-grid { grid-template-columns: 1fr; }
+      .objection-row { grid-template-columns: 1fr; }
+      .impact-meters { display: none; }
+      .meters { flex-direction: column; gap: 8px; }
+      .option-card { padding: 20px; }
+      .bar-label { width: 80px; font-size: 11px; }
+    }
+
+    @media print {
+      .toc { display: none; }
+      .section-full { break-inside: avoid; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="hero-header">
+    <img src="/oatcult-audit/oatcult-logo.avif" alt="Oat Cult">
+    <h1>pdp redesign research.</h1>
+    <p class="subtitle">15+ D2C subscription brands analysed. UX conversion patterns, visual design direction, and a prioritised roadmap to increase subscription sign-ups.</p>
+    <div class="accent-bar"></div>
+  </div>
+
+  <!-- Sticky Nav -->
+  <nav class="toc" id="toc">
+    <div class="toc-inner">
+      <span class="toc-label">Contents.</span>
+      <div class="toc-links">
+        <a href="#brief" class="toc-link">Brief</a>
+        <a href="#scope" class="toc-link">Research Scope</a>
+        <a href="#ux-patterns" class="toc-link">UX Patterns</a>
+        <a href="#design-direction" class="toc-link">Design Direction</a>
+        <a href="#approach" class="toc-link">Approach</a>
+        <a href="#impact-ranking" class="toc-link">Impact Ranking</a>
+        <a href="#benchmarks" class="toc-link">Benchmarks</a>
+        <a href="#ideas" class="toc-link">Ideas</a>
+        <a href="#conversion-lifts" class="toc-link">Conversion Lifts</a>
+        <a href="#questions" class="toc-link">Questions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 1. Brief -->
+  <div class="page">
+    <div class="section" id="brief">
+      <h2>Brief.</h2>
+
+      <div class="tags">
+        <span class="tag tag-brown">Goal: Increase Subscriptions</span>
+        <span class="tag tag-pink">1-3 SKUs</span>
+        <span class="tag tag-blue">Bold / Rebellious Brand</span>
+        <span class="tag tag-tan">Millennials + Convenience</span>
+      </div>
+
+      <div class="brief-grid">
+        <div class="brief-key">Client</div>
+        <div class="brief-val">oatcult.com (Shopify)</div>
+        <div class="brief-key">Page</div>
+        <div class="brief-val">/pages/shop — subscription oat milk box</div>
+        <div class="brief-key">Goal</div>
+        <div class="brief-val">Increase subscription sign-ups</div>
+        <div class="brief-key">SKUs</div>
+        <div class="brief-val">1-3 core products</div>
+        <div class="brief-key">Brand</div>
+        <div class="brief-val">Bold / rebellious (Oatly territory, not wellness fluff)</div>
+        <div class="brief-key">Audience</div>
+        <div class="brief-val">Health-conscious millennials + convenience seekers</div>
+      </div>
+
+      <div class="callout callout-blue">
+        <strong>Pain Points.</strong>
+        Generic design, weak storytelling, poor mobile, not converting — the product picker is the one bright spot.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Research Scope -->
+  <div class="section-full section-cream" id="scope">
+    <div class="section-inner">
+      <h2>Research Scope.</h2>
+      <p class="section-intro">15+ D2C subscription brands analysed across UX conversion flows and visual design systems. Brands weighted by relevance to oatcult's model: subscription-first, small SKU count, bold personality, site-is-the-business.</p>
+
+      <div class="brand-grid">
+        <div class="brand-col">
+          <h3>Core Benchmarks (D2C-first)</h3>
+          <div class="brand-card"><strong>AG1</strong><span>Single hero product, subscription-first, narrative-driven</span></div>
+          <div class="brand-card"><strong>Grind</strong><span>Coffee subscription, premium restraint, small SKU range</span></div>
+          <div class="brand-card"><strong>Huel</strong><span>Subscription meals, multi-product but subscription-anchored</span></div>
+          <div class="brand-card"><strong>Magic Spoon</strong><span>Cereal subscription, build-your-own bundles, bold brand</span></div>
+          <div class="brand-card"><strong>Surreal Cereal</strong><span>Best-in-class subscription toggle UX, irreverent copy</span></div>
+          <div class="brand-card"><strong>Who Gives A Crap</strong><span>Irreverent brand, packaging-as-hero</span></div>
+          <div class="brand-card"><strong>Mid-Day Squares</strong><span>Exceptional typography and visual energy</span></div>
+          <div class="brand-card"><strong>Ceremony Coffee</strong><span>Premium coffee subscription, editorial design quality</span></div>
+          <div class="brand-card"><strong>Oats Overnight</strong><span>Direct competitor, "build a box" model</span></div>
+          <div class="brand-card"><strong>Gr&uuml;ns</strong><span>Superfood gummies, best-in-class subscription buybox UX</span></div>
+        </div>
+        <div class="brand-col">
+          <h3>Aesthetic References</h3>
+          <div class="brand-card aesthetic"><strong>Liquid Death</strong><span>Dark-background commitment, illustration-driven personality</span></div>
+          <div class="brand-card aesthetic"><strong>Oatly</strong><span>Copy-as-design, hand-drawn type (brand reference for tone)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. UX Conversion Patterns -->
+  <div class="page">
+    <div class="section" id="ux-patterns">
+      <h2>UX Conversion Patterns.</h2>
+      <p class="section-intro">How top D2C brands present subscription, structure their pages, handle objections, and design for mobile. This is the densest section — each sub-topic expands below.</p>
+
+      <!-- 3a. Subscription Patterns -->
+      <details class="accordion" open>
+        <summary class="accordion-title">Subscription Patterns</summary>
+        <div class="accordion-body">
+          <div class="pattern-card">
+            <h4>Subscription as default, one-time as alternative</h4>
+            <div class="brands">AG1, Huel</div>
+            <p>Subscribe toggle is pre-selected. One-time requires deliberate opt-out. Subscription framed as "the normal way to buy."</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Save X% messaging on toggle</h4>
+            <div class="brands">Grind (25%), Huel (10%), Magic Spoon (25%)</div>
+            <p>Percentage savings displayed directly on the toggle. Immediate, quantifiable incentive.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Bundled perks beyond discount</h4>
+            <div class="brands">Grind (free tin + free shipping + flexibility), AG1 (welcome kit + travel packs)</div>
+            <p>Subscription value goes beyond price — free stuff, priority access, exclusive perks. One-time feels like leaving value on the table.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Build-your-own bundle</h4>
+            <div class="brands">Magic Spoon, Huel</div>
+            <p>Letting customers mix their own box increases engagement and perceived control. Reduces "what if I don't like it" hesitation.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Flexibility-first language</h4>
+            <div class="brands">AG1, Grind, Huel</div>
+            <p>"Update or cancel anytime," "complete flexibility," "pause, swap or cancel." The #1 subscription objection addressed within pixels of the CTA.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>"Why Subscribe?" modal</h4>
+            <div class="brands">Surreal</div>
+            <p>Clickable link opens popup listing 3-4 benefits with icons. Non-intrusive but available for hesitant buyers. Brilliant for mobile.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Subscription-as-membership</h4>
+            <div class="brands">AG1 ("Try AG1 Now"), Oats Overnight ("Join the club")</div>
+            <p>Frame subscription as joining something, not a billing arrangement. For oatcult: "Join the cult" is sitting right there.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Welcome gift with first order</h4>
+            <div class="brands">AG1 (shaker + travel packs), Grind (free tin)</div>
+            <p>Physical gift increases perceived value beyond the discount. Makes unboxing shareable.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Plan comparison cards (not just a toggle)</h4>
+            <div class="brands">Gr&uuml;ns</div>
+            <p>Show subscription plans as side-by-side cards with price, per-day cost, and benefits on each. The one-time card shows red X marks ("No free shipping", "2nd order at full price") making it clearly inferior. More persuasive than a simple toggle.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>"Discount auto-applied" confirmation</h4>
+            <div class="brands">Gr&uuml;ns</div>
+            <p>Green checkmark message below the buybox: "Limited Time Discount Auto-Applied — You're saving on this order." Small touch, high reassurance. Confirms the customer is getting the deal without needing to hunt for a code.</p>
+          </div>
+
+          <div class="callout callout-pink">
+            <strong>Recommendation for oatcult.</strong>
+            Subscription should be the default-selected option. Toggle should show savings ("Save X%") AND bundle at least one perk (free shipping is easiest). "Skip, pause, or cancel anytime" must appear directly below the CTA. CTA copy: "Join the cult" not "Subscribe."
+          </div>
+        </div>
+      </details>
+
+      <!-- 3b. Pricing Comparison -->
+      <details class="accordion">
+        <summary class="accordion-title">Subscription Pricing Context</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 20px;">oatcult's 20% subscription discount is competitive in the market. The issue isn't pricing — it's presentation.</p>
+
+          <div class="bar-chart">
+            <div class="bar-row">
+              <div class="bar-label">Magic Spoon</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 100%;">25%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">Grind</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 100%;">Up to 25%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">oatcult</div>
+              <div class="bar-track"><div class="bar-fill highlight" style="width: 80%;">20%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">AG1</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 80%;">20%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">Surreal</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 80%;">20%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">Olipop</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 60%;">15%</div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">Huel</div>
+              <div class="bar-track"><div class="bar-fill default" style="width: 40%;">10%</div></div>
+            </div>
+          </div>
+
+          <div class="callout callout-cream">
+            <strong>The discount is there — it just isn't being sold.</strong>
+            The presentation of the subscription offer is where oatcult is falling short, not the economics of it.
+          </div>
+        </div>
+      </details>
+
+      <!-- 3c. Page Structure -->
+      <details class="accordion">
+        <summary class="accordion-title">Page Structure: The Narrative Scroll</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 24px;">The highest-converting single-product subscription pages follow a specific section order that builds a persuasion arc. AG1 is the gold standard.</p>
+
+          <div class="flow">
+            <div class="flow-step flow-pink">
+              <div class="flow-num">1</div>
+              <div class="flow-content">
+                <h4>Hero — Hook + Primary CTA</h4>
+                <p>Bold headline, product image, subscribe CTA, key benefit (one line).</p>
+              </div>
+            </div>
+            <div class="flow-step flow-blue">
+              <div class="flow-num">2</div>
+              <div class="flow-content">
+                <h4>Social Proof Bar — Credibility in Seconds</h4>
+                <p>Review count + star rating, "as seen in" logos, or key stat.</p>
+              </div>
+            </div>
+            <div class="flow-step flow-cream">
+              <div class="flow-num">3</div>
+              <div class="flow-content">
+                <h4>How It Works — Ritual Framing</h4>
+                <p>"Choose your oats, add milk, leave overnight, wake up to breakfast." Positions subscription as natural.</p>
+              </div>
+            </div>
+            <div class="flow-step flow-cream">
+              <div class="flow-num">4</div>
+              <div class="flow-content">
+                <h4>What You Get — Product Education</h4>
+                <p>What's in the box, ingredients/nutrition, benefit badges (1B live cultures, gluten-free).</p>
+              </div>
+            </div>
+            <div class="flow-step flow-brown">
+              <div class="flow-num">5</div>
+              <div class="flow-content">
+                <h4>Why This Exists — Brand Story</h4>
+                <p>Why overnight oats? Why oatcult specifically? The rebellious angle lives here.</p>
+              </div>
+            </div>
+            <div class="flow-step flow-blue">
+              <div class="flow-num">6</div>
+              <div class="flow-content">
+                <h4>Proof It Works — Testimonials + Results</h4>
+                <p>Customer quotes with specific outcomes, photo/video reviews (+21-29% lift).</p>
+              </div>
+            </div>
+            <div class="flow-step flow-cream">
+              <div class="flow-num">7</div>
+              <div class="flow-content">
+                <h4>Objection Handling — Remove Friction</h4>
+                <p>Cancel anytime, money-back guarantee, FAQ in brand voice. "Can I leave the cult?" "Yes. But why would you?"</p>
+              </div>
+            </div>
+            <div class="flow-step flow-pink">
+              <div class="flow-num">8</div>
+              <div class="flow-content">
+                <h4>Final CTA — Close the Loop</h4>
+                <p>Repeat the offer with per-serving price reframing ("just &pound;X per serving").</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-blue">
+            <strong>What oatcult likely has now.</strong>
+            A product grid/picker without this narrative wrapper. The picker works (client confirmed) but it's floating in a vacuum — no story, no proof, no objection handling around it. Wrap the existing picker in this structure.
+          </div>
+        </div>
+      </details>
+
+      <!-- 3d. Trust Signals -->
+      <details class="accordion">
+        <summary class="accordion-title">Trust Signals &amp; Social Proof</summary>
+        <div class="accordion-body">
+          <ul class="trust-list">
+            <li>
+              <div class="trust-icon">&#9733;</div>
+              <div class="trust-text">
+                <strong>Review count + stars</strong>
+                <span>Hero section, directly below product name. AG1 puts "50,000+ 5-star reviews" in the first viewport.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&#10003;</div>
+              <div class="trust-text">
+                <strong>"Cancel anytime"</strong>
+                <span>Directly below subscribe CTA. Must be within the CTA's visual group, not a separate section.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&#9678;</div>
+              <div class="trust-text">
+                <strong>Money-back guarantee</strong>
+                <span>Below CTA AND in objection-handling section. "30-day taste guarantee" (Huel).</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&ldquo;</div>
+              <div class="trust-text">
+                <strong>Customer testimonials</strong>
+                <span>Own section between product details and final CTA. Use specific quotes about outcomes.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&#9872;</div>
+              <div class="trust-text">
+                <strong>Trust badges</strong>
+                <span>Footer area or below fold. Less critical for food subscription than health/supplements.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&#9998;</div>
+              <div class="trust-text">
+                <strong>Press quote carousel</strong>
+                <span>Gr&uuml;ns shows theSkimm, Glamour, Bon App&eacute;tit logos with pull quotes in a rotating carousel. If oatcult has any press coverage, this is a quick trust win in the hero area.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon">&#9776;</div>
+              <div class="trust-text">
+                <strong>Tabbed reviews by topic</strong>
+                <span>Gr&uuml;ns organises reviews into tabs (Taste / Value / Benefits / Convenience). Lets hesitant buyers find answers to their specific objection. oatcult could do Taste / Convenience / Value / Subscription Experience.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 3e. Mobile UX -->
+      <details class="accordion">
+        <summary class="accordion-title">Mobile-Specific UX Patterns</summary>
+        <div class="accordion-body">
+          <div class="pattern-card">
+            <h4>Sticky bottom CTA bar</h4>
+            <div class="brands">AG1, Hims, Huel</div>
+            <p>CTA is always one thumb-tap away. Appears after scrolling past the hero CTA. Table stakes for mobile subscription pages.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Accordion FAQ</h4>
+            <div class="brands">AG1, Huel, Magic Spoon</div>
+            <p>Collapses objection-handling content without creating a wall of text on mobile.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Full-width product images</h4>
+            <div class="brands">All top brands</div>
+            <p>No padding, no cropping on mobile hero images. Product fills the viewport.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Simplified toggle</h4>
+            <div class="brands">AG1, Grind</div>
+            <p>Subscribe/one-time toggle must be minimum 48px touch targets with clear active state.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Price prominence</h4>
+            <div class="brands">Huel ("From &pound;1.09/meal")</div>
+            <p>Per-unit pricing on mobile where screen real estate is limited.</p>
+          </div>
+
+          <div class="callout callout-pink">
+            <strong>Single highest-impact mobile change.</strong>
+            Sticky bottom CTA bar. When a user scrolls past the hero, the subscribe CTA follows them. Every top D2C brand does this.
+          </div>
+        </div>
+      </details>
+
+      <!-- 3f. Objection Handling -->
+      <details class="accordion">
+        <summary class="accordion-title">Subscription Objection Handling</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 20px;">The top objections for food subscription boxes and how the best brands handle them.</p>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"I don't want to be locked in"</strong>
+              The #1 subscription objection.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>"Skip, pause, or cancel anytime"</strong>
+              Place within CTA group. EVERY top brand places cancellation language within 1 line of the subscribe CTA.
+            </div>
+          </div>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"What if I don't like it?"</strong>
+              Taste risk is real for food.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>Money-back / taste guarantee</strong>
+              Huel's "30-day taste guarantee" is best-in-class. For oatcult: "Love your first box or it's on us."
+            </div>
+          </div>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"Is it worth the price?"</strong>
+              Sticker shock on the full box.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>Per-serving pricing reframe</strong>
+              "Just &pound;2 per serving" vs "&pound;18 per box." AG1 makes &pound;59/month feel tiny this way.
+            </div>
+          </div>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"I don't know what I'm getting"</strong>
+              Uncertainty about product contents.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>Ingredient transparency</strong>
+              "What's in the box" section with photography + benefit badges (1B live cultures, gluten-free, no added sugar).
+            </div>
+          </div>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"I already have a routine"</strong>
+              Switching cost feels high.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>Convenience framing</strong>
+              "Delivered to your door, ready in the fridge" + "How It Works" ritual section that makes overnight oats feel effortless.
+            </div>
+          </div>
+
+          <div class="objection-row">
+            <div class="objection-card objection-problem">
+              <strong>"I'll get too much / not enough"</strong>
+              Frequency anxiety.
+            </div>
+            <div class="objection-card objection-solution">
+              <strong>Delivery frequency selector</strong>
+              Every 2, 4, or 6 weeks + ability to skip shipments. Surreal and Grind both offer 3+ frequency options.
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- 4. Visual Design Direction -->
+  <div class="section-full section-cream" id="design-direction">
+    <div class="section-inner">
+      <h2>Visual Design Direction.</h2>
+      <p class="section-intro">Typography, colour, photography, and micro-interactions — what to refine, what to keep, and what to replace.</p>
+
+      <!-- 4a. Typography -->
+      <details class="accordion" open>
+        <summary class="accordion-title">Typography: The #1 Quick Win</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 20px;"><strong>The problem:</strong> Inter is solid but it's what every tech startup and generic Shopify store uses. The headlines need character.</p>
+          <p style="font-size: 14px; margin-bottom: 24px;"><strong>The fix:</strong> Introduce a chunky geometric display typeface for headlines while keeping Inter for body text.</p>
+
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <h4>Display / Hero Headlines</h4>
+            <div class="brands">Current: Inter &rarr; Recommended: Clash Display, Space Grotesk, or Satoshi (all free)</div>
+            <p>Chunky geometric sans-serifs signal bold confidence. Mid-Day Squares uses ABCROMExtended-Heavy at 5.5em+ to stunning effect. This is the single biggest design upgrade.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <h4>Section Headings</h4>
+            <div class="brands">Current: Inter &rarr; Recommended: Inter Bold, uppercase, wide letter-spacing (2-3em)</div>
+            <p>Creates contrast with the tight, heavy display headlines.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <h4>Body Text</h4>
+            <div class="brands">Current: Inter &rarr; Keep: Inter Regular 16-18px</div>
+            <p>It works. Don't change it.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <h4>Technical / Pricing</h4>
+            <div class="brands">Current: Inter &rarr; Recommended: JetBrains Mono or Roboto Mono</div>
+            <p>Monospace for nutritional data, pricing, subscription details. Adds visual rhythm.</p>
+          </div>
+          <div class="pattern-card">
+            <h4>Letter-spacing</h4>
+            <div class="brands">Current: -3% &rarr; Recommended: Headlines -4% to -5%, Body -1% to -2%</div>
+            <p>Tighter headline spacing creates density and urgency.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 4b. Colour Palette -->
+      <details class="accordion">
+        <summary class="accordion-title">Colour Palette: Refine, Don't Replace</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 8px;"><strong>Current:</strong> #171717 (dark) + #dc2626 (red) + Inter</p>
+          <p style="font-size: 14px; margin-bottom: 20px;"><strong>Problem:</strong> When red is used everywhere, nothing stands out. Dark theme without dramatic photography just feels dark, not bold.</p>
+
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 24px; height: 24px; background: #171717; border-radius: 4px;"></div>
+              <h4 style="margin-bottom: 0;">Primary Dark — #171717 (keep)</h4>
+            </div>
+            <p>Hero sections, header, key brand moments.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 24px; height: 24px; background: #dc2626; border-radius: 4px;"></div>
+              <h4 style="margin-bottom: 0;">CTA Red — #dc2626 (keep, restrict usage)</h4>
+            </div>
+            <p>PRIMARY CTAs ONLY. Subscribe button, key action moments. Scarcity of red makes it powerful.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 24px; height: 24px; background: #FBF7F0; border-radius: 4px; border: 1px solid var(--cream-dark);"></div>
+              <h4 style="margin-bottom: 0;">Warm Cream — #FBF7F0 (new)</h4>
+            </div>
+            <p>Alternating content sections. Breaks up relentless darkness, adds warmth.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 24px; height: 24px; background: #F5F5F5; border-radius: 4px; border: 1px solid var(--cream-dark);"></div>
+              <h4 style="margin-bottom: 0;">Text on Dark — #F5F5F5 (not pure white)</h4>
+            </div>
+            <p>Reduces eye strain, feels more premium than #FFFFFF.</p>
+          </div>
+          <div class="pattern-card">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 24px; height: 24px; background: #2dd4bf; border-radius: 4px;"></div>
+              <h4 style="margin-bottom: 0;">Info Accent — muted teal or electric blue (new)</h4>
+            </div>
+            <p>Badges, nutrition info, trust signals, secondary UI elements.</p>
+          </div>
+
+          <div class="callout callout-pink" style="margin-top: 20px;">
+            <strong>Key principle.</strong>
+            Dark sections alternating with warm cream sections creates rhythm. AG1 does this — dark hero, light education section, dark testimonials, light FAQ. Prevents the page from feeling like a black hole. Red for CTAs only — scarcity makes it powerful.
+          </div>
+        </div>
+      </details>
+
+      <!-- 4c. Photography -->
+      <details class="accordion">
+        <summary class="accordion-title">Photography Direction</summary>
+        <div class="accordion-body">
+          <p style="font-size: 14px; margin-bottom: 20px;">What works for bold food subscription brands on dark backgrounds:</p>
+
+          <ul class="trust-list">
+            <li>
+              <div class="trust-icon" style="background: var(--success); color: white; font-size: 11px;">&#10003;</div>
+              <div class="trust-text">
+                <strong>Hero product shot</strong>
+                <span>Dramatic side-lighting on dark background (not flat studio lighting on white).</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--success); color: white; font-size: 11px;">&#10003;</div>
+              <div class="trust-text">
+                <strong>Ingredient flat-lays</strong>
+                <span>Oats, seeds, berries scattered on dark surface. Golden oats on near-black = striking.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--success); color: white; font-size: 11px;">&#10003;</div>
+              <div class="trust-text">
+                <strong>Process / pour shots</strong>
+                <span>Milk being poured, oats being prepared. Motion blur adds energy.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--success); color: white; font-size: 11px;">&#10003;</div>
+              <div class="trust-text">
+                <strong>Packaging as hero</strong>
+                <span>Style the box itself as a design object (Who Gives A Crap's entire visual identity).</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--success); color: white; font-size: 11px;">&#10003;</div>
+              <div class="trust-text">
+                <strong>Lifestyle context</strong>
+                <span>Product on a counter, in a fridge, morning routine. Grounds the subscription in real life.</span>
+              </div>
+            </li>
+          </ul>
+
+          <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--error);">Avoid.</h4>
+          <ul class="trust-list">
+            <li>
+              <div class="trust-icon" style="background: var(--error); color: white; font-size: 11px;">&#10007;</div>
+              <div class="trust-text">
+                <strong>White studio backgrounds</strong> <span>Generic.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--error); color: white; font-size: 11px;">&#10007;</div>
+              <div class="trust-text">
+                <strong>Stock photography</strong> <span>Kills authenticity.</span>
+              </div>
+            </li>
+            <li>
+              <div class="trust-icon" style="background: var(--error); color: white; font-size: 11px;">&#10007;</div>
+              <div class="trust-text">
+                <strong>"Person smiling while eating"</strong> <span>Every brand does this.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 4d. Micro-interactions -->
+      <details class="accordion">
+        <summary class="accordion-title">Micro-interactions: 3 Priorities</summary>
+        <div class="accordion-body">
+          <div class="pattern-card" style="margin-bottom: 12px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+              <span class="tag tag-pink" style="font-size: 10px;">Priority 1</span>
+              <h4 style="margin-bottom: 0;">Subscription toggle</h4>
+            </div>
+            <p>When user switches to subscribe, price animates/counts down and a "you save X" badge slides in. Makes choosing subscription feel rewarding, not transactional.</p>
+          </div>
+          <div class="pattern-card" style="margin-bottom: 12px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+              <span class="tag tag-tan" style="font-size: 10px;">Priority 2</span>
+              <h4 style="margin-bottom: 0;">Add-to-cart</h4>
+            </div>
+            <p>Brief animation in brand red. Not a generic checkmark. Something with personality.</p>
+          </div>
+          <div class="pattern-card">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+              <span class="tag tag-blue" style="font-size: 10px;">Priority 3</span>
+              <h4 style="margin-bottom: 0;">Scroll-triggered reveals</h4>
+            </div>
+            <p>Content sections fade/slide in on scroll. Guides the narrative, keeps attention. Mid-Day Squares uses 0.4-0.6s ease transitions.</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- 5. Recommended Approach -->
+  <div class="section-full section-pink" id="approach">
+    <div class="section-inner">
+      <h2>Recommended Approach.</h2>
+      <p class="section-intro" style="color: var(--brown);">Three options for how to move forward. We recommend Option A — highest impact for the effort.</p>
+
+      <div class="option-card recommended">
+        <h3>Option A: Narrative Wrapper</h3>
+        <p>Keep the existing product picker (it works) and wrap it in a full narrative page structure. Redesign everything around the picker — hero, story, proof, objection handling, final CTA.</p>
+        <div class="meters">
+          <div class="meter">
+            <div class="meter-label">Effort</div>
+            <div class="meter-track"><div class="meter-fill effort" style="width: 50%;"></div></div>
+          </div>
+          <div class="meter">
+            <div class="meter-label">Impact</div>
+            <div class="meter-track"><div class="meter-fill impact" style="width: 90%;"></div></div>
+          </div>
+        </div>
+        <p class="when">Addresses all pain points: storytelling, trust, mobile, conversion. The picker stays, everything else is new content that sells the subscription.</p>
+      </div>
+
+      <div class="option-card">
+        <h3>Option B: Full PDP Rebuild</h3>
+        <p>Redesign the entire page from scratch including the product picker. New information architecture, new design system, new interaction patterns.</p>
+        <div class="meters">
+          <div class="meter">
+            <div class="meter-label">Effort</div>
+            <div class="meter-track"><div class="meter-fill effort" style="width: 90%;"></div></div>
+          </div>
+          <div class="meter">
+            <div class="meter-label">Impact</div>
+            <div class="meter-track"><div class="meter-fill impact" style="width: 95%;"></div></div>
+          </div>
+        </div>
+        <p class="when">When to choose: If the current Shopify theme is too constraining for the narrative wrapper, or if the product picker needs fundamental changes.</p>
+      </div>
+
+      <div class="option-card">
+        <h3>Option C: Progressive Enhancement</h3>
+        <p>Ship improvements incrementally — typography first, then photography, then narrative sections, then mobile optimisation.</p>
+        <div class="meters">
+          <div class="meter">
+            <div class="meter-label">Effort</div>
+            <div class="meter-track"><div class="meter-fill effort" style="width: 25%;"></div></div>
+          </div>
+          <div class="meter">
+            <div class="meter-label">Impact</div>
+            <div class="meter-track"><div class="meter-fill impact" style="width: 60%;"></div></div>
+          </div>
+        </div>
+        <p class="when">When to choose: If resources are limited or you want to validate each change with data before committing to the full redesign.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Impact Ranking -->
+  <div class="page">
+    <div class="section" id="impact-ranking">
+      <h2>Impact Ranking.</h2>
+      <p class="section-intro">The 10 highest-impact changes, ranked by the combination of effort required and expected conversion lift.</p>
+
+      <div class="impact-list">
+
+        <div class="impact-item">
+          <div class="impact-rank top3">1</div>
+          <div class="impact-body">
+            <strong>Add sticky mobile CTA bar</strong>
+            <span>Every top D2C brand does this. Users lose the CTA when they scroll. Table stakes.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 25%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 90%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank top3">2</div>
+          <div class="impact-body">
+            <strong>Make subscription the default toggle</strong>
+            <span>Pre-select subscribe, show savings inline. One-time becomes the opt-out.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 25%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 90%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank top3">3</div>
+          <div class="impact-body">
+            <strong>Add "cancel anytime" + guarantee near CTA</strong>
+            <span>#1 subscription objection killer. AG1, Grind, Huel all do this. Placement matters.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 20%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 90%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">4</div>
+          <div class="impact-body">
+            <strong>Typography upgrade (display font for headlines)</strong>
+            <span>Biggest visual impact for smallest effort. Transforms generic into distinctive in one change.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 35%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 85%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">5</div>
+          <div class="impact-body">
+            <strong>Add social proof section (reviews/testimonials)</strong>
+            <span>Okendo is already integrated — surface review count + stars in hero. Add 3-4 customer testimonial cards.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 50%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 85%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">6</div>
+          <div class="impact-body">
+            <strong>Add narrative sections (brand story + "what's in the box")</strong>
+            <span>Fills the storytelling gap. Where the rebellious brand voice earns its keep.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 85%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">7</div>
+          <div class="impact-body">
+            <strong>Photography upgrade (dark-background product shots)</strong>
+            <span>Current generic imagery is the #2 reason the page feels generic. Dramatic photography = instant premium.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 80%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">8</div>
+          <div class="impact-body">
+            <strong>Colour hierarchy refinement (red for CTAs only + cream sections)</strong>
+            <span>Adds rhythm to the page and makes CTAs pop by contrast.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 25%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">9</div>
+          <div class="impact-body">
+            <strong>Mobile type scaling + full-width images</strong>
+            <span>Quick CSS changes with outsized mobile impact.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 20%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-rank">10</div>
+          <div class="impact-body">
+            <strong>Micro-interactions (subscription toggle animation, scroll reveals)</strong>
+            <span>Polish that makes the experience feel ownable. Ship after the fundamentals are solid.</span>
+          </div>
+          <div class="impact-meters">
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Effort</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--tan);"></div></div>
+            </div>
+            <div class="impact-meter-row">
+              <div class="impact-meter-label">Impact</div>
+              <div class="impact-meter-track"><div class="impact-meter-fill" style="width: 55%; background: var(--pink);"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Brand Benchmarks -->
+  <div class="section-full section-cream" id="benchmarks">
+    <div class="section-inner">
+      <h2>Brand Benchmarks.</h2>
+      <p class="section-intro">What to steal from each brand — and what to leave behind.</p>
+
+      <div class="tabs">
+        <div class="tab-bar" id="benchmark-tabs">
+          <button class="tab-btn active" data-tab="ag1">AG1</button>
+          <button class="tab-btn" data-tab="grind">Grind</button>
+          <button class="tab-btn" data-tab="huel">Huel</button>
+          <button class="tab-btn" data-tab="magicspoon">Magic Spoon</button>
+          <button class="tab-btn" data-tab="midday">Mid-Day Squares</button>
+          <button class="tab-btn" data-tab="wgac">Who Gives A Crap</button>
+          <button class="tab-btn" data-tab="surreal">Surreal</button>
+          <button class="tab-btn" data-tab="liquid">Liquid Death</button>
+          <button class="tab-btn" data-tab="oatsovernight">Oats Overnight</button>
+          <button class="tab-btn" data-tab="gruns">Gr&uuml;ns</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-ag1">
+          <h3>AG1</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Narrative page flow (hook, educate, prove, convert)</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Credibility stacking</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>"Cancel anytime" placement directly below CTA</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Sticky mobile CTA</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Over-reliance on celebrity endorsement</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Clinical trial framing (wrong for oat milk)</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-grind">
+          <h3>Grind</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Premium restraint</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Subscription perks beyond discount (free stuff + free shipping + flexibility)</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Variant-stacking for small SKU range</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Minimalist aesthetic might be too quiet for oatcult's bold personality</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-huel">
+          <h3>Huel</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Per-serving pricing</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>"30-day taste guarantee"</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Quiz mechanism for product selection</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>"No Bullshit" objection handling section</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Corporate feel</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Too many products for oatcult's simpler range</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-magicspoon">
+          <h3>Magic Spoon</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Build-your-own bundle UX</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>80k+ reviews displayed prominently</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Subscription savings on toggle</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Playful/colourful aesthetic is wrong energy for oatcult</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-midday">
+          <h3>Mid-Day Squares</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Multi-typeface hierarchy</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Color energy</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Animation timing (0.4-0.6s)</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Generous vertical spacing</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>No subscription model to learn from</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-wgac">
+          <h3>Who Gives A Crap</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Packaging-as-hero photography</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Irreverent brand voice in UX copy</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Making every box shareable/content-worthy</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Primarily one-time purchase flow</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-surreal">
+          <h3>Surreal</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Best-in-class subscription toggle (dual radio + frequency selector + "Why Subscribe?" modal)</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Irreverent FAQ copy</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Expanding into retail — use for UX patterns, not conversion benchmarks</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-liquid">
+          <h3>Liquid Death</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Commitment to dark backgrounds</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Illustration over stock photography</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Scarcity of accent colour</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Retail-first site, not optimised for conversion</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-oatsovernight">
+          <h3>Oats Overnight</h3>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Direct competitor reference</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>"Build a box" bundle UX</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Subscriber co-creation (flavour development access)</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Generic visual design — this is what oatcult should be the anti-version of</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="panel-gruns">
+          <h3>Gr&uuml;ns <span class="tag tag-pink" style="font-size: 10px; vertical-align: middle;">Deep Dive</span></h3>
+          <p style="font-size: 14px; color: var(--brown-light); margin-bottom: 20px;">Superfood gummies (gruns.co). Single hero product, subscription-first, 85k+ reviews, 1M+ customers. Executes the AG1 playbook with a clean, conversion-optimised PDP. Not a food brand — but the subscription UX is best-in-class.</p>
+
+          <h4 style="margin-bottom: 12px;">Page Structure (scroll order).</h4>
+          <div style="font-size: 13px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-pink" style="font-size: 10px;">1</span> Hero — headline + product image + "4.8 stars, 85K+ reviews, 1M+ members" + "Save 52%" CTA + "30 Day Guarantee"</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-blue" style="font-size: 10px;">2</span> Press carousel — theSkimm, Glamour, Bon App&eacute;tit logos with pull quotes</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">3</span> Product cards — 4 variants (Adults/Kids &times; Original/Mango Sorbet)</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">4</span> Benefits — 4 cards (Gut Health, Immunity, Energy, Brain) with icons</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">5</span> Statistics — "90% of US adults don't meet daily nutrient intake" + lifestyle image</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">6</span> Results — survey cards (95% daily use, 67% better digestion, 52% more energy)</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">7</span> Quality assurance — testing badges (70 pesticides, 4 heavy metals, NSF/GMP)</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-brown" style="font-size: 10px;">8</span> Buybox — flavour selector + sugar level + 3 plan cards + bundle upsell + CTA</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-cream" style="font-size: 10px;">9</span> FAQ accordions — 6 sections (Why Gr&uuml;ns, Ingredients, Science, Directions, Benefits, Sugar)</div>
+            <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px;"><span class="tag tag-blue" style="font-size: 10px;">10</span> Reviews — tabbed by topic (Taste / Value / Vs Powders / Benefits / Ingredients / Convenience)</div>
+          </div>
+
+          <h4 style="margin-bottom: 12px;">Subscription Buybox (the standout).</h4>
+          <p style="font-size: 13px; color: var(--brown-light); margin-bottom: 16px;">Three plan cards shown side-by-side. Autoship is pre-selected. One-time purchase is last, visually penalised.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+            <div style="background: var(--cream-light); border: 2px solid var(--pink); border-radius: 8px; padding: 12px; font-size: 11px; text-align: center;">
+              <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px;">Autoship 1 Person</div>
+              <div style="color: var(--pink); font-weight: 700;">$59.99/mo</div>
+              <div style="text-decoration: line-through; color: var(--brown-light);">$79.99/mo</div>
+              <div style="margin-top: 6px; font-size: 10px; color: var(--success);">&#10003; FREE Shipping<br>&#10003; Cancel anytime</div>
+            </div>
+            <div style="background: var(--cream-light); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 12px; font-size: 11px; text-align: center;">
+              <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px;">Autoship 2 People</div>
+              <div style="color: var(--brown); font-weight: 700;">$113.98/mo</div>
+              <div style="text-decoration: line-through; color: var(--brown-light);">$159.98/mo</div>
+              <div style="margin-top: 6px; font-size: 10px; color: var(--success);">&#10003; FREE Shipping<br>&#10003; Cancel anytime</div>
+            </div>
+            <div style="background: var(--cream-light); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 12px; font-size: 11px; text-align: center;">
+              <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px;">One-Time</div>
+              <div style="color: var(--brown); font-weight: 700;">$79.99</div>
+              <div style="color: transparent;">-</div>
+              <div style="margin-top: 6px; font-size: 10px; color: var(--error);">&#10007; No free shipping<br>&#10007; Full price next time</div>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--success); margin-bottom: 20px;">&#10003; Limited Time Discount Auto-Applied — You're saving on this order</p>
+
+          <h4 style="margin-bottom: 8px;">What to steal.</h4>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Plan comparison cards — subscription vs one-time as visual cards, not a toggle. One-time gets red X marks.</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Per-day pricing on every plan ("$2.14/day") — reframes cost instantly</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Press quote carousel in hero area — logos + pull quotes from publications</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Tabbed reviews by topic (Taste / Value / Benefits / Convenience) — lets buyers find answers to their specific objection</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Bundle upsell inside the buybox ("Popular Bundle" add-on with extra 5% off)</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>"Discount auto-applied" confirmation — green checkmark below CTA reassures the deal is active</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>Trust icons below buybox — guarantee + tested + HSA eligible in a clean 3-column row</li>
+            <li><span class="benchmark-icon icon-steal">&#10003;</span>6-section FAQ accordion — comprehensive objection handling (ingredients, science, certifications, directions)</li>
+          </ul>
+
+          <h4 style="margin-top: 16px; margin-bottom: 8px;">What to leave.</h4>
+          <ul class="benchmark-list">
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Supplement/clinical tone — "clinically tested," "NSF certified" framing is wrong for oat milk</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Helvetica/Arial typography — generic, no brand personality. oatcult needs a display font.</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Light green wellness palette — too clean/clinical for oatcult's dark, rebellious energy</li>
+            <li><span class="benchmark-icon icon-leave">&#10007;</span>Countdown timers and "almost sold out" urgency — earned trust over manufactured scarcity</li>
+          </ul>
+
+          <div class="callout callout-pink" style="margin-top: 16px;">
+            <strong>The takeaway.</strong>
+            Gr&uuml;ns is the AG1 playbook executed with polish. The subscription buybox — plan cards with per-day pricing, one-time visually penalised, discount confirmation, bundle upsell — is the single best reference for how oatcult's purchase flow should work. The conversion architecture is right; the tone and aesthetics are wrong for oatcult. Same engine, different body.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <strong>What oatcult should feel like.</strong>
+        The intersection of: AG1's persuasion architecture (narrative flow, credibility stacking) + Mid-Day Squares' visual energy (typography, colour, animation) + Grind's premium restraint (whitespace, product-led) + oatcult's own rebellious voice (dark, punchy, no fluff).
+      </div>
+      <div class="callout callout-cream">
+        <strong>Not.</strong>
+        Oatly copy (that's their territory). Generic wellness aesthetic (sage green, thin sans-serif, calm). Template Shopify store (Impact theme defaults).
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Standout Ideas -->
+  <div class="section-full section-blue" id="ideas">
+    <div class="section-inner">
+      <h2>Standout Ideas.</h2>
+      <p class="section-intro" style="color: var(--brown);">Patterns that go beyond the basics and could differentiate oatcult.</p>
+
+      <div class="idea-card" style="border: 2px solid var(--pink);">
+        <div class="idea-num">1</div>
+        <div class="idea-body">
+          <h4>"Join the cult" membership framing</h4>
+          <p>Subscription isn't a billing arrangement, it's cult membership. Insider benefits, early access to new flavours, community. Oats Overnight does subscriber co-creation (flavour development input) which maps perfectly to oatcult's brand.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">2</div>
+        <div class="idea-body">
+          <h4>Per-serving price anchoring</h4>
+          <p>"Just &pound;X per serving" in the final CTA reframes the entire price perception. AG1 does this to make &pound;59/month feel like nothing.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">3</div>
+        <div class="idea-body">
+          <h4>Brand-voice FAQ</h4>
+          <p>Instead of corporate Q&amp;A, use the cult persona. "Can I leave the cult?" / "What's actually in this?" / "Is this just porridge?" Surreal does irreverent FAQ copy brilliantly.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">4</div>
+        <div class="idea-body">
+          <h4>"Why Subscribe?" modal (Surreal pattern)</h4>
+          <p>Small "why subscribe?" link near the toggle opens a focused modal with 3-4 benefits. Non-intrusive but catches the hesitant buyer. Excellent on mobile.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">5</div>
+        <div class="idea-body">
+          <h4>Welcome kit / gift with first subscription</h4>
+          <p>AG1 bundles a shaker + travel packs, Grind includes a free tin. A branded item with the first box makes unboxing shareable and increases perceived value.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">6</div>
+        <div class="idea-body">
+          <h4>Plan comparison cards instead of a toggle</h4>
+          <p>Gr&uuml;ns shows subscription plans as side-by-side cards with per-day pricing and checkmarks vs red Xs. One-time purchase is visually penalised ("No free shipping", "Full price next time"). More persuasive than a binary toggle — the customer sees what they lose, not just what they save.</p>
+        </div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">7</div>
+        <div class="idea-body">
+          <h4>Tabbed reviews by objection type</h4>
+          <p>Gr&uuml;ns organises reviews into topic tabs (Taste / Value / Benefits / Convenience). Lets hesitant buyers self-select the reassurance they need. For oatcult: Taste / Convenience / Value / Subscription Experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Conversion Benchmarks -->
+  <div class="page">
+    <div class="section" id="conversion-lifts">
+      <h2>Conversion Lift Benchmarks.</h2>
+      <p class="section-intro">Industry research (Baymard Institute, Digital Applied 2026) on expected conversion lifts for each type of change.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">+8-15%</div>
+          <div class="stat-label">Star ratings near product title</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">+5-10%</div>
+          <div class="stat-label">Review count near CTA</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">+21-29%</div>
+          <div class="stat-label">Photo/video reviews</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">+7.9%</div>
+          <div class="stat-label">Sticky mobile CTA bar</div>
+        </div>
+      </div>
+
+      <div class="callout callout-cream">
+        <strong>Accordion vs tabs.</strong>
+        Vertically collapsed sections (accordion) have an 8% content miss rate vs 27% for horizontal tabs. Prefer accordions for objection handling and FAQ content.
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Open Questions -->
+  <div class="section-full section-brown" id="questions">
+    <div class="section-inner">
+      <h2>Open Questions.</h2>
+
+      <div class="question-card">
+        <div class="question-num">1.</div>
+        <div class="question-text">Which subscription app is oatcult using? (Impacts what's possible with toggle/pricing display)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">2.</div>
+        <div class="question-text">Does oatcult have customer reviews already? (Okendo is installed — 29 reviews at 5.0 stars found on product page. Enough to display but not enough for "thousands of reviews" social proof)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">3.</div>
+        <div class="question-text">Photography budget? (Dark-background product photography is a significant investment but arguably the highest-impact brand change)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">4.</div>
+        <div class="question-text">Is the product picker a custom Shopify section or app? (Determines how much we can modify vs wrap around it)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">5.</div>
+        <div class="question-text">Are there plans to add more SKUs? (Affects whether we need build-your-own bundle UX)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">6.</div>
+        <div class="question-text">Any press coverage? (If yes, "as seen in" logos are a quick trust signal win)</div>
+      </div>
+      <div class="question-card">
+        <div class="question-num">7.</div>
+        <div class="question-text">Welcome gift feasibility? (Cost/logistics of including a branded item with first subscription box)</div>
+      </div>
+
+      <div class="credit" style="margin-top: 32px; color: var(--cream-dark);">
+        Research conducted across 15+ D2C subscription brands.<br>
+        <a href="https://happypages.co" target="_blank" style="color: var(--pink);">happypages.co</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Sticky TOC detection
+      var toc = document.getElementById('toc');
+      var tocLinks = toc.querySelectorAll('.toc-link');
+      var sections = [];
+
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var el = document.getElementById(id);
+        if (el) sections.push({ id: id, el: el, link: link });
+      });
+
+      var sentinel = document.createElement('div');
+      sentinel.style.height = '0';
+      sentinel.style.width = '0';
+      sentinel.style.overflow = 'hidden';
+      toc.parentNode.insertBefore(sentinel, toc);
+
+      var stickyObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          toc.classList.toggle('is-stuck', !e.isIntersecting);
+        });
+      }, { threshold: 0 });
+      stickyObs.observe(sentinel);
+
+      // Active section highlighting
+      var currentActive = null;
+      var sectionObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            var id = e.target.id;
+            if (currentActive) currentActive.classList.remove('active');
+            sections.forEach(function(s) {
+              if (s.id === id) {
+                s.link.classList.add('active');
+                currentActive = s.link;
+                if (window.innerWidth <= 600) {
+                  s.link.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+                }
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -60% 0px' });
+
+      sections.forEach(function(s) { sectionObs.observe(s.el); });
+
+      // Smooth scroll with offset
+      tocLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var id = this.getAttribute('href').slice(1);
+          var target = document.getElementById(id);
+          if (!target) return;
+          var tocHeight = toc.offsetHeight;
+          var y = target.getBoundingClientRect().top + window.pageYOffset - tocHeight - 12;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        });
+      });
+
+      // Tabs
+      var tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var tabId = this.dataset.tab;
+          // Deactivate all
+          this.parentNode.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+          document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+          // Activate selected
+          this.classList.add('active');
+          var panel = document.getElementById('panel-' + tabId);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

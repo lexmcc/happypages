@@ -2,6 +2,10 @@
 
 Dated record of shipped features across both products.
 
+## 2026-03-13
+
+- **Post-audit metafield storage fixes** — `reward_status` metafield no longer overwritten when an older reward transitions to a terminal state (expired/cancelled/consumed) while a newer active reward exists. Guard added at all 4 write sites (both reward jobs, webhooks controller, Awtomic webhooks controller). Added `set_metafields` stub to `Base::CustomerProvider` (raises `NotImplementedError` instead of `NoMethodError` for non-Shopify shops). Defensive rescue on inline metafield write in `process_reward_consumption`. 658 total specs.
+
 ## 2026-03-06
 
 - **Super admin dark theme reskin** — all 22 superadmin views reskinned with `ops-*` design tokens (dark theme). Collapsible sidebar with Ops Dashboard link.

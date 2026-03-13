@@ -212,6 +212,13 @@ class WebhooksController < ApplicationController
   end
 
   def process_referral_usage(referral, order)
+    # Block self-referrals: buyer using their own referral code
+    if order[:customer_email].present? && referral.email.present? &&
+       order[:customer_email].downcase == referral.email.downcase
+      Rails.logger.info "Self-referral detected: #{order[:customer_email]} used own code #{referral.referral_code}, skipping reward"
+      return
+    end
+
     # Skip if we already processed this order for this referral (webhook retry)
     if referral.referral_rewards.exists?(shopify_order_id: order[:order_id])
       Rails.logger.info "Order #{order[:order_id]} already processed for #{referral.referral_code}, skipping"
@@ -238,6 +245,29 @@ class WebhooksController < ApplicationController
     if reward && !reward.consumed?
       reward.mark_consumed!
       Rails.logger.info "Reward #{code} consumed via order #{order_id}"
+
+      # Update reward_status metafield
+      referral = reward.referral
+      if referral&.shopify_customer_id.present? && Current.shop.shopify?
+        # Skip metafield write if referral has another active reward
+        has_active = referral.referral_rewards
+          .where(status: %w[created applied_to_subscription])
+          .where.not(id: reward.id)
+          .not_expired
+          .exists?
+
+        unless has_active
+          begin
+            Current.shop.customer_provider.set_metafields(
+              customer_id: referral.shopify_customer_id,
+              namespace: Current.shop.metafield_namespace,
+              metafields: [ { key: "reward_status", value: "consumed" } ]
+            )
+          rescue => e
+            Rails.logger.error "[Webhooks] Metafield update failed for #{reward.code}: #{e.message}"
+          end
+        end
+      end
     end
   end
 
@@ -355,12 +385,15 @@ class WebhooksController < ApplicationController
       Rails.logger.error "Failed to add customer note: #{result[:errors]}"
     end
 
-    # Write referral code to customer metafield
-    mf_result = customer_provider.set_metafield(
+    # Write referral code + referral page URL to customer metafields
+    metafields = [
+      { key: "referral_code", value: referral.referral_code },
+      referral.referral_page_url ? { key: "referral_page_url", value: referral.referral_page_url } : nil
+    ].compact
+    mf_result = customer_provider.set_metafields(
       customer_id: referral.shopify_customer_id,
       namespace: Current.shop.metafield_namespace,
-      key: "referral_code",
-      value: referral.referral_code
+      metafields: metafields
     )
     unless mf_result[:success]
       Rails.logger.error "Metafield write failed for #{referral.referral_code}: #{mf_result[:errors]}"
@@ -420,6 +453,18 @@ class WebhooksController < ApplicationController
       )
 
       Rails.logger.info "Created referrer reward #{result[:reward_code]} for #{referral.email} (customer-specific: #{referral.shopify_customer_id.present?})"
+
+      # Write reward metafields to customer
+      if referral.shopify_customer_id.present?
+        customer_provider.set_metafields(
+          customer_id: referral.shopify_customer_id,
+          namespace: Current.shop.metafield_namespace,
+          metafields: [
+            { key: "reward_discount_code", value: result[:reward_code] },
+            { key: "reward_status", value: "active" }
+          ]
+        )
+      end
 
       track_klaviyo(:reward_earned, referral,
         reward_code: result[:reward_code],

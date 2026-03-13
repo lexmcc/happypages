@@ -16,6 +16,7 @@ class RewardSubscriptionApplicationJob < ApplicationJob
     ReferralReward.expired_but_not_marked.joins(referral: :shop).where(referrals: { shop_id: shop.id }).find_each do |r|
       r.mark_expired!
       Rails.logger.info "[RewardApplication] Expired reward: #{r.code}"
+      update_reward_status_metafield(r, shop)
     end
 
     awtomic_key = shop.awtomic_credentials[:api_key]
@@ -94,5 +95,26 @@ class RewardSubscriptionApplicationJob < ApplicationJob
 
   def extract_numeric_id(gid)
     gid.to_s.split("/").last
+  end
+
+  def update_reward_status_metafield(reward, shop)
+    referral = reward.referral
+    return unless shop.shopify? && referral&.shopify_customer_id.present?
+
+    # Skip metafield write if referral has another active reward
+    has_active = referral.referral_rewards
+      .where(status: %w[created applied_to_subscription])
+      .where.not(id: reward.id)
+      .not_expired
+      .exists?
+    return if has_active
+
+    shop.customer_provider.set_metafields(
+      customer_id: referral.shopify_customer_id,
+      namespace: shop.metafield_namespace,
+      metafields: [ { key: "reward_status", value: "expired" } ]
+    )
+  rescue => e
+    Rails.logger.error "[RewardApplication] Metafield update failed for #{reward.code}: #{e.message}"
   end
 end

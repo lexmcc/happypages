@@ -73,6 +73,25 @@ class AwtomicWebhooksController < ApplicationController
     if usage_count.present? && usage_count > 0
       reward.mark_consumed!
       Rails.logger.info "[AwtomicWebhook] Marked reward #{reward.code} as consumed (usage: #{usage_count})"
+
+      # Update reward_status metafield
+      referral = reward.referral
+      if referral&.shopify_customer_id.present? && shop.shopify?
+        # Skip metafield write if referral has another active reward
+        has_active = referral.referral_rewards
+          .where(status: %w[created applied_to_subscription])
+          .where.not(id: reward.id)
+          .not_expired
+          .exists?
+
+        unless has_active
+          shop.customer_provider.set_metafields(
+            customer_id: referral.shopify_customer_id,
+            namespace: shop.metafield_namespace,
+            metafields: [ { key: "reward_status", value: "consumed" } ]
+          )
+        end
+      end
     else
       Rails.logger.info "[AwtomicWebhook] Reward #{reward.code} not yet used (usage: #{usage_count})"
     end

@@ -109,6 +109,10 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Mar 6** - Super admin dark theme reskin: all 22 views reskinned with `ops-*` design tokens, collapsible sidebar with Ops Dashboard link.
 - **Mar 6** - Ops Dashboard integration: client-side fetch from local Node server (`127.0.0.1:3333`), works from staging/prod. Removed server-side proxy and token auth — superadmin auth layer is sufficient.
 
+### Week 14: Audit Fixes + Referral Hardening (Mar 13, 2026)
+
+- **Mar 13** - Post-audit metafield storage fixes: multi-reward status overwrite guard at all 4 write sites, `set_metafields` base provider stub, defensive rescue on webhook metafield write. 658 total specs.
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

@@ -73,6 +73,16 @@ class CustomerImportJob < ApplicationJob
           type: "single_line_text_field"
         }
 
+        if referral.referral_page_url
+          metafield_batch << {
+            ownerId: customer_gid,
+            namespace: shop.metafield_namespace,
+            key: "referral_page_url",
+            value: referral.referral_page_url,
+            type: "single_line_text_field"
+          }
+        end
+
         if metafield_batch.size >= METAFIELD_BATCH_SIZE
           flush_metafields(credentials, metafield_batch)
           metafield_batch = []

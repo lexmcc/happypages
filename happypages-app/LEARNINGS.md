@@ -4,6 +4,18 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 ## Gotchas & Bug Fixes
 
+### Multi-Reward Metafield Status Overwrite (Mar 13, 2026)
+- `reward_status` metafield is per-customer, but a customer can earn multiple rewards over time. When an older reward transitions to a terminal state (expired/cancelled/consumed), it overwrites the metafield — even if a newer reward is still active. Liquid templates then show "expired" instead of "active".
+- The metafield write happens at 4 sites: `RewardApplicationJob#update_reward_status_metafield` (expired + cancelled + consumed), `RewardSubscriptionApplicationJob#update_reward_status_metafield` (expired only), `WebhooksController#process_reward_consumption` (consumed), `AwtomicWebhooksController#check_and_consume_reward` (consumed).
+- **Fix**: Before writing a terminal status, check if the referral has another active reward (`status: created/applied_to_subscription`, not expired) using the existing `not_expired` scope. If so, skip the write — the metafield already shows "active" from when the newer reward was created.
+- **Lesson**: Per-entity metafields that track lifecycle state need a "latest wins" guard when multiple records share the same metafield key.
+
+### Ops Dashboard `moveToDone` Line-Number Drift (Mar 12, 2026)
+- When a top-level item with sub-tasks was checked, `startFadeTimer` fired independently for parent and each sub-task. Parent's `moveToDone` spliced its line from the markdown, shifting all subsequent line numbers by -1. Sub-task timers then fired with stale line numbers, targeting wrong lines.
+- On refresh, orphaned indented lines attached to whatever top-level item was parsed last via `items[items.length - 1].chunks.push(...)`.
+- **Fix**: Backend `moveToDone` (`update.js`) collects parent + indented sub-tasks and splices as a group. Frontend (`build-html.js`) fires only one `moveToDone` for the parent; sub-tasks get visual fade only, removed from DOM when parent is removed.
+- **Lesson**: When multiple async operations depend on positional references (line numbers, array indices), either batch them into one operation or re-resolve positions before each call.
+
 ### Webhook HMAC `return true if secret.blank?` Bypass (Feb 12, 2026)
 - Both `Shopify::OrderHandler` and `Custom::OrderHandler` had `return true if secret.blank?` at the top of `verify_signature`
 - This meant any request was accepted without verification when the signing secret wasn't configured
@@ -519,5 +531,12 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - Node server needs `Access-Control-Allow-Origin: *` (safe for localhost-only servers)
 - **Lesson**: When a service is truly local-only, use client-side fetch — the browser is on the user's machine, the server is not
 
+### n8n `lastNEntries()` Mangles Sub-Headings (Mar 9, 2026)
+- `lastNEntries(content, n, '## ')` splits on `## ` and re-joins with `## ` prefix
+- A `### Meetings` heading (three `#`) gets split at `## ` — the `#` becomes a trailing char on the previous chunk, and `Meetings` becomes a new `## Meetings` chunk
+- Any regex applied *after* `lastNEntries` must account for this transformation
+- **Fix**: Apply content-stripping regexes on raw content *before* passing through `lastNEntries`
+- **Lesson**: `split('## ')` is destructive to `###`+ headings — always clean content before splitting
+
 ---
-*Updated: Mar 6, 2026 (localhost IPv6 resolution, client-side fetch for local services)*
+*Updated: Mar 13, 2026 (multi-reward metafield overwrite guard)*

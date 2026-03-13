@@ -16,10 +16,11 @@ class RewardApplicationJob < ApplicationJob
   def expire_old_rewards
     expired_count = 0
 
-    ReferralReward.expired_but_not_marked.joins(referral: :shop).find_each do |reward|
+    ReferralReward.expired_but_not_marked.joins(referral: :shop).includes(referral: :shop).find_each do |reward|
       reward.mark_expired!
       expired_count += 1
       Rails.logger.info "[RewardApplicationJob] Expired reward: #{reward.code}"
+      update_reward_status_metafield(reward, "expired")
     rescue => e
       Rails.logger.error "[RewardApplicationJob] Error expiring reward #{reward.code}: #{e.message}"
     end
@@ -66,9 +67,11 @@ class RewardApplicationJob < ApplicationJob
               reward.mark_cancelled!
               cancelled_count += 1
               Rails.logger.info "[RewardApplicationJob] Cancelled reward #{reward.code} from #{status} subscription"
+              update_reward_status_metafield(reward, "cancelled")
             else
               reward.mark_consumed!
               Rails.logger.info "[RewardApplicationJob] Reward #{reward.code} was used, marking consumed"
+              update_reward_status_metafield(reward, "consumed")
             end
           end
         elsif status == "PAUSED"
@@ -142,5 +145,29 @@ class RewardApplicationJob < ApplicationJob
 
   def extract_numeric_id(gid)
     gid.to_s.split("/").last
+  end
+
+  def update_reward_status_metafield(reward, status)
+    referral = reward.referral
+    shop = referral&.shop
+    return unless shop&.shopify? && referral.shopify_customer_id.present?
+
+    # Skip metafield write if referral has another active reward
+    if status.in?(%w[expired cancelled consumed])
+      has_active = referral.referral_rewards
+        .where(status: %w[created applied_to_subscription])
+        .where.not(id: reward.id)
+        .not_expired
+        .exists?
+      return if has_active
+    end
+
+    shop.customer_provider.set_metafields(
+      customer_id: referral.shopify_customer_id,
+      namespace: shop.metafield_namespace,
+      metafields: [ { key: "reward_status", value: status } ]
+    )
+  rescue => e
+    Rails.logger.error "[RewardApplicationJob] Metafield update failed for #{reward.code}: #{e.message}"
   end
 end
