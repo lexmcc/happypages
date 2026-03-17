@@ -4,6 +4,11 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 
 ## Gotchas & Bug Fixes
 
+### App-Owned Metafields Invisible Without Definitions (Mar 17, 2026)
+- When an app writes to app-owned metafield namespaces (e.g. `app--happypages-friendly-referrals`), the data is invisible in Shopify admin unless `metafieldDefinitionCreate` is called with `pin: true`.
+- **Fix**: Auto-create definitions for all 4 customer metafields (`referral_code`, `referral_page_url`, `reward_discount_code`, `reward_status`) during OAuth install/re-auth. The mutation is idempotent — Shopify returns a user error if the definition already exists.
+- **Lesson**: Always create metafield definitions as part of the install flow. Writing metafield values without definitions means merchants can't see or verify the data in their admin.
+
 ### Webhook HMAC `return true if secret.blank?` Bypass (Feb 12, 2026)
 - Both `Shopify::OrderHandler` and `Custom::OrderHandler` had `return true if secret.blank?` at the top of `verify_signature`
 - This meant any request was accepted without verification when the signing secret wasn't configured

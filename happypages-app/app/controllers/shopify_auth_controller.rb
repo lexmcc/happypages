@@ -170,6 +170,9 @@ class ShopifyAuthController < ApplicationController
     # Write shop slug to Shopify metafield (fire-and-forget)
     sync_shop_slug_metafield(@shop)
 
+    # Create customer metafield definitions so they're visible in Shopify admin (idempotent)
+    create_customer_metafield_definitions(@shop)
+
     # Scrape brand identity (async) — runs on install, re-auth, or scope upgrade
     if !@shop.brand_scraped? || scopes_upgraded || @returning
       BrandScrapeJob.perform_later(@shop.id)
@@ -195,6 +198,12 @@ class ShopifyAuthController < ApplicationController
     ShopMetafieldWriter.new(shop).write_slug
   rescue => e
     Rails.logger.error "Failed to sync shop slug metafield: #{e.message}"
+  end
+
+  def create_customer_metafield_definitions(shop)
+    ShopMetafieldWriter.new(shop).create_customer_metafield_definitions
+  rescue => e
+    Rails.logger.error "Failed to create customer metafield definitions: #{e.message}"
   end
 
   def valid_shopify_domain?(domain)

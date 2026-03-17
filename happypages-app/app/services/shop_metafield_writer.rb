@@ -26,6 +26,31 @@ class ShopMetafieldWriter
     )
   end
 
+  CUSTOMER_METAFIELD_DEFINITIONS = [
+    { key: "referral_code", name: "Referral Code" },
+    { key: "referral_page_url", name: "Referral Page URL" },
+    { key: "reward_discount_code", name: "Reward Discount Code" },
+    { key: "reward_status", name: "Reward Status" }
+  ].freeze
+
+  def create_customer_metafield_definitions
+    return unless @shop.shopify?
+
+    credentials = @shop.shopify_credentials
+    return unless credentials[:token].present?
+
+    namespace = @shop.metafield_namespace
+
+    CUSTOMER_METAFIELD_DEFINITIONS.each do |defn|
+      create_metafield_definition(
+        credentials: credentials,
+        namespace: namespace,
+        key: defn[:key],
+        name: defn[:name]
+      )
+    end
+  end
+
   private
 
   def fetch_shop_gid(credentials)
@@ -67,6 +92,35 @@ class ShopMetafieldWriter
     end
 
     result
+  end
+
+  def create_metafield_definition(credentials:, namespace:, key:, name:)
+    mutation = <<~GRAPHQL
+      mutation metafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
+        metafieldDefinitionCreate(definition: $definition) {
+          createdDefinition { id }
+          userErrors { field message }
+        }
+      }
+    GRAPHQL
+
+    variables = {
+      definition: {
+        name: name,
+        namespace: namespace,
+        key: key,
+        type: "single_line_text_field",
+        ownerType: "CUSTOMER",
+        pin: true
+      }
+    }
+
+    result = execute_graphql(credentials, mutation, variables)
+    errors = result.dig("data", "metafieldDefinitionCreate", "userErrors")
+
+    if errors.present?
+      Rails.logger.info "Metafield definition #{namespace}.#{key}: #{errors.inspect}"
+    end
   end
 
   def execute_graphql(credentials, query, variables)
