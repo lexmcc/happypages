@@ -96,16 +96,10 @@ class ShopifyAuthController < ApplicationController
           )
         end
 
-        # Store custom app credentials if this is a custom app install and integration doesn't already have them
-        if oauth_app == "custom"
-          target = integration || existing_shop.integration_for("shopify")
-          if target&.app_client_id.blank?
-            target.update!(
-              app_client_id: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID"),
-              app_client_secret: ENV.fetch("SHOPIFY_CUSTOM_CLIENT_SECRET")
-            )
-          end
-        end
+        # Always record which app credentials were used for this OAuth flow
+        oauth_creds = shopify_app_credentials
+        target = integration || existing_shop.integration_for("shopify")
+        target&.update!(app_client_id: oauth_creds[:client_id], app_client_secret: oauth_creds[:client_secret])
 
         scopes_upgraded = old_scopes&.split(",")&.map(&:strip)&.sort != granted_scopes.split(",").map(&:strip).sort
         # NOTE: Does NOT touch awtomic_api_key, klaviyo_api_key, webhook_secret
@@ -144,10 +138,9 @@ class ShopifyAuthController < ApplicationController
           shopify_access_token: access_token,
           granted_scopes: granted_scopes
         }
-        if oauth_app == "custom"
-          integration_attrs[:app_client_id] = ENV.fetch("SHOPIFY_CUSTOM_CLIENT_ID")
-          integration_attrs[:app_client_secret] = ENV.fetch("SHOPIFY_CUSTOM_CLIENT_SECRET")
-        end
+        oauth_creds = shopify_app_credentials
+        integration_attrs[:app_client_id] = oauth_creds[:client_id]
+        integration_attrs[:app_client_secret] = oauth_creds[:client_secret]
         @shop.shop_integrations.create!(integration_attrs)
 
         # Create default features
