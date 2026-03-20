@@ -61,41 +61,57 @@
   body {
     padding-top: 48px;
     font-family: var(--font-body);
-    background: #E8E3E6;
+    background: #FAFAFA;
     color: var(--text-primary);
     line-height: 1.6;
   }
 
-  /* ── Page Chrome ── */
+  /* ── Page Layout ── */
 
-  .page-header {
-    background: var(--plum-dark);
-    color: white;
-    padding: 32px 24px;
-  }
-  .page-header__inner {
-    max-width: 960px;
+  .page-wrapper {
+    max-width: 780px;
     margin: 0 auto;
+    padding: 48px 24px 120px;
   }
-  .page-title {
-    font-family: var(--font-heading);
-    font-size: 1.6rem;
-    font-weight: 400;
-    margin-bottom: 8px;
+
+  @media (max-width: 600px) {
+    .page-wrapper { padding: 32px 16px 80px; }
   }
-  .page-intro {
+
+  .report-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .report-header .meta {
     font-family: var(--font-ui);
-    font-size: 0.88rem;
-    font-weight: 400;
-    color: rgba(255,255,255,0.7);
-    max-width: 560px;
-    line-height: 1.5;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
   }
 
-  .page-main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 24px 64px;
+  .report-header h1 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .report-header .subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  @media (max-width: 600px) {
+    .report-header h1 { font-size: 30px; }
+    .report-header .subtitle { font-size: 16px; }
   }
 
   .section-header {
@@ -2301,18 +2317,25 @@
     right: 0;
     z-index: 1000;
     height: 48px;
-    background: #2F0423;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E5DFE3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Instrument Sans", sans-serif;
+  }
+  .rollr-nav-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    max-width: 780px;
     padding: 0 24px;
-    font-family: "Instrument Sans", sans-serif;
-    box-shadow: 0 1px 3px rgba(67, 6, 50, 0.12);
   }
   .rollr-nav-brand {
     font-family: "Kalice", Georgia, serif;
     font-size: 18px;
-    color: #FAFAFA;
+    color: #430632;
     text-decoration: none;
   }
   .rollr-nav-links {
@@ -2329,10 +2352,10 @@
   }
   .rollr-nav-links a:hover,
   .rollr-nav-links a.active {
-    color: #FAFAFA;
+    color: #430632;
   }
   @media (max-width: 600px) {
-    .rollr-nav { padding: 0 16px; }
+    .rollr-nav-inner { padding: 0 16px; }
     .rollr-nav-links { gap: 16px; }
     .rollr-nav-links a { font-size: 12px; }
   }
@@ -2341,24 +2364,27 @@
 </head>
 <body>
 <nav class="rollr-nav">
-  <span class="rollr-nav-brand">Rollr</span>
-  <div class="rollr-nav-links">
-    <a href="/rollr/audit/">Audit</a>
-    <a href="/rollr/roadmap/">Roadmap</a>
-    <a href="/rollr/design-system/">Design system</a>
-    <a href="/rollr/wizard-prototype-v2/" class="active">Prototype</a>
+  <div class="rollr-nav-inner">
+    <span class="rollr-nav-brand">Rollr</span>
+    <div class="rollr-nav-links">
+      <a href="/rollr/audit/">Audit</a>
+      <a href="/rollr/roadmap/">Roadmap</a>
+      <a href="/rollr/design-system/">Design system</a>
+      <a href="/rollr/wizard-prototype-v2/" class="active">Prototype</a>
+    </div>
   </div>
 </nav>
 
 
-<header class="page-header">
-  <div class="page-header__inner">
-    <h1 class="page-title">Rollr — Purchase Flow Prototype</h1>
-    <p class="page-intro">Working prototype — tap through to explore the full purchase journey.</p>
-  </div>
+<div class="page-wrapper">
+
+<header class="report-header">
+  <div class="meta">HappyPages &times; Rollr</div>
+  <h1>Purchase Flow Prototype</h1>
+  <p class="subtitle">Working prototype — tap through to explore the full purchase journey.</p>
 </header>
 
-<main class="page-main">
+<main>
 
   <section class="component-section" id="full-prototype">
     <div class="prototype-hero">
@@ -2378,6 +2404,8 @@
 
 
 </main>
+
+</div>
 
 <script>
   // ══════════════════════════════════════
