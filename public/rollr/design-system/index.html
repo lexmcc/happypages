@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rollr — Web Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Kalice";
+      src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Regular.woff2?v=1710785896") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Kalice";
+      src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Italic_6707812a-88e2-4d65-9729-c58d30fcb57a.woff2?v=1720789116&v=5705") format("woff2");
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --wine: #430632;
+      --wine-light: #561245;
+      --wine-dark: #2F0423;
+      --off-white: #FFFFFF;
+      --white: #FFFFFF;
+      --wine-grey: #786874;
+      --wine-border: #E5DFE3;
+      --wine-muted: #B8B0B5;
+      --vetiver: #DFFFC2;
+      --clary-sage: #FFBFD2;
+      --mandarin: #FFA674;
+      --juniper: #A8BBFF;
+      --success: #4A7A3F;
+      --error: #B83A3A;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(67, 6, 50, 0.06);
+      --shadow-md: 0 4px 12px rgba(67, 6, 50, 0.08);
+      --font-display: "Kalice", Georgia, serif;
+      --font-ui: "Instrument Sans", sans-serif;
+    }
+
+    body {
+    padding-top: 48px;
+      font-family: var(--font-display);
+      background: var(--off-white);
+      color: var(--wine);
+      font-size: 18px;
+      line-height: 1.6;
+      padding: 48px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    h1 { font-size: 48px; margin-bottom: 16px; }
+    h2 { font-size: 32px; margin-bottom: 12px; margin-top: 56px; }
+    h3 { font-size: 22px; margin-bottom: 8px; margin-top: 32px; }
+
+    p { margin-bottom: 16px; }
+
+    .brand-header {
+      border-bottom: 1px solid var(--wine-border);
+      padding-bottom: 40px;
+      margin-bottom: 48px;
+    }
+
+    .brand-header h1 {
+      font-size: 56px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-header .tagline {
+      font-size: 20px;
+      color: var(--wine-grey);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .section {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--wine-border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .font-note {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--wine-grey);
+      background: var(--white);
+      border: 1px solid var(--wine-border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 32px;
+    }
+
+    /* Colour swatches */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    .swatch-group-label {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--wine-grey);
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    .swatch {
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: flex-end;
+      padding: 10px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .swatch--base {
+      height: 110px;
+      box-shadow: 0 0 0 2px var(--wine-border);
+    }
+
+    .swatch--variant {
+      height: 88px;
+    }
+
+    .swatch-label {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch-meta {
+      margin-top: 6px;
+    }
+
+    .swatch-meta strong {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--wine);
+    }
+
+    .swatch-meta span {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--wine-grey);
+    }
+
+    .swatch-meta .primary-label {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mandarin);
+      margin-bottom: 2px;
+    }
+
+    /* Typography samples */
+    .type-sample {
+      margin-bottom: 24px;
+      padding: 24px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .type-sample .sample-text {
+      margin-bottom: 8px;
+    }
+
+    .type-sample .sample-meta {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--wine-grey);
+      border-top: 1px solid var(--wine-border);
+      padding-top: 8px;
+    }
+
+    /* Radius demo */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .radius-demo {
+      background: var(--white);
+      border: 1px solid var(--wine-border);
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--wine-grey);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--wine);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--wine-grey);
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--wine-border);
+      vertical-align: top;
+    }
+
+    /* Principles */
+    .principle {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--wine-border);
+    }
+
+    .principle:last-child { border-bottom: none; }
+
+    .principle strong {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Discussion flag */
+    .discussion-flag {
+      border-left: 4px solid var(--mandarin);
+      padding-left: 20px;
+      margin: 24px 0;
+    }
+
+    .discussion-flag-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mandarin);
+      margin-bottom: 4px;
+    }
+
+    /* Flagged issues */
+    .issue-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 80px;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--wine-border);
+      font-family: var(--font-ui);
+      font-size: 14px;
+    }
+
+    .issue-num {
+      font-weight: 700;
+      color: var(--wine-grey);
+    }
+
+    .severity-high { color: var(--error); font-weight: 700; font-size: 12px; text-transform: uppercase; }
+    .severity-medium { color: var(--mandarin); font-weight: 700; font-size: 12px; text-transform: uppercase; }
+
+    /* Print */
+    @media print {
+      body { padding: 0; font-size: 14px; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 24px; break-before: page; margin-top: 0; }
+      h3 { font-size: 18px; }
+      .swatch--base { height: 80px; }
+      .swatch--variant { height: 60px; }
+      .swatch-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  
+  /* === Rollr Portal Nav === */
+  .rollr-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 48px;
+    background: #2F0423;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    font-family: "Instrument Sans", sans-serif;
+    box-shadow: 0 1px 3px rgba(67, 6, 50, 0.12);
+  }
+  .rollr-nav-brand {
+    font-family: "Kalice", Georgia, serif;
+    font-size: 18px;
+    color: #FAFAFA;
+    text-decoration: none;
+  }
+  .rollr-nav-links {
+    display: flex;
+    gap: 24px;
+  }
+  .rollr-nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: #B8B0B5;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .rollr-nav-links a:hover,
+  .rollr-nav-links a.active {
+    color: #FAFAFA;
+  }
+  @media (max-width: 600px) {
+    .rollr-nav { padding: 0 16px; }
+    .rollr-nav-links { gap: 16px; }
+    .rollr-nav-links a { font-size: 12px; }
+  }
+  /* === End Nav === */
+</style>
+</head>
+<body>
+<nav class="rollr-nav">
+  <span class="rollr-nav-brand">Rollr</span>
+  <div class="rollr-nav-links">
+    <a href="/rollr/audit/">Audit</a>
+    <a href="/rollr/roadmap/">Roadmap</a>
+    <a href="/rollr/design-system/" class="active">Design system</a>
+    <a href="/rollr/prototype/">Prototype</a>
+  </div>
+</nav>
+
+
+  <!-- Brand Header -->
+  <div class="brand-header">
+    <h1>Rollr</h1>
+    <div class="tagline">Premium refillable natural deodorant for the conscious hedonist.</div>
+  </div>
+
+  <div class="font-note">
+    This document uses Kalice, the brand's custom licensed serif, loaded from the Shopify CDN. Instrument Sans is the functional UI companion font, loaded from Google Fonts. Kalice is never used in all-caps — sentence case only.
+  </div>
+
+  <!-- Colour System -->
+  <div class="section">
+    <h2>Colour system</h2>
+    <p>Two primary colours carry the brand — Wine and White. Four pastel scent colours add personality through the product experience. For web, Wine gets hover and pressed variants to handle interactive states.</p>
+
+    <div class="swatch-group-label">Primary palette</div>
+    <div class="swatch-grid">
+      <div>
+        <div class="swatch swatch--base" style="background-color: #430632;">
+          <span class="swatch-label" style="color: #FAFAFA;">#430632</span>
+        </div>
+        <div class="swatch-meta">
+          <div class="primary-label">Primary</div>
+          <strong>Wine</strong>
+          <span>Body text, headings, buttons, CTA</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #561245;">
+          <span class="swatch-label" style="color: #FAFAFA;">#561245</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Wine Light</strong>
+          <span>Button hover, link hover</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #2F0423;">
+          <span class="swatch-label" style="color: #FAFAFA;">#2F0423</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Wine Dark</strong>
+          <span>Button pressed / active</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--base" style="background-color: #FFFFFF; border: 1px solid #E5DFE3;">
+          <span class="swatch-label" style="color: #430632;">#FFFFFF</span>
+        </div>
+        <div class="swatch-meta">
+          <div class="primary-label">Primary</div>
+          <strong>White</strong>
+          <span>Page background, cards, modals, elevated panels</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group-label">Scent palette</div>
+    <div class="swatch-grid">
+      <div>
+        <div class="swatch swatch--base" style="background-color: #DFFFC2;">
+          <span class="swatch-label" style="color: #430632;">#DFFFC2</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Vetiver</strong>
+          <span>Fresh &amp; earthy</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--base" style="background-color: #FFBFD2;">
+          <span class="swatch-label" style="color: #430632;">#FFBFD2</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Clary Sage</strong>
+          <span>Herbal &amp; grounding</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--base" style="background-color: #FFA674;">
+          <span class="swatch-label" style="color: #430632;">#FFA674</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Mandarin</strong>
+          <span>Bright &amp; warm</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--base" style="background-color: #A8BBFF;">
+          <span class="swatch-label" style="color: #430632;">#A8BBFF</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Juniper</strong>
+          <span>Cool &amp; crisp</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group-label">Neutral palette</div>
+    <div class="swatch-grid">
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #786874;">
+          <span class="swatch-label" style="color: #FAFAFA;">#786874</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Wine Grey</strong>
+          <span>Captions, meta, timestamps</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #E5DFE3;">
+          <span class="swatch-label" style="color: #430632;">#E5DFE3</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Wine Border</strong>
+          <span>Input borders, card edges, vertical accents</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #B8B0B5;">
+          <span class="swatch-label" style="color: #430632;">#B8B0B5</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Wine Muted</strong>
+          <span>Disabled states, placeholders</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group-label">Semantic colours</div>
+    <div class="swatch-grid">
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #FFA674;">
+          <span class="swatch-label" style="color: #430632;">#FFA674</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Sale / Urgency</strong>
+          <span>Sale badges, low stock</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #4A7A3F;">
+          <span class="swatch-label" style="color: #FAFAFA;">#4A7A3F</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Success</strong>
+          <span>Added to cart, confirmed</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch swatch--variant" style="background-color: #B83A3A;">
+          <span class="swatch-label" style="color: #FAFAFA;">#B83A3A</span>
+        </div>
+        <div class="swatch-meta">
+          <strong>Error</strong>
+          <span>Validation, payment failure</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section">
+    <h2>Typography</h2>
+    <p>Kalice is the brand typeface — used for headings, body copy, and navigation. Instrument Sans is the functional companion for buttons, CTAs, and UI elements where serif readability drops at small sizes: form inputs, meta text, cart details.</p>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 48px; line-height: 1.2;">For pleasure and planet.</div>
+      <div class="sample-meta">H1 Hero — Kalice Regular, 48px desktop / 32px mobile, line-height 1.2</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 36px; line-height: 1.2;">Damn, you smell good.</div>
+      <div class="sample-meta">H2 Section — Kalice Regular, 36px desktop / 28px mobile, line-height 1.2</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 24px; line-height: 1.2;">Rose Quartz starter pack</div>
+      <div class="sample-meta">H3 Card / Product — Kalice Regular, 24px desktop / 20px mobile, line-height 1.2</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 18px; line-height: 1.6;">A rush of lemon and ginger. Then comes vetiver, bitter orange, mint. At last, cedarwood. Sharp, earthy, fresh, grounded. Like an all-consuming fling, you can't quite pin it down. And that's half the fun.</div>
+      <div class="sample-meta">Body — Kalice Regular, 18px desktop / 16px mobile, line-height 1.6</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 18px; line-height: 1.6; font-style: italic;">Swoony to smell. Sensational on skin.</div>
+      <div class="sample-meta">Body emphasis — Kalice Italic (used instead of bold, which doesn't exist for Kalice)</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-family: var(--font-ui); font-size: 14px; line-height: 1.5; color: var(--wine-grey);">Free UK delivery on all subscriptions. Cancel or pause anytime.</div>
+      <div class="sample-meta">Small / Meta — Instrument Sans 400, 14px desktop / 13px mobile, line-height 1.5</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text"><span style="font-family: var(--font-ui); font-size: 18px; font-weight: 500; background: var(--wine); color: var(--off-white); padding: 14px 32px; border-radius: var(--radius-sm); display: inline-block;">Build your Rollr</span></div>
+      <div class="sample-meta">Button / CTA — Instrument Sans 500, 18px desktop / 16px mobile, sentence case</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="sample-text" style="font-size: 22px;">£35.00 <span style="font-family: var(--font-ui); font-size: 16px; color: var(--wine-muted); text-decoration: line-through;">£45.00</span></div>
+      <div class="sample-meta">Price — Kalice Regular 22px. Compare-at price — Instrument Sans 400, 16px, Wine Muted, strikethrough</div>
+    </div>
+  </div>
+
+  <!-- Spacing & Layout -->
+  <div class="section">
+    <h2>Spacing and layout</h2>
+
+    <table>
+      <tr><th>Property</th><th>Desktop</th><th>Mobile</th></tr>
+      <tr><td>Base unit</td><td colspan="2">8px</td></tr>
+      <tr><td>Section padding</td><td>80px</td><td>48px</td></tr>
+      <tr><td>Card padding</td><td>24px</td><td>16px</td></tr>
+      <tr><td>Component gap</td><td>16px</td><td>12px</td></tr>
+      <tr><td>Grid columns</td><td colspan="2">12</td></tr>
+      <tr><td>Grid max-width</td><td colspan="2">1440px</td></tr>
+      <tr><td>Grid gutter</td><td>24px</td><td>16px</td></tr>
+      <tr><td>Container padding</td><td>24px</td><td>16px</td></tr>
+      <tr><td>Section dividers</td><td colspan="2">Space only — no horizontal lines or rules</td></tr>
+    </table>
+
+    <h3>Border radius</h3>
+    <p>3-token system. Soft corners throughout — aligned with Kalice's round serifs, the fluid letterforms, and organic gemstone product forms. Fewer tokens means fewer decisions and less inconsistency.</p>
+    <div class="radius-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div>
+        <div class="radius-demo" style="border-radius: 8px;">8px</div>
+        <div class="swatch-meta"><strong>--radius-sm</strong><span>Badges, buttons, inputs, tags</span></div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius: 12px;">12px</div>
+        <div class="swatch-meta"><strong>--radius-md</strong><span>Cards, images</span></div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius: 20px;">20px</div>
+        <div class="swatch-meta"><strong>--radius-lg</strong><span>Modals, drawers</span></div>
+      </div>
+    </div>
+
+    <h3>Shadows</h3>
+    <p>Minimal. Wine-tinted rather than pure black to keep warmth.</p>
+    <div class="radius-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div>
+        <div class="radius-demo" style="border-radius: 12px; border: none; box-shadow: var(--shadow-sm); background: var(--white);">sm</div>
+        <div class="swatch-meta"><strong>--shadow-sm</strong><span>Cards, subtle lift</span></div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(67, 6, 50, 0.08); background: var(--white);">md</div>
+        <div class="swatch-meta"><strong>--shadow-md</strong><span>Dropdowns, hover</span></div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius: 12px; border: none; box-shadow: 0 8px 24px rgba(67, 6, 50, 0.12); background: var(--white);">lg</div>
+        <div class="swatch-meta"><strong>--shadow-lg</strong><span>Modals, drawers</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Experience -->
+  <div class="section">
+    <h2>Mobile experience</h2>
+    <p>75%+ of traffic is mobile, primarily cold from Meta ads. Mobile is the primary experience, desktop is the adaptation.</p>
+    <table>
+      <tr><th>Guideline</th><th>Value</th></tr>
+      <tr><td>Touch targets</td><td>44px minimum height and width</td></tr>
+      <tr><td>Thumb zone</td><td>Primary CTA in bottom 60% of viewport</td></tr>
+      <tr><td>Minimum Kalice size</td><td>16px</td></tr>
+      <tr><td>Minimum Instrument Sans size</td><td>13px</td></tr>
+      <tr><td>Form input font size</td><td>16px minimum (prevents iOS zoom)</td></tr>
+      <tr><td>Images</td><td>Full viewport width, no pinch-to-zoom needed</td></tr>
+      <tr><td>Configurator</td><td>One decision per screen</td></tr>
+    </table>
+  </div>
+
+  <!-- Imagery -->
+  <div class="section">
+    <h2>Imagery direction</h2>
+    <p><strong>Product:</strong> Premium and sensorial. Showcasing textures, embracing mess. The product IS the hero.</p>
+    <p><strong>Ingredients/Scents:</strong> Shot like the product — premium, sensorial. Hands interacting with ingredients. Ice and blue for refreshing. Warm golden light for warmth. Scent-coloured backgrounds to set mood.</p>
+    <p><strong>People:</strong> Authentic, full of life. Dark silhouettes, unusual crops, graphic compositions. Never posed lifestyle shots.</p>
+    <p><strong>Glass filter:</strong> Faceted distortion on imagery — as if looking through the bottle. Sparingly.</p>
+    <p style="color: var(--wine-grey); font-style: italic;">Avoid: standard white-background product isolation, stock photography, clinical studio shots.</p>
+  </div>
+
+  <!-- Conversion Principles -->
+  <div class="section">
+    <h2>Conversion principles</h2>
+    <p>How conversion tactics should feel within The Conscious Hedonist identity.</p>
+
+    <div class="principle">
+      <strong>CTA presence</strong>
+      <p>Confident and direct. "Build Your Rollr" over generic "Shop Now." The brand has attitude — buttons should too.</p>
+    </div>
+    <div class="principle">
+      <strong>Urgency</strong>
+      <p>Organic over manufactured. "Each gemstone is hand-carved and naturally unique" is authentic scarcity. No countdown timers.</p>
+    </div>
+    <div class="principle">
+      <strong>Trust signals</strong>
+      <p>Woven into the product story. Review quotes near the purchase decision. "We do talk about sweat. We do speak transparently."</p>
+    </div>
+    <div class="principle">
+      <strong>Subscription framing</strong>
+      <p>"Refill Plan" not "Subscription." Lead with flexibility. Widen the savings gap enough that one-time feels irrational.</p>
+    </div>
+    <div class="principle">
+      <strong>Cart and checkout</strong>
+      <p>Drawer cart, no page redirect. Progressive disclosure. Running total visible at all times.</p>
+    </div>
+    <div class="principle">
+      <strong>Mobile</strong>
+      <p>Thumb-first. Key actions in bottom half. One decision per screen in the configurator. Smooth as Estrid.</p>
+    </div>
+  </div>
+
+  <!-- Flagged Issues -->
+  <div class="section">
+    <h2>Flagged issues</h2>
+
+    <div class="issue-row">
+      <div class="issue-num">1</div>
+      <div><strong>Border-radius inconsistency</strong> — current site mixes 3px, 8px, 13px with no system. Adopt the 3-token scale (8/12/20px).</div>
+      <div class="severity-high">High</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-num">2</div>
+      <div><strong>Scent colours unused on web</strong> — four distinctive pastel colours defined in the brand guide, not deployed anywhere on the site. Introduce through configurator and section theming.</div>
+      <div class="severity-medium">Medium</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-num">3</div>
+      <div><strong>Fluid letterforms not on site</strong> — powerful brand assets (V, J, C, M) sitting unused. Deploy in configurator scent selection and as brand page decoration.</div>
+      <div class="severity-medium">Medium</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-num">4</div>
+      <div><strong>No web type scale</strong> — Kalice is loaded but no clear sizing system exists. Implement the key sizes table with Kalice for display/body and Instrument Sans for functional UI.</div>
+      <div class="severity-medium">Medium</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-num">5</div>
+      <div><strong>Sensorial identity confined to homepage</strong> — glass distortion, rolling liquid motion, and sensorial photography exist on the homepage but don't carry into product pages or the purchase flow.</div>
+      <div class="severity-medium">Medium</div>
+    </div>
+  </div>
+
+  <!-- Discussion Areas -->
+  <div class="section">
+    <h2>Discussion areas</h2>
+
+    <div class="discussion-flag">
+      <div class="discussion-flag-label">For discussion</div>
+      <h3>Instrument Sans usage scope</h3>
+      <p>Instrument Sans is used for buttons/CTAs and all functional UI — form inputs, cart line items, meta text, captions. Sans-serif for all interactive elements where readability matters. Confirmed direction.</p>
+    </div>
+
+    <div class="discussion-flag">
+      <div class="discussion-flag-label">For discussion</div>
+      <h3>Fluid letterform prominence</h3>
+      <p>Should these be subtle background textures or prominent visual elements in the purchase flow? We recommend prominent in scent selection (step 2 of configurator), subtle elsewhere.</p>
+    </div>
+
+    <div class="discussion-flag">
+      <div class="discussion-flag-label">For discussion</div>
+      <h3>Visible grid lines on web</h3>
+      <p>Proposed as subtle accent only — beside hero images, alongside editorial content. One or two per page maximum. Does this feel right, or should it be more present?</p>
+    </div>
+
+    <div class="discussion-flag">
+      <div class="discussion-flag-label">For discussion</div>
+      <h3>Subscription savings gap</h3>
+      <p>Conversion evidence suggests widening from 20% to 25-40%. This is a commercial decision, not a design one, but it affects how the subscription comparison UI is designed.</p>
+    </div>
+  </div>
+
+  <!-- Provenance -->
+  <div class="section">
+    <h2>Provenance</h2>
+
+    <h3>From client</h3>
+    <p><strong>Brand guide:</strong> Wine and Off-white palette, scent colours, Kalice typeface, fluid letterforms, visible grid system, glass distortion effect, rolling liquid motion, art direction, brand personality, voice pillars, copy guidelines, logo usage.</p>
+    <p><strong>Milo's input:</strong> Estrid as UX reference, BTSO scroll effects, vertical lines as accent not structure, Kalice-primary approach, Instrument Sans pairing preference.</p>
+
+    <h3>Proposed by happypages</h3>
+    <p>Instrument Sans as functional UI companion, neutral palette derivation (Wine Grey, Wine Border, Disabled), semantic colour palette, 3-token border-radius system, no-horizontal-lines rule, spacing scale, shadow system, mobile-first sizing, web type scale, button styling (Instrument Sans 500), scent colour web deployment, fluid letterform web use, conversion principles.</p>
+  </div>
+
+</body>
+</html>

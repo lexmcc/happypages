@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rollr — Conversion Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: "Kalice";
+    src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Regular.woff2?v=1710785896") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Kalice";
+    src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Italic_6707812a-88e2-4d65-9729-c58d30fcb57a.woff2?v=1720789116&v=5705") format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --wine: #430632;
+    --wine-light: #561245;
+    --wine-dark: #2F0423;
+    --off-white: #FAFAFA;
+    --white: #FFFFFF;
+    --wine-grey: #786874;
+    --wine-border: #E5DFE3;
+    --wine-muted: #B8B0B5;
+    --vetiver: #DFFFC2;
+    --clary-sage: #FFBFD2;
+    --mandarin: #FFA674;
+    --juniper: #A8BBFF;
+    --success: #4A7A3F;
+    --error: #B83A3A;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 3px rgba(67, 6, 50, 0.06);
+    --shadow-md: 0 4px 12px rgba(67, 6, 50, 0.08);
+    --shadow-lg: 0 8px 24px rgba(67, 6, 50, 0.12);
+    --font-display: "Kalice", Georgia, serif;
+    --font-ui: "Instrument Sans", sans-serif;
+
+    --severity-critical: #B83A3A;
+    --severity-critical-bg: #FDF2F2;
+    --severity-major: #C47A20;
+    --severity-major-bg: #FDF8F0;
+    --severity-minor: #5B7BA5;
+    --severity-minor-bg: #F0F4F8;
+    --severity-enhancement: var(--wine-grey);
+    --severity-enhancement-bg: #F5F3F4;
+    --severity-bug: #B83A3A;
+    --severity-bug-bg: #FDF2F2;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    padding-top: 48px;
+    font-family: var(--font-display);
+    background: var(--off-white);
+    color: var(--wine);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  /* ---------- Layout ---------- */
+
+  .page-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 120px;
+  }
+
+  @media (max-width: 600px) {
+    .page-wrapper { padding: 32px 16px 80px; }
+  }
+
+  /* ---------- Header ---------- */
+
+  .report-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--wine-border);
+  }
+
+  .report-header .meta {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wine-grey);
+    margin-bottom: 16px;
+  }
+
+  .report-header h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .report-header .subtitle {
+    font-size: 18px;
+    color: var(--wine-grey);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  @media (max-width: 600px) {
+    .report-header h1 { font-size: 30px; }
+    .report-header .subtitle { font-size: 16px; }
+  }
+
+  /* ---------- Start Here ---------- */
+
+  .start-here {
+    background: var(--wine-dark);
+    color: var(--off-white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 48px;
+  }
+
+  .start-here h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--off-white);
+  }
+
+  .start-here-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .start-here-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .start-here-number {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.15);
+    color: var(--off-white);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .start-here-content {
+    flex: 1;
+  }
+
+  .start-here-content strong {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 17px;
+    margin-bottom: 2px;
+  }
+
+  .start-here-content span {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--wine-muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    .start-here { padding: 24px 20px; }
+    .start-here h2 { font-size: 22px; }
+    .start-here-content strong { font-size: 16px; }
+  }
+
+  /* ---------- Sections ---------- */
+
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wine-muted);
+    margin-bottom: 8px;
+  }
+
+  .section > h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .section > p {
+    color: var(--wine-grey);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .section > h2 { font-size: 24px; }
+    .section > p { font-size: 16px; }
+  }
+
+  /* ---------- Finding Cards ---------- */
+
+  .finding {
+    background: var(--white);
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .finding:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .finding-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .finding-header:active {
+    background: rgba(67, 6, 50, 0.02);
+  }
+
+  .finding-number {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--wine-muted);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .finding-title-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .finding-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .finding-location {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+  }
+
+  .severity-badge {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .severity-badge.critical {
+    background: var(--severity-critical-bg);
+    color: var(--severity-critical);
+  }
+  .severity-badge.major {
+    background: var(--severity-major-bg);
+    color: var(--severity-major);
+  }
+  .severity-badge.minor {
+    background: var(--severity-minor-bg);
+    color: var(--severity-minor);
+  }
+  .severity-badge.enhancement {
+    background: var(--severity-enhancement-bg);
+    color: var(--severity-enhancement);
+  }
+  .severity-badge.bug {
+    background: var(--severity-bug-bg);
+    color: var(--severity-bug);
+  }
+
+  .finding-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    transition: transform 0.2s ease;
+    color: var(--wine-muted);
+  }
+
+  .finding.open .finding-chevron {
+    transform: rotate(180deg);
+  }
+
+  .finding-body {
+    display: none;
+    padding: 0 24px 24px;
+  }
+
+  .finding.open .finding-body {
+    display: block;
+  }
+
+  .finding-body p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--wine);
+    margin-bottom: 16px;
+  }
+
+  .finding-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .finding-body strong {
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .finding-body ul {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+
+  .finding-body ul li {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--wine);
+  }
+
+  .finding-body ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--wine-border);
+  }
+
+  .sub-heading {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wine-muted);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  .sub-heading:first-child {
+    margin-top: 0;
+  }
+
+  @media (max-width: 600px) {
+    .finding-header { padding: 16px; gap: 10px; }
+    .finding-body { padding: 0 16px 20px; }
+    .finding-title { font-size: 16px; }
+    .finding-body p { font-size: 15px; }
+    .finding-body ul li { font-size: 15px; }
+    .severity-badge { font-size: 10px; padding: 3px 8px; }
+  }
+
+  /* ---------- Screenshot Placeholder ---------- */
+
+  .screenshot-slot {
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screenshot-slot.mobile {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .screenshot-slot .phone-frame {
+    background: #1a1a1a;
+    border-radius: 32px;
+    padding: 12px;
+    max-width: 300px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .screenshot-slot .phone-screen {
+    background: var(--off-white);
+    border-radius: 22px;
+    aspect-ratio: 9/19.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screenshot-slot .phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .screenshot-slot .placeholder-label {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+    text-align: center;
+    padding: 12px;
+  }
+
+  /* Annotation overlays */
+  .annotation {
+    position: absolute;
+    border: 2px solid var(--severity-critical);
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+  }
+
+  .annotation-number {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 22px;
+    height: 22px;
+    background: var(--severity-critical);
+    color: white;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- Severity Group Headers ---------- */
+
+  .severity-group {
+    margin-bottom: 40px;
+  }
+
+  .severity-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--wine-border);
+  }
+
+  .severity-group-header h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 20px;
+  }
+
+  .severity-group-header .count {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+  }
+
+  /* ---------- Executive Summary ---------- */
+
+  .executive-summary {
+    margin-bottom: 48px;
+  }
+
+  .executive-summary p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--wine);
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .executive-summary p { font-size: 16px; }
+  }
+
+  /* ---------- Assessment Meta ---------- */
+
+  .assessment-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+
+  .assessment-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .assessment-meta-label {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wine-muted);
+  }
+
+  .assessment-meta-value {
+    font-size: 15px;
+    color: var(--wine);
+  }
+
+  @media (max-width: 600px) {
+    .assessment-meta { grid-template-columns: 1fr; padding: 16px; }
+  }
+
+  /* ---------- Impact Matrix ---------- */
+
+  .matrix-container {
+    margin: 32px 0;
+  }
+
+  .matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+    background: var(--wine-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .matrix-quadrant {
+    background: var(--white);
+    padding: 20px;
+  }
+
+  .matrix-quadrant-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .matrix-quadrant.quick-wins .matrix-quadrant-label { color: var(--success); }
+  .matrix-quadrant.major-projects .matrix-quadrant-label { color: var(--severity-major); }
+  .matrix-quadrant.fill-ins .matrix-quadrant-label { color: var(--wine-muted); }
+  .matrix-quadrant.deprioritise .matrix-quadrant-label { color: var(--wine-muted); }
+
+  .matrix-item {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine);
+    padding: 4px 0;
+    line-height: 1.4;
+  }
+
+  .matrix-item .ref {
+    color: var(--wine-muted);
+    font-size: 11px;
+  }
+
+  .matrix-axes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .matrix-axis-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--wine-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .matrix-y-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--wine-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 600px) {
+    .matrix-quadrant { padding: 14px; }
+    .matrix-item { font-size: 12px; }
+  }
+
+  /* ---------- Separator ---------- */
+
+  .separator {
+    height: 1px;
+    background: var(--wine-border);
+    margin: 48px 0;
+  }
+
+  /* ---------- Footer ---------- */
+
+  .report-footer {
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--wine-border);
+    margin-top: 48px;
+  }
+
+  .report-footer p {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+  }
+
+  /* ---------- TOC (sticky, desktop only) ---------- */
+
+  .toc-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    width: 48px;
+    height: 48px;
+    background: var(--wine);
+    color: var(--off-white);
+    border: none;
+    border-radius: 50%;
+    font-family: var(--font-ui);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease;
+  }
+
+  .toc-toggle:hover {
+    background: var(--wine-light);
+  }
+
+  .toc-panel {
+    position: fixed;
+    bottom: 84px;
+    right: 24px;
+    z-index: 99;
+    width: 280px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--white);
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 20px;
+    display: none;
+  }
+
+  .toc-panel.open {
+    display: block;
+  }
+
+  .toc-panel h4 {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wine-muted);
+    margin-bottom: 12px;
+  }
+
+  .toc-panel a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine);
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--wine-border);
+    transition: color 0.15s ease;
+  }
+
+  .toc-panel a:last-child { border-bottom: none; }
+
+  .toc-panel a:hover { color: var(--wine-light); }
+
+  .toc-panel a .toc-badge {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .toc-panel a .toc-badge.critical { background: var(--severity-critical-bg); color: var(--severity-critical); }
+  .toc-panel a .toc-badge.major { background: var(--severity-major-bg); color: var(--severity-major); }
+  .toc-panel a .toc-badge.minor { background: var(--severity-minor-bg); color: var(--severity-minor); }
+  .toc-panel a .toc-badge.enhancement { background: var(--severity-enhancement-bg); color: var(--severity-enhancement); }
+  .toc-panel a .toc-badge.bug { background: var(--severity-bug-bg); color: var(--severity-bug); }
+
+  @media (max-width: 600px) {
+    .toc-panel { right: 16px; bottom: 76px; width: calc(100vw - 32px); }
+    .toc-toggle { right: 16px; bottom: 16px; }
+  }
+
+  /* ---------- Expand / collapse all ---------- */
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .controls button {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--wine-grey);
+    background: none;
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s ease;
+  }
+
+  .controls button:hover {
+    background: var(--white);
+    color: var(--wine);
+    border-color: var(--wine-muted);
+  }
+
+  /* === Rollr Portal Nav === */
+  .rollr-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 48px;
+    background: #2F0423;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    font-family: "Instrument Sans", sans-serif;
+    box-shadow: 0 1px 3px rgba(67, 6, 50, 0.12);
+  }
+  .rollr-nav-brand {
+    font-family: "Kalice", Georgia, serif;
+    font-size: 18px;
+    color: #FAFAFA;
+    text-decoration: none;
+  }
+  .rollr-nav-links {
+    display: flex;
+    gap: 24px;
+  }
+  .rollr-nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: #B8B0B5;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .rollr-nav-links a:hover,
+  .rollr-nav-links a.active {
+    color: #FAFAFA;
+  }
+  @media (max-width: 600px) {
+    .rollr-nav { padding: 0 16px; }
+    .rollr-nav-links { gap: 16px; }
+    .rollr-nav-links a { font-size: 12px; }
+  }
+  /* === End Nav === */
+</style>
+</head>
+<body>
+<nav class="rollr-nav">
+  <span class="rollr-nav-brand">Rollr</span>
+  <div class="rollr-nav-links">
+    <a href="/rollr/audit/" class="active">Audit</a>
+    <a href="/rollr/roadmap/">Roadmap</a>
+    <a href="/rollr/design-system/">Design system</a>
+    <a href="/rollr/prototype/">Prototype</a>
+  </div>
+</nav>
+
+
+<div class="page-wrapper">
+
+  <!-- ======== HEADER ======== -->
+  <header class="report-header">
+    <div class="meta">HappyPages &times; Rollr</div>
+    <h1>Conversion Audit</h1>
+    <p class="subtitle">Full mobile walkthrough assessment of rollr.co.uk — from Instagram ad to checkout. 22 findings, prioritised by conversion impact.</p>
+  </header>
+
+  <!-- ======== START HERE ======== -->
+  <div class="start-here">
+    <h2>Start here</h2>
+    <ol class="start-here-list">
+      <li class="start-here-item">
+        <div class="start-here-number">1</div>
+        <div class="start-here-content">
+          <strong>Fix the cart modal on mobile</strong>
+          <span>The checkout button is hidden behind Chrome's bottom bar. Visitors who want to buy literally cannot proceed. This is a show-stopper.</span>
+        </div>
+      </li>
+      <li class="start-here-item">
+        <div class="start-here-number">2</div>
+        <div class="start-here-content">
+          <strong>Clean up pricing — one clear answer to "how much?"</strong>
+          <span>Four different prices visible on one screen. The biggest single friction point in the purchase flow. A visitor should know exactly what they're paying at every step.</span>
+        </div>
+      </li>
+      <li class="start-here-item">
+        <div class="start-here-number">3</div>
+        <div class="start-here-content">
+          <strong>Reorder the story the site tells</strong>
+          <span>What it is, how it works, why it's different, then choose yours. Currently the homepage buries "how it works" near the bottom and the wizard has zero functional product information.</span>
+        </div>
+      </li>
+      <li class="start-here-item">
+        <div class="start-here-number">4</div>
+        <div class="start-here-content">
+          <strong>Surface efficacy where it matters</strong>
+          <span>Reviews say "it actually works" — but the site leads with luxury. Cold traffic needs to believe it performs before they care how it looks.</span>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ======== ASSESSMENT META ======== -->
+  <div class="assessment-meta">
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">URL</span>
+      <span class="assessment-meta-value">rollr.co.uk</span>
+    </div>
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">Date</span>
+      <span class="assessment-meta-value">20 March 2026</span>
+    </div>
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">Method</span>
+      <span class="assessment-meta-value">Full mobile purchase flow walkthrough</span>
+    </div>
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">Device</span>
+      <span class="assessment-meta-value">iPhone, Chrome mobile</span>
+    </div>
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">Entry point</span>
+      <span class="assessment-meta-value">Simulated Instagram ad arrival</span>
+    </div>
+    <div class="assessment-meta-item">
+      <span class="assessment-meta-label">Findings</span>
+      <span class="assessment-meta-value">22 findings + 2 bugs</span>
+    </div>
+  </div>
+
+  <!-- ======== EXECUTIVE SUMMARY ======== -->
+  <section class="section">
+    <div class="section-label">Executive summary</div>
+    <div class="executive-summary">
+      <p>Rollr has strong product-market fit. 127 reviews at 4.97/5, passionate testimonials, a product that people love once they try it. But the website is built for people who already love the brand, not for the cold paid traffic that makes up 75% of visitors.</p>
+      <p><em>The information hierarchy across the entire customer journey is broken.</em> Beyond "it's a beautiful product," the value proposition is not clear. How does it work? Does it actually perform? How much does it cost? That information is either buried deep in the page or hidden behind sub-menus. A first-time visitor from a Meta ad can't answer those three questions within the first scroll.</p>
+      <p>Then there are the UX issues. The cart modal's checkout button is hidden behind Chrome's browser bar on mobile. A chatbot widget competes with the primary CTA before anyone understands the product. Error messages persist after resolution. The subscription info modal can't be closed on mobile.</p>
+      <p>The conversion ceiling is set by information clarity and mobile UX. Fix the story the site tells and the order it tells it in, then fix the broken interactions that stop people buying even when they want to.</p>
+    </div>
+  </section>
+
+  <!-- ======== FINDINGS ======== -->
+  <section class="section" id="findings">
+    <div class="section-label">Findings</div>
+    <h2>22 findings across 5 severity levels</h2>
+    <p>Tap any finding to expand. Findings are ordered by conversion impact within each severity group.</p>
+
+    <div class="controls">
+      <button onclick="expandAll()">Expand all</button>
+      <button onclick="collapseAll()">Collapse all</button>
+    </div>
+
+    <!-- ──── CRITICAL ──── -->
+    <div class="severity-group" id="critical">
+      <div class="severity-group-header">
+        <span class="severity-badge critical">Critical</span>
+        <span class="count">7 findings — fix these first</span>
+      </div>
+
+      <!-- Finding 1 -->
+      <div class="finding" id="f1">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#1</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Information hierarchy and value proposition is broken across the entire journey</div>
+            <div class="finding-location">Every page — homepage, wizard, cart, navigation</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Most of the individual findings below trace back to this one. The site tells a story about a beautiful product, but it doesn't communicate, clearly or in the right order, what the product actually is, why it works, and why someone should care beyond how it looks.</p>
+
+          <div class="sub-heading">Where this shows up</div>
+          <ul>
+            <li><strong>Homepage:</strong> "How it works" (sachets, add water, shake — the fundamental product explainer) is buried near the bottom. Scent information sits below a "Discover your scents" CTA that appears before the actual scent descriptions. "Find your gemstone" appears as a CTA before the gemstones have been introduced. The story is told out of order.</li>
+            <li><strong>Wizard:</strong> Functional benefits are completely absent. No mention of how it feels on skin, how long it lasts, whether it's effective. The scent descriptions lean heavily on perfume-style poetry without explaining what you're putting on your body daily.</li>
+            <li><strong>FAQ content:</strong> Key objection-handling information — "Is it safe to use water from home?", "What does antiodorant mean?", "Is it a roll-on?" — is hidden behind About > FAQs. These are questions cold traffic will have during the purchase flow, and they're invisible unless someone actively hunts for them.</li>
+            <li><strong>The refills themselves:</strong> The roller is a one-time purchase. The refill sachets are what you're actually rebuying, and they're barely shown. The packaging, how simple they are to use, what they look like — all buried on the homepage and almost invisible in the wizard. The ongoing product needs to be sold as hard as the case.</li>
+            <li><strong>Sustainability:</strong> Refillable sachets, reduced packaging waste, eco-friendly materials. All strong selling points. None of them prominent in the purchase flow.</li>
+          </ul>
+
+          <div class="sub-heading">Impact</div>
+          <p>This affects everything: bounce rate, time on page, configurator entry, add-to-cart. Every other fix depends on getting this right. For cold Meta traffic that has never heard of Rollr, the first 10 seconds decide whether they stay or leave. Right now, it takes 3-4 scrolls to build a complete picture of what the product even is.</p>
+        </div>
+      </div>
+
+      <!-- Finding 2 -->
+      <div class="finding" id="f2">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#2</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Pricing hierarchy is the biggest single friction point</div>
+            <div class="finding-location">Product configurator — particularly Step 2 (scent selection)</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Four different prices are visible simultaneously on the scent selection step:</p>
+          <ul>
+            <li>"&pound;6 a month" at the top of the page</li>
+            <li>"&pound;15" crossed out on each product card</li>
+            <li>"&pound;12" as the actual price on each card</li>
+            <li>"&pound;30" on the sticky CTA button at the bottom</li>
+          </ul>
+          <p>A first-time visitor cannot answer "what am I actually paying?" The &pound;6/month figure splits the &pound;12 subscription price across 2 months, but nobody explains this. The &pound;30 on the CTA is the case price from Step 1, and it hasn't updated to reflect scent selections.</p>
+          <p>As scents are added, the total climbs to &pound;54 for two, with messaging about four-month delivery cycles. The relationship between number of scents, delivery frequency, and total cost is unclear. There's no running total anywhere.</p>
+
+          <!-- Screenshot: pricing confusion - clean state -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9117.PNG" alt="Step 2 scent selection showing £6/month, £15 crossed out, £12 actual price, and £30 on CTA">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-heading">Impact</div>
+          <p>People leave when they can't work out the price. Every second spent doing mental arithmetic is a second closer to closing the tab.</p>
+        </div>
+      </div>
+
+      <!-- Finding 3 -->
+      <div class="finding" id="f3">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#3</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Cart modal is broken on mobile — checkout button hidden</div>
+            <div class="finding-location">Cart drawer on mobile devices (Chrome)</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>After adding products to cart, the cart modal opens but the checkout button is completely hidden behind the bottom bar of Chrome's mobile browser. Scrolling inside the modal does not bring the checkout button into view — it only appears if the user accidentally scrolls outside the modal, which collapses the browser chrome.</p>
+          <p>This is not an edge case. This is the default experience on the most common mobile browser, for a site where 75% of traffic comes from mobile Meta ads.</p>
+
+          <!-- Screenshot: cart modal - no checkout button visible -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9119.PNG" alt="Cart modal open showing bundle contents but no checkout button visible">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-heading">Impact</div>
+          <p>People who have gone through the entire wizard, chosen their products, and decided to buy cannot find the button to pay. They're being lost at the last step.</p>
+        </div>
+      </div>
+
+      <!-- Finding 4 -->
+      <div class="finding" id="f4">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#4</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Homepage is not built for paid traffic</div>
+            <div class="finding-location">Homepage — primary landing page for 75% of traffic</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>The homepage is a brand experience page doing double duty as a landing page for cold paid traffic. The hero says "We use deodorant 22,000 times in our lives. Why shouldn't it be beautiful?" That's a brand statement. It doesn't answer any of the questions cold ad traffic actually has.</p>
+          <p>The Shop Now button isn't prominent. It sits inline and competes with the chatbot widget on mobile. There are four different CTAs across the page: "Shop Now", "Find your gemstone", "Shop Rollr", "Discover your scent." None of them say "Buy your first Rollr here."</p>
+          <p>Several CTAs reference content the visitor hasn't seen yet. "Find your gemstone" appears before the gemstones are shown. "Discover your scents" appears above the actual scent descriptions. The page asks you to act on information you haven't been given.</p>
+
+          <!-- Screenshot: homepage hero -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9120.PNG" alt="Homepage hero showing Shop Now button competing with chat widget bubble">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-heading">Impact</div>
+          <p>Worth checking bounce rate and conversion segmented by traffic source. If cold paid traffic is converting below the site average, this page is the likely reason. The first scroll needs to say what Rollr is, not just show what it looks like.</p>
+        </div>
+      </div>
+
+      <!-- Finding 5 -->
+      <div class="finding" id="f5">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#5</span>
+          <div class="finding-title-group">
+            <div class="finding-title">The configurator creates more questions than it answers</div>
+            <div class="finding-location">Product configurator — all three steps</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>The three-step flow drives 57% subscription uptake, which is strong. The stepped structure should stay. But each step has UX issues that compound.</p>
+
+          <div class="sub-heading">Step 1 — Gemstone</div>
+          <ul>
+            <li>Nothing is selected by default. No popularity indicators, no "Most Popular" badge, no reason to choose one over another beyond personal aesthetic preference.</li>
+            <li>"I already have a case" appears as a main option, confusing first-time buyers.</li>
+            <li>Below the fold sits a mini-homepage of content — easy to lose your place after selecting.</li>
+          </ul>
+
+          <div class="sub-heading">Step 2 — Scent</div>
+          <ul>
+            <li>Pricing confusion peaks here (see Finding #2).</li>
+            <li>Tapping a card highlights it but the interaction pattern differs subtly from Step 1 — easy to accidentally hit "Add to cart" thinking you've just selected.</li>
+            <li>Small info (i) buttons are hard to tap on mobile. They open modals with walls of text — content hidden for no strong reason.</li>
+            <li>Subscribe &amp; Save info modal is nearly impossible to close on mobile (see Finding #9).</li>
+          </ul>
+
+          <div class="sub-heading">Throughout the wizard</div>
+          <ul>
+            <li>The sticky "Next" button doesn't communicate what you've selected or where you are.</li>
+            <li>No running total. Must scroll back to remember selections.</li>
+            <li>Functional product information completely absent — how does it feel? How long does it last? Is it sticky?</li>
+          </ul>
+
+          <div class="sub-heading">Impact</div>
+          <p>Lower configurator completion. People who enter the wizard but don't finish it are the biggest recoverable conversion opportunity on the site.</p>
+        </div>
+      </div>
+
+      <!-- Finding 6 -->
+      <div class="finding" id="f6">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#6</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Efficacy messaging is systematically buried</div>
+            <div class="finding-location">Homepage and product page — across the entire site</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Every section of the site leads with beauty and luxury. The hero asks "Why shouldn't it be beautiful?" The wizard leads with gemstone descriptions. But the reviews tell a different story — "it actually works!", "I've tried everything else", "saved my sensitive skin."</p>
+          <p>After going through the entire wizard flow, there is not a single piece of information about whether the deodorant actually works, how it feels on skin, or how it interacts with the body. The product is being sold as jewellery, not as something you put on your body every day.</p>
+          <p>Efficacy is the #1 reason customers love this product. The reviews make that obvious. But the site treats it as a secondary message, buried 3-4 scrolls down.</p>
+
+          <div class="sub-heading">Impact</div>
+          <p>People appreciate the aesthetics but leave unconvinced it'll actually work. For cold traffic, "does it work?" is question number one. The site doesn't answer it.</p>
+        </div>
+      </div>
+
+      <!-- Finding 7 -->
+      <div class="finding" id="f7">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#7</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Product page is doing too many jobs at once</div>
+            <div class="finding-location">Product page — entire page structure</div>
+          </div>
+          <span class="severity-badge critical">Critical</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>The product page is trying to be three things at once: a landing page (convince you to buy), a configurator (help you customise), and an information hub (ingredients, press quotes, how it works, reviews). Below the configurator sits a content section that's almost a mini-homepage on its own. The persuasion content appears after the purchase flow instead of supporting it.</p>
+          <p>During the wizard, it's easy to scroll past the selection step into this content zone and lose track of where you are and what you've already chosen.</p>
+
+          <div class="sub-heading">Impact</div>
+          <p>Users either miss the selling content (buy from the wizard without scrolling) or get lost in it (scroll past their selections into the content zone).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── MAJOR ──── -->
+    <div class="severity-group" id="major">
+      <div class="severity-group-header">
+        <span class="severity-badge major">Major</span>
+        <span class="count">5 findings</span>
+      </div>
+
+      <!-- Finding 8 -->
+      <div class="finding" id="f8">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#8</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Chat widget hijacks the flow before the visitor understands the product</div>
+            <div class="finding-location">Homepage — floating Rhapsody widget</div>
+          </div>
+          <span class="severity-badge major">Major</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>A chatbot called "Rhapsody — Your Experience Curator" appears as a floating widget that competes with the Shop Now button on mobile. When opened, it runs a quiz ("Which gemstone is right for me?") before the visitor has understood what the product is.</p>
+          <p>It offers a &pound;5 discount code (RHAPSODY5) that must be memorised — not auto-applied at checkout. After completing the quiz, closing the widget requires finding a small X button (doesn't swipe down). The code cannot be retrieved if forgotten.</p>
+
+          <!-- Screenshot: chat widget -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9123.PNG" alt="Rhapsody chat widget running quiz before visitor understands the product">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-heading">Impact</div>
+          <p>Pulls attention away from the actual buying flow. The discount code friction (memorise it, type it in later) means most people who get the code probably never use it.</p>
+        </div>
+      </div>
+
+      <!-- Finding 9 -->
+      <div class="finding" id="f9">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#9</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Subscribe &amp; Save modal is unusable on mobile</div>
+            <div class="finding-location">Product configurator — subscription information modal</div>
+          </div>
+          <span class="severity-badge major">Major</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Clicking the subscription info button opens a large modal that's too big for the mobile viewport. The X close button is almost completely hidden. The content is a wall of text with conflicting messaging ("the more you order, the greater your positive impact" alongside pricing alongside "refill when you like") across three tabs.</p>
+
+          <!-- Screenshot: subscribe modal -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9121.PNG" alt="Subscription info modal too large for mobile viewport">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-heading">Impact</div>
+          <p>People who want to understand the subscription terms are punished for trying. A modal that can't be closed feels like a trap. Many will abandon the flow entirely.</p>
+        </div>
+      </div>
+
+      <!-- Finding 10 -->
+      <div class="finding" id="f10">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#10</span>
+          <div class="finding-title-group">
+            <div class="finding-title">No shipping, returns, or guarantee info before checkout</div>
+            <div class="finding-location">Product page and homepage — completely absent</div>
+          </div>
+          <span class="severity-badge major">Major</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>No shipping information visible anywhere before checkout. No delivery timeframes, no returns policy, no guarantee. For a &pound;35-50 first purchase of an unfamiliar product, that's a lot of unanswered questions at the point of commitment. "Free UK Delivery" appears once, in small text, in the subscription benefits.</p>
+          <div class="sub-heading">Impact</div>
+          <p>Unknown shipping costs are the #1 reason shoppers abandon carts. When the cost is a mystery, people assume the worst.</p>
+        </div>
+      </div>
+
+      <!-- Finding 11 -->
+      <div class="finding" id="f11">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#11</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Reviews positioned away from the purchase decision</div>
+            <div class="finding-location">Product page — reviews section far below configurator</div>
+          </div>
+          <span class="severity-badge major">Major</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>127 reviews at 97% five-star. The configurator shows a rating number at the top of each step, but no actual review content is visible during the purchase decision. The full reviews are buried below product info tabs, press quotes, and the how-it-works section.</p>
+          <p>These reviews are the most persuasive thing on the entire site, and they're invisible when it matters most.</p>
+          <div class="sub-heading">Impact</div>
+          <p>The proof that could close hesitant buyers isn't there when they're deciding.</p>
+        </div>
+      </div>
+
+      <!-- Finding 12 -->
+      <div class="finding" id="f12">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#12</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Wizard does not respect cart state</div>
+            <div class="finding-location">Product configurator and cart interaction</div>
+          </div>
+          <span class="severity-badge major">Major</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>After completing the wizard and adding items to cart, navigating back to "Shop now" starts a completely fresh flow. No awareness of what's already been added. The cart icon in the header doesn't update during wizard selections (only after explicit "Add to cart").</p>
+          <p>This makes it easy to accidentally add duplicate bundles and lose track of what you've already chosen.</p>
+          <div class="sub-heading">Impact</div>
+          <p>If someone wants to change one thing (swap a scent), they have to go through a flow that doesn't know what they've already picked.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── MINOR ──── -->
+    <div class="severity-group" id="minor">
+      <div class="severity-group-header">
+        <span class="severity-badge minor">Minor</span>
+        <span class="count">7 findings</span>
+      </div>
+
+      <!-- Finding 13 -->
+      <div class="finding" id="f13">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#13</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Visual inconsistency undermines the price point</div>
+            <div class="finding-location">Across the entire site</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Irregular shapes, mixed colours, inconsistent font sizes. Button fonts don't match the brand guidelines. The site feels less premium than the product and the price point.</p>
+          <div class="sub-heading">Impact</div>
+          <p>Visual consistency is a trust signal. When the site doesn't look like a &pound;40 product, people question whether it is one.</p>
+        </div>
+      </div>
+
+      <!-- Finding 14 -->
+      <div class="finding" id="f14">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#14</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Header too large on mobile</div>
+            <div class="finding-location">Sticky header across all pages</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>The header takes up too much space on mobile. On a site where the first scroll has to do a lot of selling, that's screen real estate you can't afford to waste.</p>
+        </div>
+      </div>
+
+      <!-- Finding 15 -->
+      <div class="finding" id="f15">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#15</span>
+          <div class="finding-title-group">
+            <div class="finding-title">FAQ content buried in sub-sub-menu</div>
+            <div class="finding-location">Navigation — About > FAQs</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Useful content is hidden behind a two-level nav path: About > FAQs. Questions like "Is it safe to use water from home?", "What does antiodorant mean?", "Is it a roll-on?" The FAQ page itself is good. The problem is nobody will find it while they're buying.</p>
+          <div class="sub-heading">Impact</div>
+          <p>Real customer questions go unanswered during the purchase flow. Those questions don't disappear; they become reasons not to buy.</p>
+        </div>
+      </div>
+
+      <!-- Finding 16 -->
+      <div class="finding" id="f16">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#16</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Footer navigation uses non-standard labels</div>
+            <div class="finding-location">Footer</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>"Curious Queries" instead of FAQs. On-brand but fails the 5-second findability test for visitors looking for help. Compounds the FAQ discoverability problem.</p>
+        </div>
+      </div>
+
+      <!-- Finding 17 -->
+      <div class="finding" id="f17">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#17</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Review section lacks filtering</div>
+            <div class="finding-location">Product page — reviews section</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>127 reviews in a single feed with no ability to filter by scent or gemstone. Someone who has selected Rose Quartz + Vetiver wants to see reviews from that combination, not scroll through everything.</p>
+        </div>
+      </div>
+
+      <!-- Finding 18 -->
+      <div class="finding" id="f18">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#18</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Site cleanup: "Powered by Shopify" in footer</div>
+            <div class="finding-location">Footer</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>"Powered by Shopify" in the footer. Undermines the premium positioning. Quick fix.</p>
+        </div>
+      </div>
+
+      <!-- Finding 19 -->
+      <div class="finding" id="f19">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#19</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Checkout unbranded and cramped</div>
+            <div class="finding-location">Shopify checkout</div>
+          </div>
+          <span class="severity-badge minor">Minor</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Logos crammed into the top right, feels rushed. Limited scope for changes (standard Shopify checkout) but basic tidying is possible — brand colours, cleaner layout, fewer logos.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── ENHANCEMENTS ──── -->
+    <div class="severity-group" id="enhancements">
+      <div class="severity-group-header">
+        <span class="severity-badge enhancement">Enhancement</span>
+        <span class="count">3 findings</span>
+      </div>
+
+      <!-- Finding 20 -->
+      <div class="finding" id="f20">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#20</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Subscription value prop needs stronger framing</div>
+            <div class="finding-location">Product configurator — subscribe vs one-time toggle</div>
+          </div>
+          <span class="severity-badge enhancement">Enhancement</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>57% subscription uptake, targeting 66%. "Subscribe &amp; Save 20%" doesn't translate to pounds. The benefits (free delivery, early access, cancel anytime) feel like an afterthought. The stepped flow gets people to the final step. That final step needs to close harder.</p>
+        </div>
+      </div>
+
+      <!-- Finding 21 -->
+      <div class="finding" id="f21">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#21</span>
+          <div class="finding-title-group">
+            <div class="finding-title">No cross-sell or gift positioning</div>
+            <div class="finding-location">Entire purchase flow</div>
+          </div>
+          <span class="severity-badge enhancement">Enhancement</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>No "Buy as a gift" option despite reviews mentioning gifting. No cross-sell during checkout.</p>
+        </div>
+      </div>
+
+      <!-- Finding 22 -->
+      <div class="finding" id="f22">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">#22</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Press quotes lack attribution links</div>
+            <div class="finding-location">Homepage and product page</div>
+          </div>
+          <span class="severity-badge enhancement">Enhancement</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Press quotes displayed without links to the original articles. Linked coverage is more credible than unlinked quotes. Easy fix.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── BUGS ──── -->
+    <div class="severity-group" id="bugs">
+      <div class="severity-group-header">
+        <span class="severity-badge bug">Bug</span>
+        <span class="count">2 bugs</span>
+      </div>
+
+      <!-- Bug 1 -->
+      <div class="finding" id="b1">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">B1</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Error messages persist after resolution</div>
+            <div class="finding-location">Product configurator — Step 2</div>
+          </div>
+          <span class="severity-badge bug">Bug</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>"Please select a scent" stays visible even after a scent has been selected. Makes you wonder whether the selection actually registered. Should clear the moment you select something.</p>
+
+          <!-- Screenshot: error persistence -->
+          <div class="screenshot-slot mobile">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="../screenshots/IMG_9122.PNG" alt="Please select a scent error still showing with Mandarin already selected at quantity 2">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bug 2 -->
+      <div class="finding" id="b2">
+        <div class="finding-header" onclick="toggleFinding(this)">
+          <span class="finding-number">B2</span>
+          <div class="finding-title-group">
+            <div class="finding-title">Error messages styled in brand colour — easy to miss</div>
+            <div class="finding-location">Product configurator</div>
+          </div>
+          <span class="severity-badge bug">Bug</span>
+          <svg class="finding-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </div>
+        <div class="finding-body">
+          <p>Error messages use the brand colour instead of a distinct alert colour. Easy to miss on mobile. They're also not helpful: "Please select a scent" doesn't tell you what to do differently. Errors should stand out and point you toward the fix.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== IMPACT / EFFORT MATRIX ======== -->
+  <section class="section" id="matrix">
+    <div class="section-label">Prioritisation</div>
+    <h2>Impact vs effort</h2>
+    <p>These findings will be grouped into workstreams for implementation. This matrix shows relative priority to help decide what to tackle first, not a list of independent tasks.</p>
+
+    <div class="matrix-container">
+      <div class="matrix-y-label">&uarr; Higher impact</div>
+      <div class="matrix">
+        <div class="matrix-quadrant quick-wins">
+          <div class="matrix-quadrant-label">Quick wins — do first</div>
+          <div class="matrix-item">Fix cart modal on mobile <span class="ref">#3</span></div>
+          <div class="matrix-item">Fix error message persistence <span class="ref">B1</span></div>
+          <div class="matrix-item">Add shipping/returns info <span class="ref">#10</span></div>
+          <div class="matrix-item">Surface efficacy messaging higher <span class="ref">#6</span></div>
+          <div class="matrix-item">Remove "Powered by Shopify" <span class="ref">#18</span></div>
+          <div class="matrix-item">Fix error message styling <span class="ref">B2</span></div>
+        </div>
+        <div class="matrix-quadrant major-projects">
+          <div class="matrix-quadrant-label">Major projects — high value</div>
+          <div class="matrix-item">Fix pricing hierarchy <span class="ref">#2</span></div>
+          <div class="matrix-item">Reorder information hierarchy <span class="ref">#1</span></div>
+          <div class="matrix-item">Rebuild configurator UX <span class="ref">#5</span></div>
+          <div class="matrix-item">Restructure product page <span class="ref">#7</span></div>
+          <div class="matrix-item">Build paid traffic landing page <span class="ref">#4</span></div>
+        </div>
+        <div class="matrix-quadrant fill-ins">
+          <div class="matrix-quadrant-label">Fill-ins — when time allows</div>
+          <div class="matrix-item">Fix subscribe modal mobile <span class="ref">#9</span></div>
+          <div class="matrix-item">Reduce header size on mobile <span class="ref">#14</span></div>
+          <div class="matrix-item">Fix footer nav labels <span class="ref">#16</span></div>
+          <div class="matrix-item">Tidy checkout branding <span class="ref">#19</span></div>
+          <div class="matrix-item">Link press quotes <span class="ref">#22</span></div>
+        </div>
+        <div class="matrix-quadrant deprioritise">
+          <div class="matrix-quadrant-label">Larger projects — plan carefully</div>
+          <div class="matrix-item">Evaluate chat widget ROI <span class="ref">#8</span></div>
+          <div class="matrix-item">Fix wizard/cart state sync <span class="ref">#12</span></div>
+          <div class="matrix-item">Add review filtering <span class="ref">#17</span></div>
+          <div class="matrix-item">Visual consistency pass <span class="ref">#13</span></div>
+          <div class="matrix-item">Strengthen subscription framing <span class="ref">#20</span></div>
+          <div class="matrix-item">Add gift/cross-sell options <span class="ref">#21</span></div>
+          <div class="matrix-item">Surface FAQs in flow <span class="ref">#15</span></div>
+          <div class="matrix-item">Move reviews to decision point <span class="ref">#11</span></div>
+        </div>
+      </div>
+      <div class="matrix-axes">
+        <span class="matrix-axis-label">&larr; Lower effort</span>
+        <span class="matrix-axis-label">Higher effort &rarr;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== COMPETITOR CONTEXT ======== -->
+  <section class="section" id="context">
+    <div class="section-label">Context</div>
+    <h2>The competitive gap</h2>
+    <div class="executive-summary">
+      <p>Rollr's product is better than Wild's in build quality and design. But Wild's purchase experience is far simpler. Rollr asks for a 3x higher first purchase (&pound;35-50 vs &pound;12) with a more complex buying process and fewer trust signals.</p>
+      <p>That's the tension. At this price point, information hierarchy and pricing clarity matter more, not less. Every unanswered question is a reason to leave.</p>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="report-footer">
+    <p>HappyPages &mdash; Conversion audit for Rollr &mdash; 20 March 2026</p>
+  </footer>
+
+</div>
+
+<!-- ======== TOC PANEL ======== -->
+<button class="toc-toggle" onclick="toggleToc()" aria-label="Table of contents">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="12" y2="15"/></svg>
+</button>
+
+<div class="toc-panel" id="tocPanel">
+  <h4>Findings</h4>
+  <a href="#f1"><span class="toc-badge critical">C</span> #1 Information hierarchy broken</a>
+  <a href="#f2"><span class="toc-badge critical">C</span> #2 Pricing confusion</a>
+  <a href="#f3"><span class="toc-badge critical">C</span> #3 Cart modal broken</a>
+  <a href="#f4"><span class="toc-badge critical">C</span> #4 Homepage not for paid traffic</a>
+  <a href="#f5"><span class="toc-badge critical">C</span> #5 Configurator UX</a>
+  <a href="#f6"><span class="toc-badge critical">C</span> #6 Efficacy buried</a>
+  <a href="#f7"><span class="toc-badge critical">C</span> #7 Product page doing too much</a>
+  <a href="#f8"><span class="toc-badge major">M</span> #8 Chat widget hijacks flow</a>
+  <a href="#f9"><span class="toc-badge major">M</span> #9 Subscribe modal unusable</a>
+  <a href="#f10"><span class="toc-badge major">M</span> #10 No shipping/returns info</a>
+  <a href="#f11"><span class="toc-badge major">M</span> #11 Reviews mispositioned</a>
+  <a href="#f12"><span class="toc-badge major">M</span> #12 Wizard/cart disconnect</a>
+  <a href="#f13"><span class="toc-badge minor">m</span> #13 Visual inconsistency</a>
+  <a href="#f14"><span class="toc-badge minor">m</span> #14 Header too large</a>
+  <a href="#f15"><span class="toc-badge minor">m</span> #15 FAQs buried</a>
+  <a href="#f16"><span class="toc-badge minor">m</span> #16 Footer nav labels</a>
+  <a href="#f17"><span class="toc-badge minor">m</span> #17 Review filtering</a>
+  <a href="#f18"><span class="toc-badge minor">m</span> #18 Shopify branding</a>
+  <a href="#f19"><span class="toc-badge minor">m</span> #19 Checkout unbranded</a>
+  <a href="#f20"><span class="toc-badge enhancement">E</span> #20 Subscription framing</a>
+  <a href="#f21"><span class="toc-badge enhancement">E</span> #21 No gift/cross-sell</a>
+  <a href="#f22"><span class="toc-badge enhancement">E</span> #22 Press quote links</a>
+  <a href="#b1"><span class="toc-badge bug">B</span> B1 Error persists</a>
+  <a href="#b2"><span class="toc-badge bug">B</span> B2 Error styling</a>
+  <a href="#matrix" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--wine-border);">Impact vs effort matrix</a>
+  <a href="#context">Competitive context</a>
+</div>
+
+<script>
+  function toggleFinding(header) {
+    header.closest('.finding').classList.toggle('open');
+  }
+
+  function expandAll() {
+    document.querySelectorAll('.finding').forEach(f => f.classList.add('open'));
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.finding').forEach(f => f.classList.remove('open'));
+  }
+
+  function toggleToc() {
+    document.getElementById('tocPanel').classList.toggle('open');
+  }
+
+  // Close TOC when clicking a link
+  document.querySelectorAll('.toc-panel a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('tocPanel').classList.remove('open');
+      // Open the target finding
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target && target.classList.contains('finding')) {
+        target.classList.add('open');
+      }
+    });
+  });
+
+  // Close TOC when clicking outside
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('tocPanel');
+    const toggle = document.querySelector('.toc-toggle');
+    if (panel.classList.contains('open') && !panel.contains(e.target) && !toggle.contains(e.target)) {
+      panel.classList.remove('open');
+    }
+  });
+</script>
+
+</body>
+</html>

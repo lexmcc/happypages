@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rollr — CRO Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: "Kalice";
+    src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Regular.woff2?v=1710785896") format("woff2");
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "Kalice";
+    src: url("https://cdn.shopify.com/s/files/1/0743/4318/6698/files/Kalice-Italic_6707812a-88e2-4d65-9729-c58d30fcb57a.woff2?v=1720789116&v=5705") format("woff2");
+    font-weight: 400; font-style: italic; font-display: swap;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --wine: #430632;
+    --wine-light: #561245;
+    --wine-dark: #2F0423;
+    --off-white: #FAFAFA;
+    --white: #FFFFFF;
+    --wine-grey: #786874;
+    --wine-border: #E5DFE3;
+    --wine-muted: #B8B0B5;
+    --success: #4A7A3F;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 3px rgba(67, 6, 50, 0.06);
+    --shadow-md: 0 4px 12px rgba(67, 6, 50, 0.08);
+    --shadow-lg: 0 8px 24px rgba(67, 6, 50, 0.12);
+    --font-display: "Kalice", Georgia, serif;
+    --font-ui: "Instrument Sans", sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    padding-top: 48px;
+    font-family: var(--font-display);
+    background: var(--off-white);
+    color: var(--wine);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .page-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 120px;
+  }
+
+  @media (max-width: 600px) {
+    .page-wrapper { padding: 32px 16px 80px; }
+  }
+
+  /* ---------- Header ---------- */
+
+  .report-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--wine-border);
+  }
+
+  .report-header .meta {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wine-grey);
+    margin-bottom: 16px;
+  }
+
+  .report-header h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .report-header .subtitle {
+    font-size: 18px;
+    color: var(--wine-grey);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  @media (max-width: 600px) {
+    .report-header h1 { font-size: 30px; }
+    .report-header .subtitle { font-size: 16px; }
+  }
+
+  /* ---------- Overview ---------- */
+
+  .overview {
+    background: var(--wine-dark);
+    color: var(--off-white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 48px;
+  }
+
+  .overview p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .overview p:last-child { margin-bottom: 0; }
+
+  .overview-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .overview-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .overview-stat-value {
+    font-family: var(--font-display);
+    font-size: 24px;
+  }
+
+  .overview-stat-label {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--wine-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .overview { padding: 24px 20px; }
+    .overview p { font-size: 16px; }
+    .overview-stats { flex-wrap: wrap; gap: 20px; }
+    .overview-stat-value { font-size: 20px; }
+  }
+
+  /* ---------- Phase ---------- */
+
+  .phase {
+    margin-bottom: 48px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .phase-header h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .phase-header .phase-timing {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+  }
+
+  .phase-intro {
+    font-size: 16px;
+    color: var(--wine-grey);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .phase-header { flex-direction: column; gap: 4px; }
+    .phase-header h2 { font-size: 24px; }
+  }
+
+  /* ---------- Workstream card ---------- */
+
+  .workstream {
+    background: var(--white);
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .workstream:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .workstream-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .workstream-header:active {
+    background: rgba(67, 6, 50, 0.02);
+  }
+
+  .workstream-title-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .workstream-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .workstream-why {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-grey);
+    line-height: 1.4;
+  }
+
+  .size-badge {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .size-badge.s {
+    background: #E8F5E4;
+    color: var(--success);
+  }
+
+  .size-badge.m {
+    background: #FDF8F0;
+    color: #C47A20;
+  }
+
+  .size-badge.l {
+    background: #FDF2F2;
+    color: #B83A3A;
+  }
+
+  .workstream-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    transition: transform 0.2s ease;
+    color: var(--wine-muted);
+  }
+
+  .workstream.open .workstream-chevron {
+    transform: rotate(180deg);
+  }
+
+  .workstream-body {
+    display: none;
+    padding: 0 24px 24px;
+  }
+
+  .workstream.open .workstream-body {
+    display: block;
+  }
+
+  .workstream-body p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--wine);
+    margin-bottom: 12px;
+  }
+
+  .workstream-body p:last-child { margin-bottom: 0; }
+
+  .finding-refs {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--wine-muted);
+    margin-bottom: 12px;
+  }
+
+  .finding-refs span {
+    display: inline-block;
+    background: var(--off-white);
+    border: 1px solid var(--wine-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  .depends-on {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .workstream-header { padding: 16px; gap: 10px; }
+    .workstream-body { padding: 0 16px 20px; }
+    .workstream-title { font-size: 16px; }
+    .workstream-body p { font-size: 15px; }
+    .size-badge { font-size: 10px; padding: 3px 8px; }
+  }
+
+  /* ---------- Phase connector ---------- */
+
+  .phase-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 24px;
+  }
+
+  .phase-connector-line {
+    width: 1px;
+    height: 32px;
+    background: var(--wine-border);
+  }
+
+  /* ---------- Footer ---------- */
+
+  .report-footer {
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--wine-border);
+    margin-top: 48px;
+  }
+
+  .report-footer p {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--wine-muted);
+  }
+
+  /* ---------- Separator ---------- */
+
+  .section-label {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wine-muted);
+    margin-bottom: 8px;
+  }
+
+  /* === Rollr Portal Nav === */
+  .rollr-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 48px;
+    background: #2F0423;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    font-family: "Instrument Sans", sans-serif;
+    box-shadow: 0 1px 3px rgba(67, 6, 50, 0.12);
+  }
+  .rollr-nav-brand {
+    font-family: "Kalice", Georgia, serif;
+    font-size: 18px;
+    color: #FAFAFA;
+    text-decoration: none;
+  }
+  .rollr-nav-links {
+    display: flex;
+    gap: 24px;
+  }
+  .rollr-nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: #B8B0B5;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .rollr-nav-links a:hover,
+  .rollr-nav-links a.active {
+    color: #FAFAFA;
+  }
+  @media (max-width: 600px) {
+    .rollr-nav { padding: 0 16px; }
+    .rollr-nav-links { gap: 16px; }
+    .rollr-nav-links a { font-size: 12px; }
+  }
+  /* === End Nav === */
+</style>
+</head>
+<body>
+<nav class="rollr-nav">
+  <span class="rollr-nav-brand">Rollr</span>
+  <div class="rollr-nav-links">
+    <a href="/rollr/audit/">Audit</a>
+    <a href="/rollr/roadmap/" class="active">Roadmap</a>
+    <a href="/rollr/design-system/">Design system</a>
+    <a href="/rollr/prototype/">Prototype</a>
+  </div>
+</nav>
+
+
+<div class="page-wrapper">
+
+  <!-- ======== HEADER ======== -->
+  <header class="report-header">
+    <div class="meta">HappyPages &times; Rollr</div>
+    <h1>CRO Roadmap</h1>
+    <p class="subtitle">Three months of sequenced work to move conversion from 3% to 4%, grounded in the findings from our mobile walkthrough audit.</p>
+  </header>
+
+  <!-- ======== OVERVIEW ======== -->
+  <div class="overview">
+    <p>This roadmap turns our 22 audit findings into a sequenced plan of work. Month 1 ships the wizard redesign — the biggest single conversion lever and your top priority. Month 2 tackles the homepage. Month 3 refines based on data and addresses the tail.</p>
+    <p>Everything traces back to the audit. Every workstream references the specific findings it solves.</p>
+    <div class="overview-stats">
+      <div class="overview-stat">
+        <span class="overview-stat-value">3% &rarr; 4%</span>
+        <span class="overview-stat-label">Conversion target</span>
+      </div>
+      <div class="overview-stat">
+        <span class="overview-stat-value">57% &rarr; 66%</span>
+        <span class="overview-stat-label">Subscription target</span>
+      </div>
+      <div class="overview-stat">
+        <span class="overview-stat-value">3 months</span>
+        <span class="overview-stat-label">Timeframe</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== MONTH 1 ======== -->
+  <section class="phase">
+    <div class="section-label">Month 1</div>
+    <div class="phase-header">
+      <h2>Foundation + wizard</h2>
+    </div>
+    <p class="phase-intro">Quick fixes ship day one. Content and design decisions get locked in the first week. The wizard redesign — your top priority — designs and builds through weeks 2-4.</p>
+
+    <!-- Day-one fixes -->
+    <div class="workstream" id="w-dayone">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Day-one fixes</div>
+          <div class="workstream-why">Cart modal is broken on mobile. Error messages persist after resolution. Both cost conversions every day.</div>
+        </div>
+        <span class="size-badge s">Small</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#3</span><span>B1</span>
+        </div>
+        <p>The checkout button in the cart drawer is hidden behind Chrome's bottom bar on mobile. People who want to buy can't find the button to pay. This is a show-stopper that needs to go live the moment we have Shopify access.</p>
+        <p>The "Please select a scent" error persists after a scent has been selected. Quick JS fix.</p>
+      </div>
+    </div>
+
+    <!-- Messaging hierarchy -->
+    <div class="workstream" id="w-messaging">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Messaging hierarchy</div>
+          <div class="workstream-why">Define what story Rollr tells cold traffic, in what order. Every build that follows depends on this.</div>
+        </div>
+        <span class="size-badge s">Small</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#1</span><span>#6</span><span>#15</span>
+        </div>
+        <p>The information hierarchy across the entire journey is broken. The value proposition isn't clear beyond "it's a beautiful product." Efficacy messaging — the #1 reason customers love Rollr — is buried 3-4 scrolls down. Key FAQ content is hidden behind a sub-sub-menu.</p>
+        <p>This workstream makes the content decisions: what story, in what order, for cold traffic. Where does efficacy sit? Which objection-handlers get pulled into the purchase flow? These are decisions, not builds — but the wizard and homepage can't be designed without them.</p>
+      </div>
+    </div>
+
+    <!-- Design system -->
+    <div class="workstream" id="w-design">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Design system refinement</div>
+          <div class="workstream-why">Lock the visual system before building against it. Draft exists — needs review and sign-off.</div>
+        </div>
+        <span class="size-badge s">Small</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#13</span>
+        </div>
+        <p>The site currently uses irregular shapes, inconsistent fonts, and mixed colour usage. A web design system exists in draft — typography, spacing, colours, components. Needs refinement with you and then locked, so both the wizard and homepage build against the same visual language.</p>
+        <p class="depends-on">Depends on: messaging hierarchy (content decisions inform visual hierarchy)</p>
+      </div>
+    </div>
+
+    <!-- Wizard redesign -->
+    <div class="workstream" id="w-wizard">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Wizard redesign</div>
+          <div class="workstream-why">The entire purchase flow. Pricing clarity, step UX, reviews at decision point, subscription framing — all solved here.</div>
+        </div>
+        <span class="size-badge l">Large</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#2</span><span>#5</span><span>#7</span><span>#9</span><span>#11</span><span>#12</span><span>#17</span><span>#20</span>
+        </div>
+        <p>This is where you've watched people go in circles. Four prices on one screen, no running total, a subscribe modal that can't be closed, error messages in the brand colour, reviews invisible during the purchase decision, a wizard that doesn't know what's already in the cart.</p>
+        <p>The redesign preserves the three-step flow that drives 57% subscription uptake while fixing every friction point. Pricing becomes clear. Steps guide rather than confuse. Efficacy and reviews appear where they matter. Subscription framing gets stronger.</p>
+        <p>Design starts once the messaging hierarchy and design system are locked. Build target: weeks 2-4 of Month 1, with refinements continuing into Month 2 based on data.</p>
+        <p class="depends-on">Depends on: messaging hierarchy + design system</p>
+      </div>
+    </div>
+
+    <!-- Remaining quick fixes -->
+    <div class="workstream" id="w-quickfixes">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Remaining quick fixes</div>
+          <div class="workstream-why">Trust signals, header size, site cleanup, press links. Ship throughout the month as they fit.</div>
+        </div>
+        <span class="size-badge s">Small</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#10</span><span>#14</span><span>#18</span><span>#22</span>
+        </div>
+        <p>Add shipping, returns, and guarantee info visible before checkout. Reduce the header size on mobile. Remove "Powered by Shopify" from the footer. Link press quotes to original articles. All independent, all small.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="phase-connector"><div class="phase-connector-line"></div></div>
+
+  <!-- ======== MONTH 2 ======== -->
+  <section class="phase">
+    <div class="section-label">Month 2</div>
+    <div class="phase-header">
+      <h2>Homepage + wizard refinement</h2>
+    </div>
+    <p class="phase-intro">The wizard is live and generating data. Refine it based on real behaviour while giving the homepage full attention.</p>
+
+    <!-- Wizard refinement -->
+    <div class="workstream" id="w-wizard-refine">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Wizard refinement</div>
+          <div class="workstream-why">First weeks of data show what's working. Adjust pricing framing, step flow, subscription messaging based on real behaviour.</div>
+        </div>
+        <span class="size-badge m">Medium</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#2</span><span>#5</span><span>#20</span>
+        </div>
+        <p>The wizard redesign ships in Month 1 but it won't be perfect on day one. Watch the data: where do people drop off? Is pricing clearer? Did subscription uptake hold? Iterate based on evidence, not assumptions.</p>
+        <p class="depends-on">Depends on: wizard redesign live and generating data</p>
+      </div>
+    </div>
+
+    <!-- Homepage restructure -->
+    <div class="workstream" id="w-homepage">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Homepage restructure</div>
+          <div class="workstream-why">75% of traffic lands here from Meta ads. Reorder the story for cold traffic. Resolve the chat widget. Full redesign.</div>
+        </div>
+        <span class="size-badge l">Large</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#4</span><span>#8</span><span>#15</span><span>#16</span>
+        </div>
+        <p>The homepage is a brand experience page doing double duty as a landing page for cold paid traffic. It doesn't work for that job. CTAs reference content that hasn't been shown yet. "How it works" is buried near the bottom. The chat widget competes with Shop Now.</p>
+        <p>Redesign against the messaging hierarchy locked in Month 1. Reorder sections so cold traffic gets: what it is, how it works, why it's different, then choose yours. Surface key FAQs. Decide on the chat widget (evaluate usage data first). Fix footer labels.</p>
+        <p class="depends-on">Depends on: messaging hierarchy + design system</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="phase-connector"><div class="phase-connector-line"></div></div>
+
+  <!-- ======== MONTH 3 ======== -->
+  <section class="phase">
+    <div class="section-label">Month 3</div>
+    <div class="phase-header">
+      <h2>Optimise + extend</h2>
+    </div>
+    <p class="phase-intro">Both core builds are live. Refine based on data, tackle the tail, measure what moved.</p>
+
+    <!-- Homepage refinement -->
+    <div class="workstream" id="w-homepage-refine">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Homepage refinement</div>
+          <div class="workstream-why">Adjust based on real behaviour data from the Month 2 launch.</div>
+        </div>
+        <span class="size-badge m">Medium</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#4</span>
+        </div>
+        <p>Same principle as the wizard refinement. Watch the data, iterate on what needs it.</p>
+        <p class="depends-on">Depends on: homepage restructure live and generating data</p>
+      </div>
+    </div>
+
+    <!-- Checkout + enhancements -->
+    <div class="workstream" id="w-checkout">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Checkout + enhancements</div>
+          <div class="workstream-why">Checkout branding, cross-sell, urgency signals. Only matters once the funnel above is working.</div>
+        </div>
+        <span class="size-badge m">Medium</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#19</span><span>#21</span><span>B2</span>
+        </div>
+        <p>Tidy checkout branding (limited by standard Shopify — no Plus). Add cross-sell or gift positioning. Introduce urgency signals using natural scarcity ("each gemstone is hand-carved and naturally unique"), not manufactured countdown timers.</p>
+        <p class="depends-on">Depends on: wizard + homepage live</p>
+      </div>
+    </div>
+
+    <!-- Paid traffic landing page -->
+    <div class="workstream" id="w-landing">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Dedicated paid traffic landing page</div>
+          <div class="workstream-why">If cold traffic conversion still lags after the homepage restructure, a stripped-back landing page is the next lever. May extend into a forward engagement.</div>
+        </div>
+        <span class="size-badge l">Large</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <div class="finding-refs">
+          <span>#4</span>
+        </div>
+        <p>75% of traffic comes from Meta ads. The homepage restructure in Month 2 will improve things, but the homepage still has to serve both brand-aware and cold visitors. A dedicated landing page for paid traffic can be single-minded: what it is, does it work, how much, buy now. No navigation, no blog links, no brand storytelling — just conversion.</p>
+        <p>Scope this based on Month 2-3 data. If the restructured homepage is converting cold traffic well, this becomes optional. If there's still a gap, this is the highest-impact next step and a natural foundation for a continued engagement.</p>
+        <p class="depends-on">Depends on: homepage restructure live + conversion data by traffic source</p>
+      </div>
+    </div>
+
+    <!-- Measurement -->
+    <div class="workstream" id="w-measure">
+      <div class="workstream-header" onclick="this.closest('.workstream').classList.toggle('open')">
+        <div class="workstream-title-group">
+          <div class="workstream-title">Measurement + forward roadmap</div>
+          <div class="workstream-why">Document what moved, what didn't, and what to do next.</div>
+        </div>
+        <span class="size-badge s">Small</span>
+        <svg class="workstream-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+      </div>
+      <div class="workstream-body">
+        <p>Compare conversion and subscription rates before and after each phase. Document what worked, what surprised us, what to test next. Build the case for continued engagement or hand off a clear plan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="report-footer">
+    <p>HappyPages &mdash; CRO roadmap for Rollr &mdash; 20 March 2026</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
