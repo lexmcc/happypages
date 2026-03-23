@@ -6,7 +6,7 @@ class CustomerImportJob < ApplicationJob
 
   API_VERSION = "2025-10"
   CUSTOMERS_PER_PAGE = 50
-  METAFIELD_BATCH_SIZE = 25
+  METAFIELD_BATCH_SIZE = 12
 
   def perform(customer_import_id)
     import = CustomerImport.find_by(id: customer_import_id)
@@ -27,6 +27,7 @@ class CustomerImportJob < ApplicationJob
     total_skipped = import.total_skipped
     cursor = import.last_cursor
     metafield_batch = []
+    namespace = shop.metafield_namespace
 
     loop do
       result = fetch_customers(credentials, cursor)
@@ -67,11 +68,21 @@ class CustomerImportJob < ApplicationJob
 
         metafield_batch << {
           ownerId: customer_gid,
-          namespace: shop.metafield_namespace,
+          namespace: namespace,
           key: "referral_code",
           value: referral.referral_code,
           type: "single_line_text_field"
         }
+
+        if referral.referral_page_url.present?
+          metafield_batch << {
+            ownerId: customer_gid,
+            namespace: namespace,
+            key: "referral_page_url",
+            value: referral.referral_page_url,
+            type: "single_line_text_field"
+          }
+        end
 
         if metafield_batch.size >= METAFIELD_BATCH_SIZE
           flush_metafields(credentials, metafield_batch)

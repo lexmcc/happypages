@@ -355,12 +355,16 @@ class WebhooksController < ApplicationController
       Rails.logger.error "Failed to add customer note: #{result[:errors]}"
     end
 
-    # Write referral code to customer metafield
-    mf_result = customer_provider.set_metafield(
+    # Write referral code + page URL to customer metafields
+    namespace = Current.shop.metafield_namespace
+    metafields = [
+      { namespace: namespace, key: "referral_code", value: referral.referral_code },
+      { namespace: namespace, key: "referral_page_url", value: referral.referral_page_url }
+    ].select { |mf| mf[:value].present? }
+
+    mf_result = customer_provider.set_metafields(
       customer_id: referral.shopify_customer_id,
-      namespace: Current.shop.metafield_namespace,
-      key: "referral_code",
-      value: referral.referral_code
+      metafields: metafields
     )
     unless mf_result[:success]
       Rails.logger.error "Metafield write failed for #{referral.referral_code}: #{mf_result[:errors]}"
@@ -430,6 +434,9 @@ class WebhooksController < ApplicationController
 
       # Apply reward to subscription after a delay (allows discount to sync)
       RewardSubscriptionApplicationJob.set(wait: 10.seconds).perform_later(reward.id)
+
+      # Sync reward metafields (discount code + status) to customer
+      RewardMetafieldSyncJob.perform_later(referral.id)
 
       # Add timeline comment to referrer's customer
       add_reward_timeline_note(referral, result[:reward_code], customer_provider)

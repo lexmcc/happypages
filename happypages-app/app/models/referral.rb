@@ -13,6 +13,17 @@ class Referral < ApplicationRecord
   validates :email, presence: true
   validates :referral_code, presence: true, uniqueness: { scope: :shop_id }
 
+  def referral_page_url
+    return nil unless shop&.slug.present?
+    "#{shop.customer_facing_url}/#{shop.slug}/refer?code=#{referral_code}"
+  end
+
+  def actionable_reward
+    referral_rewards.where(status: "applied_to_subscription").not_expired.order(created_at: :asc).first ||
+      referral_rewards.where(status: "created").not_expired.order(created_at: :asc).first ||
+      referral_rewards.order(created_at: :desc).first
+  end
+
   private
 
   def set_shop_from_current

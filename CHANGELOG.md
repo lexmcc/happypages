@@ -2,6 +2,11 @@
 
 Dated record of shipped features across both products.
 
+## 2026-03-17
+
+- **Auto-create customer metafield definitions on install** — OAuth flow now creates pinned definitions for all 4 customer metafields so data is visible in Shopify admin
+- **Always record app_client_id during OAuth** — fixed nil app_client_id on integrations causing wrong metafield namespace (duplicate definitions under wrong app)
+
 ## 2026-03-06
 
 - **Super admin dark theme reskin** — all 22 superadmin views reskinned with `ops-*` design tokens (dark theme). Collapsible sidebar with Ops Dashboard link.

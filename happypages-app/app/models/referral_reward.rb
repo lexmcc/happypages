@@ -6,6 +6,7 @@ class ReferralReward < ApplicationRecord
 
   validates :code, presence: true, uniqueness: { scope: :shop_id }
 
+  after_update :enqueue_metafield_sync, if: :saved_change_to_status?
   before_validation :set_shop_from_referral, on: :create
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :usage_number, presence: true
@@ -74,5 +75,9 @@ class ReferralReward < ApplicationRecord
 
   def set_shop_from_referral
     self.shop_id ||= referral&.shop_id
+  end
+
+  def enqueue_metafield_sync
+    RewardMetafieldSyncJob.perform_later(referral_id)
   end
 end

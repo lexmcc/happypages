@@ -270,3 +270,5 @@ See `CHANGELOG.md` for dated record of shipped features (both products).
 - **Notification creation must be outside Orchestrator transaction** — `create!` inside the pessimistic-locked block means notification failure rolls back the user message + assistant response. Use `notification_queue` array pattern: capture intent inside transaction, `Specs::NotifyJob.perform_later` outside.
 - **ActiveJob `have_enqueued_job` preserves Ruby key types** — `perform_later(data: { project_id: 1 })` enqueues with symbol keys; `hash_including("project_id" => 1)` fails. Match the same key type used in the call.
 - **Model specs don't have route helpers** — `type: :model` doesn't include URL helpers. Keep HTTP-call assertions in `type: :request` specs.
+- **Railway console can't handle multi-line paste** — heredocs and multi-line strings get mangled by zsh. Use `rails runner script.rb` or single-line semicolon chains.
+- **`update_column` bypasses validations** — useful for data fixes when related encrypted fields (like `app_client_secret`) aren't available in the environment

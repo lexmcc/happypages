@@ -109,6 +109,10 @@ A chronicle of the referral app's evolution from initial commit to production-re
 - **Mar 6** - Super admin dark theme reskin: all 22 views reskinned with `ops-*` design tokens, collapsible sidebar with Ops Dashboard link.
 - **Mar 6** - Ops Dashboard integration: client-side fetch from local Node server (`127.0.0.1:3333`), works from staging/prod. Removed server-side proxy and token auth — superadmin auth layer is sufficient.
 
+### Week 14: Metafield Fixes (Mar 17, 2026)
+
+- **Mar 17** - Auto-create customer metafield definitions on OAuth install; fix nil app_client_id causing wrong metafield namespace for custom app shops
+
 ## Key Milestones
 
 1. **First checkout extension working** - Jan 8: "It Works" thank you page displayed

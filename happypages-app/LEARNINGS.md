@@ -9,6 +9,18 @@ Detailed learnings, gotchas, and session discoveries. Claude reads this when wor
 - **Fix**: Auto-create definitions for all 4 customer metafields (`referral_code`, `referral_page_url`, `reward_discount_code`, `reward_status`) during OAuth install/re-auth. The mutation is idempotent — Shopify returns a user error if the definition already exists.
 - **Lesson**: Always create metafield definitions as part of the install flow. Writing metafield values without definitions means merchants can't see or verify the data in their admin.
 
+### Nil app_client_id Causes Wrong Metafield Namespace (Mar 17, 2026)
+- `app_client_id` was only stored when `session[:oauth_app] == "custom"` (requires `?app=custom` URL param). If missing, it stayed nil.
+- `Shop#metafield_namespace` defaults to the public app namespace when `app_client_id` is nil — silently wrong for custom app shops.
+- This caused duplicate metafield definitions (one per app namespace) on field-doctor-dev.
+- **Fix**: Always set `app_client_id`/`app_client_secret` from `shopify_app_credentials` during OAuth, which resolves from `session[:oauth_app]`.
+- **Data fix**: `update_column(:app_client_id, ...)` on Railway console (bypasses validation requiring `app_client_secret`), then delete wrong definitions via GraphQL `metafieldDefinitionDelete` and re-create.
+- **Lesson**: Record what actually happened during OAuth (which credentials were used), don't gate on intent signals like URL params.
+
+### Railway Console Multi-Line Paste Breaks (Mar 17, 2026)
+- Pasting multi-line Ruby with heredocs into Railway's `bin/rails console` via SSH mangles the input (zsh interprets `<<` as shell heredoc).
+- **Workaround**: Write a `.rb` script and run with `rails runner`, or compress to a single-line semicolon-separated statement.
+
 ### Webhook HMAC `return true if secret.blank?` Bypass (Feb 12, 2026)
 - Both `Shopify::OrderHandler` and `Custom::OrderHandler` had `return true if secret.blank?` at the top of `verify_signature`
 - This meant any request was accepted without verification when the signing secret wasn't configured
