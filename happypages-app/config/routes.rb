@@ -74,7 +74,9 @@ Rails.application.routes.draw do
     resources :media_assets, only: [ :index, :create, :destroy ]
 
     # Integrations
-    resource :integrations, only: [ :edit, :update, :destroy ], controller: "integrations"
+    resource :integrations, only: [ :edit, :update, :destroy ], controller: "integrations" do
+      post :test_klaviyo, on: :collection
+    end
 
     # AI image generation
     resources :image_generations, only: [ :create ] do

@@ -126,13 +126,32 @@ class KlaviyoService
     )
   end
 
+  def test_connection(email:)
+    return { success: false, error: "No API key configured" } unless @api_key.present?
+
+    payload = {
+      data: {
+        type: "event",
+        attributes: {
+          profile: { data: { type: "profile", attributes: { email: email } } },
+          metric: { data: { type: "metric", attributes: { name: "Integration Test" } } },
+          properties: { source: "happypages_admin", timestamp: Time.current.iso8601 }
+        }
+      }
+    }
+
+    request(:post, "/events", payload, raw: true)
+  end
+
   private
 
-  def request(method, path, body = {})
+  def request(method, path, body = {}, raw: false)
     uri = URI("#{BASE_URL}#{path}")
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
+    http.open_timeout = 5
+    http.read_timeout = 10
 
     req = case method
     when :post then Net::HTTP::Post.new(uri)
@@ -151,13 +170,16 @@ class KlaviyoService
 
     case response.code.to_i
     when 200..299
-      response.body.present? ? JSON.parse(response.body) : {}
+      raw ? { success: true } : (response.body.present? ? JSON.parse(response.body) : {})
     else
       Rails.logger.error "[Klaviyo] Error #{response.code}: #{response.body}"
-      {}
+      raw ? { success: false, error: "Klaviyo returned #{response.code}" } : {}
     end
+  rescue Net::OpenTimeout, Net::ReadTimeout, SocketError, Errno::ECONNREFUSED => e
+    Rails.logger.error "[Klaviyo] Request failed: #{e.message}"
+    raw ? { success: false, error: "Connection failed — check network and try again" } : {}
   rescue => e
     Rails.logger.error "[Klaviyo] Request failed: #{e.message}"
-    {}
+    raw ? { success: false, error: "Unexpected error" } : {}
   end
 end
