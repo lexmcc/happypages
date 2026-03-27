@@ -208,17 +208,26 @@
     display: block;
   }
 
-  /* Hero-step nav overlay */
-  .preview-card--hero-nav .proto-nav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+  /* Hide the outer (static HTML) nav inside wizard cards */
+  .preview-card--wizard > .proto-nav {
+    display: none;
+  }
+
+  /* Hero-step nav — in flow (scrolls off) but overlays hero image */
+  .wizard__step--hero .step-chrome {
+    position: relative;
     z-index: 3;
+  }
+  .wizard__step--hero .proto-nav {
     background: transparent;
   }
-  .preview-card--hero-nav .proto-nav__logo {
+  .wizard__step--hero .proto-nav__logo {
     filter: brightness(0) invert(1);
+  }
+  /* Pull hero content up behind the chrome for visual overlay */
+  .wizard__step--hero .step-chrome ~ .hero,
+  .wizard__step--hero .step-chrome ~ .vd-bg {
+    margin-top: -54px; /* nav height: 12px + 30px + 12px */
   }
 
   /* ── Shared Step Styles ── */
@@ -318,25 +327,7 @@
     line-height: 1.3;
     margin-top: 1px;
   }
-  .intro__link {
-    display: block;
-    text-align: center;
-    margin-top: 16px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: var(--font-ui);
-    padding: 8px;
-    width: 100%;
-  }
-  .intro__link:focus-visible {
-    outline: 2px solid var(--plum);
-    outline-offset: 2px;
-  }
+  .wizard__step--scent .sheet-accordion { margin-top: 12px; }
 
   /* ── Product info sheet content ── */
 
@@ -556,6 +547,14 @@
   .s1-content .selectors {
     margin-bottom: 24px;
   }
+  .wizard__step--hero .s1-content {
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    margin-top: -24px;
+    padding-bottom: 90px;
+  }
   .hero {
     width: 100%;
     height: 470px;
@@ -581,7 +580,7 @@
   }
   .hero__thumbs {
     position: absolute;
-    bottom: 12px;
+    bottom: 36px;
     left: 0;
     right: 0;
     z-index: 2;
@@ -613,36 +612,140 @@
     object-fit: cover;
     display: block;
   }
+  /* ── Enhanced Selectors ── */
+  .selectors-label {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
   .selectors {
     display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 4px;
   }
-  .selectors__btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: none;
+  .selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-md);
-    transition: box-shadow 200ms ease;
+    border: none;
+    background: none;
+    padding: 4px;
+    -webkit-tap-highlight-color: transparent;
     outline: none;
+    flex: 1;
   }
-  .selectors__btn--active {
-    box-shadow: var(--shadow-md), 0 0 0 2px var(--warm-white), 0 0 0 4px var(--plum);
+  .selector__circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid var(--warm-white);
+    box-shadow: 0 0 0 1px var(--text-muted), var(--shadow-md);
+    transition: box-shadow 200ms ease, transform var(--spring), border-color 200ms ease;
+    position: relative;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
   }
-  .selectors__btn[data-case="rose-quartz"] {
-    background: radial-gradient(circle at 35% 35%, #E8BFD4, #D4A0B9);
+  .selector:hover .selector__circle {
+    box-shadow: 0 0 0 1px var(--plum), var(--shadow-md);
   }
-  .selectors__btn[data-case="steel"] {
-    background: radial-gradient(circle at 35% 35%, #C8C8C8, #A8A8A8);
+  .selector:active .selector__circle {
+    transform: scale(0.95);
   }
-  .selectors__btn[data-case="green-aventurine"] {
-    background: radial-gradient(circle at 35% 35%, #8FBF9E, #6B9E7A);
+
+  /* Gemstone ball photos */
+  .selector[data-case="rose-quartz"] .selector__circle {
+    background-image: url('Rose_Rollr_Ball_Crop.png');
   }
-  .selectors__btn[data-case="blue-dumortierite"] {
-    background: radial-gradient(circle at 35% 35%, #6B8FBF, #4A6FA5);
+  .selector[data-case="green-aventurine"] .selector__circle {
+    background-image: url('Green_Rollr_Ball_Crop.png');
+  }
+  .selector[data-case="blue-dumortierite"] .selector__circle {
+    background-image: url('Blue_Rollr_Ball_Crop.png');
+  }
+  .selector[data-case="steel"] .selector__circle {
+    background-image: url('Steel_Rollr_Ball_Crop.png');
+  }
+
+  /* Selected state: plum ring with white buffer */
+  .selector--active .selector__circle {
+    box-shadow: 0 0 0 2px var(--plum), var(--shadow-md);
+  }
+
+  /* Checkmark overlay */
+  .selector__check {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 18px;
+    height: 18px;
+    background: var(--plum);
+    border-radius: 50%;
+    border: 2px solid var(--warm-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 150ms ease, transform var(--spring);
+  }
+  .selector--active .selector__check {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .selector__check svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Name label */
+  .selector__name {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.2;
+    transition: color 200ms ease;
+  }
+  .selector--active .selector__name {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Price beneath name */
+  .selector__price {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 200ms ease;
+  }
+  .selector--active .selector__price {
+    color: var(--text-secondary);
+  }
+
+  /* Most popular badge */
+  .selector__badge {
+    font-family: var(--font-ui);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: var(--plum);
+    background: var(--plum-tint);
+    padding: 1px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .case-info {
+    border-left: 2px solid var(--plum);
+    padding-left: 16px;
   }
   .case-info__header {
     display: flex;
@@ -733,6 +836,7 @@
   }
 
   .sheet__image {
+    position: relative;
     width: 100%;
     height: 280px;
     border-radius: var(--radius-md);
@@ -744,13 +848,36 @@
     height: 100%;
     object-fit: cover;
   }
+  .sheet__image .sheet__review {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 20px 16px;
+    color: white;
+    text-align: center;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    margin-bottom: 0;
+  }
+  .sheet__image .sheet__review-stars {
+    color: white;
+  }
+  .sheet__image .sheet__review-author {
+    color: rgba(255,255,255,0.7);
+  }
+
+  .sheet__header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
 
   .sheet__name {
     font-family: var(--font-heading);
     font-weight: 400;
     font-size: 1.05rem;
     color: var(--plum);
-    margin-bottom: 6px;
   }
 
   .sheet__desc {
@@ -760,6 +887,9 @@
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 10px;
+  }
+  .sheet__desc:last-of-type {
+    margin-bottom: 1.6em;
   }
 
   .sheet__notes {
@@ -803,6 +933,23 @@
     color: var(--plum);
   }
 
+  .sheet__price-block {
+    margin-bottom: 4px;
+  }
+  .sheet__price-main {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--plum);
+  }
+  .sheet__price-sub {
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
   .sheet__footer {
     display: flex;
     justify-content: space-between;
@@ -823,6 +970,57 @@
     margin-left: auto;
   }
   .sheet__close-link:hover { color: var(--plum-light); }
+
+  /* ── Sheet Accordion ── */
+
+  .sheet-accordion {
+    margin-top: 4px;
+  }
+  .sheet-accordion__item {
+    overflow: hidden;
+  }
+  .sheet-accordion__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--plum);
+    text-align: left;
+    line-height: 1.3;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sheet-accordion__trigger:hover {
+    color: var(--plum-light);
+  }
+  .sheet-accordion__icon {
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-left: 12px;
+    transition: transform 0.3s ease;
+    user-select: none;
+    line-height: 1;
+  }
+  .sheet-accordion__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .sheet-accordion__content {
+    padding-bottom: 14px;
+  }
+  .sheet-accordion--dividers .sheet-accordion__item + .sheet-accordion__item {
+    border-top: 1px solid var(--border);
+  }
 
   /* ── S2 — Scent Cards ── */
 
@@ -899,7 +1097,7 @@
   /* Price block */
   .s2-card__price-block {
     margin-top: auto;
-    padding-top: 6px;
+    padding-top: 14px;
   }
   .s2-card__price-main {
     font-family: var(--font-heading);
@@ -1018,6 +1216,122 @@
     line-height: 1.6;
   }
 
+  /* ── Plan tab bar ── */
+
+  .plan-tabs {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .plan-tabs__tab {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease, font-weight 0.15s ease;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .plan-tabs__tab--active {
+    color: var(--plum);
+    font-weight: 600;
+  }
+  .plan-tabs__badge {
+    font-family: var(--font-ui);
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--plum);
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .plan-tabs--lg .plan-tabs__tab { font-size: 1rem; }
+
+  /* ── Plan meta strip ── */
+
+  .plan-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 6px 0;
+    margin-bottom: 14px;
+  }
+  .plan-meta__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--plum);
+    white-space: nowrap;
+  }
+  .plan-meta__check {
+    font-size: 0.72rem;
+  }
+
+  /* ── Body-zone heading ── */
+
+  .step-body__heading {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--plum);
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .step-body__sub {
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+  }
+
+  /* ── Scent-step zones ── */
+  .step-header {
+    padding: 20px 20px 0;
+  }
+  .step-body {
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    box-shadow: var(--shadow-md);
+    padding: 16px 20px 90px;
+  }
+  .wizard__step--scent {
+    background: #fafafa;
+    padding: 0;
+  }
+  .wizard__step--scent .proto-nav {
+    background: transparent;
+  }
+  .wizard__step--plan {
+    background: #fafafa;
+    padding: 0;
+  }
+  .wizard__step--plan .proto-nav {
+    background: transparent;
+  }
+  .wizard__step--checkout {
+    background: #fafafa;
+    padding: 0;
+  }
+  .wizard__step--checkout .proto-nav {
+    background: transparent;
+  }
   /* ── Spec Panel ── */
 
   .spec-panel {
@@ -1375,6 +1689,9 @@
     padding: 12px 20px 0;
     flex-shrink: 0;
   }
+  .wizard > .wizard__progress[data-wizard-progress] {
+    display: none;
+  }
   .wizard__progress--hidden {
     display: none;
   }
@@ -1504,29 +1821,34 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
-    background: white;
+    min-height: 64px;
+    background: var(--plum-tint);
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 10px 16px;
     z-index: 5;
   }
   .wizard__bar--hidden { display: none; }
   .wizard__bar-summary {
     font-family: var(--font-ui);
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     font-weight: 400;
     color: var(--text-secondary);
     flex: 1;
     margin-right: 12px;
     min-width: 0;
-    line-height: 1.5;
+    line-height: 1.3;
   }
   .wizard__bar-summary strong {
+    display: block;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--plum);
+  }
+  .wizard__bar-summary .bar-price {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
   }
   .wizard__bar-cta {
     background: var(--plum);
@@ -1622,7 +1944,7 @@
   }
   .s2-review--on-image {
     position: absolute;
-    bottom: 12px;
+    bottom: 36px;
     left: 20px;
     right: 20px;
     z-index: 1;
@@ -1957,7 +2279,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: #fafafa;
   }
   .vd-photo {
     position: relative;
@@ -1982,18 +2304,75 @@
   }
   .vd-body {
     padding: 20px 24px 24px;
-    flex: 1;
     display: flex;
     flex-direction: column;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    margin-top: -24px;
+    padding-bottom: 90px;
   }
   .vd-sub {
     font-family: var(--font-heading);
-    font-style: italic;
+    font-style: normal;
     font-size: 1rem;
     font-weight: 400;
-    color: var(--text-secondary);
-    margin: 0 0 18px;
+    color: var(--plum);
+    margin: 0 0 16px;
     line-height: 1.5;
+  }
+  .vd-sub--next {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--plum);
+  }
+  .vd-press {
+    margin: 0 0 20px;
+    text-align: center;
+  }
+  .vd-press__logo {
+    height: 40px;
+    width: auto;
+    display: block;
+    margin: 0 auto 8px;
+    object-fit: contain;
+  }
+  .vd-press__quote {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .vd-press--left {
+    text-align: left;
+  }
+  .vd-press--left .vd-press__logo {
+    margin: 0 0 8px;
+  }
+  .vd-ticks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 4px 0 0;
+  }
+  .vd-ticks__item {
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding-left: 24px;
+    position: relative;
+  }
+  .vd-ticks__item::before {
+    content: '\2713';
+    position: absolute;
+    left: 0;
+    color: var(--plum);
+    font-weight: 600;
   }
   .vd-points {
     display: flex;
@@ -2032,12 +2411,18 @@
   .vd-bg--animate .vd-heading,
   .vd-bg--animate .vd-sub,
   .vd-bg--animate .vd-pt,
-  .vd-bg--animate .vd-link {
+  .vd-bg--animate .vd-link,
+  .vd-bg--animate .vd-ticks__item,
+  .vd-bg--animate .s2-review {
     opacity: 0;
     animation: ed-fade-up 400ms ease-out forwards;
   }
   .vd-bg--animate .vd-heading { animation-delay: 200ms; }
   .vd-bg--animate .vd-sub { animation-delay: 350ms; }
+  .vd-bg--animate .vd-ticks__item:nth-child(1) { animation-delay: 500ms; }
+  .vd-bg--animate .vd-ticks__item:nth-child(2) { animation-delay: 600ms; }
+  .vd-bg--animate .vd-ticks__item:nth-child(3) { animation-delay: 700ms; }
+  .vd-bg--animate .s2-review { animation-delay: 800ms; }
   .vd-bg--animate .vd-pt:nth-child(1) { animation-delay: 400ms; }
   .vd-bg--animate .vd-pt:nth-child(2) { animation-delay: 500ms; }
   .vd-bg--animate .vd-pt:nth-child(3) { animation-delay: 600ms; }
@@ -2048,7 +2433,9 @@
     .vd-bg--animate .vd-heading,
     .vd-bg--animate .vd-sub,
     .vd-bg--animate .vd-pt,
-    .vd-bg--animate .vd-link {
+    .vd-bg--animate .vd-link,
+    .vd-bg--animate .vd-ticks__item,
+    .vd-bg--animate .s2-review {
       opacity: 1;
       animation: none;
     }
@@ -2423,20 +2810,8 @@
         'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814'
       ],
       popular: true,
-      desc: 'Hand-polished pink crystal. The stone of calm.',
+      desc: 'The Compassionate One. Soft, luminous, pink. For those who lead with feeling.',
       detail: 'As pretty as it sounds, this stone is perfect for individuals nurturing self-love, well-being, compassion, and emotional healing.'
-    },
-    {
-      id: 'steel', name: 'Steel', price: 20,
-      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_STL_1_6745cfae-8ed3-44f9-a411-6389c5f35747_1024x1024.png?v=1747927802',
-      images: [
-        'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_STL_1_6745cfae-8ed3-44f9-a411-6389c5f35747_1024x1024.png?v=1747927802',
-        'https://rollr.co.uk/cdn/shop/videos/c/vp/f2f570767f0d45908ce128e9c3650742/f2f570767f0d45908ce128e9c3650742.HD-1080p-4.8Mbps-30252489.mp4?v=0',
-        'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_12b_tif.jpg?v=1734627157&width=814',
-        'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814'
-      ],
-      desc: 'Brushed stainless steel. Cool, modern, lasts forever.',
-      detail: 'Sleek and cooling. Perfect for a refreshing feel.'
     },
     {
       id: 'green-aventurine', name: 'Green Aventurine', price: 30,
@@ -2447,7 +2822,7 @@
         'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_12b_tif.jpg?v=1734627157&width=814',
         'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814'
       ],
-      desc: 'Natural green crystal. The stone of opportunity.',
+      desc: 'The Grounding One. Earthy, soothing, serene. For nature lovers and calm-seekers.',
       detail: 'Said to calm and soothe. A real looker, too. This vibrant green gem deepens emotional balance and invigorating optimism, making every moment feel grounded yet zestful.'
     },
     {
@@ -2459,8 +2834,20 @@
         'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_12b_tif.jpg?v=1734627157&width=814',
         'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814'
       ],
-      desc: 'Deep blue crystal. The stone of patience.',
+      desc: 'The Focused One. Bold, bright, a little mysterious. For thinkers and morning movers.',
       detail: 'Believed to help clarity and focus. A true blue beauty. This exquisite stone is your go-to for sharpening the mind and expressing thoughts with confidence.'
+    },
+    {
+      id: 'steel', name: 'Steel', price: 20,
+      image: 'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_STL_1_6745cfae-8ed3-44f9-a411-6389c5f35747_1024x1024.png?v=1747927802',
+      images: [
+        'https://rollr.co.uk/cdn/shop/files/Rollr_Product_Shots_Shopify_-_STL_1_6745cfae-8ed3-44f9-a411-6389c5f35747_1024x1024.png?v=1747927802',
+        'https://rollr.co.uk/cdn/shop/videos/c/vp/f2f570767f0d45908ce128e9c3650742/f2f570767f0d45908ce128e9c3650742.HD-1080p-4.8Mbps-30252489.mp4?v=0',
+        'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_12b_tif.jpg?v=1734627157&width=814',
+        'https://rollr.co.uk/cdn/shop/files/Rollr_12_24_08.jpg?v=1734627037&width=814'
+      ],
+      desc: 'The Sleek One. The same ritual, made with precision.',
+      detail: 'Sleek and cooling. Perfect for a refreshing feel.'
     }
   ];
 
@@ -2470,9 +2857,10 @@
       evocative: 'Forest floor after rain',
       description: 'A rush of lemon and ginger. Then comes vetiver, bitter orange, mint. At last, cedarwood.',
       notes: 'Lemon + Ginger + Vetiver',
+      tagline: 'Verdant green',
       color: '#DFFFC2',
       image: 'https://rollr.co.uk/cdn/shop/files/vet_2_1024x1024.png?v=1734429045',
-      bestseller: true,
+      bestseller: false,
       reviews: [
         { text: "My absolute favourite. Earthy without being heavy.", stars: 5, author: "Tom W." },
         { text: "Smells like a walk in the woods. Love it.", stars: 5, author: "Sarah M." }
@@ -2483,9 +2871,10 @@
       evocative: 'Sun-warmed citrus groves',
       description: 'First comes orange. Then geranium. To finish, cedar wood & patchouli.',
       notes: 'Orange + Geranium + Cedarwood',
+      tagline: 'Warm citrus',
       color: '#FFA674',
       image: 'https://rollr.co.uk/cdn/shop/files/Mandarin-1_1024x1024.png?v=1734429045',
-      bestseller: false,
+      bestseller: true,
       reviews: [
         { text: "Bright and uplifting. Perfect for mornings.", stars: 5, author: "James K." },
         { text: "The mandarin is so fresh and natural.", stars: 5, author: "Lucy H." }
@@ -2496,6 +2885,7 @@
       evocative: 'Quiet morning in a herb garden',
       description: 'A rush of eucalyptus. Then comes peppermint, rosemary, lavender. At last, clary sage.',
       notes: 'Rosemary + Peppermint + Eucalyptus',
+      tagline: 'Fresh herbaceous',
       color: '#FFBFD2',
       image: 'https://rollr.co.uk/cdn/shop/files/Clary_Sage_6c5e0980-34f2-44b6-a99f-c43b75278f9b_1024x1024.png?v=1734429045',
       bestseller: false,
@@ -2509,6 +2899,7 @@
       evocative: 'Mountain air and pine',
       description: 'Juniper opens with ho leaf. Then palmarosa, lavender, geranium and rose. A hush of chamomile and amber to finish.',
       notes: 'Juniper + Chamomile',
+      tagline: 'Soft floral',
       color: '#A8BBFF',
       image: 'https://rollr.co.uk/cdn/shop/files/Juniper_Thumb_958583d5-a411-444c-8103-a8d5b4d34c26_1024x1024.png?v=1771940227',
       bestseller: false,
@@ -2540,18 +2931,18 @@
     showProgressStep1: false,
     subscribeBadge: 'Best Value',
     showSavePill: true,
-    step1Heading: 'Find your Rollr',
+    step1Heading: 'Rollr case & gemstone',
     step3Heading: 'How would you like your refills?',
     showStep2Review: true,
     trustStripItems: ['Free delivery', '30-day guarantee', 'Cancel anytime'],
     subscribeBenefits: ['Free UK delivery, always', 'Never run out', 'Skip, edit, or cancel anytime'],
     socialProof: 'Chosen by 4 in 5 Rollr customers',
     onceExtra: ' \u00b7 Re-order when you\'re ready',
-    stepCount: 5,
+    stepCount: 4,
     interstitialStep: 2,
     scentStep: 3,
-    planStep: 4,
-    checkoutStep: 5
+    planStep: null,
+    checkoutStep: 4
   };
 
   const STANDARD_CONFIG = {
@@ -2567,11 +2958,11 @@
     subscribeBenefits: ['Free UK delivery', 'Skip, edit, or cancel anytime', 'Never run out'],
     socialProof: 'Chosen by 4 in 5 customers',
     onceExtra: '',
-    stepCount: 4,
+    stepCount: 3,
     interstitialStep: null,
     scentStep: 2,
-    planStep: 3,
-    checkoutStep: 4
+    planStep: null,
+    checkoutStep: 3
   };
 
   // ══════════════════════════════════════
@@ -2608,7 +2999,11 @@
     }).join('');
   }
 
-  function renderScentCards(grid) {
+  function renderScentCards(grid, plan) {
+    var isSub = plan === 'subscribe';
+    var mainPrice = isSub ? '£6/month' : '£15/refill';
+    var detailPrice = isSub ? '£12 per refill, lasts ~2 months' : 'Lasts ~2 months';
+
     grid.innerHTML = scents.map(s => {
       const badgeHTML = s.bestseller ? '<span class="badge">Bestseller</span>' : '';
       return '<div class="s2-card" data-id="' + s.id + '" data-qty="0">' +
@@ -2621,12 +3016,12 @@
               '<div class="s2-card__name">' + s.name + '</div>' +
             '</div>' +
             '<div class="s2-card__notes-row">' +
-              '<div class="s2-card__notes">' + s.notes + '</div>' +
-              '<span class="more-link">Detail</span>' +
+              '<div class="s2-card__notes">' + s.tagline + '</div>' +
+              '<span class="more-link">Notes & detail</span>' +
             '</div>' +
-            '<div class="s2-card__price-block">' +
-              '<div class="s2-card__price-main">\u00a36/month</div>' +
-              '<div class="s2-card__price-detail">\u00a312 per refill, lasts ~2 months</div>' +
+            '<div class="s2-card__price-block" data-price-block>' +
+              '<div class="s2-card__price-main">' + mainPrice + '</div>' +
+              '<div class="s2-card__price-detail">' + detailPrice + '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -2640,6 +3035,20 @@
         '</div>' +
       '</div>';
     }).join('');
+  }
+
+  function updateScentPrices(grid, plan) {
+    var isSub = plan === 'subscribe';
+    var mainPrice = isSub ? '£6/month' : '£15/refill';
+    var detailPrice = isSub ? '£12 per refill, lasts ~2 months' : 'Lasts ~2 months';
+
+    grid.querySelectorAll('[data-price-block]').forEach(function(block) {
+      block.querySelector('.s2-card__price-main').textContent = mainPrice;
+      block.querySelector('.s2-card__price-detail').textContent = detailPrice;
+      block.classList.remove('price-pulse');
+      block.offsetHeight;
+      block.classList.add('price-pulse');
+    });
   }
 
   // ══════════════════════════════════════
@@ -2725,47 +3134,6 @@
   // S3 Helpers
   // ══════════════════════════════════════
 
-  function s3TrustStrip(items) {
-    return '<div class="s3-trust">' + items.map(t =>
-      '<span class="s3-trust__item"><span class="s3-trust__check">\u2713</span> ' + t + '</span>'
-    ).join('') + '</div>';
-  }
-
-  function s3ProductShelf(state) {
-    var c = state.selectedCase;
-    var sc = state.scents;
-    if (!c && sc.length === 0) return '';
-    var html = '<div class="s3-shelf">';
-    if (c) {
-      html += '<div class="s3-shelf__product">' +
-        '<img src="' + c.images[0] + '" alt="' + c.name + '">' +
-        '<div class="s3-shelf__product-name">' + c.name + '</div>' +
-        '<div class="s3-shelf__label">' + formatPrice(c.price) + ', yours to keep</div>' +
-      '</div>';
-    }
-    if (sc.length > 0) {
-      var thumbs = sc.map(function(s) {
-        var q = state.scentQty[s.id] || 1;
-        var badge = q > 1 ? '<span class="s3-shelf__qty-badge">\u00d7' + q + '</span>' : '';
-        return '<span class="s3-shelf__scent-thumb-wrap">' + badge + '<img src="' + s.image + '" alt="' + s.name + '"></span>';
-      }).join('');
-      var names = sc.map(function(s) {
-        var q = state.scentQty[s.id] || 1;
-        return q > 1 ? s.name + ' \u00d7' + q : s.name;
-      }).join(', ');
-      var singleClass = sc.length === 1 ? ' s3-shelf__scent-thumbs--single' : (sc.length >= 4 ? ' s3-shelf__scent-thumbs--grid' : '');
-      var cycle = state.totalRefills * 2;
-      var label = 'Delivered every ' + cycle + ' months';
-      html += '<div class="s3-shelf__scents">' +
-        '<div class="s3-shelf__scent-thumbs' + singleClass + '">' + thumbs + '</div>' +
-        '<div class="s3-shelf__scent-names">' + names + '</div>' +
-        '<div class="s3-shelf__label">' + label + '</div>' +
-      '</div>';
-    }
-    html += '</div>';
-    return html;
-  }
-
   // ══════════════════════════════════════
   // Wizard State
   // ══════════════════════════════════════
@@ -2810,7 +3178,6 @@
         if (this.step === 1) return this.selectedCase !== null;
         if (this.config.interstitialStep && this.step === this.config.interstitialStep) return true;
         if (this.step === this.config.scentStep) return this.totalRefills >= 1;
-        if (this.step === this.config.planStep) return true;
         return false;
       }
     };
@@ -2871,9 +3238,9 @@
     // CTA click
     wizard.barCta.addEventListener('click', () => {
       if (wizard.barCta.disabled) return;
-      if (state.step < config.planStep) {
+      if (state.step < config.scentStep) {
         goToStep(wizard, state.step + 1);
-      } else if (state.step === config.planStep) {
+      } else if (state.step === config.scentStep) {
         goToStep(wizard, config.checkoutStep);
       }
     });
@@ -2895,73 +3262,44 @@
   // Step Renderers
   // ══════════════════════════════════════
 
-  function getProductInfoHTML() {
-    return '<div class="product-info__section">' +
-        '<div class="product-info__heading">Ingredients</div>' +
-        '<ul class="product-info__list">' +
-          '<li>Sodium Bicarbonate</li>' +
-          '<li>Tapioca Starch</li>' +
-          '<li>Magnesium Hydroxide</li>' +
-          '<li>Coconut Oil (Cocos Nucifera)</li>' +
-          '<li>Zinc Ricinoleate</li>' +
-          '<li>Natural Fragrance (essential oil blend)</li>' +
-        '</ul>' +
-      '</div>' +
-      '<div class="product-info__section">' +
-        '<div class="product-info__heading">Free from</div>' +
-        '<p class="product-info__text">Parabens, phthalates, aluminium, synthetic fragrances, propylene glycol, and triclosan.</p>' +
-      '</div>' +
-      '<div class="product-info__section">' +
-        '<div class="product-info__heading">How to use</div>' +
-        '<ol class="product-info__steps">' +
-          '<li>Open your Rollr case and remove the ball</li>' +
-          '<li>Empty the refill sachet into the case</li>' +
-          '<li>Add water to the fill line and stir</li>' +
-          '<li>Replace the ball and let it set (2\u20134 hours)</li>' +
-          '<li>Roll on and go \u2014 lasts ~2 months of daily use</li>' +
-        '</ol>' +
-      '</div>' +
-      '<div class="sheet__footer">' +
-        '<button class="sheet__close-link" type="button">Close</button>' +
-      '</div>';
+  function stepChromeHTML() {
+    return '<div class="step-chrome">' +
+      '<nav class="proto-nav">' +
+        '<img class="proto-nav__logo" src="https://rollr.co.uk/cdn/shop/files/Rollr_Logo_Alpha_in_wine_colour.png?v=1710786414" alt="Rollr">' +
+      '</nav>' +
+      '<div class="wizard__progress" data-step-progress></div>' +
+    '</div>';
   }
 
   function renderInterstitial(wizard) {
     const config = wizard.config;
     const stepEl = wizard.steps[config.interstitialStep - 1];
 
+    stepEl.classList.add('wizard__step--hero');
     stepEl.style.padding = '0';
     stepEl.innerHTML =
+      stepChromeHTML() +
       '<div class="vd-bg">' +
         '<div class="vd-photo">' +
-          '<img class="vd-photo__img" src="https://rollr.co.uk/cdn/shop/files/Rollr-Sachet-Enelope-Gif-2.gif?v=1734429045&width=690" alt="" loading="lazy">' +
-          '<div class="s2-review s2-review--on-image" data-scent-review></div>' +
+          '<video class="vd-photo__img" autoplay muted loop playsinline src="https://cdn.shopify.com/videos/c/o/v/4668e056aa9243b6bc32ee2d3e52db42.mp4"></video>' +
         '</div>' +
         '<div class="vd-body">' +
-          '<h2 class="vd-heading" tabindex="-1">Natural deodorant, reimagined</h2>' +
-          '<p class="vd-sub">Crafted from the earth, designed for your ritual</p>' +
-          '<div class="vd-points">' +
-            '<div class="vd-pt">' +
-              '<div class="vd-pt__title">Four scents, one ritual</div>' +
-              '<div class="vd-pt__detail">Each fragrance crafted from natural essential oils by master perfumers</div>' +
-            '</div>' +
-            '<div class="vd-pt">' +
-              '<div class="vd-pt__title">Just add water</div>' +
-              '<div class="vd-pt__detail">Concentrated powder sachet. Mix, set, roll on. Lasts ~2 months.</div>' +
-            '</div>' +
-            '<div class="vd-pt">' +
-              '<div class="vd-pt__title">From ~\u00a36 per month</div>' +
-              '<div class="vd-pt__detail">Subscribe for free delivery, or buy once. Skip or cancel anytime.</div>' +
-            '</div>' +
-            '<div class="vd-pt">' +
-              '<div class="vd-pt__title">Nothing to hide</div>' +
-              '<div class="vd-pt__detail">No aluminium, no parabens, no synthetic fragrance. Ever.</div>' +
-            '</div>' +
-          '</div>' +
-          '<button class="vd-link" type="button" data-product-info>Full ingredients &amp; allergen info</button>' +
+          '<figure class="vd-press vd-press--left">' +
+            '<img class="vd-press__logo" src="https://logo-showcase.fra1.cdn.digitaloceanspaces.com/prod/uploads/a0ee26-d7-1759253922459.png" alt="">' +
+            '<figcaption class="vd-press__quote">\u201CDeodorant doesn\u2019t get more luxurious than Rollr\u201D</figcaption>' +
+          '</figure>' +
+          '<h2 class="vd-heading" tabindex="-1">Looks dazzling, smells dreamy.</h2>' +
+          '<p class="vd-sub">Yes, our natural pro and pre-biotic formulas are anti-odorant and de-perspirant. Swoony to smell. Sensational on skin.</p>' +
+          '<ul class="vd-ticks">' +
+            '<li class="vd-ticks__item">Stunning and unique refillable case &amp; <span data-vd-gemstone>Rose Quartz</span> Rollr</li>' +
+            '<li class="vd-ticks__item">90% less packaging than other brands</li>' +
+            '<li class="vd-ticks__item">Effectively tightens pores without blocking</li>' +
+          '</ul>' +
+          '<div class="s2-review" data-scent-review></div>' +
         '</div>' +
       '</div>';
 
+    stepEl.querySelector('[data-step-progress]').style.display = 'none';
     setupScentReviews(stepEl.querySelector('[data-scent-review]'));
   }
 
@@ -2969,20 +3307,21 @@
     const stepEl = wizard.steps[0];
     const config = wizard.config;
 
-    // Nav overlay on hero step
-    wizard.previewCard.classList.add('preview-card--hero-nav');
+    stepEl.classList.add('wizard__step--hero');
 
     // Full-bleed hero — remove default step padding
-    stepEl.style.padding = '0 0 80px 0';
+    stepEl.style.padding = '0';
 
     stepEl.innerHTML =
+      stepChromeHTML() +
       '<div class="hero" data-hero>' +
         '<div class="hero__thumbs" data-hero-thumbs></div>' +
       '</div>' +
       '<div class="s1-content">' +
         '<p class="trust-line"><span class="stars">\u2605\u2605\u2605\u2605\u2605</span> Rated <strong>4.97/5</strong> from 127 reviews</p>' +
         '<h2 class="step-heading" tabindex="-1">' + config.step1Heading + '</h2>' +
-        '<p class="step-sub">Each ball is naturally one-of-a-kind and carved from the earth to reveal its unique colour, pattern, and energy.</p>' +
+        '<p class="step-sub">Each gemstone ball is one of a kind. Like a gua sha, smooth on skin.</p>' +
+        '<p class="selectors-label">Choose your gemstone</p>' +
         '<div class="selectors" data-selectors></div>' +
         '<div class="case-info">' +
           '<div class="case-info__header">' +
@@ -3034,9 +3373,24 @@
     // Gemstone selector buttons
     cases.forEach(function(c) {
       var btn = document.createElement('button');
-      btn.className = 'selectors__btn';
+      btn.className = 'selector';
       btn.setAttribute('data-case', c.id);
       btn.setAttribute('aria-label', c.name);
+
+      var circle = document.createElement('div');
+      circle.className = 'selector__circle';
+
+      var check = document.createElement('span');
+      check.className = 'selector__check';
+      check.innerHTML = '<svg viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      circle.appendChild(check);
+      btn.appendChild(circle);
+
+      var name = document.createElement('span');
+      name.className = 'selector__name';
+      name.textContent = c.name;
+      btn.appendChild(name);
+
       btn.addEventListener('click', function() { select(c.id); });
       selectorsEl.appendChild(btn);
     });
@@ -3093,8 +3447,8 @@
       });
 
       // Gemstone selector active state
-      selectorsEl.querySelectorAll('.selectors__btn').forEach(function(btn) {
-        btn.classList.toggle('selectors__btn--active', btn.getAttribute('data-case') === id);
+      selectorsEl.querySelectorAll('.selector').forEach(function(btn) {
+        btn.classList.toggle('selector--active', btn.getAttribute('data-case') === id);
       });
 
       // Case info
@@ -3125,33 +3479,145 @@
     setupCaseReviews(stepEl.querySelector('[data-scent-review]'));
   }
 
+  function planMetaHTML(plan) {
+    if (plan === 'subscribe') {
+      return '<span class="plan-meta__item"><span class="plan-meta__check">✓</span> From £6/m</span>' +
+        '<span class="plan-meta__item"><span class="plan-meta__check">✓</span> Free delivery</span>' +
+        '<span class="plan-meta__item"><span class="plan-meta__check">✓</span> Edit or cancel any time</span>';
+    }
+    return '<span class="plan-meta__item">From £15 · £3.95 delivery</span>';
+  }
+
   function renderStep2(wizard) {
     const config = wizard.config;
     const stepEl = wizard.steps[config.scentStep - 1];
+    const plan = wizard.state.plan;
+    const isSubscribe = plan === 'subscribe';
 
     let reviewHTML = '';
     if (config.showStep2Review) {
       reviewHTML = '<div class="s2-review" data-scent-review></div>';
     }
 
-    let ingredientsLinkHTML = config.interstitialStep
-      ? '<button class="intro__link" type="button" data-product-info>Ingredients &amp; info</button>'
-      : '';
+    const infoAccordionHTML =
+      '<div class="sheet-accordion sheet-accordion--dividers">' +
+        '<div class="sheet-accordion__item">' +
+          '<button class="sheet-accordion__trigger" type="button">' +
+            '<span>Ingredients</span>' +
+            '<span class="sheet-accordion__icon">+</span>' +
+          '</button>' +
+          '<div class="sheet-accordion__body">' +
+            '<div class="sheet-accordion__content">' +
+              '<ul class="product-info__list">' +
+                '<li>Sodium Bicarbonate</li>' +
+                '<li>Tapioca Starch</li>' +
+                '<li>Magnesium Hydroxide</li>' +
+                '<li>Coconut Oil (Cocos Nucifera)</li>' +
+                '<li>Zinc Ricinoleate</li>' +
+                '<li>Natural Fragrance (essential oil blend)</li>' +
+              '</ul>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sheet-accordion__item">' +
+          '<button class="sheet-accordion__trigger" type="button">' +
+            '<span>Free from</span>' +
+            '<span class="sheet-accordion__icon">+</span>' +
+          '</button>' +
+          '<div class="sheet-accordion__body">' +
+            '<div class="sheet-accordion__content">' +
+              '<p class="product-info__text">Parabens, phthalates, aluminium, synthetic fragrances, propylene glycol, and triclosan.</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sheet-accordion__item">' +
+          '<button class="sheet-accordion__trigger" type="button">' +
+            '<span>How to use</span>' +
+            '<span class="sheet-accordion__icon">+</span>' +
+          '</button>' +
+          '<div class="sheet-accordion__body">' +
+            '<div class="sheet-accordion__content">' +
+              '<ol class="product-info__steps">' +
+                '<li>Open your Rollr case and remove the ball</li>' +
+                '<li>Empty the refill sachet into the case</li>' +
+                '<li>Add water to the fill line and stir</li>' +
+                '<li>Replace the ball and let it set (2\\u20134 hours)</li>' +
+                '<li>Roll on and go \\u2014 lasts ~2 months of daily use</li>' +
+              '</ol>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    // Add scent-step class for zone styling + zero padding for edge-to-edge zones
+    stepEl.classList.add('wizard__step--scent');
+    stepEl.style.padding = '0';
 
     stepEl.innerHTML =
-      '<h2 class="step-heading" tabindex="-1">Choose your scents</h2>' +
-      '<p class="step-sub">Pick as many as you like. Each refill lasts ~2 months.</p>' +
-      '<p class="step-sub step-sub--brandy">Anti-odorant: our pro &amp; prebiotic blend stops odour in its tracks. De-perspirant: minerals tighten pores, so you can wave goodbye to stains.</p>' +
-      '<div class="c1-grid" data-scent-grid role="group" aria-label="Scent options"></div>' +
-      ingredientsLinkHTML +
-      reviewHTML;
+      stepChromeHTML() +
+      // Header zone (off-white background from step modifier)
+      '<div class="step-header">' +
+        '<p class="trust-line"><span class="stars">★★★★★</span> Rated <strong>4.97/5</strong> from 127 reviews</p>' +
+        '<h2 class="step-heading" tabindex="-1" style="margin-bottom:16px">Rollr refillable scents</h2>' +
+        '<div class="plan-tabs plan-tabs--lg" data-plan-toggle>' +
+          '<button class="plan-tabs__tab' + (isSubscribe ? ' plan-tabs__tab--active' : '') + '" data-choice="subscribe">Recurring refills <span class="plan-tabs__badge">saving 20%</span></button>' +
+          '<button class="plan-tabs__tab' + (!isSubscribe ? ' plan-tabs__tab--active' : '') + '" data-choice="once">One-time buy</button>' +
+        '</div>' +
+        '<div class="plan-meta" data-plan-meta>' + planMetaHTML(plan) + '</div>' +
+      '</div>' +
+      // Body zone (white with rounded top + shadow)
+      '<div class="step-body">' +
+        '<h3 class="step-body__heading">Pick your scents</h3>' +
+        '<p class="step-body__sub">As many as you like, each lasts ~2 months.</p>' +
+        '<div class="c1-grid" data-scent-grid role="group" aria-label="Scent options"></div>' +
+        infoAccordionHTML +
+        reviewHTML +
+      '</div>';
+
+    // Wire up inline accordion expand/collapse
+    stepEl.querySelectorAll('.step-body .sheet-accordion__trigger').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        var item = this.closest('.sheet-accordion__item');
+        var accordion = this.closest('.sheet-accordion');
+        var body = item.querySelector('.sheet-accordion__body');
+        var icon = this.querySelector('.sheet-accordion__icon');
+        var isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+        accordion.querySelectorAll('.sheet-accordion__item').forEach(function(sibling) {
+          sibling.querySelector('.sheet-accordion__body').style.maxHeight = '0px';
+          sibling.querySelector('.sheet-accordion__icon').textContent = '+';
+        });
+        if (!isOpen) {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          icon.textContent = '\u2013';
+        }
+      });
+    });
 
     const grid = stepEl.querySelector('[data-scent-grid]');
-    renderScentCards(grid);
+    renderScentCards(grid, plan);
     setupScentStepper(grid, (quantities) => {
       wizard.state.scentQty = quantities;
       wizard.state.scents = Object.keys(quantities).map(id => scents.find(s => s.id === id)).filter(Boolean);
       updateBottomBar(wizard);
+    });
+
+    // Plan toggle event listeners
+    const tabs = stepEl.querySelectorAll('[data-plan-toggle] .plan-tabs__tab');
+    const metaEl = stepEl.querySelector('[data-plan-meta]');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var choice = tab.dataset.choice;
+        if (wizard.state.plan === choice) return;
+        wizard.state.plan = choice;
+
+        tabs.forEach(function(t) {
+          t.classList.toggle('plan-tabs__tab--active', t.dataset.choice === choice);
+        });
+
+        metaEl.innerHTML = planMetaHTML(choice);
+        updateScentPrices(grid, choice);
+        updateBottomBar(wizard);
+      });
     });
 
     // Apply visual pre-selection from state quantities
@@ -3172,82 +3638,6 @@
       const reviewEl = stepEl.querySelector('[data-scent-review]');
       setupScentReviews(reviewEl);
     }
-  }
-
-  function renderStep3(wizard) {
-    const stepEl = wizard.steps[wizard.config.planStep - 1];
-    const state = wizard.state;
-    const config = wizard.config;
-    const n = state.totalRefills;
-    const subPerRefill = 12;
-    const oncePerRefill = 15;
-    const subTotal = subPerRefill * n;
-    const onceTotal = oncePerRefill * n;
-    const perMonth = subTotal / (n * 2);
-
-    // Sub line
-    let subLine = '';
-    if (config.id !== 'trust') {
-      subLine = 'Choose how your refills arrive.';
-    }
-
-    // Determine active class and toggle mode
-    const isSubDefault = config.defaultPlan === 'subscribe';
-    const currentIsSub = state.plan === 'subscribe';
-    const toggleClass = currentIsSub ? '' : ' s3-toggle--once';
-
-    // Subscribe card
-    const savePillHTML = config.showSavePill ? ' <span class="s3-save-pill">Save 20%</span>' : '';
-    const subActiveClass = currentIsSub ? ' s3-option--active' : '';
-    const onceActiveClass = currentIsSub ? '' : ' s3-option--active';
-
-    const subCard =
-      '<div class="s3-option' + subActiveClass + '" data-s3-choice="subscribe">' +
-        '<div class="s3-option__badge-row">' +
-          '<span class="s3-badge">' + config.subscribeBadge + '</span>' +
-          savePillHTML +
-        '</div>' +
-        '<div class="s3-option__title">Save on every refill</div>' +
-        '<div class="s3-option__price-month">\u00a3' + perMonth + '<small>/month</small></div>' +
-        '<div class="s3-option__price-detail">Billed as \u00a3' + subTotal + ' every ' + (n * 2) + ' months' +
-          (n > 1 ? ' (' + n + ' refills \u00d7 \u00a3' + subPerRefill + ')' : '') +
-          ' <s>\u00a3' + onceTotal + '</s></div>' +
-        '<ul class="s3-benefits">' +
-          config.subscribeBenefits.map(b =>
-            '<li class="s3-benefits__item"><span class="s3-benefits__check">\u2713</span> ' + b + '</li>'
-          ).join('') +
-        '</ul>' +
-        '<div class="s3-social">' + config.socialProof + '</div>' +
-      '</div>';
-
-    const onceCard =
-      '<div class="s3-option' + onceActiveClass + '" data-s3-choice="once">' +
-        '<div class="s3-option__title">One-time purchase</div>' +
-        '<div class="s3-option__price">\u00a3' + oncePerRefill + '/refill' + (n > 1 ? ' \u00d7 ' + n : '') + '</div>' +
-        '<div class="s3-option__meta">\u00a33.95 delivery' + config.onceExtra + '</div>' +
-      '</div>';
-
-    stepEl.innerHTML =
-      '<h2 class="step-heading" tabindex="-1">' + config.step3Heading + '</h2>' +
-      (subLine ? '<p class="step-sub step-sub--brandy">' + subLine + '</p>' : '') +
-      s3ProductShelf(state) +
-      '<div class="s3-toggle' + toggleClass + '">' + subCard + onceCard + '</div>' +
-      s3TrustStrip(config.trustStripItems);
-
-    // Toggle logic
-    const options = stepEl.querySelectorAll('[data-s3-choice]');
-    const toggle = stepEl.querySelector('.s3-toggle');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('s3-option--active'));
-        opt.classList.add('s3-option--active');
-        const choice = opt.dataset.s3Choice;
-        toggle.classList.toggle('s3-toggle--once', choice !== 'subscribe');
-        state.plan = choice;
-        updateBottomBar(wizard);
-      });
-    });
-
   }
 
   function renderCheckout(wizard) {
@@ -3289,9 +3679,15 @@
       ? '<div class="checkout__recurring">Then \u00a3' + state.billingTotal + ' every ' + state.billingCycleMonths + ' months</div>'
       : '';
 
+    stepEl.classList.add('wizard__step--checkout');
+    stepEl.style.padding = '0';
+
     stepEl.innerHTML =
-      '<div class="checkout">' +
+      stepChromeHTML() +
+      '<div class="step-header">' +
         '<h2 class="checkout__heading" tabindex="-1">Prototype finished</h2>' +
+      '</div>' +
+      '<div class="step-body">' +
         '<button class="checkout__restart" type="button" data-restart>Start again</button>' +
       '</div>';
 
@@ -3311,7 +3707,6 @@
 
     // Render dynamic steps
     const config = wizard.config;
-    if (n === config.planStep) renderStep3(wizard);
     if (n === config.checkoutStep) renderCheckout(wizard);
 
     const forward = n > current;
@@ -3335,9 +3730,6 @@
 
     wizard.state.step = n;
 
-    // Toggle hero nav overlay for step 1 and interstitial
-    wizard.previewCard.classList.toggle('preview-card--hero-nav', n === 1 || n === config.interstitialStep);
-
     // Toggle cover-active class for interstitial full-bleed
     if (config.interstitialStep) {
       wizard.el.classList.toggle('wizard--cover-active', n === config.interstitialStep);
@@ -3346,6 +3738,8 @@
       const coverEl = targetStep.querySelector('.vd-bg');
       if (coverEl) {
         if (n === config.interstitialStep) {
+          var gemEls = targetStep.querySelectorAll('[data-vd-gemstone]');
+          if (gemEls.length && wizard.state.selectedCase) gemEls.forEach(function(el) { el.textContent = wizard.state.selectedCase.name; });
           coverEl.classList.remove('vd-bg--animate');
           void coverEl.offsetWidth; // reflow to restart animations
           coverEl.classList.add('vd-bg--animate');
@@ -3363,7 +3757,6 @@
     stepNameMap[1] = 'Choose your case';
     if (config.interstitialStep) stepNameMap[config.interstitialStep] = 'What\'s inside your refill';
     stepNameMap[config.scentStep] = 'Choose your scents';
-    stepNameMap[config.planStep] = 'Choose your plan';
     stepNameMap[config.checkoutStep] = 'Order summary';
     const totalVisibleSteps = config.stepCount - 1; // exclude checkout
     wizard.announcer.textContent = n < config.checkoutStep
@@ -3384,34 +3777,36 @@
   function renderProgressBar(wizard) {
     const step = wizard.state.step;
     const config = wizard.config;
+    const progressEl = wizard.steps[step - 1].querySelector('[data-step-progress]');
+    if (!progressEl) return;
 
     // Trust Builder: hidden on step 1 only
     if (!config.showProgressStep1 && step === 1) {
-      wizard.progressEl.classList.add('wizard__progress--hidden');
+      progressEl.classList.add('wizard__progress--hidden');
       return;
     }
-    wizard.progressEl.classList.remove('wizard__progress--hidden');
+    progressEl.classList.remove('wizard__progress--hidden');
 
     // Segment state based on config step mapping
     const isInterstitial = config.interstitialStep && step === config.interstitialStep;
     const caseDone = step > 1;
     const scentDone = step > config.scentStep;
-    const scentActive = step >= config.scentStep && step < config.planStep;
+    const scentActive = step >= config.scentStep && step < config.checkoutStep;
     const scentHalf = isInterstitial;
-    const planDone = step > config.planStep || step === config.checkoutStep;
-    const planActive = step === config.planStep;
+    const cartDone = step === config.checkoutStep;
+    const cartActive = false;
 
     // Progress text (Trust Builder only)
     let progressText = '';
     if (config.id === 'trust') {
       if (isInterstitial || step === config.scentStep) progressText = 'Step 2 of 3';
-      else if (step === config.planStep) progressText = 'Step 3/3';
+      else if (step === config.checkoutStep) progressText = 'Step 3/3';
     }
 
     const segments = [
       { label: 'Case', done: caseDone, active: step === 1, half: false },
       { label: 'Scent', done: scentDone, active: scentActive, half: scentHalf },
-      { label: 'Plan', done: planDone, active: planActive, half: false }
+      { label: 'Cart', done: cartDone, active: cartActive, half: false }
     ];
 
     const segs = segments.map(s => {
@@ -3429,7 +3824,7 @@
       return '<span class="' + cls + '">' + s.label + '</span>';
     }).join('');
 
-    wizard.progressEl.innerHTML =
+    progressEl.innerHTML =
       (progressText ? '<div class="wizard__progress-text">' + progressText + '</div>' : '') +
       '<div class="progress">' + segs + '</div>' +
       '<div class="progress__labels">' + labelHTML + '</div>';
@@ -3461,25 +3856,13 @@
     if (step === 1 || (config.interstitialStep && step === config.interstitialStep)) {
       // Case step or interstitial: show case selection
       if (state.selectedCase) {
-        summary = '<strong>' + state.selectedCase.name + '</strong> \u00b7 \u00a3' + state.selectedCase.price;
-      } else {
-        summary = step === 1 ? 'Select a case' : '';
+        summary = '<strong>' + state.selectedCase.name + '</strong><span class="bar-price">\u00a3' + state.selectedCase.price + '</span>';
       }
     } else if (step === config.scentStep) {
-      if (state.totalRefills > 0) {
-        const names = state.scents.map(function(s) {
-          var q = state.scentQty[s.id] || 1;
-          return q > 1 ? s.name + ' \u00d7' + q : s.name;
-        }).join(', ');
-        summary = '<strong>' + names + '</strong> \u00b7 ' + state.totalRefills + ' refill' + (state.totalRefills > 1 ? 's' : '');
-      } else {
-        summary = 'Select your scents';
-      }
-    } else if (step === config.planStep) {
       const parts = [];
-      if (state.selectedCase) parts.push(state.selectedCase.name);
-      parts.push(state.totalRefills + ' refill' + (state.totalRefills > 1 ? 's' : ''));
-      summary = '<strong>' + parts.join(' + ') + '</strong>';
+      if (state.selectedCase) parts.push(state.selectedCase.name + ' case');
+      if (state.totalRefills > 0) parts.push(state.totalRefills + ' refill' + (state.totalRefills > 1 ? 's' : ''));
+      summary = parts.length ? '<strong>' + parts.join(' + ') + '</strong>' : 'Select your scents';
     }
 
     // Animate summary change
@@ -3493,14 +3876,14 @@
 
     // CTA text and state
     const cta = wizard.barCta;
-    if (step === config.planStep) {
-      // Final CTA
+    if (step === config.scentStep) {
+      // Final CTA — scent step is now the last real step
       cta.classList.add('wizard__bar-cta--final');
       cta.textContent = 'Add to Cart \u2014 ' + formatPrice(state.orderTotal);
-      cta.disabled = false;
+      cta.disabled = state.totalRefills < 1;
     } else {
       cta.classList.remove('wizard__bar-cta--final');
-      cta.textContent = (config.interstitialStep && step === config.interstitialStep) ? 'Choose your scents' : 'Continue';
+      cta.textContent = (config.interstitialStep && step === config.interstitialStep) ? 'Choose your scents' : (step === 1 ? 'Continue to scent' : 'Continue');
       cta.disabled = !state.canContinue;
     }
   }
@@ -3617,6 +4000,23 @@
     function openSheet(content) {
       sheetBody.innerHTML = content;
       sheetBody.querySelector('.sheet__close-link').addEventListener('click', closeSheet);
+      sheetBody.querySelectorAll('.sheet-accordion__trigger').forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+          var item = this.closest('.sheet-accordion__item');
+          var accordion = this.closest('.sheet-accordion');
+          var body = item.querySelector('.sheet-accordion__body');
+          var icon = this.querySelector('.sheet-accordion__icon');
+          var isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+          accordion.querySelectorAll('.sheet-accordion__item').forEach(function(sibling) {
+            sibling.querySelector('.sheet-accordion__body').style.maxHeight = '0px';
+            sibling.querySelector('.sheet-accordion__icon').textContent = '+';
+          });
+          if (!isOpen) {
+            body.style.maxHeight = body.scrollHeight + 'px';
+            icon.textContent = '\u2013';
+          }
+        });
+      });
       sheet.classList.add('open');
       backdrop.classList.add('open');
     }
@@ -3627,17 +4027,8 @@
       openId = null;
     }
 
-    // Delegate clicks for product info links
+    // Delegate clicks for sheet triggers
     card.addEventListener('click', (e) => {
-      const productInfo = e.target.closest('[data-product-info]');
-      if (productInfo) {
-        e.stopPropagation();
-        if (openId === 'product-info') { closeSheet(); return; }
-        openId = 'product-info';
-        openSheet(getProductInfoHTML());
-        return;
-      }
-
       const caseLearn = e.target.closest('[data-learn]');
       if (caseLearn) {
         e.stopPropagation();
@@ -3669,18 +4060,72 @@
           openId = id;
           const r = s.reviews[Math.floor(Math.random() * s.reviews.length)];
           openSheet(
-            '<div class="sheet__image"><img src="' + s.image + '" alt="' + s.name + '" loading="lazy"></div>' +
-            '<div class="sheet__name">' + s.name + '</div>' +
-            '<div class="sheet__desc">' + s.description + '</div>' +
-            '<div class="sheet__notes"><strong>Notes:</strong> ' + s.notes + '</div>' +
-            '<div class="sheet__review">' +
-              '<div class="sheet__review-stars">' + '\u2605'.repeat(r.stars) + '</div>' +
-              '<div>\"' + r.text + '\"</div>' +
-              '<div class="sheet__review-author">\u2014 ' + r.author + '</div>' +
+            '<div class="sheet__image"><img src="' + s.image + '" alt="' + s.name + '" loading="lazy">' +
+              '<div class="sheet__review">' +
+                '<div class="sheet__review-stars">' + '\u2605'.repeat(r.stars) + '</div>' +
+                '<div>\"' + r.text + '\"</div>' +
+                '<div class="sheet__review-author">\u2014 ' + r.author + '</div>' +
+              '</div>' +
             '</div>' +
-            '<div class="sheet__footer">' +
-              '<div class="sheet__price">\u00a36/month \u00b7 \u00a312 per refill</div>' +
+            '<div class="sheet__header-row">' +
+              '<div class="sheet__name">' + s.name + '</div>' +
               '<button class="sheet__close-link" type="button">Close</button>' +
+            '</div>' +
+            s.description.split('. ').map(function(line) {
+              var text = line.endsWith('.') ? line : line + '.';
+              return '<div class="sheet__desc">' + text + '</div>';
+            }).join('') +
+            '<div class="sheet__price-block">' +
+              '<div class="sheet__price-main">\u00a36/month</div>' +
+              '<div class="sheet__price-sub">\u00a312 per refill \u00b7 Lasts ~2 months</div>' +
+            '</div>' +
+            '<div class="sheet-accordion sheet-accordion--dividers">' +
+              '<div class="sheet-accordion__item">' +
+                '<button class="sheet-accordion__trigger" type="button">' +
+                  '<span>Ingredients</span>' +
+                  '<span class="sheet-accordion__icon">+</span>' +
+                '</button>' +
+                '<div class="sheet-accordion__body">' +
+                  '<div class="sheet-accordion__content">' +
+                    '<ul class="product-info__list">' +
+                      '<li>Sodium Bicarbonate</li>' +
+                      '<li>Tapioca Starch</li>' +
+                      '<li>Magnesium Hydroxide</li>' +
+                      '<li>Coconut Oil (Cocos Nucifera)</li>' +
+                      '<li>Zinc Ricinoleate</li>' +
+                      '<li>Natural Fragrance (essential oil blend)</li>' +
+                    '</ul>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="sheet-accordion__item">' +
+                '<button class="sheet-accordion__trigger" type="button">' +
+                  '<span>Free from</span>' +
+                  '<span class="sheet-accordion__icon">+</span>' +
+                '</button>' +
+                '<div class="sheet-accordion__body">' +
+                  '<div class="sheet-accordion__content">' +
+                    '<p class="product-info__text">Parabens, phthalates, aluminium, synthetic fragrances, propylene glycol, and triclosan.</p>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="sheet-accordion__item">' +
+                '<button class="sheet-accordion__trigger" type="button">' +
+                  '<span>How to use</span>' +
+                  '<span class="sheet-accordion__icon">+</span>' +
+                '</button>' +
+                '<div class="sheet-accordion__body">' +
+                  '<div class="sheet-accordion__content">' +
+                    '<ol class="product-info__steps">' +
+                      '<li>Open your Rollr case and remove the ball</li>' +
+                      '<li>Empty the refill sachet into the case</li>' +
+                      '<li>Add water to the fill line and stir</li>' +
+                      '<li>Replace the ball and let it set (2\u20134 hours)</li>' +
+                      '<li>Roll on and go \u2014 lasts ~2 months of daily use</li>' +
+                    '</ol>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
             '</div>'
           );
         }
